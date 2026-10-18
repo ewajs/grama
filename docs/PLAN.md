@@ -36,10 +36,10 @@ Goal: an empty but real app, live on GitHub Pages, with the quality gates in pla
 - [x] Scaffold Vite + Svelte 5 + TS strict with quality gates: ESLint, Prettier,
       `svelte-check`, Vitest, Playwright smoke test; `npm run check` runs lint + types + unit tests
 - [x] GitHub Actions: `check` + `e2e` + `build` on PRs; deploy to Pages on `main`
-- [ ] Design tokens (`src/ui/styles/tokens.css`): colors (light/dark), type scale, radii, durations
-- [ ] Player-facing text read from a per-language strings module (`src/i18n/es.ts`), never inline
+- [x] Design tokens (`src/ui/styles/tokens.css`): colors (light/dark), type scale, radii, durations
+- [x] Player-facing text read from a per-language strings module (`src/i18n/es.ts`), never inline
 
-**Verify:** the Pages URL loads on a phone and desktop; a PR with a failing test is blocked.
+**Verify:** the Pages URL loads on a phone and desktop; a PR with a failing test shows red checks.
 
 ### M1 — Core rules · `v0.2.0`
 
@@ -131,6 +131,8 @@ Goal: installable, works offline, never loses progress.
 
 Short entries, newest first: date — decision — reason.
 
+- 2026-10-18 — No branch protection on `main` for now. — Solo project; red checks on a PR
+  are enough of a signal. Revisit when more people contribute.
 - 2026-10-18 — Pre-1.0 we break freely: no save migrations, no compatibility shims, no
   keeping old code paths alive. Replace, don't layer. — There are no players to protect
   yet; every shim is code we'd maintain for nobody. Revisit at v1.0.0.
@@ -147,4 +149,4 @@ Short entries, newest first: date — decision — reason.
 
 ## Changelog
 
-_Nothing released yet._
+- **v0.1.0** (M0) — Svelte 5 + TS scaffold, quality gates, CI, auto-deploy to GitHub Pages, design tokens (light/dark), Spanish UI strings.
