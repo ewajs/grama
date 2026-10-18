@@ -1,3 +1,6 @@
+@import '@fontsource-variable/outfit/wght.css';
+@import './tokens.css';
+
 *,
 *::before,
 *::after {
@@ -6,5 +9,11 @@
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  color: var(--color-text);
+  background: linear-gradient(var(--color-bg-top), var(--color-bg-bottom)) fixed;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
