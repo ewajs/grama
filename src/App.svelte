@@ -1,3 +1,4 @@
+<!-- @component Root of the app. For now, a placeholder home screen. -->
 <script lang="ts">
   import { strings } from './i18n';
 </script>

@@ -1,8 +1,9 @@
+/** Player-facing text in Rioplatense Spanish (voseo). */
 export const es = {
   appName: 'Grama',
-  tagline: 'Une las letras y encuentra todas las palabras.',
+  tagline: 'Uní las letras y encontrá todas las palabras.',
   comingSoon: 'Muy pronto',
 };
 
-/** Every language pack must provide the same keys as Spanish. */
+/** The shape every language pack must provide: the same keys as Spanish. */
 export type Strings = typeof es;
