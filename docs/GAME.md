@@ -5,21 +5,21 @@ change that alters a rule, so code and spec never drift.
 
 ## Core loop (MVP)
 
-1. A **level** shows 6+ letters arranged in a circle (the *wheel*) and a
+1. A **level** shows 6+ letters arranged in a circle (the _wheel_) and a
    **board**: one row of empty tiles per expected word, grouped and sorted by
-   length. The board *is* the hint: it says "find 2 words of 3 letters, 3 of 4…".
+   length. The board _is_ the hint: it says "find 2 words of 3 letters, 3 of 4…".
 2. The player drags across the wheel to build a word. Each letter tile can be
    used once per word. Dragging back onto the previous letter removes the last
    one (undo while dragging).
 3. Lifting the finger (or mouse button) **submits** the word.
 4. The submission is evaluated:
 
-   | Result       | Condition                                    | Points | Feedback                                    |
-   | ------------ | -------------------------------------------- | ------ | ------------------------------------------- |
-   | `invalid`    | Not a word, or shorter than 3 letters        | 0      | Word shakes and fades                       |
-   | `target`     | In the level's expected set, not yet found   | high   | Word flies into its row, tiles flip in      |
-   | `bonus`      | Real word, not in the expected set, new      | low    | Word flies to the bonus counter, it pulses  |
-   | `repeated`   | Already found (target or bonus)              | 0      | The existing row / counter briefly glows    |
+   | Result     | Condition                                  | Points | Feedback                                   |
+   | ---------- | ------------------------------------------ | ------ | ------------------------------------------ |
+   | `invalid`  | Not a word, or shorter than 3 letters      | 0      | Word shakes and fades                      |
+   | `target`   | In the level's expected set, not yet found | high   | Word flies into its row, tiles flip in     |
+   | `bonus`    | Real word, not in the expected set, new    | low    | Word flies to the bonus counter, it pulses |
+   | `repeated` | Already found (target or bonus)            | 0      | The existing row / counter briefly glows   |
 
 5. When every target is found the level is **complete**: a short celebration,
    a summary (points, bonus words found) and a "Next level" action.
@@ -54,9 +54,9 @@ A level is static data, fully self-contained (no global dictionary is shipped):
 ```ts
 type Level = {
   id: string;
-  letters: string[];   // normalized, e.g. ["C","A","S","I","L","F"]
-  targets: string[];   // the board: words the level requires
-  bonus: string[];     // every other valid word formable from `letters`
+  letters: string[]; // normalized, e.g. ["C","A","S","I","L","F"]
+  targets: string[]; // the board: words the level requires
+  bonus: string[]; // every other valid word formable from `letters`
 };
 ```
 
