@@ -1,7 +1,26 @@
 # Development guidelines
 
-Read with [`docs/GAME.md`](docs/GAME.md) (what the game does) and
-[`docs/PLAN.md`](docs/PLAN.md) (what we're building next).
+Read with [`docs/GAME.md`](docs/GAME.md) (what the game does),
+[`docs/PLAN.md`](docs/PLAN.md) (what we're building next) and
+[`docs/DECISIONS.md`](docs/DECISIONS.md) (why things are the way they are).
+
+## Principles
+
+Everything below follows from these. When a rule and a principle disagree, the
+principle wins, and we fix the rule.
+
+1. **Simple over complex.** Build the simplest thing that solves today's problem.
+   No abstraction, option or extension point until a second real use needs it.
+   Deleting code is a feature.
+2. **Logic is separated and isolated.** Game rules are pure functions with no knowledge
+   of the screen, storage, time or randomness; those live at the edges and are passed in.
+   Each module has one job and a small surface.
+3. **Code is read far more than written.** Someone new to the codebase (or to Svelte)
+   should follow a file top to bottom. Plain names from the game's vocabulary, short
+   functions, explicit over clever.
+4. **Code documents itself.** Types and TSDoc comments on exports are the reference
+   documentation (see _Documentation_); prose docs describe the game and decisions,
+   never restate the code.
 
 ## Working cycle
 
@@ -16,6 +35,7 @@ Every change follows the same loop, kept small enough to review in minutes:
    when the change touches input, layout or PWA behavior.
 
 A task that grows beyond ~a day or ~400 changed lines gets split in `PLAN.md` first.
+Non-obvious choices (a library, a data source, a trade-off) get an entry in `DECISIONS.md`.
 
 ## Architecture
 
@@ -35,8 +55,9 @@ scripts/       Offline tooling (level generator). Never imported by the app.
 tests/e2e/     Playwright tests.
 ```
 
-Dependency direction: `ui → app → (core, content, storage)`. `core` imports nothing
-from the rest. Unit tests live next to the code: `evaluate.ts` + `evaluate.test.ts`.
+Folders appear when their first file does. Dependency direction:
+`ui → app → (core, content, storage)`. `core` imports nothing from the rest.
+Unit tests live next to the code: `evaluate.ts` + `evaluate.test.ts`.
 
 ## Code style
 
@@ -51,21 +72,39 @@ from the rest. Unit tests live next to the code: `evaluate.ts` + `evaluate.test.
   without a matching PLAN.md entry.
 - Tunable numbers (scores, timings, difficulty) live in one named constant each.
 - Add a dependency only when it removes real complexity; note it in the PR.
-- **Pre-1.0 there is no backwards compatibility.** When something is replaced, delete the
-  old version: no migrations, deprecated aliases, fallbacks or feature flags kept for old
-  data or old code paths. Breaking saves or level data between versions is fine.
-- Prettier decides formatting; ESLint warnings are errors in CI.
+- **Pre-1.0 there is no backwards compatibility** (D5). When something is replaced,
+  delete the old version: no migrations, deprecated aliases, fallbacks or flags.
+- Prettier decides formatting; ESLint warnings are errors.
+
+## Documentation
+
+- Every **exported** function, type and constant gets a TSDoc comment (`/** … */`):
+  one line saying what it is or does, plus `@param` / `@returns` / `@example` only when
+  the signature doesn't already make it obvious. Editors show these on hover.
+- Every Svelte component starts with a `<!-- @component … -->` comment: what it shows,
+  its props and the events it emits. Svelte's editor tooling shows it on hover.
+- Unexported helpers only get a comment when the _why_ isn't obvious.
+- Player-facing Spanish is Rioplatense (voseo) with Argentine references (D8).
+
+```ts
+/**
+ * Brings a word to the form used for comparison: uppercase, accents removed, `Ñ` kept.
+ * @example spanish.normalize('Árbol') // 'ARBOL'
+ */
+```
 
 ## Testing
 
-Test sensibly, not exhaustively:
+Two suites, each run where it pays off (D10):
 
-- **`core` and `scripts`**: unit-test every rule and edge case (this is where bugs
-  hurt most and tests are cheapest).
-- **`ui/lib`** pure helpers (geometry, hit-testing): unit tests.
-- **Components**: no snapshot tests. Cover behavior through a few Playwright flows
-  (draw a word, complete a level, persistence after reload) on a mobile and a
-  desktop viewport.
+| Suite      | Tool       | Covers                                         | Runs                                                     |
+| ---------- | ---------- | ---------------------------------------------- | -------------------------------------------------------- |
+| Unit       | Vitest     | `core`, `scripts`, pure helpers in `ui/lib`    | `npm run check`, locally and in CI on every PR           |
+| End-to-end | Playwright | Real flows in a browser (drag a word, a level) | Locally, `npm run e2e`, when touching input, flow or PWA |
+
+- Unit-test every rule and edge case in `core`: that's where bugs hurt most and tests
+  are cheapest.
+- No component unit tests or snapshots. A handful of e2e flows cover the UI.
 - A bug fix starts with a failing test when practical.
 
 ## UI and motion
@@ -78,20 +117,17 @@ Test sensibly, not exhaustively:
 
 ## Commands
 
-| Command          | Does                                                       |
-| ---------------- | ---------------------------------------------------------- |
-| `npm run dev`    | Dev server (`--host` to test on a phone on the same Wi-Fi) |
-| `npm run check`  | Lint + typecheck + unit tests (the PR gate)                |
-| `npm test`       | Unit tests in watch mode                                   |
-| `npm run e2e`    | Playwright tests                                           |
-| `npm run build`  | Production build to `dist/`                                |
-| `npm run levels` | Regenerate level data (from M4)                            |
+| Command         | Does                                                       |
+| --------------- | ---------------------------------------------------------- |
+| `npm run dev`   | Dev server (`--host` to test on a phone on the same Wi-Fi) |
+| `npm run check` | Lint + typecheck + unit tests (the PR gate)                |
+| `npm test`      | Unit tests in watch mode                                   |
+| `npm run e2e`   | Playwright tests against a production build                |
+| `npm run build` | Production build to `dist/`                                |
 
-First-time setup: `npm install` and `npx playwright install chromium`. `npm run levels` arrives with M4.
+First-time setup: `npm install`, plus `npx playwright install chromium` to run e2e.
 
 ## Commits and releases
 
 - Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
 - Tag `v0.N.0` at the end of each milestone and add a changelog line in PLAN.md.
-- Record any non-obvious decision (library, data source, rule change) in the
-  PLAN.md decision log.

@@ -38,6 +38,9 @@ The game is built around **language packs** so more languages can be added and
 picked by the player later. A pack is: the alphabet and normalization rules, the
 level data, and the UI strings. Spanish is the only pack in the MVP.
 
+Spanish is Rioplatense: the UI speaks with voseo ("Uní las letras") and any
+cultural references or imagery are Argentine.
+
 Spanish rules:
 
 - Words are compared in a **normalized form**: uppercase, accents stripped

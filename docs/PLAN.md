@@ -7,25 +7,7 @@ completes it. Status legend: `[ ]` todo · `[~]` in progress · `[x]` done.
 Each milestone ends with a tag (`v0.N.0`) and a short note in the changelog
 section at the bottom.
 
-## Stack
-
-| Concern       | Choice                                    | Why                                                                                                |
-| ------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Language      | TypeScript (strict)                       | Types document the domain; safe refactors as features grow.                                        |
-| UI            | Svelte 5 + Vite (plain SPA, no SvelteKit) | Little boilerplate, tiny bundle, built-in transitions/springs for snappy motion. No router needed. |
-| Rendering     | DOM + SVG                                 | Crisp at any DPI, accessible, easy to animate. A canvas/game engine would be overkill.             |
-| Game logic    | Framework-free TS in `src/core`           | Pure functions, trivially unit-tested, portable if the UI layer ever changes.                      |
-| Unit tests    | Vitest                                    | Shares Vite config, fast.                                                                          |
-| E2E tests     | Playwright (mobile + desktop viewport)    | A few smoke tests of the real gesture flow.                                                        |
-| Lint / format | ESLint + Prettier + `svelte-check`        | One `npm run check` gate.                                                                          |
-| PWA           | `vite-plugin-pwa` (Workbox)               | Manifest + offline service worker with minimal config.                                             |
-| Content       | Node script (`scripts/`) → static JSON    | Levels generated offline, committed, reproducible from a seed.                                     |
-| Hosting / CI  | GitHub Pages + GitHub Actions             | No backend needed; every push to `main` deploys.                                                   |
-| Runtime       | Node 24 LTS, npm                          | Already installed; no extra tooling.                                                               |
-
-Considered and rejected for now: React (more ceremony and an extra animation
-library for the same result), Phaser/canvas (fights against crisp text and
-accessibility), SvelteKit (routing/SSR we don't need).
+Technical decisions and the stack live in [`DECISIONS.md`](DECISIONS.md).
 
 ## Milestones
 
@@ -45,13 +27,13 @@ Goal: an empty but real app, live on GitHub Pages, with the quality gates in pla
 
 Goal: the whole game logic, tested, with no UI.
 
-- [ ] `Language` definition (code, alphabet, `normalize`) with the Spanish one (accents, `Ñ`, case) + tests
+- [ ] `Language` definition (code, `normalize`) with the Spanish one (accents, `Ñ`, case) + tests
 - [ ] `Level` type and a handful of hand-written fixture levels
 - [ ] `evaluate(level, state, word)` → `invalid | target | bonus | repeated` + tests
 - [ ] Scoring and `isComplete(level, state)` + tests
 - [ ] Level progression: next level id, cycling after the last one + tests
 
-**Verify:** `npm test` covers every row of the result table in GAME.md.
+**Verify:** unit tests cover every row of the result table in GAME.md.
 
 ### M2 — Letter wheel · `v0.3.0`
 
@@ -74,7 +56,7 @@ Goal: wheel + board + rules = a complete level with fixture data.
 - [ ] Feedback per result (shake / fly-in + flip / bonus pulse / repeated glow)
 - [ ] Header with level number and animated score
 - [ ] Level-complete overlay → next level
-- [ ] E2E: draw a target word, see it on the board; finish a fixture level
+- [ ] E2E (local, see D10): draw a target word, see it on the board; finish a fixture level
 
 **Verify:** a fixture level can be fully played on phone and desktop.
 
@@ -83,7 +65,8 @@ Goal: wheel + board + rules = a complete level with fixture data.
 Goal: hundreds of good Spanish levels, reproducibly generated.
 
 - [ ] Choose word sources (common words + broad dictionary) and **verify licenses**;
-      record the decision below
+      record the decision in DECISIONS.md. Must include Argentine usage (voseo forms like
+      _tenés_, _sabés_; words like _che_, _pibe_) at least as valid bonus words
 - [ ] `scripts/prepare-words.ts`: normalize and filter the sources (length, proper nouns,
       offensive list) into a compact word list with frequency ranks
 - [ ] `src/core/generate.ts`: pure `generateLevel(words, seed, index)`: pick seed word,
@@ -126,26 +109,6 @@ Goal: installable, works offline, never loses progress.
 - English (or other) language packs + language picker (the structure is in place from M0/M1)
 - Accented display of found words (show `ÁRBOL`, match `ARBOL`)
 - Share results
-
-## Decision log
-
-Short entries, newest first: date — decision — reason.
-
-- 2026-10-18 — No branch protection on `main` for now. — Solo project; red checks on a PR
-  are enough of a signal. Revisit when more people contribute.
-- 2026-10-18 — Pre-1.0 we break freely: no save migrations, no compatibility shims, no
-  keeping old code paths alive. Replace, don't layer. — There are no players to protect
-  yet; every shim is code we'd maintain for nobody. Revisit at v1.0.0.
-- 2026-10-18 — Levels are generated ahead of time (option B), but the generator is a pure
-  function in `src/core` so it could later run on-device for infinite play. — Frozen,
-  reviewable, testable data; word-list fixes don't reshuffle levels under players.
-- 2026-10-18 — Spanish first, organized as a language pack (rules + levels + UI strings)
-  from day one. — Adding a language and a picker later must not need a refactor;
-  the cost now is one strings module and a `Language` type.
-- 2026-10-18 — Levels carry their own `bonus` list; no dictionary shipped. —
-  Keeps the download tiny and validation trivial; bonus words are only ever
-  formed from that level's letters.
-- 2026-10-18 — Svelte 5 + Vite + TS, DOM/SVG rendering, static hosting on Pages. — See Stack.
 
 ## Changelog
 

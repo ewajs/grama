@@ -1,4 +1,4 @@
 import { es } from './es';
 
-// Single language for now; a language picker will choose the pack here.
+/** Player-facing text for the current language. Only Spanish exists for now. */
 export const strings = es;
