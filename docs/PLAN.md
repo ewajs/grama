@@ -35,7 +35,7 @@ Goal: an empty but real app, live on GitHub Pages, with the quality gates in pla
 
 - [x] Scaffold Vite + Svelte 5 + TS strict with quality gates: ESLint, Prettier,
       `svelte-check`, Vitest, Playwright smoke test; `npm run check` runs lint + types + unit tests
-- [ ] GitHub Actions: `check` + `e2e` + `build` on PRs; deploy to Pages on `main`
+- [x] GitHub Actions: `check` + `e2e` + `build` on PRs; deploy to Pages on `main`
 - [ ] Design tokens (`src/ui/styles/tokens.css`): colors (light/dark), type scale, radii, durations
 - [ ] Player-facing text read from a per-language strings module (`src/i18n/es.ts`), never inline
 
