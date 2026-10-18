@@ -9,19 +9,19 @@ section at the bottom.
 
 ## Stack
 
-| Concern        | Choice                                   | Why                                                                                      |
-| -------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Language       | TypeScript (strict)                      | Types document the domain; safe refactors as features grow.                              |
-| UI             | Svelte 5 + Vite (plain SPA, no SvelteKit) | Little boilerplate, tiny bundle, built-in transitions/springs for snappy motion. No router needed. |
-| Rendering      | DOM + SVG                                | Crisp at any DPI, accessible, easy to animate. A canvas/game engine would be overkill.   |
-| Game logic     | Framework-free TS in `src/core`          | Pure functions, trivially unit-tested, portable if the UI layer ever changes.            |
-| Unit tests     | Vitest                                   | Shares Vite config, fast.                                                                |
-| E2E tests      | Playwright (mobile + desktop viewport)   | A few smoke tests of the real gesture flow.                                              |
-| Lint / format  | ESLint + Prettier + `svelte-check`       | One `npm run check` gate.                                                                |
-| PWA            | `vite-plugin-pwa` (Workbox)              | Manifest + offline service worker with minimal config.                                   |
-| Content        | Node script (`scripts/`) → static JSON   | Levels generated offline, committed, reproducible from a seed.                           |
-| Hosting / CI   | GitHub Pages + GitHub Actions             | No backend needed; every push to `main` deploys.                                         |
-| Runtime        | Node 24 LTS, npm                         | Already installed; no extra tooling.                                                     |
+| Concern       | Choice                                    | Why                                                                                                |
+| ------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Language      | TypeScript (strict)                       | Types document the domain; safe refactors as features grow.                                        |
+| UI            | Svelte 5 + Vite (plain SPA, no SvelteKit) | Little boilerplate, tiny bundle, built-in transitions/springs for snappy motion. No router needed. |
+| Rendering     | DOM + SVG                                 | Crisp at any DPI, accessible, easy to animate. A canvas/game engine would be overkill.             |
+| Game logic    | Framework-free TS in `src/core`           | Pure functions, trivially unit-tested, portable if the UI layer ever changes.                      |
+| Unit tests    | Vitest                                    | Shares Vite config, fast.                                                                          |
+| E2E tests     | Playwright (mobile + desktop viewport)    | A few smoke tests of the real gesture flow.                                                        |
+| Lint / format | ESLint + Prettier + `svelte-check`        | One `npm run check` gate.                                                                          |
+| PWA           | `vite-plugin-pwa` (Workbox)               | Manifest + offline service worker with minimal config.                                             |
+| Content       | Node script (`scripts/`) → static JSON    | Levels generated offline, committed, reproducible from a seed.                                     |
+| Hosting / CI  | GitHub Pages + GitHub Actions             | No backend needed; every push to `main` deploys.                                                   |
+| Runtime       | Node 24 LTS, npm                          | Already installed; no extra tooling.                                                               |
 
 Considered and rejected for now: React (more ceremony and an extra animation
 library for the same result), Phaser/canvas (fights against crisp text and
@@ -33,7 +33,7 @@ accessibility), SvelteKit (routing/SSR we don't need).
 
 Goal: an empty but real app, live on GitHub Pages, with the quality gates in place.
 
-- [ ] Scaffold Vite + Svelte 5 + TS strict with quality gates: ESLint, Prettier,
+- [x] Scaffold Vite + Svelte 5 + TS strict with quality gates: ESLint, Prettier,
       `svelte-check`, Vitest, Playwright smoke test; `npm run check` runs lint + types + unit tests
 - [ ] GitHub Actions: `check` + `e2e` + `build` on PRs; deploy to Pages on `main`
 - [ ] Design tokens (`src/ui/styles/tokens.css`): colors (light/dark), type scale, radii, durations

@@ -9,7 +9,7 @@ Every change follows the same loop, kept small enough to review in minutes:
 
 1. Pick the next unchecked task in `docs/PLAN.md` (mark it `[~]`).
 2. Branch from `main`: `feat/wheel-backtrack`, `fix/score-overflow`, `chore/ci-cache`.
-3. Implement with tests (see *Testing*). If a rule changes, update `docs/GAME.md` too.
+3. Implement with tests (see _Testing_). If a rule changes, update `docs/GAME.md` too.
 4. `npm run check` green locally; try it in the browser at a phone viewport.
 5. Open a PR; CI must pass. Tick the task `[x]` in the same PR.
 6. Merge (squash) → `main` deploys to GitHub Pages → verify on a real device
@@ -43,11 +43,11 @@ from the rest. Unit tests live next to the code: `evaluate.ts` + `evaluate.test.
 - TypeScript `strict`. No `any`; prefer `type` aliases and discriminated unions
   (e.g. `{ kind: 'target', word, points }`) over flags and classes.
 - Functions in `core` are pure: inputs in, new values out, no mutation of arguments.
-- Name things after the game's vocabulary in GAME.md: *level, wheel, board, target,
-  bonus, submit, evaluate*. Code identifiers in English; player-facing text only
+- Name things after the game's vocabulary in GAME.md: _level, wheel, board, target,
+  bonus, submit, evaluate_. Code identifiers in English; player-facing text only
   through `src/i18n`, never hard-coded in components.
 - Components stay small; extract logic to `ui/lib` or `core` once it needs a test.
-- Comments explain *why*, not *what*. No commented-out code, no dead code, no TODOs
+- Comments explain _why_, not _what_. No commented-out code, no dead code, no TODOs
   without a matching PLAN.md entry.
 - Tunable numbers (scores, timings, difficulty) live in one named constant each.
 - Add a dependency only when it removes real complexity; note it in the PR.
@@ -78,16 +78,16 @@ Test sensibly, not exhaustively:
 
 ## Commands
 
-| Command            | Does                                          |
-| ------------------ | --------------------------------------------- |
-| `npm run dev`      | Dev server (`--host` to test on a phone on the same Wi-Fi) |
-| `npm run check`    | Lint + typecheck + unit tests (the PR gate)   |
-| `npm test`         | Unit tests in watch mode                      |
-| `npm run e2e`      | Playwright tests                              |
-| `npm run build`    | Production build to `dist/`                   |
-| `npm run levels`   | Regenerate level data (from M4)               |
+| Command          | Does                                                       |
+| ---------------- | ---------------------------------------------------------- |
+| `npm run dev`    | Dev server (`--host` to test on a phone on the same Wi-Fi) |
+| `npm run check`  | Lint + typecheck + unit tests (the PR gate)                |
+| `npm test`       | Unit tests in watch mode                                   |
+| `npm run e2e`    | Playwright tests                                           |
+| `npm run build`  | Production build to `dist/`                                |
+| `npm run levels` | Regenerate level data (from M4)                            |
 
-_(Commands become available as M0 lands.)_
+First-time setup: `npm install` and `npx playwright install chromium`. `npm run levels` arrives with M4.
 
 ## Commits and releases
 
