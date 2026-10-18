@@ -80,7 +80,8 @@ Unit tests live next to the code: `evaluate.ts` + `evaluate.test.ts`.
 
 - Every **exported** function, type and constant gets a TSDoc comment (`/** … */`):
   one line saying what it is or does, plus `@param` / `@returns` / `@example` only when
-  the signature doesn't already make it obvious. Editors show these on hover.
+  the signature doesn't already make it obvious. Editors show these on hover, and
+  lint fails when one is missing.
 - Every Svelte component starts with a `<!-- @component … -->` comment: what it shows,
   its props and the events it emits. Svelte's editor tooling shows it on hover.
 - Unexported helpers only get a comment when the _why_ isn't obvious.

@@ -23,6 +23,8 @@ delete it, the history is the point.
   every Svelte component starts with a `<!-- @component … -->` comment. Editors show
   these on hover, and they can be turned into a reference site with TypeDoc.
 - **Why:** Documentation that lives next to the code is the only kind that stays current.
+- **Enforced:** `eslint-plugin-jsdoc` fails `npm run check` when an export in `src/**/*.ts`
+  has no doc comment.
 - **Revisit:** Generating and publishing a TypeDoc site is deferred until there's enough
   API to browse (after M1).
 

@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import jsdoc from 'eslint-plugin-jsdoc';
 import svelte from 'eslint-plugin-svelte';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
@@ -20,6 +21,22 @@ export default defineConfig(
     files: ['**/*.svelte', '**/*.svelte.ts'],
     languageOptions: {
       parserOptions: { parser: ts.parser, extraFileExtensions: ['.svelte'], svelteConfig },
+    },
+  },
+  {
+    // Exports are the code's reference documentation (CONTRIBUTING › Documentation).
+    files: ['src/**/*.ts'],
+    ignores: ['**/*.test.ts'],
+    plugins: { jsdoc },
+    rules: {
+      'jsdoc/require-jsdoc': [
+        'error',
+        {
+          publicOnly: true,
+          require: { FunctionDeclaration: true, ClassDeclaration: true },
+          contexts: ['TSTypeAliasDeclaration', 'TSInterfaceDeclaration', 'VariableDeclaration'],
+        },
+      ],
     },
   },
 );
