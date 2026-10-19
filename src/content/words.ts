@@ -1,3 +1,9 @@
+/**
+ * Turning the shipped word lists into what the game uses: every valid word ranked by
+ * how common it is, and how each word is written. See the Words guide.
+ * @module
+ */
+
 import type { Language } from '../core/language';
 
 /** A language's words, ready to play with. */

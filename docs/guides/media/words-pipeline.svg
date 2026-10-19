@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 470" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Where the words come from</title>
+  <desc id="desc">Offline, prepare-words expands the RLA-ES dictionary (plus voseo), ranks wordfreq frequencies and writes two licensed files; with our Argentine list the app builds the ranked word list and spellings at load time.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a87a0"/>
+    </marker>
+  </defs>
+<text x="20" y="24" font-size="13" font-weight="700" fill="#8a87a0" text-anchor="start">OFFLINE · npm run words</text>
+<text x="20" y="284" font-size="13" font-weight="700" fill="#8a87a0" text-anchor="start">IN THE BROWSER · loadWords()</text>
+<rect x="20" y="40" width="260" height="90" rx="10" fill="#f1f0f5" stroke="#8a87a0" stroke-width="1.5"/>
+<text x="34" y="64" font-weight="700" font-size="15" fill="#1d1b2e">RLA-ES es_AR v2.9</text>
+<text x="34" y="84" font-size="13" fill="#55526a">Hunspell .aff/.dic (MPL-2.0)</text>
+<text x="34" y="102" font-size="13" fill="#55526a">pinned + SHA-256</text>
+<rect x="20" y="150" width="260" height="90" rx="10" fill="#f1f0f5" stroke="#8a87a0" stroke-width="1.5"/>
+<text x="34" y="174" font-weight="700" font-size="15" fill="#1d1b2e">wordfreq 3.2 large_es</text>
+<text x="34" y="194" font-size="13" fill="#55526a">frequency buckets (CC BY-SA)</text>
+<text x="34" y="212" font-size="13" fill="#55526a">pinned + SHA-256</text>
+<rect x="320" y="40" width="280" height="90" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="334" y="64" font-weight="700" font-size="15" fill="#1d1b2e">expand + voseoForms</text>
+<text x="334" y="84" font-size="13" fill="#55526a">every word of every entry,</text>
+<text x="334" y="102" font-size="13" fill="#55526a">plus podés, jugás… → spellings</text>
+<rect x="320" y="150" width="280" height="90" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="334" y="174" font-weight="700" font-size="15" fill="#1d1b2e">rankedWords + spellings</text>
+<text x="334" y="194" font-size="13" fill="#55526a">blocklist out, dictionary</text>
+<text x="334" y="212" font-size="13" fill="#55526a">spellings preferred (TENÉS)</text>
+<rect x="640" y="40" width="260" height="90" rx="10" fill="#e6f0fb" stroke="#3b7bd0" stroke-width="1.5"/>
+<text x="654" y="64" font-weight="700" font-size="15" fill="#1d1b2e">es/dictionary.txt</text>
+<text x="654" y="84" font-size="13" fill="#55526a">~137k words, 3–8 letters</text>
+<rect x="640" y="150" width="260" height="90" rx="10" fill="#e6f0fb" stroke="#3b7bd0" stroke-width="1.5"/>
+<text x="654" y="174" font-weight="700" font-size="15" fill="#1d1b2e">es/frequency.txt</text>
+<text x="654" y="194" font-size="13" fill="#55526a">top 30k, most frequent first</text>
+<line x1="280" y1="85" x2="317" y2="85" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="600" y1="85" x2="637" y2="85" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="280" y1="195" x2="317" y2="195" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="600" y1="195" x2="637" y2="195" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="20" y="300" width="260" height="90" rx="10" fill="#e6f0fb" stroke="#3b7bd0" stroke-width="1.5"/>
+<text x="34" y="324" font-weight="700" font-size="15" fill="#1d1b2e">es/argentina.txt</text>
+<text x="34" y="344" font-size="13" fill="#55526a">hand-curated (MIT):</text>
+<text x="34" y="362" font-size="13" fill="#55526a">pibe, bondi, laburo…</text>
+<rect x="320" y="300" width="280" height="150" rx="10" fill="#e4f5ec" stroke="#2f9e6e" stroke-width="1.5"/>
+<text x="334" y="324" font-weight="700" font-size="15" fill="#1d1b2e">buildWordList</text>
+<text x="334" y="344" font-size="13" fill="#55526a">valid = dictionary + curated</text>
+<text x="334" y="362" font-size="13" fill="#55526a">ranked by frequency;</text>
+<text x="334" y="380" font-size="13" fill="#55526a">curated within the top 2,500;</text>
+<text x="334" y="398" font-size="13" fill="#55526a">normalized (no accents)</text>
+<rect x="640" y="300" width="260" height="150" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="654" y="324" font-weight="700" font-size="15" fill="#1d1b2e">WordList</text>
+<text x="654" y="344" font-size="13" fill="#55526a">words: ranked, for</text>
+<text x="654" y="362" font-size="13" fill="#55526a">generateLevel</text>
+<text x="654" y="380" font-size="13" fill="#55526a">spellings: TENES → TENÉS,</text>
+<text x="654" y="398" font-size="13" fill="#55526a">for the screen</text>
+<line x1="280" y1="345" x2="317" y2="345" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M770 240 L770 270 L460 270 L460 297" fill="none" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="600" y1="375" x2="637" y2="375" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+</svg>

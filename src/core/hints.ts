@@ -1,3 +1,8 @@
+/**
+ * Hints: which letter one reveals, and the numbers for earning them.
+ * @module
+ */
+
 import type { Level } from './level';
 import type { Session } from './session';
 

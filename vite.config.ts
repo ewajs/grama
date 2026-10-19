@@ -49,7 +49,7 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         // The guide and the developer docs are their own sites under the same path: the
         // app's offline fallback must not answer for them.
-        navigateFallbackDenylist: [/\/guia\//, /\/docs\//, /\/api\//],
+        navigateFallbackDenylist: [/\/guia\//, /\/docs\//],
       },
     }),
   ],

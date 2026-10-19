@@ -1,3 +1,8 @@
+/**
+ * Results of completed levels: stars, and keeping the best result per level.
+ * @module
+ */
+
 import type { Difficulty } from './cadence';
 import type { Tier } from './difficulty';
 import type { Level } from './level';
@@ -11,9 +16,11 @@ export const THREE_STAR_BONUS = 3;
 
 /** How a completed level went: what the map, stats and achievements read. */
 export type LevelRecord = {
+  /** How hard the level was. */
   tier: Tier;
   /** The player's difficulty when it was played: with the number, it regenerates the level. */
   difficulty: Difficulty;
+  /** Stars earned: see {@link starsFor}. */
   stars: Stars;
   /** Hints spent on it. */
   hints: number;

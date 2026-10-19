@@ -1,11 +1,47 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "name": "Grama",
+  "name": "Grama \u00b7 developer docs",
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
-  "exclude": ["**/*.test.ts", "src/main.ts"],
+  "exclude": ["**/*.test.ts", "src/main.ts", "src/globals.d.ts", "src/i18n/**"],
   "tsconfig": "tsconfig.app.json",
-  "out": "dist/api",
-  "readme": "none",
-  "treatWarningsAsErrors": true
+  "out": "dist/docs",
+  "readme": "docs/guides/README.md",
+  "projectDocuments": [
+    "docs/guides/how-it-works.md",
+    "docs/guides/words.md",
+    "docs/guides/difficulty.md",
+    "docs/guides/working-on-it.md",
+    "docs/GAME.md",
+    "docs/DECISIONS.md",
+    "docs/PLAN.md"
+  ],
+  "navigation": {
+    "includeFolders": true,
+    "includeGroups": false
+  },
+  "navigationLinks": {
+    "Game": "https://ewajs.github.io/grama/",
+    "Player guide": "https://ewajs.github.io/grama/guia/",
+    "GitHub": "https://github.com/ewajs/grama"
+  },
+  "sourceLinkTemplate": "https://github.com/ewajs/grama/blob/main/{path}#L{line}",
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": true
+  },
+  "treatWarningsAsErrors": true,
+  "requiredToBeDocumented": [
+    "Function",
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Variable",
+    "Method",
+    "Accessor",
+    "Enum"
+  ]
 }

@@ -1,4 +1,9 @@
 /**
+ * Durations for animations driven from script, matching the CSS tokens.
+ * @module
+ */
+
+/**
  * Durations in milliseconds for animations driven from script (Svelte transitions,
  * tweens). They mirror the `--dur-*` tokens in `styles/tokens.css`; keep both in sync.
  */

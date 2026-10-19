@@ -1,3 +1,8 @@
+/**
+ * Letters flying from the word pill into the board.
+ * @module
+ */
+
 import { backOut, cubicOut } from 'svelte/easing';
 import { prefersReducedMotion } from 'svelte/motion';
 import { crossfade, scale } from 'svelte/transition';
@@ -13,7 +18,7 @@ export const FLIGHT_DURATION = 380;
  * letter between the two places. A letter with no partner (a hint's, or a word that isn't
  * a target) pops in, or just goes. A `delay` staggers letters into a cascade.
  */
-export const [sendLetter, receiveLetter] = crossfade({
+const [send, receive] = crossfade({
   duration: () => (prefersReducedMotion.current ? 0 : FLIGHT_DURATION),
   easing: cubicOut,
   // Without a partner, an arriving tile pops in; a leaving pill letter just goes, so the
@@ -28,3 +33,9 @@ export const [sendLetter, receiveLetter] = crossfade({
         })
       : { duration: 0 },
 });
+
+/** The pill's half of a letter's flight: `out:sendLetter|global={{ key: index }}`. */
+export const sendLetter = send;
+
+/** The board's half of a letter's flight: `in:receiveLetter={{ key: position, delay }}`. */
+export const receiveLetter = receive;

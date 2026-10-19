@@ -1,3 +1,8 @@
+/**
+ * Where a visit starts: the saved game, or the level asked for in the URL.
+ * @module
+ */
+
 import type { Difficulty } from '../core/cadence';
 import { NEW_PROGRESS, type Progress } from '../core/progress';
 import { NEW_SESSION } from '../core/session';

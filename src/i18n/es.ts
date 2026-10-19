@@ -1,3 +1,8 @@
+/**
+ * Every word the player reads, in Rioplatense Spanish.
+ * @module
+ */
+
 import type { AchievementId } from '../core/achievements';
 
 const reportKinds = {

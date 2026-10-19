@@ -7,6 +7,9 @@ Word game PWA (Svelte 5 + TS + Vite, static on GitHub Pages). Follow these:
 @docs/PLAN.md
 @docs/DECISIONS.md
 
+How the code fits together: `docs/guides/` (published with the API reference at
+https://ewajs.github.io/grama/docs/). Keep the guides true when changing what they describe.
+
 Notes for agents:
 
 - Work one PLAN.md task per cycle; stop at the end of the cycle for review

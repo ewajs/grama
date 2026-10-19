@@ -1,5 +1,6 @@
 # Development guidelines
 
+Browsable at https://ewajs.github.io/grama/docs/ (guides, diagrams, API reference).
 Read with [`docs/GAME.md`](docs/GAME.md) (what the game does),
 [`docs/PLAN.md`](docs/PLAN.md) (what we're building next) and
 [`docs/DECISIONS.md`](docs/DECISIONS.md) (why things are the way they are).
@@ -125,7 +126,7 @@ Two suites, each run where it pays off (D10):
 | `npm test`                  | Unit tests in watch mode                                                |
 | `npm run e2e`               | Playwright tests against a production build                             |
 | `npm run build`             | Production build to `dist/`                                             |
-| `npm run docs`              | Code reference from TSDoc to `dist/api/` (deployed at `/api/`)          |
+| `npm run docs`              | Developer docs (guides + API reference) to `dist/docs/`                 |
 | `npm run words`             | Rebuild the word lists in `src/content/` from pinned sources (D12)      |
 | `npm run icons`             | Render the app icon (`public/icons/*.svg`) to the PNGs installs need    |
 | `npm run guide`             | Build the player guide to `dist/guia/` (`guide:dev` to preview it live) |

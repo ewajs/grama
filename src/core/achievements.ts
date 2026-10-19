@@ -1,9 +1,15 @@
+/**
+ * The achievements: each one a stat reaching a goal.
+ * @module
+ */
+
 import type { Stats } from './stats';
 
 /** Something to unlock: reached when a stat gets to `goal`. */
 export type Achievement = {
   /** Stable name, also the key of its title and description in the UI strings. */
   id: AchievementId;
+  /** The value to reach. */
   goal: number;
   /** Where the player stands toward the goal. */
   value: (stats: Stats) => number;

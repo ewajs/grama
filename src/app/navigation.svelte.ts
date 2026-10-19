@@ -1,3 +1,8 @@
+/**
+ * Which screen shows, tied to the browser's history so "back" works.
+ * @module
+ */
+
 /** The app's screens. */
 export type Screen = 'home' | 'game' | 'map' | 'stats';
 

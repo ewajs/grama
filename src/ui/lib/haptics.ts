@@ -1,3 +1,8 @@
+/**
+ * Vibration patterns, where the device can vibrate.
+ * @module
+ */
+
 /** Vibration patterns in milliseconds (vibrate, pause, vibrate…). Subtle by design. */
 export const HAPTICS: Record<'letter' | 'target' | 'bonus' | 'invalid', VibratePattern> = {
   /** A letter joins the word. */

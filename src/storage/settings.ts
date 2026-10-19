@@ -1,3 +1,8 @@
+/**
+ * Saving and loading the player's settings, apart from their progress.
+ * @module
+ */
+
 import type { Difficulty } from '../core/cadence';
 
 /** Light or dark colors: following the device, or the player's pick. */

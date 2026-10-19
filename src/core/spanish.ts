@@ -1,3 +1,8 @@
+/**
+ * Spanish word rules: uppercase, accents ignored, `Ñ` kept as its own letter.
+ * @module
+ */
+
 import type { Language } from './language';
 
 // Ñ is a letter of its own in Spanish, so it is deliberately absent here.

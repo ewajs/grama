@@ -1,3 +1,10 @@
+/**
+ * The level generator: turns a word list, a level number, a tier and an occurrence into
+ * a {@link core/level!Level | Level}, deterministically. Also how big levels are as the player
+ * progresses. See the Difficulty guide for how seeds are chosen.
+ * @module
+ */
+
 import { classify, levelScore, RECIPES, TIERS, type Tier } from './difficulty';
 import { canSpell, MIN_WORD_LENGTH, type Level } from './level';
 import { seededRandom, shuffled } from './random';

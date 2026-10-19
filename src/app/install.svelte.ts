@@ -1,3 +1,8 @@
+/**
+ * Installing the app to the home screen, where the device allows it.
+ * @module
+ */
+
 /** How the app can be installed on this device, if at all. */
 export type InstallOption =
   /** The browser offers its own install prompt (Chrome, Edge, Android). */

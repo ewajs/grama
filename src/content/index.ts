@@ -1,3 +1,8 @@
+/**
+ * Loading the current language's word lists.
+ * @module
+ */
+
 import { spanish } from '../core/spanish';
 import curatedUrl from './es/argentina.txt?url';
 import dictionaryUrl from './es/dictionary.txt?url';

@@ -1,4 +1,9 @@
 /**
+ * Sharing text: the device's share sheet, or the clipboard.
+ * @module
+ */
+
+/**
  * Shares text through the device's share sheet when there is one (phones), or copies it.
  * @returns How it went, so the UI can confirm a copy.
  */

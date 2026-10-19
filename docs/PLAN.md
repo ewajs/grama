@@ -183,10 +183,10 @@ Goal: calmer feedback, a tidier menu, a guide for curious players and docs for d
 - [x] Player guide "Todo sobre Grama" (VitePress, Spanish) at `/grama/guia/`: how to
       play, which words count, how levels and difficulty work, hints, stars, achievements,
       the daily challenge, FAQ; screenshots generated with Playwright
-- [ ] Developer docs (TypeDoc, English) at `/grama/docs/`: API reference plus guides (how
+- [x] Developer docs (TypeDoc, English) at `/grama/docs/`: API reference plus guides (how
       it works with walkthroughs, words pipeline, difficulty, working on it) with SVG
       diagrams; module overviews; links validated
-- [ ] Both doc sites built on every PR as checks and deployed with the game
+- [x] Both doc sites built on every PR as checks and deployed with the game
 
 **Verify:** a player can answer "why didn't my word count?" from the guide; a developer
 can follow a word from the wheel to the score from the docs alone.

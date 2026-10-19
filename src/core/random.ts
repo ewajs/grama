@@ -1,4 +1,10 @@
 /**
+ * Repeatable randomness: a seeded generator, so level N is the same on every device, and
+ * a shuffle.
+ * @module
+ */
+
+/**
  * A source of random numbers in [0, 1) that always yields the same sequence for the same
  * seed, so level N is identical on every device (mulberry32 algorithm).
  */

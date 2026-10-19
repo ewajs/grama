@@ -1,3 +1,8 @@
+/**
+ * Judging a submitted word: invalid, repeated, bonus or target, with its points.
+ * @module
+ */
+
 import type { Tier } from './difficulty';
 import type { Level } from './level';
 
@@ -14,9 +19,26 @@ export const TIER_MULTIPLIER: Readonly<Record<Tier, number>> = {
 
 /** The outcome of submitting a word (docs/GAME.md › Core loop has the table). */
 export type Submission =
-  | { kind: 'invalid'; word: string }
-  | { kind: 'repeated'; word: string }
-  | { kind: 'target' | 'bonus'; word: string; points: number };
+  | {
+      /** Not a word of the level. */
+      kind: 'invalid';
+      /** The word as submitted (normalized). */
+      word: string;
+    }
+  | {
+      /** Found already on this level. */
+      kind: 'repeated';
+      /** The word as submitted (normalized). */
+      word: string;
+    }
+  | {
+      /** One of the level's targets, or another valid word. */
+      kind: 'target' | 'bonus';
+      /** The word as submitted (normalized). */
+      word: string;
+      /** Points it scored, tier multiplier included. */
+      points: number;
+    };
 
 /**
  * Classifies a word the player submitted on a level.

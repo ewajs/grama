@@ -1,8 +1,14 @@
+/**
+ * The board: which word shows in which row, and how many of its letters.
+ * @module
+ */
+
 import type { Level } from './level';
 import type { Session } from './session';
 
 /** One row of the board: a slot for a target word of `length` letters. */
 export type BoardRow = {
+  /** Letters in the row's word: its number of tiles. */
   length: number;
   /** The target in this row, or `null` while the slot is empty. */
   word: string | null;

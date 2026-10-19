@@ -1,3 +1,9 @@
+/**
+ * One level in play: the words found and the letters revealed, and what follows from
+ * them (complete? points? bonus words?). Main levels, replays and dailies all use it.
+ * @module
+ */
+
 import { evaluate, type Submission } from './evaluate';
 import type { Level } from './level';
 

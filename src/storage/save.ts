@@ -1,3 +1,8 @@
+/**
+ * Saving and loading the player's progress in the browser.
+ * @module
+ */
+
 import type { Progress } from '../core/progress';
 
 const KEY = 'grama.save';
