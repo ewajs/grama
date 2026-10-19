@@ -28,7 +28,8 @@ One task from `docs/PLAN.md` per branch and PR, small enough to review in minute
 runs `check`, the e2e suite (Chromium and WebKit, D20) and builds both doc sites on
 every PR; merging to `main` runs `check` again and deploys the game, the guide
 (`/grama/guia/`) and these docs (`/grama/docs/`) to GitHub Pages (D22). Run
-`npm run e2e` locally too when a change touches input, flow or the PWA.
+`npm run e2e` locally too when a change touches input, flow or the PWA, and go through
+the [real-device checklist](./devices.md) at the end of each milestone.
 
 A non-obvious choice gets an entry in `docs/DECISIONS.md`; a rule change updates
 `docs/GAME.md` in the same PR; a change players notice may need the guide (`guide/`)
