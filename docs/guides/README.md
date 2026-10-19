@@ -13,6 +13,8 @@ These pages explain how it's built, for anyone reading or changing the code.
 - **[Difficulty](./difficulty.md)**: how levels are scored, classified, paced
   and kept from repeating.
 - **[Working on it](./working-on-it.md)**: commands, workflow and standards.
+- **[Real-device checklist](./devices.md)**: what to try on a real Android phone and
+  iPhone before calling a milestone done.
 - The game's rules ([GAME](../GAME.md)), the decision log
   ([DECISIONS](../DECISIONS.md)) and the roadmap ([PLAN](../PLAN.md)).
 - The **API reference**: every module, in the menu, grouped by folder.

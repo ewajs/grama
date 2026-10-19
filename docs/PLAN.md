@@ -251,8 +251,12 @@ rescues a dead wheel, and the best score survives reloads.
 
 ### M16 — Polish · `v0.17.0`
 
-- [ ] Visual design pass (level-complete moment, landscape and tablet layouts)
-- [ ] Real-device checklist: install and offline on Android and iOS
+- [x] Level-complete moment: stars land one by one, then the points count up; it says
+      what was missing for three stars, and fits a phone on its side
+- [x] Wide layouts: board and wheel side by side in landscape, bigger on tablets
+- [x] Themes: Grama, Argento, Yerba and Quebrada, apart from the light/dark mode (D23)
+- [x] Real-device checklist written (`docs/guides/devices.md`)
+- [ ] Run the checklist on Android and iOS (owner, on real phones)
 
 **Verify:** fresh-install playthrough of levels 1–20 on a mid-range phone with no rough edges.
 
