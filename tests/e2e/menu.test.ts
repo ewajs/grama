@@ -28,3 +28,32 @@ test('starting over goes back to level 1 with no points', async ({ page }) => {
   await expect(page.getByText('Nivel 1', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Puntos')).toHaveText('0');
 });
+
+test('offers to install the app when the browser can', async ({ page }) => {
+  await page.goto('./');
+  await page.locator('[data-letter]').first().waitFor();
+  // Simulates Chrome offering its install prompt.
+  await page.evaluate(() => {
+    const event = Object.assign(new Event('beforeinstallprompt'), {
+      prompt: async () => void ((window as unknown as { prompted: boolean }).prompted = true),
+      userChoice: Promise.resolve({ outcome: 'accepted' }),
+    });
+    window.dispatchEvent(event);
+  });
+  await openMenu(page);
+  await page.getByRole('button', { name: 'Instalar Grama' }).click();
+  expect(await page.evaluate(() => (window as unknown as { prompted: boolean }).prompted)).toBe(
+    true,
+  );
+});
+
+test('the vibration switch survives a reload', async ({ page }) => {
+  await page.goto('./');
+  await openMenu(page);
+  const vibration = page.getByRole('switch', { name: 'Vibración' });
+  await expect(vibration).toBeChecked();
+  await vibration.uncheck();
+  await page.reload();
+  await openMenu(page);
+  await expect(page.getByRole('switch', { name: 'Vibración' })).not.toBeChecked();
+});

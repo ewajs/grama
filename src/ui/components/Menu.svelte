@@ -3,23 +3,28 @@
 The menu: settings, help and the rest of the game's options, plus credits.
 
 - `preferences`: the player's settings; changes here apply and save right away.
+- `installer`: whether and how the app can be installed here.
 - `onreport()`, `onreset()`: the player picked one of those options.
 - `onclose()`: done.
 -->
 <script lang="ts">
+  import type { Installer } from '../../app/install.svelte';
   import type { Preferences } from '../../app/preferences.svelte';
   import { strings } from '../../i18n';
   import type { Theme } from '../../storage/settings';
   import Dialog from './Dialog.svelte';
+  import { canVibrate } from '../lib/haptics';
   import Segmented from './Segmented.svelte';
+  import Toggle from './Toggle.svelte';
 
   type Props = {
     preferences: Preferences;
+    installer: Installer;
     onreport: () => void;
     onreset: () => void;
     onclose: () => void;
   };
-  let { preferences, onreport, onreset, onclose }: Props = $props();
+  let { preferences, installer, onreport, onreset, onclose }: Props = $props();
 
   const themes: { value: Theme; label: string }[] = (['auto', 'light', 'dark'] as const).map(
     (value) => ({ value, label: strings.themes[value] }),
@@ -30,7 +35,16 @@ The menu: settings, help and the rest of the game's options, plus credits.
   <section>
     <h3>{strings.theme}</h3>
     <Segmented label={strings.theme} options={themes} bind:value={preferences.theme} />
+    {#if canVibrate}
+      <Toggle label={strings.vibration} bind:checked={preferences.vibration} />
+    {/if}
   </section>
+
+  {#if installer.option === 'prompt'}
+    <button class="primary" onclick={() => installer.install()}>{strings.install}</button>
+  {:else if installer.option === 'ios'}
+    <p class="install">{strings.installIos}</p>
+  {/if}
 
   <section class="actions">
     <button class="secondary" onclick={onreport}>{strings.report}</button>
@@ -60,6 +74,12 @@ The menu: settings, help and the rest of the game's options, plus credits.
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
+  }
+
+  .install {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .actions {

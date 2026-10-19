@@ -5,10 +5,13 @@ letter wheel with its controls.
 
 - `game`: the running game; the screen reads it and sends it the player's words.
 - `preferences`: the player's settings, changed from the menu.
+- `installer`: for the menu's install option.
 -->
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
+  import type { Installer } from '../../app/install.svelte';
   import type { Preferences } from '../../app/preferences.svelte';
+  import { vibrate } from '../lib/haptics';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
   import { strings } from '../../i18n';
@@ -25,7 +28,8 @@ letter wheel with its controls.
   import ResetDialog from './ResetDialog.svelte';
   import WordPill from './WordPill.svelte';
 
-  let { game, preferences }: { game: Game; preferences: Preferences } = $props();
+  type Props = { game: Game; preferences: Preferences; installer: Installer };
+  let { game, preferences, installer }: Props = $props();
 
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
   let panel = $state<'menu' | 'report' | 'reset' | 'bonus' | null>(null);
@@ -52,6 +56,7 @@ letter wheel with its controls.
   );
 
   function spell(next: string) {
+    if (preferences.vibration && next.length > word.length) vibrate('letter');
     word = next;
     if (next) result = null;
   }
@@ -62,7 +67,9 @@ letter wheel with its controls.
   }
 
   function submit(next: string) {
-    result = { id: ++resultCount, submission: game.submit(next) };
+    const submission = game.submit(next);
+    if (preferences.vibration && submission.kind !== 'repeated') vibrate(submission.kind);
+    result = { id: ++resultCount, submission };
     clearTimeout(clearResult);
     clearResult = setTimeout(() => (result = null), FEEDBACK_DURATION);
   }
@@ -102,6 +109,7 @@ letter wheel with its controls.
 {#if panel === 'menu'}
   <Menu
     {preferences}
+    {installer}
     onreport={() => (panel = 'report')}
     onreset={() => (panel = 'reset')}
     onclose={close}
