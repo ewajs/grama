@@ -98,8 +98,9 @@ Spanish rules:
 - Minimum word length is 3.
 - Valid words are the dictionary's (with generated voseo forms) plus our Argentine list,
   `src/content/es/argentina.txt` (D12, D14). The frequency list only ranks them.
-- Targets are among the 5,000 most frequent valid words; every word on the Argentine list
-  ranks within the top 2,500, so all of them can be targets. Offensive words
+- Targets are among the most frequent valid words: the top 1,500 for easy levels, up to
+  the top 20,000 for extra hard (see Difficulty); every word on the Argentine list ranks
+  within the top 2,500, so all of them can be targets. Offensive words
   (`scripts/blocklist-es.txt`) are never targets.
 - Every level has at least one target that uses **all** its letters.
 
@@ -108,8 +109,8 @@ Spanish rules:
 A level is the letters on the wheel (a letter may repeat), its target words and its
 bonus words: the type `Level` in `src/core/level.ts`. `generateLevel` in
 `src/core/generate.ts` builds level N: its letters are a common word's, shuffled; the
-most common words they spell (that one included, up to 8) are the targets; every other
-valid word they spell is a bonus word. A level is valid when:
+words they spell that the level's tier picks (that one included, up to the size's
+maximum) are the targets; every other valid word they spell is a bonus word. A level is valid when:
 
 - it has at least 6 letters;
 - every word has 3+ letters and can be spelled with the level's letters, each used once;
@@ -140,7 +141,8 @@ The reference app is functional but noisy. We aim for **calm and focused**:
 - One background (soft gradient or solid), no photos, no ads, no clutter.
 - One accent color; neutral tiles; high contrast letters. Light and dark themes.
 - Rounded geometric sans-serif, large letters, generous spacing.
-- Header: level number (left), score (right). Nothing else in MVP.
+- Header: back to home and the level number with its tier badge (left); score and the
+  menu (right).
 - Board in the upper half, wheel in the lower half within thumb reach.
 - A single secondary action next to the wheel: **shuffle** letters.
 - The word being built floats above the wheel as a pill; the drag path is a
@@ -167,7 +169,7 @@ Rough layout (portrait phone):
 ```
 
 Desktop: same layout, centered, max width ~480px. Mouse drag works the same;
-typing on the keyboard + Enter is a later addition (see backlog in PLAN.md).
+typing on the keyboard + Enter is planned (M14 in PLAN.md).
 
 ### Motion
 

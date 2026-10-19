@@ -16,6 +16,7 @@
     "typecheck": "svelte-check --tsconfig ./tsconfig.app.json --fail-on-warnings && tsc -p tsconfig.node.json",
     "test": "vitest",
     "e2e": "playwright test",
+    "audit": "npm audit --omit=dev",
     "docs": "typedoc",
     "words": "node scripts/prepare-words.ts",
     "icons": "node scripts/icons.ts",

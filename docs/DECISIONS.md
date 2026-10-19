@@ -40,7 +40,8 @@ delete it, the history is the point.
 
 ## D18 · Docs: VitePress for players, TypeDoc for developers — 2026-10-19
 
-- **Decision:** two separate sites deployed with the game, as in lighting-simulator:
+- **Decision:** two separate sites deployed with the game, as in lighting-simulator (the
+  owner's other project, our benchmark for docs):
   - _Todo sobre Grama_ (`guide/`, VitePress 1.6, Spanish) at `/grama/guia/`: how the game
     works for a curious player. Screenshots are taken from the real game by Playwright
     (`npm run guide:screenshots`) and committed.
@@ -50,6 +51,8 @@ delete it, the history is the point.
 - **Why:** different readers, different tools; both are what worked in lighting-simulator.
 - **Costs accepted:** VitePress 1.6 bundles an older Vite whose dev server has known
   advisories (`npm audit`); they only affect `vitepress dev` locally, not the static site.
+  CI audits only what ships (`npm run audit`, `--omit=dev`), so a new advisory there
+  stands out instead of hiding among these.
 
 ## D17 · A home screen, stars from hints and bonus words, replays, a weekday daily — 2026-10-18
 
@@ -85,8 +88,9 @@ delete it, the history is the point.
   repeating; no extra hard before level 15; from level 50 the middle easy becomes medium.
 - **No repeats nearby**: each tier draws seeds from its own band of ranks, each letter set
   once across tiers, in a fixed order; each level gets its own block of 3 seeds in it
-  (`occurrence`). A level comes back only after its tier's whole order is used (about
-  180 levels at 8 letters).
+  (`occurrence`). A level comes back only after its tier's whole order is used, or
+  sooner when a level falls back to the far side of the order: the closest repeat
+  measured is 88 levels.
   - _Since v0.14_ progress counts the levels actually played of each tier and size, so a
     change of difficulty doesn't recount earlier levels and reuse their blocks. Level N
     is therefore the same for everyone only for players who kept one difficulty (as
@@ -131,8 +135,9 @@ delete it, the history is the point.
   - _How common a word is:_ wordfreq 3.2 `large_es` (github.com/rspeer/wordfreq), data
     under **CC BY-SA 4.0**.
   - Shipped as **two files**, each under its own license with an attribution header;
-    never merged into one. The app combines them when loading. A word is valid if it's in
-    either; targets must be both frequent and in the dictionary (this drops names, which
+    never merged into one. The app combines them when loading. ~~A word is valid if it's
+    in either~~ (_replaced by D14: only dictionary and curated words are valid_); targets
+    must be both frequent and in the dictionary (this drops names, which
     the lowercased frequency list mixes in) and not on our offensive-word blocklist.
 - **Why:** RLA-ES es_AR has voseo (_tenés, sabés, vení, sos_) and Argentine words (_che,
   laburo, birra_); wordfreq fills its gaps (_podés, pibe, coima_) and ranks Rioplatense
