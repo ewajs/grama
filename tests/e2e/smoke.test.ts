@@ -23,3 +23,18 @@ test('?nivel= opens that level', async ({ page }) => {
   // …and leaves the URL, so a reload continues from the saved game.
   await expect(page).toHaveURL(/\/grama\/$/);
 });
+
+test('home shows before the words arrive; a level waits for them', async ({ page }) => {
+  let release = () => {};
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/dictionary-*.txt', async (route) => {
+    await held;
+    await route.continue();
+  });
+  await page.goto('./');
+  await expect(page.getByRole('button', { name: /^Jugar.*Nivel 1/ })).toBeVisible();
+  await page.getByRole('button', { name: /^Jugar/ }).click();
+  await expect(page.getByText('Cargando palabras…')).toBeVisible();
+  release();
+  await expect(page.locator('[data-letter]').first()).toBeVisible();
+});

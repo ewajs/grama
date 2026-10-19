@@ -17,6 +17,7 @@
     "test": "vitest",
     "e2e": "playwright test",
     "audit": "npm audit --omit=dev",
+    "budget": "node scripts/budget.ts",
     "docs": "typedoc",
     "words": "node scripts/prepare-words.ts",
     "icons": "node scripts/icons.ts",

@@ -18,8 +18,14 @@
   const settings = loadSettings();
   const levelInUrl = levelFromUrl(location.search);
   const start = startState(loadGame(), levelInUrl, settings.difficulty);
-  // One game for the whole visit, kept while moving between screens.
-  const game = loadWords().then((words) => new Game(words, start, saveGame));
+  // One game for the whole visit, kept while moving between screens. It starts at once,
+  // so the home screen shows while the words download; only playing a level needs them.
+  const game = new Game(start, saveGame);
+  let failed = $state(false);
+  loadWords().then(
+    (words) => (game.words = words),
+    () => (failed = true),
+  );
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
   // ?nivel= is for playtesting: straight into that level.
@@ -45,48 +51,48 @@
 
   // Back from the background (a PWA can sleep for days), the daily may have changed.
   $effect(() => {
-    const refresh = async () => {
-      if (document.visibilityState === 'visible') (await game).refreshDate();
+    const refresh = () => {
+      if (document.visibilityState === 'visible') game.refreshDate();
     };
     document.addEventListener('visibilitychange', refresh);
     return () => document.removeEventListener('visibilitychange', refresh);
   });
 </script>
 
-{#await game}
-  <p class="status">{strings.loading}</p>
-{:then game}
-  {#if navigation.screen === 'game'}
+{#if navigation.screen === 'game'}
+  {#if game.ready}
     <GameScreen {game} {preferences} {installer} onback={() => navigation.back()} />
-  {:else if navigation.screen === 'map'}
-    <LevelMap
-      {game}
-      onplay={(levelNumber) => {
-        game.replay(levelNumber);
-        navigation.go('game');
-      }}
-      onback={() => navigation.back()}
-    />
-  {:else if navigation.screen === 'stats'}
-    <StatsScreen {game} onback={() => navigation.back()} />
+  {:else if failed}
+    <p class="status">{strings.loadError}</p>
   {:else}
-    <Home
-      {game}
-      onplay={() => {
-        game.playCurrent();
-        navigation.go('game');
-      }}
-      onmap={() => navigation.go('map')}
-      onstats={() => navigation.go('stats')}
-      ondaily={() => {
-        game.playDaily();
-        navigation.go('game');
-      }}
-    />
+    <p class="status">{strings.loading}</p>
   {/if}
-{:catch}
-  <p class="status">{strings.loadError}</p>
-{/await}
+{:else if navigation.screen === 'map'}
+  <LevelMap
+    {game}
+    onplay={(levelNumber) => {
+      game.replay(levelNumber);
+      navigation.go('game');
+    }}
+    onback={() => navigation.back()}
+  />
+{:else if navigation.screen === 'stats'}
+  <StatsScreen {game} onback={() => navigation.back()} />
+{:else}
+  <Home
+    {game}
+    onplay={() => {
+      game.playCurrent();
+      navigation.go('game');
+    }}
+    onmap={() => navigation.go('map')}
+    onstats={() => navigation.go('stats')}
+    ondaily={() => {
+      game.playDaily();
+      navigation.go('game');
+    }}
+  />
+{/if}
 
 <UpdatePrompt />
 

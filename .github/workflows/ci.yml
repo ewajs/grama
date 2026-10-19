@@ -41,6 +41,8 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run e2e
+      # The build e2e just tested, checked against the performance budget.
+      - run: npm run budget
       - if: failure()
         uses: actions/upload-artifact@v7
         with:

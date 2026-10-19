@@ -60,7 +60,7 @@ export type DailySummary = {
 export class Game {
   #progress: Progress;
   #onchange: (progress: Progress) => void;
-  #spellings: ReadonlyMap<string, string>;
+  #words = $state<WordList | null>(null);
   #clock: () => string;
   /** Today's date, read from the clock when the game starts and on {@link refreshDate}. */
   #today: string;
@@ -71,13 +71,13 @@ export class Game {
   readonly level: Level;
 
   /**
-   * @param words The language's words (from `loadWords`).
+   * The game starts without its words, so the home screen can show at once; the level on
+   * screen needs them (see {@link ready}).
    * @param progress Where to start: a saved game, or a new one.
    * @param onchange Called with the new progress after every change, e.g. to save it.
    * @param clock Today's date as `YYYY-MM-DD`; the device's clock unless a test passes one.
    */
   constructor(
-    words: WordList,
     progress: Progress,
     onchange: (progress: Progress) => void = () => {},
     clock: () => string = today,
@@ -86,12 +86,13 @@ export class Game {
     this.#onchange = onchange;
     this.#clock = clock;
     this.#today = $state(clock());
-    this.#spellings = words.spellings;
     // Progress is replaced on every word, which re-runs this. Returning the same Level
     // object until the level actually changes matters: Svelte only updates what depends
     // on a derived when its value changes (===), so the wheel keeps a shuffled order.
     let current: { key: string; level: Level } | null = null;
     this.level = $derived.by(() => {
+      const words = this.#words;
+      if (!words) throw new Error('The level needs the words: check `ready` first');
       const { place } = this.#playing;
       const key =
         place.kind === 'daily'
@@ -126,6 +127,16 @@ export class Game {
   get levelNumber(): number {
     const { place } = this.#playing;
     return place.kind === 'daily' ? dailyNumber(place.date) : place.levelNumber;
+  }
+
+  /** Whether the words have loaded, so the level on screen can be played. */
+  get ready(): boolean {
+    return this.#words !== null;
+  }
+
+  /** Gives the game its words, once loaded (from `loadWords`). */
+  set words(words: WordList) {
+    this.#words = words;
   }
 
   /** The player's current level: the furthest reached. */
@@ -260,7 +271,7 @@ export class Game {
 
   /** How a word is written, with its accents: `TENES` → `TENÉS`. */
   written(word: string): string {
-    return this.#spellings.get(word) ?? word;
+    return this.#words?.spellings.get(word) ?? word;
   }
 
   /** Submits a word spelled on the wheel and returns how it went. */

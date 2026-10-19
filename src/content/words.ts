@@ -10,7 +10,7 @@ import type { Language } from '../core/language';
 export type WordList = {
   /** Every valid word as the game compares them, most common first: `generateLevel`'s input. */
   words: string[];
-  /** How each word is written, accents included: `TENES` → `TENÉS`. */
+  /** How words are written when it's not as compared, accents included: `TENES` → `TENÉS`. */
   spellings: ReadonlyMap<string, string>;
 };
 
@@ -57,20 +57,31 @@ export function rankWords({ dictionary, frequency, curated }: SourceLists): stri
 
 /**
  * Builds a language's word list from its shipped lists. Each word keeps its most
- * frequent spelling.
+ * frequent spelling. Every word is normalized once, and only words written differently
+ * (with an accent) get an entry in `spellings`: on a phone this runs before the first
+ * level, so it's kept lean.
  */
 export function buildWordList(lists: SourceLists, language: Language): WordList {
+  const dictionary = lists.dictionary.map(language.normalize);
+  const frequency = lists.frequency.map(language.normalize);
+  const curated = lists.curated.map(language.normalize);
+  const words = rankWords({ dictionary, frequency, curated });
+
+  // First spelling wins: the frequency list's, then the curated list's, then the
+  // dictionary's. Each list has a word once, so only earlier lists need checking.
   const spellings = new Map<string, string>();
-  for (const written of [...lists.frequency, ...lists.curated, ...lists.dictionary]) {
-    const word = language.normalize(written);
-    if (!spellings.has(word)) spellings.set(word, written);
+  const earlier = new Set<string>();
+  for (const [written, normalized] of [
+    [lists.frequency, frequency],
+    [lists.curated, curated],
+    [lists.dictionary, dictionary],
+  ] as const) {
+    for (const [index, word] of normalized.entries()) {
+      if (earlier.has(word)) continue;
+      const spelling = written[index] ?? word;
+      if (spelling !== word) spellings.set(word, spelling);
+    }
+    if (normalized !== dictionary) for (const word of normalized) earlier.add(word);
   }
-  return {
-    words: rankWords({
-      dictionary: lists.dictionary.map(language.normalize),
-      frequency: lists.frequency.map(language.normalize),
-      curated: lists.curated.map(language.normalize),
-    }),
-    spellings,
-  };
+  return { words, spellings };
 }
