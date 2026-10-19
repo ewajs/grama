@@ -8,7 +8,7 @@ import type { Progress } from '../core/progress';
 const KEY = 'grama.save';
 
 /** Bump whenever `Progress` changes shape. Pre-1.0 an older save is discarded (D5). */
-const VERSION = 8;
+const VERSION = 9;
 
 type Save = { version: number; progress: Progress };
 
@@ -54,6 +54,7 @@ function isSave(value: unknown): value is Save {
     progress.occurrences !== null &&
     Array.isArray(session?.found) &&
     session.found.every((word) => typeof word === 'string') &&
+    typeof session.points === 'number' &&
     typeof session.revealed === 'object' &&
     session.revealed !== null &&
     typeof progress.history === 'object' &&

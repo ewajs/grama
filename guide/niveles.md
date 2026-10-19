@@ -40,4 +40,5 @@ Siempre hay al menos 5 palabras en el tablero.
 ## Volver a un nivel
 
 Desde el [mapa](/progreso#el-mapa) podés volver a jugar cualquier nivel anterior, por
-ejemplo para mejorar sus estrellas. Es exactamente el mismo nivel que jugaste.
+ejemplo para mejorar sus estrellas. Es exactamente el mismo nivel que jugaste; no suma
+puntos ni pistas, porque ya los ganaste la primera vez.

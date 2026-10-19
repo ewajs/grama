@@ -45,7 +45,8 @@ delete it, the history is the point.
   tab bar (takes room from the board).
 - **Stars:** ★★★ no hints and at least 3 bonus words; ★★ at most one hint; ★ completed.
 - **Replays:** completed levels can be replayed from the map, for better stars; a replay
-  never moves the player's current level.
+  never moves the player's current level. Since v0.14 a replay pays nothing (no points,
+  no progress toward hints): paying again let players farm hints by replaying.
 - **Daily challenge:** 7 letters, difficulty by weekday (Monday easy … Sunday extra hard),
   the same for everyone so results can be compared.
   - _Seeds_ (since v0.14): each tier's dailies take their own blocks from the end of its

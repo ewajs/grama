@@ -201,8 +201,8 @@ Goal: fix what the M12 code review found, and guard against it coming back.
 - [x] Levels don't repeat after a difficulty change: a "next block" counter per tier and
       size saved in progress; reports carry difficulty, tier and the daily's date; guide
       claims fixed ("level 37 is the same on every phone")
-- [ ] Replays don't pay twice: no points or hint progress for words already found on
-      that level; `playWord` says what was earned, and Level Complete shows only that
+- [x] Replays don't pay twice: a completed level pays no points or hint progress again;
+      the session keeps what it paid, and Level Complete shows only that
 - [ ] Stats only grow: cumulative counters and sticky achievements; dailies count toward
       the tier achievements
 - [ ] Home shows the current level and its tier after a replay or daily; sharing uses the

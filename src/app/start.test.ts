@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { occurrence } from '../core/cadence';
 import { currentPlace, NEW_PROGRESS } from '../core/progress';
+import { NEW_SESSION } from '../core/session';
 import { levelFromUrl, startState } from './start';
 
 describe('levelFromUrl', () => {
@@ -20,7 +21,7 @@ describe('startState', () => {
     ...NEW_PROGRESS,
     levelNumber: 12,
     score: 480,
-    session: { found: ['CASA'], revealed: {} },
+    session: { ...NEW_SESSION, found: ['CASA'], revealed: {} },
   };
 
   it('continues the saved game, or starts a new one', () => {

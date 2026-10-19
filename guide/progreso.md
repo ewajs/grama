@@ -20,8 +20,8 @@ El mapa muestra todos los niveles a los que llegaste, con su dificultad (el colo
 arriba) y sus estrellas. El nivel actual está resaltado.
 
 Tocá cualquier nivel anterior para **volver a jugarlo**, por ejemplo para conseguir las 3
-estrellas. Es exactamente el mismo nivel; los puntos y las pistas cuentan igual, pero tu
-nivel actual no cambia.
+estrellas. Es exactamente el mismo nivel, y tu nivel actual no cambia. Como ya lo habías
+completado, solo cuenta para las estrellas: no suma puntos ni pistas.
 
 <img class="screen" src="/screenshots/mapa.png" alt="El mapa de niveles con su dificultad y estrellas">
 

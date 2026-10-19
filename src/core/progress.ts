@@ -74,10 +74,21 @@ export const NEW_PROGRESS: Progress = {
 };
 
 /**
+ * Whether a level still pays: a level completed before (a replay, for better stars) pays
+ * no points, no progress toward hints and no hint, so it can't be farmed.
+ */
+export function pays(progress: Progress, place: Place): boolean {
+  return place.kind === 'level'
+    ? !(place.levelNumber in progress.history)
+    : !(place.date in progress.dailies);
+}
+
+/**
  * Plays a word on a level: the outcome, the session after it, and the player's progress
- * with what it earned: points, a step toward the next hint for a bonus word, and on
- * finishing the level its record (in the history, or the dailies), plus a hint the first
- * time an extra-hard level is finished. Unchanged objects are returned as they were.
+ * with what it earned, if the level still {@link pays}: points, a step toward the next
+ * hint for a bonus word, and a hint for finishing an extra-hard level. Finishing it
+ * records it (in the history, or the dailies), keeping the best result. Unchanged objects
+ * are returned as they were.
  * @param place Which level it is, for its record.
  * @param session The level as played so far: the player's current one, a replay, a daily.
  */
@@ -88,14 +99,15 @@ export function playWord(
   session: Session,
   word: string,
 ): { submission: Submission; progress: Progress; session: Session } {
-  const { submission, session: after } = submitWord(session, level, word);
+  const { submission, session: played } = submitWord(session, level, word);
   if (submission.kind === 'invalid' || submission.kind === 'repeated') {
     return { submission, progress, session };
   }
-  const scored = { ...progress, score: progress.score + submission.points };
-  if (submission.kind === 'bonus') {
-    return { submission, progress: countBonusWord(scored), session: after };
-  }
+  const paying = pays(progress, place);
+  const points = paying ? submission.points : 0;
+  const after = { ...played, points: played.points + points };
+  let scored = { ...progress, score: progress.score + points };
+  if (paying && submission.kind === 'bonus') scored = countBonusWord(scored);
   if (!isComplete(level, after)) return { submission, progress: scored, session: after };
 
   const recorded =
@@ -112,12 +124,12 @@ export function playWord(
           ...scored,
           dailies: record(scored.dailies, place.date, recordOf(level, after, 'normal', 0)),
         };
-  const firstTime =
-    place.kind === 'level'
-      ? !(place.levelNumber in progress.history)
-      : !(place.date in progress.dailies);
-  const reward = firstTime && level.tier === 'extra' ? EXTRA_HARD_HINTS : 0;
-  return { submission, progress: { ...recorded, hints: recorded.hints + reward }, session: after };
+  const reward = paying && level.tier === 'extra' ? EXTRA_HARD_HINTS : 0;
+  return {
+    submission,
+    progress: { ...recorded, hints: recorded.hints + reward },
+    session: { ...after, hintsWon: reward },
+  };
 }
 
 /** A step toward the next hint, or a hint earned. */

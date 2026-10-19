@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NEW_PROGRESS, type Progress } from '../core/progress';
+import { NEW_SESSION } from '../core/session';
 import { loadGame, saveGame } from './save';
 
 /** An in-memory stand-in for `localStorage`. */
@@ -15,7 +16,7 @@ const state: Progress = {
   ...NEW_PROGRESS,
   levelNumber: 12,
   score: 480,
-  session: { found: ['CASA', 'SOL'], revealed: {} },
+  session: { ...NEW_SESSION, found: ['CASA', 'SOL'], revealed: {} },
 };
 
 describe('saving and loading', () => {

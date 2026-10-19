@@ -217,6 +217,7 @@ letter wheel with its controls.
         : strings.nextLevel}
     share={game.daily ? shareDaily : undefined}
     points={game.levelPoints}
+    hints={game.hintsWon}
     bonus={game.bonusFound}
     onnext={nextLevel}
   />

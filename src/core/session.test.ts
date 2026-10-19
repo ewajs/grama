@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Level } from './level';
-import {
-  bonusWords,
-  hintsUsed,
-  isComplete,
-  NEW_SESSION,
-  sessionPoints,
-  submitWord,
-} from './session';
+import { bonusWords, hintsUsed, isComplete, NEW_SESSION, submitWord } from './session';
 
 const level: Level = {
   letters: ['S', 'A', 'L', 'T', 'O', 'P'],
@@ -44,11 +37,7 @@ describe('isComplete', () => {
 });
 
 describe('a session in numbers', () => {
-  const session = { found: ['SOL', 'OLA'], revealed: { PLATOS: 2, SOL: 1 } };
-
-  it('adds up the points of every word found', () => {
-    expect(sessionPoints(level, session)).toBe(36);
-  });
+  const session = { ...NEW_SESSION, found: ['SOL', 'OLA'], revealed: { PLATOS: 2, SOL: 1 } };
 
   it('lists the bonus words found', () => {
     expect(bonusWords(level, session)).toEqual(['OLA']);

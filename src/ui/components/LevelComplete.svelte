@@ -6,7 +6,8 @@ Celebrates a finished level over the game screen, with what was won, and moves o
 - `tier`: how hard it was; harder levels list their rewards.
 - `stars`: stars earned on it.
 - `words`: its targets, as written, each linking to its definition.
-- `points`: points won on it.
+- `points`: points won on it; none means a replay, which pays nothing.
+- `hints`: hints won by finishing it.
 - `bonus`: bonus words found on it.
 - `nextLabel`: the button's label (the next level, or back to the map after a replay).
 - `share()`: when given, a share button (daily challenge); it says how it went.
@@ -28,12 +29,14 @@ Celebrates a finished level over the game screen, with what was won, and moves o
     stars: number;
     words: readonly string[];
     points: number;
+    hints: number;
     bonus: number;
     nextLabel: string;
     share?: () => Promise<'shared' | 'copied' | 'failed'>;
     onnext: () => void;
   };
-  let { detail, tier, stars, words, points, bonus, nextLabel, share, onnext }: Props = $props();
+  let { detail, tier, stars, words, points, hints, bonus, nextLabel, share, onnext }: Props =
+    $props();
 
   let copied = $state(false);
 </script>
@@ -47,15 +50,19 @@ Celebrates a finished level over the game screen, with what was won, and moves o
     <p class="how">{strings.starsHow}</p>
   {/if}
   <ul>
-    {#if tier === 'hard' || tier === 'extra'}
-      <li class="tier {tier}">
-        {strings.tiers[tier]} · {strings.tierReward(TIER_MULTIPLIER[tier])}
-      </li>
+    {#if points === 0}
+      <li class="points">{strings.replayPays}</li>
+    {:else}
+      {#if tier === 'hard' || tier === 'extra'}
+        <li class="tier {tier}">
+          {strings.tiers[tier]} · {strings.tierReward(TIER_MULTIPLIER[tier])}
+        </li>
+      {/if}
+      <li class="points">{strings.pointsWon(points)}</li>
     {/if}
-    <li class="points">{strings.pointsWon(points)}</li>
     <li class="bonus">{strings.bonusWords(bonus)}</li>
-    {#if tier === 'extra'}
-      <li class="hint">{strings.extraHint}</li>
+    {#if hints > 0}
+      <li class="hint">{strings.hintsWon(hints)}</li>
     {/if}
   </ul>
   <section class="recap">

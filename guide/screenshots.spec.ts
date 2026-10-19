@@ -44,7 +44,7 @@ function veteran() {
     targets: 8,
   };
   return {
-    version: 8,
+    version: 9,
     progress: {
       levelNumber: 25,
       score: 12840,
@@ -52,9 +52,9 @@ function veteran() {
       bonusTowardHint: 3,
       difficulty: 'normal',
       occurrences: occurrencesBefore(25, 'normal'),
-      session: { found: [], revealed: {} },
+      session: { found: [], revealed: {}, points: 0, hintsWon: 0 },
       history,
-      daily: { date: '', session: { found: [], revealed: {} } },
+      daily: { date: '', session: { found: [], revealed: {}, points: 0, hintsWon: 0 } },
       dailies: { [day(-1)]: daily, [day(-2)]: daily, [day(-3)]: daily, [day(-4)]: daily },
     },
   };

@@ -10,7 +10,11 @@ const level: Level = {
   tier: 'medium',
 };
 
-const session = (found: string[], revealed: Record<string, number> = {}) => ({ found, revealed });
+const session = (found: string[], revealed: Record<string, number> = {}) => ({
+  ...NEW_SESSION,
+  found,
+  revealed,
+});
 
 describe('hintTarget', () => {
   it('picks the target showing the fewest letters, shortest first', () => {

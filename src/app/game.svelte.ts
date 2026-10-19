@@ -24,14 +24,7 @@ import {
   type Place,
   type Progress,
 } from '../core/progress';
-import {
-  bonusWords,
-  hintsUsed,
-  isComplete,
-  NEW_SESSION,
-  sessionPoints,
-  type Session,
-} from '../core/session';
+import { bonusWords, hintsUsed, isComplete, NEW_SESSION, type Session } from '../core/session';
 import { statsOf, type Stats } from '../core/stats';
 import type { WordList } from '../content/words';
 import { today } from './clock';
@@ -190,9 +183,14 @@ export class Game {
     return this.#progress.score;
   }
 
-  /** Points won on the level on screen so far. */
+  /** Points the level on screen has paid so far (none on a replay). */
   get levelPoints(): number {
-    return sessionPoints(this.level, this.#playing.session);
+    return this.#playing.session.points;
+  }
+
+  /** Hints finishing the level on screen earned (an extra-hard level, the first time). */
+  get hintsWon(): number {
+    return this.#playing.session.hintsWon;
   }
 
   /** The board's rows, with words as written (accents included). */
