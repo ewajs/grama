@@ -16,6 +16,7 @@ letter wheel with its controls.
   import Header from './Header.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import LetterWheel from './LetterWheel.svelte';
+  import LevelComplete from './LevelComplete.svelte';
   import WordPill from './WordPill.svelte';
 
   let { game }: { game: Game } = $props();
@@ -35,6 +36,11 @@ letter wheel with its controls.
   function spell(next: string) {
     word = next;
     if (next) result = null;
+  }
+
+  function nextLevel() {
+    result = null;
+    game.next();
   }
 
   function submit(next: string) {
@@ -68,6 +74,15 @@ letter wheel with its controls.
     </div>
   </div>
 </main>
+
+{#if game.complete}
+  <LevelComplete
+    level={game.levelNumber}
+    points={game.levelPoints}
+    bonus={game.bonusFound}
+    onnext={nextLevel}
+  />
+{/if}
 
 <style>
   main {

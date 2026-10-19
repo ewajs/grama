@@ -1,5 +1,12 @@
 import type { Submission } from '../core/evaluate';
-import { isLevelComplete, NEW_GAME, nextLevel, submitWord, type GameState } from '../core/game';
+import {
+  isLevelComplete,
+  levelPoints,
+  NEW_GAME,
+  nextLevel,
+  submitWord,
+  type GameState,
+} from '../core/game';
 import type { Level } from '../core/level';
 
 /**
@@ -33,6 +40,11 @@ export class Game {
   /** Points across all levels. */
   get score(): number {
     return this.#state.score;
+  }
+
+  /** Points won on the current level so far. */
+  get levelPoints(): number {
+    return levelPoints(this.level, this.#state.found);
   }
 
   /** How many bonus words have been found on the current level. */

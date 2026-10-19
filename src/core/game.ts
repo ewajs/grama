@@ -38,6 +38,16 @@ export function isLevelComplete(level: Level, found: readonly string[]): boolean
   return level.targets.every((target) => found.includes(target));
 }
 
+/** Points won on a level so far: the sum over every word found on it. */
+export function levelPoints(level: Level, found: readonly string[]): number {
+  return found.reduce((sum, word) => {
+    const submission = evaluate(level, [], word);
+    return submission.kind === 'target' || submission.kind === 'bonus'
+      ? sum + submission.points
+      : sum;
+  }, 0);
+}
+
 /** Moves on to the next level, starting over from the first after the last one. */
 export function nextLevel(state: GameState, levelCount: number): GameState {
   return { ...state, levelIndex: (state.levelIndex + 1) % levelCount, found: [] };

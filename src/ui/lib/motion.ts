@@ -10,5 +10,8 @@ export const SCORE_COUNT_DURATION = 400;
 /** How long the result of a submitted word stays on screen. */
 export const FEEDBACK_DURATION = 600;
 
+/** Pause after the last word before celebrating, so its tiles can pop in first. */
+export const CELEBRATION_DELAY = 500;
+
 /** Delay between consecutive tiles of a word appearing, for a quick cascade. */
 export const TILE_STAGGER = 45;
