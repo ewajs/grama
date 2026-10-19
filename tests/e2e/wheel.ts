@@ -27,8 +27,10 @@ export async function drawWord(page: Page, word: string, { cancel = false } = {}
   if (await touchDrags(page)) {
     // Real touch input, so the wheel gets touch pointers (and the browser's scroll handling).
     const cdp = await page.context().newCDPSession(page);
-    const touch = (type: string, point?: { x: number; y: number }) =>
-      cdp.send('Input.dispatchTouchEvent', { type, touchPoints: point ? [point] : [] });
+    const touch = (
+      type: 'touchStart' | 'touchMove' | 'touchEnd' | 'touchCancel',
+      point?: { x: number; y: number },
+    ) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: point ? [point] : [] });
     await touch('touchStart', first);
     for (const point of rest) await touch('touchMove', point);
     await touch(cancel ? 'touchCancel' : 'touchEnd');
