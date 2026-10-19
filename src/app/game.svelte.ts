@@ -4,6 +4,7 @@ import type { Tier } from '../core/difficulty';
 import type { Submission } from '../core/evaluate';
 import { generateLevel } from '../core/generate';
 import { BONUS_WORDS_PER_HINT } from '../core/hints';
+import type { History, Stars } from '../core/history';
 import type { Level } from '../core/level';
 import {
   canUseHint,
@@ -13,8 +14,8 @@ import {
   useHint,
   type Progress,
 } from '../core/progress';
-import { starsFor, type Stars } from '../core/history';
-import { bonusWords, isComplete, sessionPoints } from '../core/session';
+import { starsFor } from '../core/history';
+import { bonusWords, isComplete, NEW_SESSION, sessionPoints, type Session } from '../core/session';
 import type { WordList } from '../content/words';
 import { reportUrl, type ReportKind } from './report';
 
@@ -28,6 +29,8 @@ export class Game {
   #spellings: ReadonlyMap<string, string>;
   /** Words rejected on this level, most recent last; kept for reports, not saved. */
   #rejected = $state<string[]>([]);
+  /** A completed level being played again, if any; not saved. */
+  #replay = $state<{ levelNumber: number; difficulty: Difficulty; session: Session } | null>(null);
   /** The level being played, generated once per level number. */
   readonly level: Level;
 
@@ -49,7 +52,7 @@ export class Game {
     // on a derived when its value changes (===), so the wheel keeps a shuffled order.
     let current: { key: string; level: Level } | null = null;
     this.level = $derived.by(() => {
-      const { levelNumber, difficulty } = this.#progress;
+      const { levelNumber, difficulty } = this.#playing;
       const key = `${levelNumber}:${difficulty}`;
       if (current?.key !== key) {
         const tier = tierFor(levelNumber, difficulty);
@@ -60,9 +63,29 @@ export class Game {
     });
   }
 
-  /** The current level's number, starting at 1. */
+  /** The level on screen: a replay, or else the player's current one. */
+  get #playing(): { levelNumber: number; difficulty: Difficulty; session: Session } {
+    return this.#replay ?? this.#progress;
+  }
+
+  /** The number of the level on screen, starting at 1. */
   get levelNumber(): number {
+    return this.#playing.levelNumber;
+  }
+
+  /** The player's current level: the furthest reached. */
+  get currentLevel(): number {
     return this.#progress.levelNumber;
+  }
+
+  /** Whether the level on screen is a replay of an earlier one. */
+  get replaying(): boolean {
+    return this.#replay !== null;
+  }
+
+  /** Every completed level's best result. */
+  get history(): History {
+    return this.#progress.history;
   }
 
   /** How hard the current level is. */
@@ -72,12 +95,12 @@ export class Game {
 
   /** Whether every target of the current level has been found. */
   get complete(): boolean {
-    return isComplete(this.level, this.#progress.session);
+    return isComplete(this.level, this.#playing.session);
   }
 
   /** Stars the current level earns as played so far (final once complete). */
   get stars(): Stars {
-    return starsFor(this.level, this.#progress.session);
+    return starsFor(this.level, this.#playing.session);
   }
 
   /** Points across all levels. */
@@ -87,12 +110,12 @@ export class Game {
 
   /** Points won on the current level so far. */
   get levelPoints(): number {
-    return sessionPoints(this.level, this.#progress.session);
+    return sessionPoints(this.level, this.#playing.session);
   }
 
   /** The board's rows, with words as written (accents included). */
   get board(): BoardRow[] {
-    return boardRows(this.level, this.#progress.session).map((row) => ({
+    return boardRows(this.level, this.#playing.session).map((row) => ({
       ...row,
       word: row.word && this.written(row.word),
     }));
@@ -115,17 +138,17 @@ export class Game {
 
   /** Whether a hint can be spent now: one is available and a letter is left to reveal. */
   get canHint(): boolean {
-    return canUseHint(this.#progress, this.level, this.#progress.session);
+    return canUseHint(this.#progress, this.level, this.#playing.session);
   }
 
   /** Bonus words found on the current level, as written, in the order found. */
   get bonusWords(): string[] {
-    return bonusWords(this.level, this.#progress.session).map((word) => this.written(word));
+    return bonusWords(this.level, this.#playing.session).map((word) => this.written(word));
   }
 
   /** How many bonus words have been found on the current level. */
   get bonusFound(): number {
-    return bonusWords(this.level, this.#progress.session).length;
+    return bonusWords(this.level, this.#playing.session).length;
   }
 
   /** How many bonus words the current level has. */
@@ -140,29 +163,44 @@ export class Game {
 
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
-    const { levelNumber, session } = this.#progress;
-    const played = playWord(this.#progress, this.level, levelNumber, session, word);
+    const { levelNumber, difficulty, session } = this.#playing;
+    const played = playWord(this.#progress, this.level, { levelNumber, difficulty }, session, word);
     if (played.submission.kind === 'invalid') {
       this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
     }
-    if (played.session !== this.#progress.session) {
-      this.#update({ ...played.progress, session: played.session });
-    }
+    if (played.session !== session) this.#apply(played.progress, played.session);
     return played.submission;
   }
 
   /** Spends a hint to reveal a letter on the board. */
   hint(): void {
-    const used = useHint(this.#progress, this.level, this.#progress.session);
-    if (used.session !== this.#progress.session) {
-      this.#update({ ...used.progress, session: used.session });
-    }
+    const { session } = this.#playing;
+    const used = useHint(this.#progress, this.level, session);
+    if (used.session !== session) this.#apply(used.progress, used.session);
   }
 
   /** Starts over from level 1, as a new game at the given difficulty. */
   reset(difficulty: Difficulty): void {
     this.#rejected = [];
+    this.#replay = null;
     this.#update({ ...NEW_PROGRESS, difficulty });
+  }
+
+  /**
+   * Plays an earlier level again, as it was generated (for better stars). It shares the
+   * player's score, hints and history, but never changes their current level.
+   */
+  replay(levelNumber: number): void {
+    if (levelNumber >= this.#progress.levelNumber) return this.endReplay();
+    const difficulty = this.#progress.history[levelNumber]?.difficulty ?? this.#progress.difficulty;
+    this.#rejected = [];
+    this.#replay = { levelNumber, difficulty, session: NEW_SESSION };
+  }
+
+  /** Back to the player's current level. */
+  endReplay(): void {
+    if (this.#replay) this.#rejected = [];
+    this.#replay = null;
   }
 
   /** Moves on to the next level, at the player's current difficulty. */
@@ -174,13 +212,23 @@ export class Game {
   /** A link to report a problem with the current level on GitHub. */
   reportUrl(kind: ReportKind): string {
     return reportUrl(kind, {
-      levelNumber: this.#progress.levelNumber,
+      levelNumber: this.levelNumber,
       letters: this.level.letters,
       targets: this.level.targets.map((word) => this.written(word)),
-      found: this.#progress.session.found.map((word) => this.written(word)),
+      found: this.#playing.session.found.map((word) => this.written(word)),
       rejected: this.#rejected,
       build: __BUILD__,
     });
+  }
+
+  /** Applies a played word or hint: the session goes to the replay or the current level. */
+  #apply(progress: Progress, session: Session) {
+    if (this.#replay) {
+      this.#replay = { ...this.#replay, session };
+      this.#update(progress);
+    } else {
+      this.#update({ ...progress, session });
+    }
   }
 
   #update(progress: Progress) {

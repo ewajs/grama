@@ -3,7 +3,7 @@ import type { Progress } from '../core/progress';
 const KEY = 'grama.save';
 
 /** Bump whenever `Progress` changes shape. Pre-1.0 an older save is discarded (D5). */
-const VERSION = 5;
+const VERSION = 6;
 
 type Save = { version: number; progress: Progress };
 

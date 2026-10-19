@@ -11,6 +11,7 @@
   import { loadSettings, saveSettings } from './storage/settings';
   import GameScreen from './ui/components/GameScreen.svelte';
   import Home from './ui/components/Home.svelte';
+  import LevelMap from './ui/components/LevelMap.svelte';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const words = loadWords();
@@ -48,8 +49,24 @@
   {@const game = new Game(words, start, saveGame)}
   {#if navigation.screen === 'game'}
     <GameScreen {game} {preferences} {installer} onback={() => navigation.back()} />
+  {:else if navigation.screen === 'map'}
+    <LevelMap
+      {game}
+      onplay={(levelNumber) => {
+        game.replay(levelNumber);
+        navigation.go('game');
+      }}
+      onback={() => navigation.back()}
+    />
   {:else}
-    <Home {game} onplay={() => navigation.go('game')} />
+    <Home
+      {game}
+      onplay={() => {
+        game.endReplay();
+        navigation.go('game');
+      }}
+      onmap={() => navigation.go('map')}
+    />
   {/if}
 {:catch}
   <p class="status">{strings.loadError}</p>

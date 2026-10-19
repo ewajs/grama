@@ -7,7 +7,8 @@ Celebrates a finished level over the game screen, with what was won, and moves o
 - `stars`: stars earned on it.
 - `points`: points won on it.
 - `bonus`: bonus words found on it.
-- `onnext()`: the player wants the next level.
+- `nextLabel`: the button's label (the next level, or back to the map after a replay).
+- `onnext()`: the player is done here.
 -->
 <script lang="ts">
   import type { Tier } from '../../core/difficulty';
@@ -23,9 +24,10 @@ Celebrates a finished level over the game screen, with what was won, and moves o
     stars: number;
     points: number;
     bonus: number;
+    nextLabel: string;
     onnext: () => void;
   };
-  let { level, tier, stars, points, bonus, onnext }: Props = $props();
+  let { level, tier, stars, points, bonus, nextLabel, onnext }: Props = $props();
 </script>
 
 <Dialog title={strings.levelComplete} delay={CELEBRATION_DELAY}>
@@ -46,7 +48,7 @@ Celebrates a finished level over the game screen, with what was won, and moves o
       <li class="hint">{strings.extraHint}</li>
     {/if}
   </ul>
-  <button class="primary" onclick={onnext}>{strings.nextLevel}</button>
+  <button class="primary" onclick={onnext}>{nextLabel}</button>
 </Dialog>
 
 <style>

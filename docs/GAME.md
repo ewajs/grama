@@ -42,6 +42,10 @@ Each completed level is recorded with its tier, hints used, bonus words found an
 **★★★** with no hints and at least 3 bonus words, **★★** with at most one hint, **★**
 otherwise. Replaying a level keeps the best result.
 
+The **map** shows every level reached, by tier, with its stars; tapping an earlier level
+replays it as it was generated. Replays share score, hints and history but never change
+the current level, and the extra-hard hint is only earned the first time.
+
 ### Hints (tunable in `src/core/hints.ts`)
 
 - A new game starts with **3 hints**; every **5 bonus words** found earn one more. Hints

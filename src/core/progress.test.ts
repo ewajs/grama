@@ -11,11 +11,14 @@ const level: Level = {
   tier: 'medium',
 };
 
+const current = { levelNumber: 1, difficulty: 'normal' } as const;
+
 /** Plays words in turn, returning the final progress and session. */
 function play(words: readonly string[], on = level) {
   let progress = NEW_PROGRESS;
   let session: Session = NEW_SESSION;
-  for (const word of words) ({ progress, session } = playWord(progress, on, 1, session, word));
+  for (const word of words)
+    ({ progress, session } = playWord(progress, on, current, session, word));
   return { progress, session };
 }
 
@@ -28,10 +31,10 @@ describe('playWord', () => {
 
   it('leaves both untouched for invalid and repeated words', () => {
     const { progress, session } = play(['SOL']);
-    const again = playWord(progress, level, 1, session, 'SOL');
+    const again = playWord(progress, level, current, session, 'SOL');
     expect(again.progress).toBe(progress);
     expect(again.session).toBe(session);
-    expect(playWord(progress, level, 1, session, 'XYZ').progress).toBe(progress);
+    expect(playWord(progress, level, current, session, 'XYZ').progress).toBe(progress);
   });
 
   it('starts the game with a few hints', () => {
@@ -49,10 +52,16 @@ describe('playWord', () => {
     expect(play(['SOL']).progress.bonusTowardHint).toBe(0);
   });
 
-  it('earns a hint for finishing an extra-hard level', () => {
+  it('earns a hint for finishing an extra-hard level, the first time only', () => {
     const extra = { ...level, tier: 'extra' as const };
-    expect(play(extra.targets, extra).progress.hints).toBe(STARTING_HINTS + EXTRA_HARD_HINTS);
+    const once = play(extra.targets, extra).progress;
+    expect(once.hints).toBe(STARTING_HINTS + EXTRA_HARD_HINTS);
     expect(play(level.targets).progress.hints).toBe(STARTING_HINTS);
+    let replay = { progress: once, session: NEW_SESSION as Session };
+    for (const word of extra.targets) {
+      replay = playWord(replay.progress, extra, current, replay.session, word);
+    }
+    expect(replay.progress.hints).toBe(once.hints);
   });
 });
 

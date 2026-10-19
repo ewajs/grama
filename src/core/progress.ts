@@ -43,36 +43,36 @@ export const NEW_PROGRESS: Progress = {
 /**
  * Plays a word on a level: the outcome, the session after it, and the player's progress
  * with what it earned: points, a step toward the next hint for a bonus word, and on
- * finishing the level its record in the history (plus a hint if it was extra hard).
- * Unchanged objects are returned as they were.
- * @param levelNumber The level's number, for the history.
- * @param session The level as played so far: the player's current one, or any other.
+ * finishing the level its record in the history, plus a hint the first time an
+ * extra-hard level is finished. Unchanged objects are returned as they were.
+ * @param played Which level it is and the difficulty it's played at, for the history.
+ * @param session The level as played so far: the player's current one, or a replay.
  */
 export function playWord(
   progress: Progress,
   level: Level,
-  levelNumber: number,
+  played: { levelNumber: number; difficulty: Difficulty },
   session: Session,
   word: string,
 ): { submission: Submission; progress: Progress; session: Session } {
-  const played = submitWord(session, level, word);
-  const { submission } = played;
+  const { submission, session: after } = submitWord(session, level, word);
   if (submission.kind === 'invalid' || submission.kind === 'repeated') {
     return { submission, progress, session };
   }
   const scored = { ...progress, score: progress.score + submission.points };
   if (submission.kind === 'bonus') {
-    return { submission, progress: countBonusWord(scored), session: played.session };
+    return { submission, progress: countBonusWord(scored), session: after };
   }
-  if (!isComplete(level, played.session)) {
-    return { submission, progress: scored, session: played.session };
-  }
+  if (!isComplete(level, after)) return { submission, progress: scored, session: after };
+
+  const { levelNumber, difficulty } = played;
+  const firstTime = !(levelNumber in progress.history);
   const completed = {
     ...scored,
-    history: record(scored.history, levelNumber, recordOf(level, played.session)),
-    hints: scored.hints + (level.tier === 'extra' ? EXTRA_HARD_HINTS : 0),
+    history: record(scored.history, levelNumber, recordOf(level, after, difficulty)),
+    hints: scored.hints + (firstTime && level.tier === 'extra' ? EXTRA_HARD_HINTS : 0),
   };
-  return { submission, progress: completed, session: played.session };
+  return { submission, progress: completed, session: after };
 }
 
 /** A step toward the next hint, or a hint earned. */
