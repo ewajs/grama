@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { extendPath, LETTER_RADIUS, letterAt, letterPositions, RING_RADIUS } from './wheel';
+import {
+  extendPath,
+  HIT_RADIUS,
+  LETTER_RADIUS,
+  letterAt,
+  letterPositions,
+  RING_RADIUS,
+  type Point,
+} from './wheel';
 
 describe('letterPositions', () => {
   it('places the first letter at the top and goes clockwise', () => {
@@ -15,6 +23,25 @@ describe('letterPositions', () => {
     const [first, second] = letterPositions(10);
     const gap = Math.hypot(first!.x - second!.x, first!.y - second!.y);
     expect(gap).toBeGreaterThan(2 * LETTER_RADIUS);
+  });
+});
+
+describe('dragging straight from letter to letter', () => {
+  // Closest a point of segment a-b gets to point p.
+  function distanceToSegment(p: Point, a: Point, b: Point) {
+    const [dx, dy] = [b.x - a.x, b.y - a.y];
+    const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(a.x + t * dx - p.x, a.y + t * dy - p.y);
+  }
+
+  it.each([6, 7, 8])('never passes over a third letter with %i letters', (count) => {
+    const positions = letterPositions(count);
+    for (const [i, a] of positions.entries())
+      for (const [j, b] of positions.entries())
+        for (const [k, other] of positions.entries()) {
+          if (k === i || k === j || i === j) continue;
+          expect(distanceToSegment(other, a, b), `${i}→${j} over ${k}`).toBeGreaterThan(HIT_RADIUS);
+        }
   });
 });
 

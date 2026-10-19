@@ -41,10 +41,10 @@ describe('levelShape', () => {
   it('follows the difficulty curve', () => {
     expect(levelShape(1)).toMatchObject({ letters: 6, targets: 6 });
     expect(levelShape(5)).toMatchObject({ letters: 6, targets: 6 });
-    expect(levelShape(6)).toMatchObject({ letters: 6, targets: 8 });
-    expect(levelShape(16)).toMatchObject({ letters: 7, targets: 10 });
+    expect(levelShape(6)).toMatchObject({ letters: 6, targets: 7 });
+    expect(levelShape(16)).toMatchObject({ letters: 7, targets: 8 });
     expect(levelShape(40)).toMatchObject({ letters: 7 });
-    expect(levelShape(41)).toMatchObject({ letters: 8, targets: 12, shortestTarget: 4 });
+    expect(levelShape(41)).toMatchObject({ letters: 8, targets: 9, shortestTarget: 4 });
     expect(levelShape(5000)).toMatchObject({ letters: 8 });
   });
 });

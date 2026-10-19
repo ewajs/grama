@@ -14,9 +14,10 @@ export type LevelShape = {
 /** The difficulty curve: each step applies from level `from` on. Tune it here. */
 export const DIFFICULTY: readonly (LevelShape & { from: number })[] = [
   { from: 1, letters: 6, targets: 6, shortestTarget: 3 },
-  { from: 6, letters: 6, targets: 8, shortestTarget: 3 },
-  { from: 16, letters: 7, targets: 10, shortestTarget: 3 },
-  { from: 41, letters: 8, targets: 12, shortestTarget: 4 },
+  { from: 6, letters: 6, targets: 7, shortestTarget: 3 },
+  { from: 16, letters: 7, targets: 8, shortestTarget: 3 },
+  // More targets than this won't fit a small phone with readable tiles.
+  { from: 41, letters: 8, targets: 9, shortestTarget: 4 },
 ];
 
 /** The shape of level `levelNumber`, from the difficulty curve. */
