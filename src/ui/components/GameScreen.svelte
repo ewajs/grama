@@ -19,7 +19,8 @@ letter wheel with its controls.
   import { shuffled } from '../../core/random';
   import { spanish } from '../../core/spanish';
   import { strings } from '../../i18n';
-  import { FEEDBACK_DURATION } from '../lib/motion';
+  import { CELEBRATION_DELAY, FEEDBACK_DURATION } from '../lib/motion';
+  import { play } from '../lib/sound';
   import Board from './Board.svelte';
   import Header from './Header.svelte';
   import HintButton from './HintButton.svelte';
@@ -78,7 +79,10 @@ letter wheel with its controls.
   );
 
   function spell(next: string, waits: boolean) {
-    if (preferences.vibration && next.length > word.length) vibrate('letter');
+    if (next.length > word.length) {
+      if (preferences.vibration) vibrate('letter');
+      if (preferences.sound) play('letter', next.length);
+    }
     word = next;
     waiting = waits;
     if (next) result = null;
@@ -130,7 +134,13 @@ letter wheel with its controls.
 
   function submit(next: string) {
     const submission = game.submit(next);
-    if (preferences.vibration && submission.kind !== 'repeated') vibrate(submission.kind);
+    if (submission.kind !== 'repeated') {
+      if (preferences.vibration) vibrate(submission.kind);
+      if (preferences.sound) play(submission.kind);
+    }
+    // In time with the confetti.
+    if (preferences.sound && submission.kind === 'target' && game.complete)
+      setTimeout(() => play('complete'), CELEBRATION_DELAY);
     result = { id: ++resultCount, submission };
     clearTimeout(clearResult);
     clearResult = setTimeout(() => (result = null), FEEDBACK_DURATION);

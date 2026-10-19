@@ -63,6 +63,18 @@ test('the vibration switch survives a reload', async ({ page, browserName }) => 
   await expect(page.getByRole('switch', { name: 'Vibración' })).not.toBeChecked();
 });
 
+test('the sound switch survives a reload', async ({ page }) => {
+  await openGame(page);
+  await openMenu(page);
+  const sound = page.getByRole('switch', { name: 'Sonido' });
+  await expect(sound).toBeChecked();
+  await sound.uncheck();
+  await page.reload();
+  await enterGame(page);
+  await openMenu(page);
+  await expect(page.getByRole('switch', { name: 'Sonido' })).not.toBeChecked();
+});
+
 test('the difficulty setting survives a reload', async ({ page }) => {
   await openGame(page);
   await openMenu(page);

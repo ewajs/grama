@@ -20,6 +20,7 @@ describe('settings', () => {
       theme: 'dark',
       difficulty: 'challenging',
       vibration: false,
+      sound: false,
       tutorialSeen: true,
     } as const;
     saveSettings(settings, storage);

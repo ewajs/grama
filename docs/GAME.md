@@ -182,3 +182,11 @@ does typing.
 - Never block input on an animation; the next drag can start immediately.
 - Respect `prefers-reduced-motion` (fade instead of move/flip).
 - Light haptic tick on each letter connected where `navigator.vibrate` exists.
+
+### Sound (`src/ui/lib/sound.ts`)
+
+Soft synthesized sounds (Web Audio, nothing to download), on unless turned off in the
+menu ("Sonido"): a tick per letter that climbs a scale as the word grows, a chime for a
+target, a light note for a bonus word, a low soft tone for a word that isn't valid, and
+an arpeggio with the confetti when a level is done. Repeated words are silent. On
+iPhone they mix with the player's music and stay quiet in silent mode.

@@ -51,6 +51,7 @@ The menu: settings, help and the rest of the game's options, plus credits.
   <section>
     <h3>{strings.theme}</h3>
     <Segmented label={strings.theme} options={themes} bind:value={preferences.theme} />
+    <Toggle label={strings.sound} bind:checked={preferences.sound} />
     {#if canVibrate}
       <Toggle label={strings.vibration} bind:checked={preferences.vibration} />
     {/if}

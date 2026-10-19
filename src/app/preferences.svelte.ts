@@ -50,6 +50,15 @@ export class Preferences {
     this.#update({ vibration });
   }
 
+  /** Whether to play sound effects. */
+  get sound(): boolean {
+    return this.#settings.sound;
+  }
+  /** Turns sound effects on or off. */
+  set sound(sound: boolean) {
+    this.#update({ sound });
+  }
+
   /** Whether the tutorial has been shown. */
   get tutorialSeen(): boolean {
     return this.#settings.tutorialSeen;
