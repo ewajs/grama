@@ -60,6 +60,74 @@ body {
   scale: 0.96;
 }
 
+/* The two play screens (a level, Contrarreloj): a header, the board, then the word pill
+   and the wheel with its buttons (.play, its .controls). */
+.play-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: max(var(--space-3), env(safe-area-inset-top))
+    max(var(--space-4), env(safe-area-inset-right)) max(var(--space-4), env(safe-area-inset-bottom))
+    max(var(--space-4), env(safe-area-inset-left));
+}
+
+.play-screen > .board {
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+}
+
+.play-screen > .play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  align-self: stretch;
+}
+
+.play-screen .controls {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+}
+
+/* An upright tablet: room for a bigger board and wheel. */
+@media (orientation: portrait) and (min-width: 700px) and (min-height: 900px) {
+  .play-screen {
+    --wheel-size: min(60vw, 420px, 36dvh);
+    max-width: 640px;
+  }
+}
+
+/* A wide screen (a phone on its side, a tablet, a computer): the board on the left, the
+   wheel on the right, as tall as the screen allows. The header takes the free top-left. */
+@media (orientation: landscape) and (min-aspect-ratio: 4/3) {
+  .play-screen {
+    --wheel-size: min(40vw, 440px, 100dvh - var(--pill-height) - 4rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: var(--space-8);
+    max-width: 1100px;
+  }
+
+  .play-screen > .board {
+    grid-area: 2 / 1;
+  }
+
+  .play-screen > .play {
+    grid-area: 1 / 2 / 3;
+    justify-content: center;
+    /* Room beside the wheel for the buttons in its corners. */
+    width: calc(var(--wheel-size) + 7rem);
+  }
+}
+
 /* Less motion when the device asks for it: CSS animations and transitions end at once.
    Svelte transitions do the same through ui/lib/motion and ui/lib/fly. */
 @media (prefers-reduced-motion: reduce) {

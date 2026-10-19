@@ -138,7 +138,7 @@ letter wheel with its controls.
 
 <svelte:window onkeydown={key} />
 
-<main>
+<main class="play-screen">
   <Header
     title={game.daily
       ? strings.dailyTitle(game.levelNumber)
@@ -162,26 +162,32 @@ letter wheel with its controls.
     />
   </div>
 
-  <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
+  <div class="play">
+    <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
 
-  <div class="controls">
-    <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
-    <button class="shuffle" aria-label={strings.shuffle} onclick={() => (tiles = shuffled(tiles))}>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
-      </svg>
-    </button>
-    <div class="hint">
-      <HintButton count={game.hints} disabled={!game.canHint} onhint={() => game.hint()} />
-    </div>
-    <div class="bonus">
-      <BonusCounter
-        count={game.bonusFound}
-        progress={game.hintProgress}
-        untilHint={game.bonusUntilHint}
-        glow={repeated !== null && !game.level.targets.includes(repeated)}
-        onopen={() => (panel = 'bonus')}
-      />
+    <div class="controls">
+      <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
+      <button
+        class="shuffle"
+        aria-label={strings.shuffle}
+        onclick={() => (tiles = shuffled(tiles))}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
+        </svg>
+      </button>
+      <div class="hint">
+        <HintButton count={game.hints} disabled={!game.canHint} onhint={() => game.hint()} />
+      </div>
+      <div class="bonus">
+        <BonusCounter
+          count={game.bonusFound}
+          progress={game.hintProgress}
+          untilHint={game.bonusUntilHint}
+          glow={repeated !== null && !game.level.targets.includes(repeated)}
+          onopen={() => (panel = 'bonus')}
+        />
+      </div>
     </div>
   </div>
 </main>
@@ -251,31 +257,6 @@ letter wheel with its controls.
 <AchievementToast unlocked={game.achievements} />
 
 <style>
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-3);
-    height: 100dvh;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4)
-      max(var(--space-4), env(safe-area-inset-bottom));
-  }
-
-  .board {
-    flex: 1;
-    align-self: stretch;
-    min-height: 0;
-  }
-
-  .controls {
-    position: relative;
-    display: grid;
-    place-items: center;
-    align-self: stretch;
-  }
-
   .shuffle,
   .bonus {
     position: absolute;

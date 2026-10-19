@@ -10,7 +10,7 @@ export const TILE_GAP = 6;
 export const COLUMN_GAP = 20;
 
 /** Tiles never grow past this, even with room to spare. */
-export const MAX_TILE = 56;
+export const MAX_TILE = 72;
 
 /** How to lay out the board's rows: in how many columns, and how big each tile is. */
 export type BoardLayout = { columns: number; tile: number };

@@ -126,7 +126,7 @@ is open and the app is visible; when time is up, a summary offers another run.
 <svelte:window onkeydown={key} />
 <svelte:document onvisibilitychange={() => (hidden = document.visibilityState === 'hidden')} />
 
-<main>
+<main class="play-screen">
   <header>
     <button class="back" aria-label={strings.back} onclick={onback}>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
@@ -150,23 +150,25 @@ is open and the app is visible; when time is up, a summary offers another run.
     <Board rows={trial.board} />
   </div>
 
-  <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
+  <div class="play">
+    <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
 
-  <div class="controls">
-    <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
-    <button
-      class="round shuffle"
-      aria-label={strings.shuffle}
-      onclick={() => (tiles = shuffled(tiles))}
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
-      </svg>
-    </button>
-    <button class="pass" disabled={!trial.canPass} onclick={() => trial.pass()}>
-      {strings.pass}
-      <small>{strings.passCost}</small>
-    </button>
+    <div class="controls">
+      <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
+      <button
+        class="round shuffle"
+        aria-label={strings.shuffle}
+        onclick={() => (tiles = shuffled(tiles))}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
+        </svg>
+      </button>
+      <button class="pass" disabled={!trial.canPass} onclick={() => trial.pass()}>
+        {strings.pass}
+        <small>{strings.passCost}</small>
+      </button>
+    </div>
   </div>
 </main>
 
@@ -190,18 +192,6 @@ is open and the app is visible; when time is up, a summary offers another run.
 {/if}
 
 <style>
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-3);
-    height: 100dvh;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4)
-      max(var(--space-4), env(safe-area-inset-bottom));
-  }
-
   header {
     display: flex;
     align-items: center;
@@ -291,19 +281,6 @@ is open and the app is visible; when time is up, a summary offers another run.
     font-weight: var(--weight-bold);
     text-align: right;
     font-variant-numeric: tabular-nums;
-  }
-
-  .board {
-    flex: 1;
-    align-self: stretch;
-    min-height: 0;
-  }
-
-  .controls {
-    position: relative;
-    display: grid;
-    place-items: center;
-    align-self: stretch;
   }
 
   .shuffle,

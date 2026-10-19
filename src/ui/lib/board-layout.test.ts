@@ -18,7 +18,7 @@ describe('boardLayout', () => {
   const rows = [3, 3, 3, 4, 4, 5, 6, 6];
 
   it('uses one column when there is height to spare', () => {
-    expect(boardLayout(rows, 400, 800)).toEqual({ columns: 1, tile: MAX_TILE });
+    expect(boardLayout(rows, 600, 1000)).toEqual({ columns: 1, tile: MAX_TILE });
   });
 
   it('switches to two columns when height is short, for bigger tiles', () => {
