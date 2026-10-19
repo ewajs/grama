@@ -212,6 +212,9 @@ can follow a word from the wheel to the score from the docs alone.
 
 ## Changelog
 
+- **v0.13.0** (M12) — Calm in-place feedback; tidier menu and an Acerca de window (version,
+  news, check for updates); "Todo sobre Grama" player guide at `/guia/`; developer docs with
+  guides and diagrams at `/docs/`; docs built on every PR.
 - **v0.12.0** (M11) — Confetti and a recap of the words on completion; a target's letters fly
   into the board; definitions (RAE) for any found word.
 - **v0.11.0** (M10) — Daily challenge: one 7-letter level per date, Monday easy to Sunday
