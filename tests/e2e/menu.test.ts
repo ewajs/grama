@@ -70,8 +70,14 @@ test('the difficulty setting survives a reload', async ({ page }) => {
   );
 });
 
-test('extra-hard levels show their badge', async ({ page }) => {
+test('the header always shows the level’s difficulty', async ({ page }) => {
+  // The level's own tier: usually the cadence's, but the generator may settle for another.
+  const labels = { easy: 'Fácil', medium: 'Media', hard: 'Difícil', extra: 'Extra difícil' };
+  await page.goto('./');
+  await expect(
+    page.locator('header').getByText(labels[level(1).tier], { exact: true }),
+  ).toBeVisible();
   // Level 21 closes the third 7-level cycle: extra hard (see core/cadence.ts).
   await page.goto('./?nivel=21');
-  await expect(page.getByText('Extra difícil')).toBeVisible();
+  await expect(page.locator('header').getByText('Extra difícil')).toBeVisible();
 });

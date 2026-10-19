@@ -3,7 +3,7 @@
 The top bar: the level number and the score, which counts up when points are won.
 
 - `level`: level number as shown to the player.
-- `tier`: how hard the level is; hard and extra-hard levels show a badge.
+- `tier`: how hard the level is, shown as a badge under the level number.
 - `score`: total points.
 - `onmenu()`: the player wants the menu.
 -->
@@ -23,10 +23,8 @@ The top bar: the level number and the score, which counts up when points are won
 
 <header>
   <div class="level">
-    <span>{strings.level(level)}</span>
-    {#if tier === 'hard' || tier === 'extra'}
-      <span class="badge {tier}">{strings.tiers[tier]}</span>
-    {/if}
+    <span class="title">{strings.level(level)}</span>
+    <span class="badge {tier}">{strings.tiers[tier]}</span>
   </div>
   <div class="end">
     <span class="score" aria-label={strings.score}>
@@ -54,17 +52,33 @@ The top bar: the level number and the score, which counts up when points are won
   }
 
   .level {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
+    display: grid;
+    justify-items: start;
+    gap: 2px;
   }
 
+  .title {
+    line-height: 1.1;
+  }
+
+  /* Compact, so the board keeps its room. */
   .badge {
-    padding: 2px var(--space-2);
+    padding: 0 var(--space-2);
     border-radius: var(--radius-full);
     color: var(--color-accent-contrast);
-    font-size: var(--text-sm);
+    font-size: 11px;
     font-weight: var(--weight-bold);
+    letter-spacing: 0.04em;
+    line-height: 16px;
+    text-transform: uppercase;
+  }
+
+  .easy {
+    background: var(--color-success);
+  }
+
+  .medium {
+    background: var(--color-accent);
   }
 
   .hard {
