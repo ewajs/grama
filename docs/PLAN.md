@@ -83,7 +83,7 @@ feels fair (no obscure targets, no offensive words, nothing unspellable).
 
 Goal: installable, works offline, never loses progress.
 
-- [ ] Versioned `localStorage` save (current level, score, found words); pre-1.0 an
+- [x] Versioned `localStorage` save (current level, score, found words); pre-1.0 an
       unknown version is simply discarded
 - [ ] Manifest, icons, theme color, `base` path for Pages
 - [ ] Service worker: precache app + word lists; update prompt on new version

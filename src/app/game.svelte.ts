@@ -1,12 +1,5 @@
 import type { Submission } from '../core/evaluate';
-import {
-  isLevelComplete,
-  levelPoints,
-  NEW_GAME,
-  nextLevel,
-  submitWord,
-  type GameState,
-} from '../core/game';
+import { isLevelComplete, levelPoints, nextLevel, submitWord, type GameState } from '../core/game';
 import { generateLevel } from '../core/generate';
 import type { Level } from '../core/level';
 
@@ -16,15 +9,22 @@ import type { Level } from '../core/level';
  */
 export class Game {
   #state: GameState;
+  #onchange: (state: GameState) => void;
   /** The level being played, generated once per level number. */
   readonly level: Level;
 
   /**
    * @param words Every valid word, most common first (from `loadWords`).
-   * @param levelNumber Level to start on.
+   * @param state Where to start: a saved game, or a new one.
+   * @param onchange Called with the new state after every change, e.g. to save it.
    */
-  constructor(words: readonly string[], levelNumber = 1) {
-    this.#state = $state({ ...NEW_GAME, levelNumber });
+  constructor(
+    words: readonly string[],
+    state: GameState,
+    onchange: (state: GameState) => void = () => {},
+  ) {
+    this.#state = $state(state);
+    this.#onchange = onchange;
     this.level = $derived(generateLevel(words, this.#state.levelNumber));
   }
 
@@ -61,12 +61,18 @@ export class Game {
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
     const { submission, state } = submitWord(this.#state, this.level, word);
-    this.#state = state;
+    this.#update(state);
     return submission;
   }
 
   /** Moves on to the next level. */
   next(): void {
-    this.#state = nextLevel(this.#state);
+    this.#update(nextLevel(this.#state));
+  }
+
+  #update(state: GameState) {
+    if (state === this.#state) return;
+    this.#state = state;
+    this.#onchange(state);
   }
 }
