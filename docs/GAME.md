@@ -52,6 +52,10 @@ Each completed level is recorded with its tier, hints used, bonus words found an
 otherwise. Replaying a level keeps the best of every play (most stars, fewest hints, most
 bonus words), so stats and achievements never go down.
 
+Finishing a level shows its stars landing one by one, then the points counting up, the
+bonus words and hints won (none isn't mentioned) and, short of three stars, what was
+missing ("Para 3 estrellas: sin pistas y 1 palabra extra más").
+
 The **map** shows every level reached, by tier, with its stars; tapping an earlier level
 replays it as it was generated. A replay only counts for better stars: it pays no points,
 no progress toward hints and no extra-hard hint (the level already paid once), and never

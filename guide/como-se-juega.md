@@ -49,8 +49,9 @@ nivel, pero no son en vano: te acercan a [ganar pistas](/pistas).
 
 ## Completar el nivel
 
-Cuando llenás todo el tablero, el nivel se completa: ves tus puntos, tus
-[estrellas](/progreso) y la lista de palabras del nivel. Tocá cualquiera para ver qué
+Cuando llenás todo el tablero, el nivel se completa: ves tus
+[estrellas](/progreso), tus puntos y la lista de palabras del nivel. Si te faltó alguna
+estrella, te dice qué te faltó para las 3. Tocá cualquiera para ver qué
 significa en el diccionario. Después, **Siguiente nivel**.
 
 <img class="screen" src="/screenshots/nivel-completo.png" alt="Nivel completo: estrellas, puntos y las palabras del nivel">

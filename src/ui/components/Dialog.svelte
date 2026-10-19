@@ -82,8 +82,11 @@ focus goes back where it was when it closes.
     color: inherit;
   }
 
+  /* One row as tall as the screen, so a long card scrolls inside it instead of running
+     off a short (landscape) screen. */
   .backdrop[open] {
     display: grid;
+    grid-template-rows: minmax(0, 1fr);
     place-items: center;
   }
 
@@ -118,5 +121,20 @@ focus goes back where it was when it closes.
     font-size: var(--text-2xl);
     color: var(--color-accent);
     outline: none;
+  }
+
+  @media (max-height: 500px) {
+    .backdrop {
+      padding: var(--space-3);
+    }
+
+    .card {
+      gap: var(--space-2);
+      padding: var(--space-4);
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+    }
   }
 </style>

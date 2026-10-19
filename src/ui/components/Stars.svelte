@@ -1,15 +1,15 @@
 <!--
 @component
-A level's stars: three, filled as earned. They can pop in one after another.
+A level's stars: three, filled as earned. They can land one after another.
 
 - `stars`: earned, from 0 to 3.
 - `size`: in pixels.
-- `delay`: milliseconds before popping in; omit to show them right away.
+- `delay`: milliseconds before landing; omit to show them right away.
 -->
 <script lang="ts">
-  import { backOut } from 'svelte/easing';
+  import { cubicOut } from 'svelte/easing';
   import { strings } from '../../i18n';
-  import { DURATION, scale } from '../lib/motion';
+  import { DURATION, fly, STAR_STAGGER } from '../lib/motion';
 
   type Props = { stars: number; size?: number; delay?: number };
   let { stars, size = 20, delay }: Props = $props();
@@ -20,11 +20,11 @@ A level's stars: three, filled as earned. They can pop in one after another.
     <svg
       viewBox="0 0 24 24"
       class:earned={star <= stars}
-      in:scale={{
-        start: 0.2,
+      in:fly={{
+        y: -size / 2,
         duration: delay === undefined ? 0 : DURATION.slow * 1.5,
-        delay: (delay ?? 0) + star * 150,
-        easing: backOut,
+        delay: (delay ?? 0) + (star - 1) * STAR_STAGGER,
+        easing: cubicOut,
       }}
     >
       <path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z" />

@@ -29,6 +29,9 @@ export const FEEDBACK_DURATION = 700;
 /** Pause after the last word before celebrating, so its tiles can pop in first. */
 export const CELEBRATION_DELAY = 500;
 
+/** Delay between a level's stars landing, one by one. */
+export const STAR_STAGGER = 250;
+
 /** Delay between consecutive tiles of a word appearing, for a quick cascade. */
 export const TILE_STAGGER = 45;
 

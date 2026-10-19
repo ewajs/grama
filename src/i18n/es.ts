@@ -162,7 +162,11 @@ export const es = {
   hintsWon: (count: number) => (count === 1 ? '+1 pista' : `+${count} pistas`),
   replayPays: 'Ya lo habías completado: no suma puntos',
   starsLabel: (stars: number) => (stars === 1 ? '1 estrella' : `${stars} estrellas`),
-  starsHow: '3 estrellas: sin pistas y con 3 palabras extra.',
+  starsMissing: ({ hints, bonus }: { hints: number; bonus: number }) => {
+    const more = bonus === 1 ? '1 palabra extra más' : `${bonus} palabras extra más`;
+    if (hints > 0 && bonus > 0) return `Para 3 estrellas: sin pistas y ${more}.`;
+    return hints > 0 ? 'Para 3 estrellas: sin pistas.' : `Para 3 estrellas: ${more}.`;
+  },
   recap: 'Las palabras · tocá una para ver qué significa',
   definitionOf: (word: string) => `Qué significa ${word}`,
   definitionHint: 'Mirá qué significa en el diccionario de la Real Academia Española.',
