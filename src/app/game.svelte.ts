@@ -1,10 +1,12 @@
+import { unlocked, type AchievementId } from '../core/achievements';
 import { boardRows, type BoardRow } from '../core/board';
 import { occurrence, tierFor, type Difficulty } from '../core/cadence';
+import { dailyFor, dailyNumber, dailyTier, generateDaily, streak } from '../core/daily';
 import type { Tier } from '../core/difficulty';
 import type { Submission } from '../core/evaluate';
 import { generateLevel } from '../core/generate';
 import { BONUS_WORDS_PER_HINT } from '../core/hints';
-import type { History, Stars } from '../core/history';
+import { starsFor, type History, type LevelRecord, type Stars } from '../core/history';
 import type { Level } from '../core/level';
 import {
   canUseHint,
@@ -12,14 +14,38 @@ import {
   nextLevel,
   playWord,
   useHint,
+  type Place,
   type Progress,
 } from '../core/progress';
-import { starsFor } from '../core/history';
+import {
+  bonusWords,
+  hintsUsed,
+  isComplete,
+  NEW_SESSION,
+  sessionPoints,
+  type Session,
+} from '../core/session';
 import { statsOf, type Stats } from '../core/stats';
-import { unlocked, type AchievementId } from '../core/achievements';
-import { bonusWords, isComplete, NEW_SESSION, sessionPoints, type Session } from '../core/session';
 import type { WordList } from '../content/words';
+import { today } from './clock';
 import { reportUrl, type ReportKind } from './report';
+
+/** What's being played: the player's current level, a replay of an earlier one, or a daily. */
+type Mode =
+  | { kind: 'current' }
+  | { kind: 'replay'; levelNumber: number; difficulty: Difficulty; session: Session }
+  | { kind: 'daily'; date: string };
+
+/** Today's daily challenge, as the home screen shows it. */
+export type DailySummary = {
+  number: number;
+  date: string;
+  tier: Tier;
+  /** Its best result, once completed. */
+  result: LevelRecord | undefined;
+  /** Consecutive days completed, still alive through yesterday. */
+  streak: number;
+};
 
 /**
  * The running game: the rules from `core` plus reactive state the UI reads.
@@ -29,11 +55,10 @@ export class Game {
   #progress: Progress;
   #onchange: (progress: Progress) => void;
   #spellings: ReadonlyMap<string, string>;
+  #mode = $state<Mode>({ kind: 'current' });
   /** Words rejected on this level, most recent last; kept for reports, not saved. */
   #rejected = $state<string[]>([]);
-  /** A completed level being played again, if any; not saved. */
-  #replay = $state<{ levelNumber: number; difficulty: Difficulty; session: Session } | null>(null);
-  /** The level being played, generated once per level number. */
+  /** The level being played, generated once per level (or date). */
   readonly level: Level;
 
   /**
@@ -54,25 +79,31 @@ export class Game {
     // on a derived when its value changes (===), so the wheel keeps a shuffled order.
     let current: { key: string; level: Level } | null = null;
     this.level = $derived.by(() => {
-      const { levelNumber, difficulty } = this.#playing;
-      const key = `${levelNumber}:${difficulty}`;
-      if (current?.key !== key) {
-        const tier = tierFor(levelNumber, difficulty);
-        const occurs = occurrence(levelNumber, difficulty);
-        current = { key, level: generateLevel(words.words, levelNumber, tier, occurs) };
-      }
+      const { place } = this.#playing;
+      const key = place.kind === 'daily' ? place.date : `${place.levelNumber}:${place.difficulty}`;
+      if (current?.key !== key) current = { key, level: generate(words.words, place) };
       return current.level;
     });
   }
 
-  /** The level on screen: a replay, or else the player's current one. */
-  get #playing(): { levelNumber: number; difficulty: Difficulty; session: Session } {
-    return this.#replay ?? this.#progress;
+  /** What's on screen: where it belongs and how far along it is. */
+  get #playing(): { place: Place; session: Session } {
+    const mode = this.#mode;
+    const progress = this.#progress;
+    if (mode.kind === 'daily') {
+      return {
+        place: { kind: 'daily', date: mode.date },
+        session: dailyFor(progress.daily, mode.date).session,
+      };
+    }
+    const { levelNumber, difficulty, session } = mode.kind === 'replay' ? mode : progress;
+    return { place: { kind: 'level', levelNumber, difficulty }, session };
   }
 
-  /** The number of the level on screen, starting at 1. */
+  /** The number of the level on screen; for a daily challenge, the daily's number. */
   get levelNumber(): number {
-    return this.#playing.levelNumber;
+    const { place } = this.#playing;
+    return place.kind === 'daily' ? dailyNumber(place.date) : place.levelNumber;
   }
 
   /** The player's current level: the furthest reached. */
@@ -82,7 +113,24 @@ export class Game {
 
   /** Whether the level on screen is a replay of an earlier one. */
   get replaying(): boolean {
-    return this.#replay !== null;
+    return this.#mode.kind === 'replay';
+  }
+
+  /** Whether the level on screen is a daily challenge. */
+  get daily(): boolean {
+    return this.#mode.kind === 'daily';
+  }
+
+  /** Today's daily challenge: its number, tier, result and the streak. */
+  get today(): DailySummary {
+    const date = today();
+    return {
+      number: dailyNumber(date),
+      date,
+      tier: dailyTier(date),
+      result: this.#progress.dailies[date],
+      streak: streak(this.#progress.dailies, date),
+    };
   }
 
   /** Every completed level's best result. */
@@ -90,9 +138,9 @@ export class Game {
     return this.#progress.history;
   }
 
-  /** The player's totals, from the history. */
+  /** The player's totals, from the history and the daily challenges. */
   get stats(): Stats {
-    return statsOf(this.#progress.history);
+    return statsOf(this.#progress.history, this.#progress.dailies);
   }
 
   /** The achievements the player has reached. */
@@ -100,19 +148,24 @@ export class Game {
     return unlocked(this.stats);
   }
 
-  /** How hard the current level is. */
+  /** How hard the level on screen is. */
   get tier(): Tier {
     return this.level.tier;
   }
 
-  /** Whether every target of the current level has been found. */
+  /** Whether every target of the level on screen has been found. */
   get complete(): boolean {
     return isComplete(this.level, this.#playing.session);
   }
 
-  /** Stars the current level earns as played so far (final once complete). */
+  /** Stars the level on screen earns as played so far (final once complete). */
   get stars(): Stars {
     return starsFor(this.level, this.#playing.session);
+  }
+
+  /** Hints spent on the level on screen. */
+  get hintsUsed(): number {
+    return hintsUsed(this.#playing.session);
   }
 
   /** Points across all levels. */
@@ -120,7 +173,7 @@ export class Game {
     return this.#progress.score;
   }
 
-  /** Points won on the current level so far. */
+  /** Points won on the level on screen so far. */
   get levelPoints(): number {
     return sessionPoints(this.level, this.#playing.session);
   }
@@ -153,17 +206,17 @@ export class Game {
     return canUseHint(this.#progress, this.level, this.#playing.session);
   }
 
-  /** Bonus words found on the current level, as written, in the order found. */
+  /** Bonus words found on the level on screen, as written, in the order found. */
   get bonusWords(): string[] {
     return bonusWords(this.level, this.#playing.session).map((word) => this.written(word));
   }
 
-  /** How many bonus words have been found on the current level. */
+  /** How many bonus words have been found on the level on screen. */
   get bonusFound(): number {
     return bonusWords(this.level, this.#playing.session).length;
   }
 
-  /** How many bonus words the current level has. */
+  /** How many bonus words the level on screen has. */
   get bonusTotal(): number {
     return this.level.bonus.length;
   }
@@ -175,8 +228,7 @@ export class Game {
 
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
-    const { levelNumber, difficulty, session } = this.#playing;
-    const place = { kind: 'level', levelNumber, difficulty } as const;
+    const { place, session } = this.#playing;
     const played = playWord(this.#progress, this.level, place, session, word);
     if (played.submission.kind === 'invalid') {
       this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
@@ -192,11 +244,10 @@ export class Game {
     if (used.session !== session) this.#apply(used.progress, used.session);
   }
 
-  /** Starts over from level 1, as a new game at the given difficulty. */
-  reset(difficulty: Difficulty): void {
-    this.#rejected = [];
-    this.#replay = null;
-    this.#update({ ...NEW_PROGRESS, difficulty });
+  /** Back to the player's current level (from a replay or a daily). */
+  playCurrent(): void {
+    if (this.#mode.kind !== 'current') this.#rejected = [];
+    this.#mode = { kind: 'current' };
   }
 
   /**
@@ -204,16 +255,23 @@ export class Game {
    * player's score, hints and history, but never changes their current level.
    */
   replay(levelNumber: number): void {
-    if (levelNumber >= this.#progress.levelNumber) return this.endReplay();
+    if (levelNumber >= this.#progress.levelNumber) return this.playCurrent();
     const difficulty = this.#progress.history[levelNumber]?.difficulty ?? this.#progress.difficulty;
     this.#rejected = [];
-    this.#replay = { levelNumber, difficulty, session: NEW_SESSION };
+    this.#mode = { kind: 'replay', levelNumber, difficulty, session: NEW_SESSION };
   }
 
-  /** Back to the player's current level. */
-  endReplay(): void {
-    if (this.#replay) this.#rejected = [];
-    this.#replay = null;
+  /** Plays today's daily challenge, picking up where it was left. */
+  playDaily(): void {
+    this.#rejected = [];
+    this.#mode = { kind: 'daily', date: today() };
+  }
+
+  /** Starts over from level 1, as a new game at the given difficulty. */
+  reset(difficulty: Difficulty): void {
+    this.#rejected = [];
+    this.#mode = { kind: 'current' };
+    this.#update({ ...NEW_PROGRESS, difficulty });
   }
 
   /** Moves on to the next level, at the player's current difficulty. */
@@ -222,7 +280,7 @@ export class Game {
     this.#update(nextLevel(this.#progress, difficulty));
   }
 
-  /** A link to report a problem with the current level on GitHub. */
+  /** A link to report a problem with the level on screen on GitHub. */
   reportUrl(kind: ReportKind): string {
     return reportUrl(kind, {
       levelNumber: this.levelNumber,
@@ -234,11 +292,14 @@ export class Game {
     });
   }
 
-  /** Applies a played word or hint: the session goes to the replay or the current level. */
+  /** Applies a played word or hint: the session goes where the level on screen belongs. */
   #apply(progress: Progress, session: Session) {
-    if (this.#replay) {
-      this.#replay = { ...this.#replay, session };
+    const mode = this.#mode;
+    if (mode.kind === 'replay') {
+      this.#mode = { ...mode, session };
       this.#update(progress);
+    } else if (mode.kind === 'daily') {
+      this.#update({ ...progress, daily: { date: mode.date, session } });
     } else {
       this.#update({ ...progress, session });
     }
@@ -248,4 +309,12 @@ export class Game {
     this.#progress = progress;
     this.#onchange(progress);
   }
+}
+
+/** Generates the level at a place: a numbered level at its tier, or a date's daily. */
+function generate(words: readonly string[], place: Place): Level {
+  if (place.kind === 'daily') return generateDaily(words, place.date);
+  const { levelNumber, difficulty } = place;
+  const tier = tierFor(levelNumber, difficulty);
+  return generateLevel(words, levelNumber, tier, occurrence(levelNumber, difficulty));
 }

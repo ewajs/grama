@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { buildWordList, parseWordList } from '../../src/content/words';
 import { spanish } from '../../src/core/spanish';
 import { occurrence, tierFor } from '../../src/core/cadence';
+import { dateKey, dailyNumber, generateDaily } from '../../src/core/daily';
 import { generateLevel } from '../../src/core/generate';
 import type { Level } from '../../src/core/level';
 
@@ -18,6 +19,12 @@ const { words, spellings } = buildWordList(
 /** Level `number` exactly as the app generates it, so tests know its words. */
 export function level(number: number): Level {
   return generateLevel(words, number, tierFor(number, 'normal'), occurrence(number, 'normal'));
+}
+
+/** Today's daily challenge, exactly as the app generates it, and its number. */
+export function todaysDaily(): { level: Level; number: number } {
+  const date = dateKey(new Date());
+  return { level: generateDaily(words, date), number: dailyNumber(date) };
 }
 
 /** How the app writes a word, with its accents. */

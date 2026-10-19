@@ -7,6 +7,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
 - `onplay()`: continue playing.
 - `onmap()`: open the level map.
 - `onstats()`: open the achievements and stats.
+- `ondaily()`: play today's daily challenge.
 -->
 <script lang="ts">
   import { fly } from 'svelte/transition';
@@ -14,9 +15,19 @@ The home screen: where the app opens. Continue the game from here; more is comin
   import { ACHIEVEMENTS } from '../../core/achievements';
   import { strings } from '../../i18n';
   import { DURATION } from '../lib/motion';
+  import Stars from './Stars.svelte';
 
-  type Props = { game: Game; onplay: () => void; onmap: () => void; onstats: () => void };
-  let { game, onplay, onmap, onstats }: Props = $props();
+  type Props = {
+    game: Game;
+    onplay: () => void;
+    onmap: () => void;
+    onstats: () => void;
+    ondaily: () => void;
+  };
+  let { game, onplay, onmap, onstats, ondaily }: Props = $props();
+
+  const today = $derived(game.today);
+  const weekday = $derived(strings.weekday(today.date));
 
   const results = $derived(Object.values(game.history));
   const stars = $derived(results.reduce((sum, result) => sum + result.stars, 0));
@@ -34,6 +45,21 @@ The home screen: where the app opens. Continue the game from here; more is comin
     <span class="detail">
       {strings.level(game.levelNumber)}
       <span class="badge {game.tier}">{strings.tiers[game.tier]}</span>
+    </span>
+  </button>
+
+  <button class="card daily" onclick={ondaily}>
+    <span class="label">
+      {strings.dailyChallenge}
+      <small>{weekday} · {strings.tiers[today.tier]}</small>
+    </span>
+    <span class="detail">
+      {#if today.result}
+        <Stars stars={today.result.stars} size={14} />
+      {/if}
+      {#if today.streak > 0}
+        <span class="streak">{strings.streak(today.streak)}</span>
+      {/if}
     </span>
   </button>
 
@@ -167,7 +193,31 @@ The home screen: where the app opens. Continue the game from here; more is comin
   }
 
   .card .label {
+    display: grid;
+    justify-items: start;
     font-size: var(--text-lg);
+  }
+
+  .card small {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .daily {
+    box-shadow:
+      inset 0 0 0 2px var(--color-bonus),
+      var(--shadow-sm);
+  }
+
+  .card .detail {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .streak {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
   }
 
   .card .detail {

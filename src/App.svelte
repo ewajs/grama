@@ -65,11 +65,15 @@
     <Home
       {game}
       onplay={() => {
-        game.endReplay();
+        game.playCurrent();
         navigation.go('game');
       }}
       onmap={() => navigation.go('map')}
       onstats={() => navigation.go('stats')}
+      ondaily={() => {
+        game.playDaily();
+        navigation.go('game');
+      }}
     />
   {/if}
 {:catch}

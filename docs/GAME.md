@@ -46,10 +46,19 @@ The **map** shows every level reached, by tier, with its stars; tapping an earli
 replays it as it was generated. Replays share score, hints and history but never change
 the current level, and the extra-hard hint is only earned the first time.
 
+### Daily challenge (`src/core/daily.ts`)
+
+One level per date (the player's own), the same for everyone: 7 letters, 8 targets, and a
+difficulty by weekday (Monday–Tuesday easy, Wednesday–Thursday medium, Friday–Saturday
+hard, Sunday extra hard). It's saved as it's played; completing it records the date and
+keeps a **streak** of consecutive days, alive until the day without one ends. The result
+can be shared: "Grama #3 · Miércoles · Media / ★★☆ · 1 pista · 🔥 3". Points and hints are
+shared with the main game; it never moves the current level.
+
 ### Achievements (`src/core/achievements.ts`)
 
-15 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
-bonus words, levels without hints). A toast announces each one as it's earned; the
+19 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
+bonus words, levels without hints, dailies and streaks). A toast announces each one as it's earned; the
 Logros screen lists them with progress and the player's stats.
 
 ### Hints (tunable in `src/core/hints.ts`)
