@@ -160,15 +160,20 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 
 ## Walkthrough 3: today becomes a daily challenge
 
-1. Home reads {@link "app/game.svelte"!Game.today | Game.today}: {@link "app/clock"!today | today} gives the
-   local date, {@link "core/daily"!dailyNumber | dailyNumber} its number,
-   {@link "core/daily"!dailyTier | dailyTier} its weekday tier, {@link "core/daily"!streak | streak} the streak.
+1. Home reads {@link "app/game.svelte"!Game.today | Game.today}. `Game` reads the date from its clock
+   ({@link "app/clock"!today | today}, unless a test passes another) when it starts, and again
+   with {@link "app/game.svelte"!Game.refreshDate | refreshDate} when the app comes back to the
+   foreground, since a PWA can sleep past midnight. From the date,
+   {@link "core/daily"!dailyNumber | dailyNumber} gives its number,
+   {@link "core/daily"!dailyTier | dailyTier} its weekday tier and {@link "core/daily"!streak | streak} the streak.
 2. "Desafío del día" calls `game.playDaily()`: the mode becomes the daily, and
    {@link "core/daily"!generateDaily | generateDaily} builds a 7-letter level from seeds at the far end
    of the tier's order, away from the main levels'.
 3. Words are played exactly as in walkthrough 1, with a `daily` place: the session is saved
    in `progress.daily`, and completion is recorded in `progress.dailies` under the date.
-4. "Compartir" builds the text from the result and calls {@link "app/share"!shareText | shareText}.
+4. "Compartir" builds the text from the daily on screen
+   ({@link "app/game.svelte"!Game.dailyOnScreen | dailyOnScreen}: its own date, even if it's
+   past midnight) and calls {@link "app/share"!shareText | shareText}.
 
 ## Storage and offline
 

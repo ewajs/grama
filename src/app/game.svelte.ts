@@ -39,17 +39,17 @@ type Mode =
   | { kind: 'replay'; place: LevelPlace; session: Session }
   | { kind: 'daily'; date: string };
 
-/** Today's daily challenge, as the home screen shows it. */
+/** A day's daily challenge, as the home screen shows it and the share text tells it. */
 export type DailySummary = {
   /** The daily's number: 1 for the first one. */
   number: number;
-  /** Today, `YYYY-MM-DD`. */
+  /** Its date, `YYYY-MM-DD`. */
   date: string;
   /** How hard it is (it depends on the weekday). */
   tier: Tier;
   /** Its best result, once completed. */
   result: LevelRecord | undefined;
-  /** Consecutive days completed, still alive through yesterday. */
+  /** Consecutive days completed up to it, still alive through the day before. */
   streak: number;
 };
 
@@ -61,6 +61,9 @@ export class Game {
   #progress: Progress;
   #onchange: (progress: Progress) => void;
   #spellings: ReadonlyMap<string, string>;
+  #clock: () => string;
+  /** Today's date, read from the clock when the game starts and on {@link refreshDate}. */
+  #today: string;
   #mode = $state<Mode>({ kind: 'current' });
   /** Words rejected on this level, most recent last; kept for reports, not saved. */
   #rejected = $state<string[]>([]);
@@ -71,14 +74,18 @@ export class Game {
    * @param words The language's words (from `loadWords`).
    * @param progress Where to start: a saved game, or a new one.
    * @param onchange Called with the new progress after every change, e.g. to save it.
+   * @param clock Today's date as `YYYY-MM-DD`; the device's clock unless a test passes one.
    */
   constructor(
     words: WordList,
     progress: Progress,
     onchange: (progress: Progress) => void = () => {},
+    clock: () => string = today,
   ) {
     this.#progress = $state(progress);
     this.#onchange = onchange;
+    this.#clock = clock;
+    this.#today = $state(clock());
     this.#spellings = words.spellings;
     // Progress is replaced on every word, which re-runs this. Returning the same Level
     // object until the level actually changes matters: Svelte only updates what depends
@@ -110,6 +117,11 @@ export class Game {
       : { place: currentPlace(progress), session: progress.session };
   }
 
+  /** The player's current level's tier, whatever is on screen. */
+  get currentTier(): Tier {
+    return tierFor(this.#progress.levelNumber, this.#progress.difficulty);
+  }
+
   /** The number of the level on screen; for a daily challenge, the daily's number. */
   get levelNumber(): number {
     const { place } = this.#playing;
@@ -133,14 +145,17 @@ export class Game {
 
   /** Today's daily challenge: its number, tier, result and the streak. */
   get today(): DailySummary {
-    const date = today();
-    return {
-      number: dailyNumber(date),
-      date,
-      tier: dailyTier(date),
-      result: this.#progress.dailies[date],
-      streak: streak(this.#progress.dailies, date),
-    };
+    return this.#dailySummary(this.#today);
+  }
+
+  /** The daily challenge on screen (maybe yesterday's, if played past midnight), or `null`. */
+  get dailyOnScreen(): DailySummary | null {
+    return this.#mode.kind === 'daily' ? this.#dailySummary(this.#mode.date) : null;
+  }
+
+  /** Reads the clock again: after the app comes back, it may be another day. */
+  refreshDate(): void {
+    this.#today = this.#clock();
   }
 
   /** Every completed level's best result. */
@@ -294,7 +309,7 @@ export class Game {
   /** Plays today's daily challenge, picking up where it was left. */
   playDaily(): void {
     this.#rejected = [];
-    this.#mode = { kind: 'daily', date: today() };
+    this.#mode = { kind: 'daily', date: this.#today };
   }
 
   /** Starts over from level 1, as a new game at the given difficulty. */
@@ -321,6 +336,16 @@ export class Game {
       rejected: this.#rejected,
       build: __BUILD__,
     });
+  }
+
+  #dailySummary(date: string): DailySummary {
+    return {
+      number: dailyNumber(date),
+      date,
+      tier: dailyTier(date),
+      result: this.#progress.dailies[date],
+      streak: streak(this.#progress.dailies, date),
+    };
   }
 
   /** Applies a played word or hint: the session goes where the level on screen belongs. */
