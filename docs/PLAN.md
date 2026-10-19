@@ -28,7 +28,7 @@ Goal: an empty but real app, live on GitHub Pages, with the quality gates in pla
 Goal: the whole game logic, tested, with no UI.
 
 - [x] `Language` definition (code, `normalize`) with the Spanish one (accents, `Ñ`, case) + tests
-- [ ] `Level` type and a handful of hand-written fixture levels
+- [x] `Level` type and a handful of hand-written fixture levels
 - [ ] `evaluate(level, state, word)` → `invalid | target | bonus | repeated` + tests
 - [ ] Scoring and `isComplete(level, state)` + tests
 - [ ] Level progression: next level id, cycling after the last one + tests
