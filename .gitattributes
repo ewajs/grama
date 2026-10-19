@@ -1,0 +1,2 @@
+# Generated word lists: collapsed in diffs (regenerate with npm run words)
+src/content/*/*.txt linguist-generated=true

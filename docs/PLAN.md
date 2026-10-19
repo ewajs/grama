@@ -67,7 +67,7 @@ Goal: levels never run out, generated on the device (D11), good enough to playte
 - [x] Choose word sources (common words + broad dictionary) and **verify licenses**;
       record the decision in DECISIONS.md. Must include Argentine usage (voseo forms like
       _tenés_, _sabés_; words like _che_, _pibe_) at least as valid bonus words
-- [ ] `scripts/prepare-words.ts`: normalize and filter the sources (length, proper nouns,
+- [x] `scripts/prepare-words.ts`: normalize and filter the sources (length, proper nouns,
       offensive list) into a compact word list with frequency ranks, shipped as a static file
 - [x] `src/core/generate.ts`: pure `generateLevel(words, levelNumber)`: seeded RNG, pick a
       seed word, find every word its letters spell, choose targets (common) vs bonus (rest);
@@ -108,6 +108,8 @@ Goal: installable, works offline, never loses progress.
 - Crossword-style board layout
 - Sound effects with mute toggle
 - English (or other) language packs + language picker (the structure is in place from M0/M1)
+- Argentine supplement word list (MIT, hand-curated) so words missing from the dictionary
+  (_pibe, coima, bondi, subte_) can be targets
 - Accented display of found words (show `ÁRBOL`, match `ARBOL`)
 - Share results
 

@@ -26,3 +26,6 @@ dist-ssr
 # Playwright
 playwright-report
 test-results
+
+# Downloaded word sources (scripts/prepare-words.ts)
+.cache

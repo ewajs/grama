@@ -6,7 +6,7 @@ export default defineConfig({
   base: '/grama/',
   plugins: [svelte()],
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],
     passWithNoTests: true,
   },
 });
