@@ -233,6 +233,7 @@ letter wheel with its controls.
       : strings.levelCompleteDetail(game.levelNumber)}
     tier={game.tier}
     stars={game.stars}
+    missing={game.missingStars}
     words={game.targetWords}
     nextLabel={game.daily
       ? strings.backHome

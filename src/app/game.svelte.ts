@@ -12,7 +12,14 @@ import type { Tier } from '../core/difficulty';
 import type { Submission } from '../core/evaluate';
 import { generateLevel } from '../core/generate';
 import { BONUS_WORDS_PER_HINT } from '../core/hints';
-import { starsFor, type History, type LevelRecord, type Stars } from '../core/history';
+import {
+  missingForThreeStars,
+  starsFor,
+  type History,
+  type LevelRecord,
+  type MissingStars,
+  type Stars,
+} from '../core/history';
 import type { Level } from '../core/level';
 import {
   canUseHint,
@@ -227,6 +234,11 @@ export class Game {
   /** Stars the level on screen earns as played so far (final once complete). */
   get stars(): Stars {
     return starsFor(this.level, this.#playing.session);
+  }
+
+  /** What the level on screen lacks for three stars, as played so far. */
+  get missingStars(): MissingStars {
+    return missingForThreeStars(this.level, this.#playing.session);
   }
 
   /** Hints spent on the level on screen. */

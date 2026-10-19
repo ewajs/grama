@@ -1,23 +1,28 @@
 <!--
 @component
-Celebrates a finished level over the game screen, with what was won, and moves on.
+Celebrates a finished level over the game screen, with what was won, and moves on. The
+stars land one by one, then the points count up.
 
 - `detail`: what was finished: "Completaste el nivel 12".
 - `tier`: how hard it was; harder levels list their rewards.
 - `stars`: stars earned on it.
+- `missing`: what it lacked for three stars, said when it got fewer.
 - `words`: its targets, as written, each linking to its definition.
 - `points`: points won on it; none means a replay, which pays nothing.
 - `hints`: hints won by finishing it.
-- `bonus`: bonus words found on it.
+- `bonus`: bonus words found on it; none isn't mentioned.
 - `nextLabel`: the button's label (the next level, or back to the map after a replay).
 - `share()`: when given, a share button (daily challenge); it says how it went.
 - `onnext()`: the player is done here.
 -->
 <script lang="ts">
+  import { cubicOut } from 'svelte/easing';
+  import { Tween } from 'svelte/motion';
   import type { Tier } from '../../core/difficulty';
   import { TIER_MULTIPLIER } from '../../core/evaluate';
+  import type { MissingStars } from '../../core/history';
   import { strings } from '../../i18n';
-  import { CELEBRATION_DELAY } from '../lib/motion';
+  import { CELEBRATION_DELAY, SCORE_COUNT_DURATION, STAR_STAGGER } from '../lib/motion';
   import { definitionUrl } from '../../app/dictionary';
   import Confetti from './Confetti.svelte';
   import Dialog from './Dialog.svelte';
@@ -27,6 +32,7 @@ Celebrates a finished level over the game screen, with what was won, and moves o
     detail: string;
     tier: Tier;
     stars: number;
+    missing: MissingStars;
     words: readonly string[];
     points: number;
     hints: number;
@@ -35,10 +41,27 @@ Celebrates a finished level over the game screen, with what was won, and moves o
     share?: () => Promise<'shared' | 'copied' | 'failed'>;
     onnext: () => void;
   };
-  let { detail, tier, stars, words, points, hints, bonus, nextLabel, share, onnext }: Props =
-    $props();
+  let {
+    detail,
+    tier,
+    stars,
+    missing,
+    words,
+    points,
+    hints,
+    bonus,
+    nextLabel,
+    share,
+    onnext,
+  }: Props = $props();
 
   let copied = $state(false);
+
+  // The points count up from 0 once the three stars have landed.
+  const counted = new Tween(0, { duration: SCORE_COUNT_DURATION * 2, easing: cubicOut });
+  $effect(() => {
+    counted.set(points, { delay: CELEBRATION_DELAY + 3 * STAR_STAGGER });
+  });
 </script>
 
 <Dialog title={strings.levelComplete} delay={CELEBRATION_DELAY}>
@@ -48,7 +71,7 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   <p>{detail}</p>
   <div class="stars"><Stars {stars} size={44} delay={CELEBRATION_DELAY} /></div>
   {#if stars < 3}
-    <p class="how">{strings.starsHow}</p>
+    <p class="how">{strings.starsMissing(missing)}</p>
   {/if}
   <ul>
     {#if points === 0}
@@ -59,9 +82,13 @@ Celebrates a finished level over the game screen, with what was won, and moves o
           {strings.tiers[tier]} · {strings.tierReward(TIER_MULTIPLIER[tier])}
         </li>
       {/if}
-      <li class="points">{strings.pointsWon(points)}</li>
+      <li class="points" aria-label={strings.pointsWon(points)}>
+        {strings.pointsWon(Math.round(counted.current))}
+      </li>
     {/if}
-    <li class="bonus">{strings.bonusWords(bonus)}</li>
+    {#if bonus > 0}
+      <li class="bonus">{strings.bonusWords(bonus)}</li>
+    {/if}
     {#if hints > 0}
       <li class="hint">{strings.hintsWon(hints)}</li>
     {/if}
@@ -150,6 +177,7 @@ Celebrates a finished level over the game screen, with what was won, and moves o
 
   li {
     padding: var(--space-1) var(--space-3);
+    font-variant-numeric: tabular-nums;
     border-radius: var(--radius-full);
     background: var(--color-tile);
     box-shadow: inset 0 0 0 1px var(--color-tile-border);

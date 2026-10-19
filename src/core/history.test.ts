@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { record, recordOf, starsFor, type History, type LevelRecord } from './history';
+import {
+  missingForThreeStars,
+  record,
+  recordOf,
+  starsFor,
+  type History,
+  type LevelRecord,
+} from './history';
 import type { Level } from './level';
 import { NEW_SESSION } from './session';
 
@@ -33,6 +40,24 @@ describe('starsFor', () => {
     expect(starsFor(level, { ...NEW_SESSION, found: all, revealed: { SOL: 1, PLATOS: 1 } })).toBe(
       1,
     );
+  });
+});
+
+describe('missingForThreeStars', () => {
+  it('counts the hints spent and the bonus words still to find', () => {
+    expect(
+      missingForThreeStars(level, { ...NEW_SESSION, found: [...all, 'OLA'], revealed: { SOL: 2 } }),
+    ).toEqual({ hints: 2, bonus: 2 });
+  });
+
+  it('is nothing for a three-star play, however many bonus words past three', () => {
+    expect(
+      missingForThreeStars(level, {
+        ...NEW_SESSION,
+        found: [...all, 'OLA', 'LOS', 'LAS', 'TOS'],
+        revealed: {},
+      }),
+    ).toEqual({ hints: 0, bonus: 0 });
   });
 });
 

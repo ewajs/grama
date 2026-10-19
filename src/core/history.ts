@@ -35,13 +35,29 @@ export type LevelRecord = {
 /** Completed levels by number: the player's best on each. */
 export type History = Readonly<Record<number, LevelRecord>>;
 
+/** What a play lacks for three stars: nothing when both are 0. */
+export type MissingStars = {
+  /** Hints spent, where three stars allow none. */
+  hints: number;
+  /** Bonus words still to find. */
+  bonus: number;
+};
+
+/** What a play of `level` lacks for three stars, so far. */
+export function missingForThreeStars(level: Level, session: Session): MissingStars {
+  return {
+    hints: hintsUsed(session),
+    bonus: Math.max(0, THREE_STAR_BONUS - bonusWords(level, session).length),
+  };
+}
+
 /**
  * Stars for a completed level: ★★★ with no hints and at least {@link THREE_STAR_BONUS}
  * bonus words, ★★ with at most one hint, ★ otherwise.
  */
 export function starsFor(level: Level, session: Session): Stars {
-  const hints = hintsUsed(session);
-  if (hints === 0 && bonusWords(level, session).length >= THREE_STAR_BONUS) return 3;
+  const { hints, bonus } = missingForThreeStars(level, session);
+  if (hints === 0 && bonus === 0) return 3;
   return hints <= 1 ? 2 : 1;
 }
 
