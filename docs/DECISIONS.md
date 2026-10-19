@@ -8,6 +8,32 @@ delete it, the history is the point.
 
 ---
 
+## D13 · Grama's code is MIT-licensed — 2026-10-18
+
+- **Decision:** `LICENSE` (MIT) covers our code. Third-party data files keep their own
+  licenses (D12) and say so in a header and in `NOTICE.md`.
+
+## D12 · Word sources: RLA-ES es_AR + wordfreq — 2026-10-18
+
+- **Decision:**
+  - _Valid words:_ the RLA-ES Spanish (Argentina) Hunspell dictionary v2.9
+    (github.com/sbosio/rla-es), affixes expanded at build time, used under **MPL-2.0**
+    (chosen from its GPLv3+/LGPLv3+/MPL-1.1+ options).
+  - _How common a word is:_ wordfreq 3.2 `large_es` (github.com/rspeer/wordfreq), data
+    under **CC BY-SA 4.0**.
+  - Shipped as **two files**, each under its own license with an attribution header;
+    never merged into one. The app combines them when loading. A word is valid if it's in
+    either; targets must be both frequent and in the dictionary (this drops names, which
+    the lowercased frequency list mixes in) and not on our offensive-word blocklist.
+- **Why:** RLA-ES es_AR has voseo (_tenés, sabés, vení, sos_) and Argentine words (_che,
+  laburo, birra_); wordfreq fills its gaps (_podés, pibe, coima_) and ranks Rioplatense
+  words well. Rejected: FrequencyWords (Argentine words rank far lower), SUBTLEX-ESP and
+  RAE CREA/CORPES (no clear license).
+- **Costs accepted:** about 500 KB compressed to download once; wordfreq's data is a
+  frozen ~2021 snapshot; some names count as valid bonus words (harmless).
+- **Neither license touches our code:** MPL is file-level; CC BY-SA applies to the
+  adapted data file, not to code that loads it.
+
 ## D11 · Levels generated on the device, endlessly — 2026-10-18
 
 - **Decision:** The app ships a word list and generates level N on demand with a pure

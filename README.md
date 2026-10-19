@@ -7,3 +7,8 @@ Installable as a PWA, playable on phone and desktop. **Play: https://ewajs.githu
 - Roadmap and progress: [`docs/PLAN.md`](docs/PLAN.md)
 - How we work: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - Code reference (generated from TSDoc): https://ewajs.github.io/grama/api/
+
+## License
+
+Code: [MIT](LICENSE). Word lists come from third parties under their own licenses; see
+[`NOTICE.md`](NOTICE.md).
