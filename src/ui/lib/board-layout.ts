@@ -1,3 +1,8 @@
+/**
+ * Sizing the board: one or two columns, and the biggest tiles that fit.
+ * @module
+ */
+
 /** Space between tiles, and between rows, in pixels. */
 export const TILE_GAP = 6;
 

@@ -1,3 +1,8 @@
+/**
+ * Reporting a problem with a level as a pre-filled GitHub issue.
+ * @module
+ */
+
 import { strings } from '../i18n';
 
 /** Where reports go: a new issue on the project's GitHub. */
@@ -8,12 +13,17 @@ export type ReportKind = 'missing' | 'wrong' | 'other';
 
 /** What a report carries so the level can be reproduced. Words as written. */
 export type ReportContext = {
+  /** The level's number (or the daily's). */
   levelNumber: number;
+  /** The wheel's letters. */
   letters: readonly string[];
+  /** The level's words. */
   targets: readonly string[];
+  /** What the player found. */
   found: readonly string[];
   /** Recent words the game said aren't valid: likely "this should count!" cases. */
   rejected: readonly string[];
+  /** The build's commit, to know which version it happened on. */
   build: string;
 };
 

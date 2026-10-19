@@ -1,3 +1,9 @@
+/**
+ * How hard a level is: the score from its targets' rarity and length, the tiers it falls
+ * in, and each tier's recipe for the generator. Calibration in D16.
+ * @module
+ */
+
 /** How hard a level is, from its target words. */
 export type Tier = 'easy' | 'medium' | 'hard' | 'extra';
 

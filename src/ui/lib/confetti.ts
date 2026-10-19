@@ -1,3 +1,8 @@
+/**
+ * The confetti burst for a completed level.
+ * @module
+ */
+
 /** One piece of confetti in flight, in canvas pixels. */
 type Piece = {
   x: number;

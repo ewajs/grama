@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">How a level is built</title>
+  <desc id="desc">From a level number and the player difficulty to a Level: the cadence picks the tier, the size comes from progress, a seed word is taken from the tier band, its letters spell every word, the recipe picks targets and the score confirms the tier.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a87a0"/>
+    </marker>
+  </defs>
+<rect x="20" y="20" width="200" height="80" rx="10" fill="#e4f5ec" stroke="#2f9e6e" stroke-width="1.5"/>
+<text x="34" y="44" font-weight="700" font-size="15" fill="#1d1b2e">level number + difficulty</text>
+<text x="34" y="64" font-size="13" fill="#55526a">e.g. 21, normal</text>
+<rect x="260" y="20" width="300" height="80" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="274" y="44" font-weight="700" font-size="15" fill="#1d1b2e">cadence</text>
+<text x="274" y="64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#55526a">tierFor → extra hard</text>
+<text x="274" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#55526a">occurrence → 1 (which seed block)</text>
+<rect x="600" y="20" width="300" height="80" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="614" y="44" font-weight="700" font-size="15" fill="#1d1b2e">size</text>
+<text x="614" y="64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#55526a">levelShape(21) → 7 letters,</text>
+<text x="614" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#55526a">up to 8 targets</text>
+<line x1="220" y1="60" x2="257" y2="60" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="20" y="150" width="420" height="110" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="34" y="174" font-weight="700" font-size="15" fill="#1d1b2e">seedOrder(tier, letters)</text>
+<text x="34" y="194" font-size="13" fill="#55526a">words of that length from the tier&#x27;s band of ranks</text>
+<text x="34" y="212" font-size="13" fill="#55526a">(extra hard: 8,000–20,000), one per set of letters,</text>
+<text x="34" y="230" font-size="13" fill="#55526a">in a fixed shuffled order; level gets block #occurrence</text>
+<line x1="410" y1="100" x2="300" y2="147" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="750" y1="100" x2="420" y2="147" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="480" y="150" width="420" height="110" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="494" y="174" font-weight="700" font-size="15" fill="#1d1b2e">buildLevel(seed)</text>
+<text x="494" y="194" font-size="13" fill="#55526a">shuffle the seed&#x27;s letters (seeded by the number)</text>
+<text x="494" y="212" font-size="13" fill="#55526a">wordsSpelled: every word they spell (bitmask + canSpell)</text>
+<text x="494" y="230" font-size="13" fill="#55526a">targets: seed + recipe&#x27;s pool, longest/most common first</text>
+<line x1="440" y1="205" x2="477" y2="205" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="480" y="300" width="420" height="90" rx="10" fill="#fdf2dc" stroke="#c98a0e" stroke-width="1.5"/>
+<text x="494" y="324" font-weight="700" font-size="15" fill="#1d1b2e">classify(levelScore(targets))</text>
+<text x="494" y="344" font-size="13" fill="#55526a">avg log₁₀(rank+1) + 0.25·(length−3), minus wheel size</text>
+<text x="494" y="362" font-size="13" fill="#55526a">same tier as asked? → done; else next seed in block</text>
+<line x1="690" y1="260" x2="690" y2="297" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M480 345 Q300 345 230 263" fill="none" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="240" y="300" font-size="13" font-weight="400" fill="#8a87a0" text-anchor="start">no: try the next seed</text>
+<rect x="20" y="420" width="880" height="80" rx="10" fill="#e6f0fb" stroke="#3b7bd0" stroke-width="1.5"/>
+<text x="34" y="444" font-weight="700" font-size="15" fill="#1d1b2e">Level</text>
+<text x="34" y="464" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#55526a">letters: [N, E, G, A, M, O, S] · targets: NEGAMOS GANEMOS MANGOS GENOMA … · bonus: every other word · tier: extra</text>
+<line x1="690" y1="390" x2="690" y2="417" stroke="#8a87a0" stroke-width="1.8" marker-end="url(#arrow)"/>
+</svg>

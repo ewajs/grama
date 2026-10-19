@@ -1,3 +1,8 @@
+/**
+ * Checking for a new version of the app.
+ * @module
+ */
+
 /** What checking for a new version found. */
 export type UpdateCheck = 'available' | 'current' | 'offline' | 'unsupported';
 

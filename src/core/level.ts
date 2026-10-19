@@ -1,3 +1,9 @@
+/**
+ * What a level is (letters, targets, bonus words, tier) and what makes one valid.
+ * Everything else in `core` builds, plays or scores levels.
+ * @module
+ */
+
 import type { Tier } from './difficulty';
 
 /** A puzzle: the letters on the wheel and the words they spell. Words are normalized. */

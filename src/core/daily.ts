@@ -1,3 +1,8 @@
+/**
+ * The daily challenge: one level per date for everyone, its weekday tier, and streaks.
+ * @module
+ */
+
 import { generateLevel, type LevelShape } from './generate';
 import type { Tier } from './difficulty';
 import type { LevelRecord } from './history';
@@ -69,7 +74,12 @@ export function generateDaily(words: readonly string[], key: string): Level {
 }
 
 /** The daily challenge in play: its date, and how far along it is. */
-export type DailyPlay = { date: string; session: Session };
+export type DailyPlay = {
+  /** Its date, `YYYY-MM-DD`; empty before the first daily is played. */
+  date: string;
+  /** How far along it is. */
+  session: Session;
+};
 
 /** Today's daily in play: the one saved if it's today's, or a fresh one. */
 export function dailyFor(saved: DailyPlay, today: string): DailyPlay {

@@ -1,3 +1,9 @@
+/**
+ * The player's progress (level, score, hints, history, dailies) and the moves that change
+ * it: playing a word on any level, spending a hint, moving on. Plain data, saved as JSON.
+ * @module
+ */
+
 import type { Difficulty } from './cadence';
 import type { Submission } from './evaluate';
 import {
@@ -36,7 +42,18 @@ export type Progress = {
 
 /** Where a level being played belongs: a numbered level, or a date's daily challenge. */
 export type Place =
-  { kind: 'level'; levelNumber: number; difficulty: Difficulty } | { kind: 'daily'; date: string };
+  | {
+      kind: 'level';
+      /** The level's number. */
+      levelNumber: number;
+      /** The difficulty it's played at; with the number, it decides the level. */
+      difficulty: Difficulty;
+    }
+  | {
+      kind: 'daily';
+      /** The daily challenge's date, `YYYY-MM-DD`. */
+      date: string;
+    };
 
 /** Progress at the start of a new game. */
 export const NEW_PROGRESS: Progress = {

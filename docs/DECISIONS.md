@@ -138,7 +138,7 @@ delete it, the history is the point.
 - **Enforced:** `eslint-plugin-jsdoc` fails `npm run check` when an export in `src/**/*.ts`
   has no doc comment.
 - **Published:** TypeDoc builds a reference site from these comments on every deploy:
-  https://ewajs.github.io/grama/api/
+  https://ewajs.github.io/grama/docs/ (with hand-written guides since D18)
 
 ## D8 · Rioplatense Spanish, Argentine flavor — 2026-10-18
 

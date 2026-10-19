@@ -1,3 +1,9 @@
+/**
+ * The running game: {@link app/game.svelte!Game | Game} wraps the pure rules in reactive state
+ * for the UI, and knows what's on screen (the current level, a replay or a daily).
+ * @module
+ */
+
 import { unlocked, type AchievementId } from '../core/achievements';
 import { boardRows, type BoardRow } from '../core/board';
 import { occurrence, tierFor, type Difficulty } from '../core/cadence';
@@ -38,8 +44,11 @@ type Mode =
 
 /** Today's daily challenge, as the home screen shows it. */
 export type DailySummary = {
+  /** The daily's number: 1 for the first one. */
   number: number;
+  /** Today, `YYYY-MM-DD`. */
   date: string;
+  /** How hard it is (it depends on the weekday). */
   tier: Tier;
   /** Its best result, once completed. */
   result: LevelRecord | undefined;

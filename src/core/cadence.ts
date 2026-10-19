@@ -1,3 +1,9 @@
+/**
+ * Which tier each level gets: the 7-level rhythm, adjusted for progress and the player's
+ * difficulty setting, and each level's place in its tier's seed order.
+ * @module
+ */
+
 import { TIERS, type Tier } from './difficulty';
 import { levelShape } from './generate';
 

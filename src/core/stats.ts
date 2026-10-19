@@ -1,3 +1,8 @@
+/**
+ * Totals over the player's history, for the stats screen and achievements.
+ * @module
+ */
+
 import { TIERS, type Tier } from './difficulty';
 import { bestStreak } from './daily';
 import type { History, LevelRecord } from './history';

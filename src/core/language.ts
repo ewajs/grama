@@ -1,3 +1,9 @@
+/**
+ * What a language pack provides to the rules: how its words are compared.
+ * Spanish is the only one so far ({@link core/spanish!spanish | spanish}).
+ * @module
+ */
+
 /** The word rules of a language pack: how words are compared in that language. */
 export type Language = {
   /** ISO 639-1 code, e.g. `'es'`. */

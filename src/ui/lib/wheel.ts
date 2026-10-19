@@ -1,3 +1,9 @@
+/**
+ * The letter wheel's geometry: where letters sit, which one is under the pointer, and how
+ * a drag builds a path.
+ * @module
+ */
+
 /** A point on the wheel, as fractions of its width and height: (0, 0) is the top-left corner. */
 export type Point = { x: number; y: number };
 
