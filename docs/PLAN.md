@@ -240,7 +240,7 @@ A timed mode, apart from the main game (D19).
 
 - [x] Core: a run as plain data: wheels from a random seed, getting harder; time added
       and taken by results and Pasar; points; `tick(run, elapsed)` (time passed in)
-- [ ] Screen: timer, board, wheel, Pasar; pauses when the app is hidden; run summary
+- [x] Screen: timer, board, wheel, Pasar; pauses when the app is hidden; run summary
       with the best score
 - [ ] Home card, best score and history saved apart from progress; 3 achievements
 - [ ] Guide page and GAME.md section

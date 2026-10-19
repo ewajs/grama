@@ -95,6 +95,7 @@ Around `Game`:
 
 | Module                                      | Its job                                   |
 | ------------------------------------------- | ----------------------------------------- |
+| {@link "app/time-trial.svelte"!Trial        | Trial}                                    | A Contrarreloj run on screen (`core/time-trial`)         |
 | {@link "app/preferences.svelte"!Preferences | Preferences}                              | Settings as reactive state, saved on every change        |
 | {@link "app/navigation.svelte"!Navigation   | Navigation}                               | Which screen shows, tied to browser history (back works) |
 | {@link "app/install.svelte"!Installer       | Installer}                                | The install prompt, or iOS instructions                  |
@@ -110,6 +111,7 @@ Svelte components render what `Game` exposes and call its methods. TypeDoc can't
 | Component                                      | Shows                                                    |
 | ---------------------------------------------- | -------------------------------------------------------- |
 | `App`                                          | Loads words, picks the screen, applies the theme         |
+| `TrialScreen`                                  | Contrarreloj: the clock, a wheel, Pasar, the summary     |
 | `Home`, `LevelMap`, `StatsScreen`              | The hub, the map with replays, achievements and stats    |
 | `GameScreen`                                   | A level: wires the pieces below and the dialogs          |
 | `Header`, `Board`, `WordPill`, `LetterWheel`   | Level and score, the rows, the word being spelled, input |
@@ -120,7 +122,8 @@ Svelte components render what `Game` exposes and call its methods. TypeDoc can't
 The UI's own helpers are plain TypeScript in `src/ui/lib`:
 {@link "ui/lib/wheel"!letterAt | letterAt} and {@link "ui/lib/wheel"!extendPath | extendPath} (the gesture),
 {@link "ui/lib/board-layout"!boardLayout | boardLayout} (tile size), {@link "ui/lib/fly"!sendLetter | sendLetter} and
-{@link "ui/lib/fly"!receiveLetter | receiveLetter} (letters flying into the board).
+{@link "ui/lib/fly"!receiveLetter | receiveLetter} (letters flying into the board),
+{@link "ui/lib/keyboard"!wheelKey | wheelKey} (typing), {@link "ui/lib/sound"!play | play} (sounds).
 
 ## Walkthrough 1: a drag becomes a scored word
 

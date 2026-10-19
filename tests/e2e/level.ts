@@ -5,6 +5,7 @@ import { occurrence, tierFor } from '../../src/core/cadence';
 import { dateKey, dailyNumber, generateDaily } from '../../src/core/daily';
 import { generateLevel } from '../../src/core/generate';
 import type { Level } from '../../src/core/level';
+import { newRun, wheelOf } from '../../src/core/time-trial';
 
 const read = (file: string) => parseWordList(readFileSync(`src/content/es/${file}`, 'utf8'));
 const { words, spellings } = buildWordList(
@@ -42,4 +43,9 @@ export function nonWord({ letters, targets, bonus }: Level): string {
         if (!targets.includes(word) && !bonus.includes(word)) return word;
       }
   throw new Error('Every three-letter combination is a word');
+}
+
+/** The first wheel of a Contrarreloj run whose seed comes from `Math.random() === random`. */
+export function trialWheel(random: number): Level {
+  return wheelOf(words, newRun(Math.floor(random * 2 ** 31)));
 }

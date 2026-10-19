@@ -15,9 +15,9 @@ letter wheel with its controls.
   import type { Preferences } from '../../app/preferences.svelte';
   import { shareText } from '../../app/share';
   import { vibrate } from '../lib/haptics';
+  import { wheelKey } from '../lib/keyboard';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
-  import { spanish } from '../../core/spanish';
   import { strings } from '../../i18n';
   import { CELEBRATION_DELAY, FEEDBACK_DURATION } from '../lib/motion';
   import { play } from '../lib/sound';
@@ -88,21 +88,10 @@ letter wheel with its controls.
     if (next) result = null;
   }
 
-  /**
-   * Typing on a keyboard: letters spell, Backspace erases, Enter submits, Escape clears.
-   * With no word started, Enter and the rest do what they would (e.g. press a button).
-   */
+  /** Typing on a keyboard, while nothing covers the level. */
   function key(event: KeyboardEvent) {
-    if (panel !== null || game.complete || event.ctrlKey || event.metaKey || event.altKey) return;
-    if (word && event.key === 'Enter') wheel.submit();
-    else if (word && event.key === 'Backspace') wheel.erase();
-    else if (word && event.key === 'Escape') wheel.clear();
-    else if (event.key.length === 1) {
-      const letter = spanish.normalize(event.key);
-      if (/^[A-ZÑ]$/.test(letter)) wheel.type(letter);
-      else return;
-    } else return;
-    event.preventDefault();
+    if (panel !== null || game.complete) return;
+    if (wheelKey(event, wheel, word !== '')) event.preventDefault();
   }
 
   function nextLevel() {

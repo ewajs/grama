@@ -8,10 +8,13 @@ The home screen: where the app opens. Continue the game from here; more is comin
 - `onmap()`: open the level map.
 - `onstats()`: open the achievements and stats.
 - `ondaily()`: play today's daily challenge.
+- `trialBest`: the best Contrarreloj run, if any.
+- `ontrial()`: play Contrarreloj.
 -->
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
   import { ACHIEVEMENTS } from '../../core/achievements';
+  import type { RunResult } from '../../core/time-trial';
   import { strings } from '../../i18n';
   import { DURATION, fly } from '../lib/motion';
   import Stars from './Stars.svelte';
@@ -22,8 +25,10 @@ The home screen: where the app opens. Continue the game from here; more is comin
     onmap: () => void;
     onstats: () => void;
     ondaily: () => void;
+    trialBest: RunResult | null;
+    ontrial: () => void;
   };
-  let { game, onplay, onmap, onstats, ondaily }: Props = $props();
+  let { game, onplay, onmap, onstats, ondaily, trialBest, ontrial }: Props = $props();
 
   const today = $derived(game.today);
   const weekday = $derived(strings.weekday(today.date));
@@ -63,6 +68,16 @@ The home screen: where the app opens. Continue the game from here; more is comin
         <span role="img" aria-label={strings.streakFreeze} title={strings.streakFreeze}>❄️</span>
       {/if}
     </span>
+  </button>
+
+  <button class="card" onclick={ontrial}>
+    <span class="label">
+      {strings.trial}
+      <small>{strings.trialTagline}</small>
+    </span>
+    {#if trialBest}
+      <span class="detail">{strings.bestShort(trialBest.points)}</span>
+    {/if}
   </button>
 
   <button class="card" onclick={onmap}>
