@@ -3,6 +3,8 @@
  * @module
  */
 
+import type { Tier } from '../core/difficulty';
+import type { Place } from '../core/progress';
 import { strings } from '../i18n';
 
 /** Where reports go: a new issue on the project's GitHub. */
@@ -13,8 +15,10 @@ export type ReportKind = 'missing' | 'wrong' | 'other';
 
 /** What a report carries so the level can be reproduced. Words as written. */
 export type ReportContext = {
-  /** The level's number (or the daily's). */
-  levelNumber: number;
+  /** Which level: number, difficulty and seed block, or the daily's date. */
+  place: Place;
+  /** How hard it is. */
+  tier: Tier;
   /** The wheel's letters. */
   letters: readonly string[];
   /** The level's words. */
@@ -30,7 +34,7 @@ export type ReportContext = {
 /** A link that opens a new GitHub issue, pre-filled with the report. */
 export function reportUrl(kind: ReportKind, context: ReportContext): string {
   const params = new URLSearchParams({
-    title: strings.reportIssueTitle(kind, context.levelNumber),
+    title: strings.reportIssueTitle(kind, context.place),
     body: strings.reportIssueBody(context),
   });
   return `${ISSUES_URL}?${params}`;

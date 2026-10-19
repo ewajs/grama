@@ -4,7 +4,7 @@
  * @module
  */
 
-import type { Difficulty } from './cadence';
+import { countLevel, occurrenceIn, tierFor, type Difficulty, type Occurrences } from './cadence';
 import type { Submission } from './evaluate';
 import {
   BONUS_WORDS_PER_HINT,
@@ -30,6 +30,8 @@ export type Progress = {
   bonusTowardHint: number;
   /** The player's difficulty when the current level began; it decides its tier. */
   difficulty: Difficulty;
+  /** Levels before the current one, by tier and size: it decides its seeds. */
+  occurrences: Occurrences;
   /** The current level as played so far. */
   session: Session;
   /** Every completed level's best result. */
@@ -46,8 +48,10 @@ export type Place =
       kind: 'level';
       /** The level's number. */
       levelNumber: number;
-      /** The difficulty it's played at; with the number, it decides the level. */
+      /** The difficulty it's played at, which decides its tier. */
       difficulty: Difficulty;
+      /** Its place in its tier's seed order (see `core/cadence`). */
+      occurrence: number;
     }
   | {
       kind: 'daily';
@@ -62,6 +66,7 @@ export const NEW_PROGRESS: Progress = {
   hints: STARTING_HINTS,
   bonusTowardHint: 0,
   difficulty: 'normal',
+  occurrences: {},
   session: NEW_SESSION,
   history: {},
   daily: { date: '', session: NEW_SESSION },
@@ -100,12 +105,12 @@ export function playWord(
           history: record(
             scored.history,
             place.levelNumber,
-            recordOf(level, after, place.difficulty),
+            recordOf(level, after, place.difficulty, place.occurrence),
           ),
         }
       : {
           ...scored,
-          dailies: record(scored.dailies, place.date, recordOf(level, after, 'normal')),
+          dailies: record(scored.dailies, place.date, recordOf(level, after, 'normal', 0)),
         };
   const firstTime =
     place.kind === 'level'
@@ -144,15 +149,32 @@ export function useHint(
   };
 }
 
+/** Where the player's current level belongs. */
+export function currentPlace(progress: Progress): Place & { kind: 'level' } {
+  const { levelNumber, difficulty, occurrences } = progress;
+  return {
+    kind: 'level',
+    levelNumber,
+    difficulty,
+    occurrence: occurrenceIn(occurrences, levelNumber, tierFor(levelNumber, difficulty)),
+  };
+}
+
 /**
  * Moves on to the next level, keeping the score and hints.
  * @param difficulty The player's difficulty for the new level (it may have changed).
  */
 export function nextLevel(progress: Progress, difficulty = progress.difficulty): Progress {
+  const { levelNumber } = progress;
   return {
     ...progress,
-    levelNumber: progress.levelNumber + 1,
+    levelNumber: levelNumber + 1,
     difficulty,
+    occurrences: countLevel(
+      progress.occurrences,
+      levelNumber,
+      tierFor(levelNumber, progress.difficulty),
+    ),
     session: NEW_SESSION,
   };
 }

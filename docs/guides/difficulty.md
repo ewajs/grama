@@ -63,8 +63,12 @@ share letters:
 3. **A fixed order.** Each band is shuffled once (seeded by tier and size), the same on
    every device.
 4. **Blocks.** Levels of the same tier and size take consecutive blocks of
-   {@link "core/generate"!SEED_BLOCK | SEED_BLOCK} seeds in that order;
-   {@link "core/cadence"!occurrence | occurrence} says which block a level gets.
+   {@link "core/generate"!SEED_BLOCK | SEED_BLOCK} seeds in that order. The player's progress
+   counts the levels actually played of each tier and size
+   ({@link "core/cadence"!Occurrences | Occurrences}), so the next one takes the next block even after
+   a change of difficulty; a level's block is saved in its record, for replays.
+   {@link "core/cadence"!occurrence | occurrence} gives the block when every earlier level was played at
+   one difficulty, which is what `?nivel=N` opens.
 5. **Within its block**, a level takes the first seed whose level lands in its tier. If
    none does, it tries up to {@link "core/generate"!FAR_TRIES | FAR_TRIES} seeds from the far side
    of the order (last used about half a cycle ago), then settles for the first workable

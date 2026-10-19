@@ -4,9 +4,33 @@ import { statsOf } from './stats';
 
 it('adds up the history', () => {
   const history: History = {
-    1: { tier: 'easy', difficulty: 'normal', stars: 3, hints: 0, bonus: 4, targets: 6 },
-    2: { tier: 'extra', difficulty: 'normal', stars: 2, hints: 0, bonus: 1, targets: 9 },
-    3: { tier: 'extra', difficulty: 'normal', stars: 1, hints: 3, bonus: 0, targets: 9 },
+    1: {
+      tier: 'easy',
+      difficulty: 'normal',
+      occurrence: 0,
+      stars: 3,
+      hints: 0,
+      bonus: 4,
+      targets: 6,
+    },
+    2: {
+      tier: 'extra',
+      difficulty: 'normal',
+      occurrence: 0,
+      stars: 2,
+      hints: 0,
+      bonus: 1,
+      targets: 9,
+    },
+    3: {
+      tier: 'extra',
+      difficulty: 'normal',
+      occurrence: 0,
+      stars: 1,
+      hints: 3,
+      bonus: 0,
+      targets: 9,
+    },
   };
   expect(statsOf(history)).toEqual({
     levels: 3,
@@ -31,6 +55,7 @@ it('counts daily challenges and the best streak', () => {
   const done = {
     tier: 'easy',
     difficulty: 'normal',
+    occurrence: 0,
     stars: 2,
     hints: 0,
     bonus: 0,

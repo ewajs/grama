@@ -145,8 +145,8 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 ![How a level is built: cadence and size, seed order, building, classifying, the Level](media/level-generation.svg)
 
 1. {@link "core/cadence"!tierFor | tierFor}(21, `normal`) says **extra hard** (the seventh in its
-   cycle); {@link "core/cadence"!occurrence | occurrence} says it's the second extra-hard 7-letter level,
-   so it gets the second block of seeds.
+   cycle); the player's progress counts one extra-hard 7-letter level before it
+   ({@link "core/progress"!currentPlace | currentPlace}), so it gets the second block of seeds.
 2. {@link "core/generate"!levelShape | levelShape}(21): 7 letters, up to 8 targets.
 3. The extra-hard seed order holds 7-letter words ranked 8,000–20,000, one per set of
    letters, shuffled once (seeded, so always the same order).

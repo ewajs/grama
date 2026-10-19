@@ -3,7 +3,7 @@
  * @module
  */
 
-import type { Difficulty } from '../core/cadence';
+import { occurrencesBefore, type Difficulty } from '../core/cadence';
 import { NEW_PROGRESS, type Progress } from '../core/progress';
 import { NEW_SESSION } from '../core/session';
 
@@ -19,7 +19,8 @@ export function levelFromUrl(search: string): number | null {
 
 /**
  * Where the game starts: the saved game (or a new one at the player's difficulty), moved
- * to the level in the URL when there is one, keeping the score.
+ * to the level in the URL when there is one, keeping the score. A level from the URL is
+ * the one a player gets by playing every level before it at that difficulty.
  */
 export function startState(
   saved: Progress | null,
@@ -29,5 +30,10 @@ export function startState(
   const progress = saved ?? { ...NEW_PROGRESS, difficulty };
   return levelInUrl === null
     ? progress
-    : { ...progress, levelNumber: levelInUrl, session: NEW_SESSION };
+    : {
+        ...progress,
+        levelNumber: levelInUrl,
+        occurrences: occurrencesBefore(levelInUrl, progress.difficulty),
+        session: NEW_SESSION,
+      };
 }

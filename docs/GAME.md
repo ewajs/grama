@@ -25,8 +25,9 @@ change that alters a rule, so code and spec never drift.
 5. When every target is found the level is **complete**: a short celebration,
    a summary (points, bonus words found) and a "Next level" action.
 6. Levels never run out: level N is generated on the device from the word list, and
-   is the same for everyone (D11). The score keeps growing across levels.
-   `?nivel=N` in the URL opens level N directly, for playtesting.
+   is the same for everyone who played at the same difficulty (D11, D16). Changing the
+   difficulty never brings back a level already played. The score keeps growing across
+   levels. `?nivel=N` in the URL opens level N directly, for playtesting.
 
 ### Scoring (tunable in `POINTS_PER_LETTER`, `src/core/evaluate.ts`)
 

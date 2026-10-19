@@ -4,7 +4,15 @@ import { statsOf } from './stats';
 
 const fresh = statsOf({});
 const after = statsOf({
-  1: { tier: 'extra', difficulty: 'normal', stars: 3, hints: 0, bonus: 3, targets: 9 },
+  1: {
+    tier: 'extra',
+    difficulty: 'normal',
+    occurrence: 0,
+    stars: 3,
+    hints: 0,
+    bonus: 3,
+    targets: 9,
+  },
 });
 
 describe('unlocked', () => {
