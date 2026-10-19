@@ -7,7 +7,8 @@ import {
   revealLetter,
   STARTING_HINTS,
 } from './hints';
-import { record, recordOf, type History } from './history';
+import type { DailyPlay } from './daily';
+import { record, recordOf, type History, type LevelRecord } from './history';
 import type { Level } from './level';
 import { isComplete, NEW_SESSION, submitWord, type Session } from './session';
 
@@ -27,7 +28,15 @@ export type Progress = {
   session: Session;
   /** Every completed level's best result. */
   history: History;
+  /** The daily challenge in play, if one was started (see `core/daily`). */
+  daily: DailyPlay;
+  /** Completed daily challenges' best results, by date. */
+  dailies: Readonly<Record<string, LevelRecord>>;
 };
+
+/** Where a level being played belongs: a numbered level, or a date's daily challenge. */
+export type Place =
+  { kind: 'level'; levelNumber: number; difficulty: Difficulty } | { kind: 'daily'; date: string };
 
 /** Progress at the start of a new game. */
 export const NEW_PROGRESS: Progress = {
@@ -38,20 +47,22 @@ export const NEW_PROGRESS: Progress = {
   difficulty: 'normal',
   session: NEW_SESSION,
   history: {},
+  daily: { date: '', session: NEW_SESSION },
+  dailies: {},
 };
 
 /**
  * Plays a word on a level: the outcome, the session after it, and the player's progress
  * with what it earned: points, a step toward the next hint for a bonus word, and on
- * finishing the level its record in the history, plus a hint the first time an
- * extra-hard level is finished. Unchanged objects are returned as they were.
- * @param played Which level it is and the difficulty it's played at, for the history.
- * @param session The level as played so far: the player's current one, or a replay.
+ * finishing the level its record (in the history, or the dailies), plus a hint the first
+ * time an extra-hard level is finished. Unchanged objects are returned as they were.
+ * @param place Which level it is, for its record.
+ * @param session The level as played so far: the player's current one, a replay, a daily.
  */
 export function playWord(
   progress: Progress,
   level: Level,
-  played: { levelNumber: number; difficulty: Difficulty },
+  place: Place,
   session: Session,
   word: string,
 ): { submission: Submission; progress: Progress; session: Session } {
@@ -65,14 +76,26 @@ export function playWord(
   }
   if (!isComplete(level, after)) return { submission, progress: scored, session: after };
 
-  const { levelNumber, difficulty } = played;
-  const firstTime = !(levelNumber in progress.history);
-  const completed = {
-    ...scored,
-    history: record(scored.history, levelNumber, recordOf(level, after, difficulty)),
-    hints: scored.hints + (firstTime && level.tier === 'extra' ? EXTRA_HARD_HINTS : 0),
-  };
-  return { submission, progress: completed, session: after };
+  const recorded =
+    place.kind === 'level'
+      ? {
+          ...scored,
+          history: record(
+            scored.history,
+            place.levelNumber,
+            recordOf(level, after, place.difficulty),
+          ),
+        }
+      : {
+          ...scored,
+          dailies: record(scored.dailies, place.date, recordOf(level, after, 'normal')),
+        };
+  const firstTime =
+    place.kind === 'level'
+      ? !(place.levelNumber in progress.history)
+      : !(place.date in progress.dailies);
+  const reward = firstTime && level.tier === 'extra' ? EXTRA_HARD_HINTS : 0;
+  return { submission, progress: { ...recorded, hints: recorded.hints + reward }, session: after };
 }
 
 /** A step toward the next hint, or a hint earned. */

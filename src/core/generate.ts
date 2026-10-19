@@ -164,14 +164,15 @@ function buildLevel(
  * @param words Normalized words, most common first, no repeats.
  * @param occurrence How many earlier levels share this one's tier and size (`occurrence`
  * in `core/cadence`): which block of seeds it gets.
+ * @param shape Its size; by default the one for its number ({@link levelShape}).
  */
 export function generateLevel(
   words: readonly string[],
   levelNumber: number,
   tier: Tier = 'medium',
   occurrence = 0,
+  shape: LevelShape = levelShape(levelNumber),
 ): Level {
-  const shape = levelShape(levelNumber);
   const recipe = RECIPES[tier];
   const order = seedOrder(words, tier, shape.letters);
   const blocks = Math.max(1, Math.floor(order.length / SEED_BLOCK));

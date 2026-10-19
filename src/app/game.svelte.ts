@@ -176,7 +176,8 @@ export class Game {
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
     const { levelNumber, difficulty, session } = this.#playing;
-    const played = playWord(this.#progress, this.level, { levelNumber, difficulty }, session, word);
+    const place = { kind: 'level', levelNumber, difficulty } as const;
+    const played = playWord(this.#progress, this.level, place, session, word);
     if (played.submission.kind === 'invalid') {
       this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
     }

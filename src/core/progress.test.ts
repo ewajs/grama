@@ -11,7 +11,7 @@ const level: Level = {
   tier: 'medium',
 };
 
-const current = { levelNumber: 1, difficulty: 'normal' } as const;
+const current = { kind: 'level', levelNumber: 1, difficulty: 'normal' } as const;
 
 /** Plays words in turn, returning the final progress and session. */
 function play(words: readonly string[], on = level) {
@@ -73,6 +73,23 @@ describe('completing a level', () => {
 
   it('records nothing before it is complete', () => {
     expect(play(['SOL']).progress.history).toEqual({});
+  });
+});
+
+describe('completing a daily challenge', () => {
+  it('records it by date, not in the level history', () => {
+    let state = { progress: NEW_PROGRESS, session: NEW_SESSION as Session };
+    for (const word of level.targets) {
+      state = playWord(
+        state.progress,
+        level,
+        { kind: 'daily', date: '2026-10-19' },
+        state.session,
+        word,
+      );
+    }
+    expect(state.progress.dailies['2026-10-19']).toMatchObject({ stars: 2 });
+    expect(state.progress.history).toEqual({});
   });
 });
 

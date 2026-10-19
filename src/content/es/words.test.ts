@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import blocklistText from '../../../scripts/blocklist-es.txt?raw';
 import { occurrence, tierFor } from '../../core/cadence';
+import { dailyTier, generateDaily } from '../../core/daily';
 import { RECIPES, TIERS } from '../../core/difficulty';
 import { generateLevel, levelShape } from '../../core/generate';
 import { levelProblems } from '../../core/level';
@@ -90,5 +91,16 @@ describe('Spanish word lists', () => {
     const perLevel = (performance.now() - start) / count;
     expect(hits / count).toBeGreaterThan(0.98);
     expect(perLevel).toBeLessThan(150);
+  });
+
+  it('make a valid 7-letter daily challenge of the right tier every day', () => {
+    for (let day = 19; day <= 31; day++) {
+      const date = `2026-10-${day}`;
+      const daily = generateDaily(words, date);
+      expect(levelProblems(daily), date).toEqual([]);
+      expect(daily.letters).toHaveLength(7);
+      expect(daily.tier, date).toBe(dailyTier(date));
+      expect(generateDaily(words, date)).toEqual(daily);
+    }
   });
 });
