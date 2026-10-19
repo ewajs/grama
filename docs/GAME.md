@@ -89,7 +89,8 @@ no 3-letter targets.
 Every level is **easy, medium, hard or extra hard**, scored from how rare and long its
 targets are (D16). Tiers follow a 7-level rhythm (easy, medium, medium, hard, easy,
 medium, extra hard), with an easy level after each extra hard, no extra hard before level
-15, and a harder mix from level 50. Hard and extra-hard levels show a badge.
+15, and a harder mix from level 50. A badge under the level number always shows the
+current level's tier.
 
 The player picks **Relajada** (one tier easier, never extra hard), **Normal** or
 **Desafiante** (one tier harder) in the menu; it applies from the next level.
