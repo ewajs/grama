@@ -23,8 +23,8 @@ change that alters a rule, so code and spec never drift.
 
 5. When every target is found the level is **complete**: a short celebration,
    a summary (points, bonus words found) and a "Next level" action.
-6. Levels cycle: after the last authored level the game continues from a
-   defined loop point (never a dead end).
+6. Levels cycle: after the last level, play starts over from the first (never a
+   dead end). The score keeps growing across levels.
 
 ### Scoring (tunable in `POINTS_PER_LETTER`, `src/core/evaluate.ts`)
 
