@@ -5,7 +5,7 @@
  */
 
 import { unlocked, type AchievementId } from '../core/achievements';
-import { boardRows, type BoardRow } from '../core/board';
+import { boardRows, byBoardOrder, type BoardRow } from '../core/board';
 import { occurrence, tierFor, type Difficulty } from '../core/cadence';
 import { dailyFor, dailyNumber, dailyTier, generateDaily, streakOf } from '../core/daily';
 import type { Tier } from '../core/difficulty';
@@ -282,11 +282,9 @@ export class Game {
     return bonusWords(this.level, this.#playing.session).map((word) => this.written(word));
   }
 
-  /** The targets of the level on screen, as written, in board order (shortest first). */
+  /** The targets of the level on screen, as written, in board order. */
   get targetWords(): string[] {
-    return this.level.targets
-      .toSorted((a, b) => a.length - b.length)
-      .map((word) => this.written(word));
+    return this.level.targets.toSorted(byBoardOrder).map((word) => this.written(word));
   }
 
   /** How many bonus words have been found on the level on screen. */

@@ -47,7 +47,7 @@ tiles as big as possible.
 >
   {#each columns as column, c (c)}
     <div class="column">
-      <!-- Keyed by word, so a row keeps its tiles when a found word lands above it. -->
+      <!-- Keyed by word, so a hinted row keeps its letters when the word is found. -->
       {#each column as row, index (row.word ?? `empty:${row.length}:${index}`)}
         <div class="row" class:glow={row.word !== null && row.word === glow}>
           {#each { length: row.length }, position}
