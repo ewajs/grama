@@ -96,7 +96,7 @@ Goal: installable, works offline, never loses progress.
 Goal: help when stuck, give bonus words a purpose, read like real Spanish, and make
 playtest feedback easy to send.
 
-- [ ] Accented display of found words (`ÁRBOL`, `TENÉS`), still matched without accents
+- [x] Accented display of found words (`ÁRBOL`, `TENÉS`), still matched without accents
 - [ ] Hints: earned by finding bonus words, each reveals a letter of a target
 - [ ] Bonus words list: tap the bonus counter to see the ones found
 - [ ] Report button: opens a pre-filled GitHub issue (level, letters, words, recent

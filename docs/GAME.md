@@ -46,7 +46,9 @@ cultural references or imagery are Argentine.
 Spanish rules:
 
 - Words are compared in a **normalized form**: uppercase, accents stripped
-  (`Á→A`, `É→E`, `Í→I`, `Ó→O`, `Ú→U`, `Ü→U`). `Ñ` is its own letter.
+  (`Á→A`, `É→E`, `Í→I`, `Ó→O`, `Ú→U`, `Ü→U`). `Ñ` is its own letter. The wheel
+  shows plain letters; found words are shown as written, with accents (its most
+  frequent spelling: `TENÉS`, `ÁRBOL`).
 - Minimum word length is 3.
 - Any word in the dictionary or the frequency list is valid (sources in D12).
   Targets are among the 5,000 most frequent words that are also in the dictionary;
