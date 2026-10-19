@@ -107,19 +107,51 @@ playtest feedback easy to send.
 **Verify:** a stuck player can always progress with hints; a report reaches GitHub with
 enough context to reproduce.
 
-### M7 — Polish & release · `v1.0.0`
+### M7 — Menu & settings · `v0.8.0`
 
-- [ ] Visual design pass (spacing, motion timing, dark mode, level-complete moment)
-- [ ] Haptics; `prefers-reduced-motion`; accessible labels and contrast check
-- [ ] Performance budget: < 100 KB JS gz, Lighthouse PWA/perf ≥ 90 on mobile
-- [ ] Minimal "how to play" on first launch
+Goal: one place for options, and a first launch that teaches the game.
 
-**Verify:** fresh-install playthrough of levels 1–10 on a mid-range phone with no rough edges.
+- [ ] Menu panel from the header, with settings saved apart from progress; theme
+      (Automático / Claro / Oscuro); report moves here; reset progress; about (version,
+      word-list credits)
+- [ ] Install the app: the browser's prompt where there is one, steps on iOS; hidden
+      when already installed
+- [ ] Vibration on/off, with haptics while dragging and on results
+- [ ] Difficulty setting (Relajada / Normal / Desafiante), applied from M8
+- [ ] Animated "Cómo jugar" tutorial: on first launch and from the menu
+
+**Verify:** every option works and survives a reload; a new player gets the game from the
+tutorial alone.
+
+### M8 — Difficulty · `v0.9.0`
+
+Goal: levels vary in difficulty with a deliberate rhythm, and players choose how hard.
+
+- [ ] Classify levels easy / medium / hard / extra hard from their targets (rarity, length),
+      calibrated on thousands of generated levels
+- [ ] Generator builds a level of a requested tier; size (letters, targets) still grows
+      with progress
+- [ ] Cadence: 7-level cycle (easy, medium, medium, hard, easy, medium, extra hard), easy
+      after extra hard, no extra hard before level 15, harder mix with progress
+- [ ] Player setting shifts tiers (Relajada: one easier, no extra hard; Desafiante: one harder)
+- [ ] Tier badge; harder levels score more (×1.5, ×2) and extra hard earns a hint
+
+**Verify:** tier shares over 1,000 levels match the cadence; extra-hard levels feel hard
+but fair in playtests.
+
+### M9 — Polish · `v0.10.0`
+
+- [ ] Visual design pass (level-complete moment, landscape and tablet layouts)
+- [ ] `prefers-reduced-motion`; accessible labels and contrast check
+- [ ] Keyboard input on desktop (type + Enter)
+- [ ] Performance budget: < 100 KB JS gz, Lighthouse ≥ 90 on mobile
+- [ ] Real-device checklist: install and offline on Android and iOS
+
+**Verify:** fresh-install playthrough of levels 1–20 on a mid-range phone with no rough edges.
 
 ## Backlog (post-MVP, unordered)
 
 - More power-ups (reveal a whole word) and a coin economy
-- Keyboard input on desktop (type + Enter)
 - Statistics screen, streaks, daily puzzle
 - Crossword-style board layout
 - Sound effects with mute toggle

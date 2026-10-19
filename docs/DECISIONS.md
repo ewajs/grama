@@ -8,6 +8,13 @@ delete it, the history is the point.
 
 ---
 
+## D15 · Stay on 0.x while we experiment — 2026-10-18
+
+- **Decision:** Milestones keep bumping the minor version (0.8, 0.9, 0.10…). There's no
+  1.0 on the roadmap; it comes only after a lot more iteration and playtesting.
+- **Why:** 1.0 would end D5's freedom to change saves, rules and data at will, and we
+  still want to experiment.
+
 ## D14 · Argentine words: generated voseo + a curated list — 2026-10-18
 
 - **Decision:**
@@ -108,7 +115,7 @@ delete it, the history is the point.
 - **Decision:** No save migrations, compatibility shims, deprecated aliases or old code
   paths kept alive. Replace, don't layer.
 - **Why:** There are no players to protect yet; every shim is code we'd maintain for nobody.
-- **Revisit:** At v1.0.0.
+- **Revisit:** At v1.0.0, which is deliberately far off (D15).
 
 ## D4 · Levels generated ahead of time — 2026-10-18 · _replaced by D11_
 
