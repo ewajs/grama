@@ -169,7 +169,7 @@ after a missed day.
 
 - [x] Level-complete celebration: confetti, and a recap of the words found
 - [x] Found letters fly from the wheel into their row on the board
-- [ ] Tap a found word for a link to its definition (RAE dictionary)
+- [x] Tap a found word for a link to its definition (RAE dictionary)
 
 **Verify:** feels good on a phone; respects reduced motion.
 
@@ -194,6 +194,8 @@ after a missed day.
 
 ## Changelog
 
+- **v0.12.0** (M11) — Confetti and a recap of the words on completion; a target's letters fly
+  into the board; definitions (RAE) for any found word.
 - **v0.11.0** (M10) — Daily challenge: one 7-letter level per date, Monday easy to Sunday
   extra hard, saved as you go, streaks, sharing, 4 new achievements.
 - **v0.10.0** (M9) — Home screen; history of completed levels with 1-3 stars; level map with

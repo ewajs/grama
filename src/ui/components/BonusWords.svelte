@@ -9,6 +9,7 @@ The bonus words found on this level, newest first, and how far along the next hi
 -->
 <script lang="ts">
   import { strings } from '../../i18n';
+  import { definitionUrl } from '../../app/dictionary';
   import Dialog from './Dialog.svelte';
 
   type Props = { words: readonly string[]; total: number; untilHint: number; onclose: () => void };
@@ -20,7 +21,14 @@ The bonus words found on this level, newest first, and how far along the next hi
   {#if words.length > 0}
     <ul>
       {#each words.toReversed() as word (word)}
-        <li>{word}</li>
+        <li>
+          <a
+            href={definitionUrl(word)}
+            target="_blank"
+            rel="noopener"
+            aria-label={strings.definitionOf(word)}>{word}</a
+          >
+        </li>
       {/each}
     </ul>
   {:else}
@@ -54,8 +62,12 @@ The bonus words found on this level, newest first, and how far along the next hi
     border-radius: var(--radius-full);
     background: var(--color-tile);
     box-shadow: inset 0 0 0 1px var(--color-tile-border);
-    color: var(--color-bonus);
     font-weight: var(--weight-bold);
     letter-spacing: 0.04em;
+  }
+
+  a {
+    color: var(--color-bonus);
+    text-decoration: none;
   }
 </style>

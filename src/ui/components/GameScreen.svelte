@@ -25,6 +25,7 @@ letter wheel with its controls.
   import AchievementToast from './AchievementToast.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import BonusWords from './BonusWords.svelte';
+  import DefinitionDialog from './DefinitionDialog.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import LevelComplete from './LevelComplete.svelte';
   import Menu from './Menu.svelte';
@@ -44,10 +45,12 @@ letter wheel with its controls.
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
   // The tutorial opens by itself on first launch. `untrack` reads the setting once, on
   // purpose: marking it seen later shouldn't change which panel is open.
-  let panel = $state<'menu' | 'tutorial' | 'report' | 'reset' | 'bonus' | null>(
+  let panel = $state<'menu' | 'tutorial' | 'report' | 'reset' | 'bonus' | 'definition' | null>(
     untrack(() => (preferences.tutorialSeen ? null : 'tutorial')),
   );
   const close = () => (panel = null);
+  /** The word whose definition is offered, when that panel is open. */
+  let defining = $state('');
   /** The word being spelled on the wheel right now. */
   let word = $state('');
   /** The last submitted word's result, shown briefly. */
@@ -124,7 +127,14 @@ letter wheel with its controls.
   />
 
   <div class="board">
-    <Board rows={game.board} glow={repeated && game.written(repeated)} />
+    <Board
+      rows={game.board}
+      glow={repeated && game.written(repeated)}
+      ondefine={(word) => {
+        defining = word;
+        panel = 'definition';
+      }}
+    />
   </div>
 
   <WordPill {word} result={shown} />
@@ -178,6 +188,8 @@ letter wheel with its controls.
     }}
     onclose={close}
   />
+{:else if panel === 'definition'}
+  <DefinitionDialog word={defining} onclose={close} />
 {:else if panel === 'bonus'}
   <BonusWords
     words={game.bonusWords}

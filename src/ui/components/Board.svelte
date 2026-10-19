@@ -7,14 +7,21 @@ tiles as big as possible.
 
 - `rows`: from `boardRows` in `core/board`.
 - `glow`: a found word to briefly highlight (the player spelled it again).
+- `ondefine(word)`: the player tapped a found word, to see what it means.
 -->
 <script lang="ts">
   import type { BoardRow } from '../../core/board';
   import { boardLayout, COLUMN_GAP, splitIntoColumns, TILE_GAP } from '../lib/board-layout';
+  import { strings } from '../../i18n';
   import { receiveLetter } from '../lib/fly';
   import { TILE_STAGGER } from '../lib/motion';
 
-  let { rows, glow = null }: { rows: readonly BoardRow[]; glow?: string | null } = $props();
+  type Props = {
+    rows: readonly BoardRow[];
+    glow?: string | null;
+    ondefine?: (word: string) => void;
+  };
+  let { rows, glow = null, ondefine }: Props = $props();
 
   // Svelte keeps these in sync with the element's size (bind:clientWidth/Height below).
   let width = $state(0);
@@ -55,6 +62,14 @@ tiles as big as possible.
               {/if}
             </div>
           {/each}
+          {#if ondefine && row.word && row.shown === row.length}
+            {@const word = row.word}
+            <button
+              class="define"
+              aria-label={strings.definitionOf(word)}
+              onclick={() => ondefine(word)}
+            ></button>
+          {/if}
         </div>
       {/each}
     </div>
@@ -78,9 +93,20 @@ tiles as big as possible.
   }
 
   .row {
+    position: relative;
     display: flex;
     gap: var(--gap);
     border-radius: var(--radius-sm);
+  }
+
+  /* Over a found row, so tapping anywhere on it asks what the word means. */
+  .define {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
   }
 
   .tile {

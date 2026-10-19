@@ -99,3 +99,17 @@ test('the shuffled order stays put while playing', async ({ page }) => {
   await page.getByRole('button', { name: /^Pista/ }).click();
   expect(await order()).toEqual(shuffledOrder);
 });
+
+test('tapping a found word offers its definition', async ({ page }) => {
+  await openGame(page);
+  await drawWord(page, target);
+  const word = written(target);
+  await page.getByRole('button', { name: `Qué significa ${word}` }).click();
+  const link = page
+    .getByRole('dialog', { name: word })
+    .getByRole('link', { name: 'Ver definición' });
+  await expect(link).toHaveAttribute(
+    'href',
+    `https://dle.rae.es/${encodeURIComponent(word.toLocaleLowerCase('es'))}`,
+  );
+});
