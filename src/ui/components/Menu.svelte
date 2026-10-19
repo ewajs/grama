@@ -4,7 +4,7 @@ The menu: settings, help and the rest of the game's options, plus credits.
 
 - `preferences`: the player's settings; changes here apply and save right away.
 - `installer`: whether and how the app can be installed here.
-- `ontutorial()`, `onreport()`, `onreset()`: the player picked one of those options.
+- `ontutorial()`, `onreport()`, `onabout()`: the player picked one of those options.
 - `onclose()`: done.
 -->
 <script lang="ts">
@@ -23,10 +23,10 @@ The menu: settings, help and the rest of the game's options, plus credits.
     installer: Installer;
     ontutorial: () => void;
     onreport: () => void;
-    onreset: () => void;
+    onabout: () => void;
     onclose: () => void;
   };
-  let { preferences, installer, ontutorial, onreport, onreset, onclose }: Props = $props();
+  let { preferences, installer, ontutorial, onreport, onabout, onclose }: Props = $props();
 
   const difficulties: { value: Difficulty; label: string }[] = (
     ['relaxed', 'normal', 'challenging'] as const
@@ -62,21 +62,14 @@ The menu: settings, help and the rest of the game's options, plus credits.
     <p class="install">{strings.installIos}</p>
   {/if}
 
-  <section class="actions">
-    <button class="secondary" onclick={ontutorial}>{strings.howToPlay}</button>
-    <button class="secondary" onclick={onreport}>{strings.report}</button>
-    <button class="secondary" onclick={onreset}>{strings.resetProgress}</button>
-  </section>
-
+  <button class="secondary" onclick={ontutorial}>{strings.howToPlay}</button>
   <button class="primary" onclick={onclose}>{strings.backToGame}</button>
 
-  <footer>
-    <p>{strings.about(__BUILD__)}</p>
-    <p>
-      {strings.credits}
-      <a href={strings.licensesUrl} target="_blank" rel="noopener">{strings.licenses}</a>
-    </p>
-  </footer>
+  <nav>
+    <a href="{import.meta.env.BASE_URL}guia/" target="_blank" rel="noopener">{strings.guide}</a>
+    <button onclick={onreport}>{strings.report}</button>
+    <button onclick={onabout}>{strings.about}</button>
+  </nav>
 </Dialog>
 
 <style>
@@ -105,20 +98,25 @@ The menu: settings, help and the rest of the game's options, plus credits.
     font-size: var(--text-sm);
   }
 
-  .actions {
-    margin: var(--space-2) 0;
-  }
-
-  footer {
-    color: var(--color-text-muted);
+  /* Less-used options: small links at the bottom. */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-1) var(--space-4);
+    margin-top: var(--space-2);
     font-size: var(--text-sm);
   }
 
-  footer p {
-    margin: var(--space-1) 0 0;
-  }
-
-  a {
-    color: var(--color-accent);
+  nav a,
+  nav button {
+    padding: var(--space-1) 0;
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
   }
 </style>

@@ -25,6 +25,7 @@ test('starting over goes back to level 1 with no points', async ({ page }) => {
   await drawWord(page, target);
   await expect(page.getByLabel('Puntos')).not.toHaveText('0');
   await openMenu(page);
+  await page.getByRole('button', { name: 'Acerca de' }).click();
   await page.getByRole('button', { name: 'Empezar de cero' }).click();
   await page.getByRole('button', { name: 'Sí, empezar de cero' }).click();
   await expect(page.getByText('Nivel 1', { exact: true })).toBeVisible();
@@ -84,4 +85,20 @@ test('the header always shows the level’s difficulty', async ({ page }) => {
   // Level 21 closes the third 7-level cycle: extra hard (see core/cadence.ts).
   await page.goto('./?nivel=21');
   await expect(page.locator('header').getByText('Extra difícil')).toBeVisible();
+});
+
+test('Acerca de shows the version and checks for updates', async ({ page }) => {
+  await page.goto('./');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await enterGame(page);
+  await openMenu(page);
+  await expect(page.getByRole('link', { name: 'Todo sobre Grama' })).toHaveAttribute(
+    'href',
+    '/grama/guia/',
+  );
+  await page.getByRole('button', { name: 'Acerca de' }).click();
+  const about = page.getByRole('dialog', { name: 'Acerca de' });
+  await expect(about).toContainText(/Versión \d+\.\d+\.\d+/);
+  await about.getByRole('button', { name: 'Buscar actualizaciones' }).click();
+  await expect(about.getByRole('status')).toHaveText('Ya tenés la última versión.');
 });

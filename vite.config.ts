@@ -1,4 +1,5 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { readFileSync } from 'node:fs';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 
@@ -9,7 +10,9 @@ const background = '#f7f6fc'; // --color-bg-top, light theme
 export default defineConfig({
   base,
   define: {
-    // CI builds name their commit; local builds say so.
+    // The release (package.json, bumped with each milestone tag) and the commit it was
+    // built from (CI; local builds say so).
+    __VERSION__: JSON.stringify(JSON.parse(readFileSync('package.json', 'utf8')).version),
     __BUILD__: JSON.stringify(process.env.GITHUB_SHA?.slice(0, 7) ?? 'local'),
   },
   plugins: [
