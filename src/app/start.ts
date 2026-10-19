@@ -16,5 +16,7 @@ export function levelFromUrl(search: string): number | null {
  */
 export function startState(saved: GameState | null, levelInUrl: number | null): GameState {
   const state = saved ?? NEW_GAME;
-  return levelInUrl === null ? state : { ...state, levelNumber: levelInUrl, found: [] };
+  return levelInUrl === null
+    ? state
+    : { ...state, levelNumber: levelInUrl, found: [], revealed: {} };
 }

@@ -97,7 +97,7 @@ Goal: help when stuck, give bonus words a purpose, read like real Spanish, and m
 playtest feedback easy to send.
 
 - [x] Accented display of found words (`ÁRBOL`, `TENÉS`), still matched without accents
-- [ ] Hints: earned by finding bonus words, each reveals a letter of a target
+- [x] Hints: earned by finding bonus words, each reveals a letter of a target
 - [ ] Bonus words list: tap the bonus counter to see the ones found
 - [ ] Report button: opens a pre-filled GitHub issue (level, letters, words, recent
       rejected attempts)

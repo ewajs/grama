@@ -3,7 +3,7 @@ import type { GameState } from '../core/game';
 const KEY = 'grama.save';
 
 /** Bump whenever `GameState` changes shape. Pre-1.0 an older save is discarded (D5). */
-const VERSION = 1;
+const VERSION = 2;
 
 type Save = { version: number; state: GameState };
 
@@ -42,6 +42,10 @@ function isSave(value: unknown): value is Save {
     (state?.levelNumber ?? 0) >= 1 &&
     typeof state?.score === 'number' &&
     Array.isArray(state.found) &&
-    state.found.every((word) => typeof word === 'string')
+    state.found.every((word) => typeof word === 'string') &&
+    Number.isInteger(state.hints) &&
+    Number.isInteger(state.bonusTowardHint) &&
+    typeof state.revealed === 'object' &&
+    state.revealed !== null
   );
 }

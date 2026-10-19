@@ -48,3 +48,10 @@ test('progress survives a reload', async ({ page }) => {
   await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
   await expect(page.locator('.row', { hasText: [...target].join('') })).toBeVisible();
 });
+
+test('a hint reveals a letter on the board', async ({ page }) => {
+  await page.goto('./');
+  await page.getByRole('button', { name: 'Pista: te quedan 3' }).click();
+  await expect(page.locator('.hinted')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Pista: te quedan 2' })).toBeVisible();
+});

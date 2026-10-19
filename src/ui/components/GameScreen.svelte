@@ -7,13 +7,13 @@ letter wheel with its controls.
 -->
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
-  import { boardRows } from '../../core/board';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
   import { strings } from '../../i18n';
   import { FEEDBACK_DURATION } from '../lib/motion';
   import Board from './Board.svelte';
   import Header from './Header.svelte';
+  import HintButton from './HintButton.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import LevelComplete from './LevelComplete.svelte';
@@ -34,12 +34,6 @@ letter wheel with its controls.
   const repeated = $derived(result?.submission.kind === 'repeated' ? result.submission.word : null);
 
   // What the player sees: words as written, with their accents.
-  const rows = $derived(
-    boardRows(game.level, game.found).map((row) => ({
-      ...row,
-      word: row.word && game.written(row.word),
-    })),
-  );
   const shown = $derived(
     result && {
       id: result.id,
@@ -69,7 +63,7 @@ letter wheel with its controls.
   <Header level={game.levelNumber} score={game.score} />
 
   <div class="board">
-    <Board {rows} glow={repeated && game.written(repeated)} />
+    <Board rows={game.board} glow={repeated && game.written(repeated)} />
   </div>
 
   <WordPill {word} result={shown} />
@@ -81,9 +75,14 @@ letter wheel with its controls.
         <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
       </svg>
     </button>
+    <div class="hint">
+      <HintButton count={game.hints} disabled={!game.canHint} onhint={() => game.hint()} />
+    </div>
     <div class="bonus">
       <BonusCounter
         count={game.bonusFound}
+        progress={game.hintProgress}
+        untilHint={game.bonusUntilHint}
         glow={repeated !== null && !game.level.targets.includes(repeated)}
       />
     </div>
@@ -162,6 +161,12 @@ letter wheel with its controls.
   }
 
   .bonus {
+    right: 0;
+  }
+
+  .hint {
+    position: absolute;
+    top: 0;
     right: 0;
   }
 </style>

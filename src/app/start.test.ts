@@ -15,7 +15,7 @@ describe('levelFromUrl', () => {
 });
 
 describe('startState', () => {
-  const saved = { levelNumber: 12, score: 480, found: ['CASA'] };
+  const saved = { ...NEW_GAME, levelNumber: 12, score: 480, found: ['CASA'] };
 
   it('continues the saved game, or starts a new one', () => {
     expect(startState(saved, null)).toBe(saved);
@@ -23,6 +23,6 @@ describe('startState', () => {
   });
 
   it('jumps to the level in the URL, keeping the score', () => {
-    expect(startState(saved, 40)).toEqual({ levelNumber: 40, score: 480, found: [] });
+    expect(startState(saved, 40)).toMatchObject({ levelNumber: 40, score: 480, found: [] });
   });
 });

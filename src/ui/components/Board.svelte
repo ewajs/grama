@@ -1,8 +1,9 @@
 <!--
 @component
 The board: one row of tiles per target word. Empty rows are the player's hint ("two
-words of 3 letters…"); found words pop in, letter by letter. It fills the space it's
-given, choosing one or two columns to keep tiles as big as possible.
+words of 3 letters…"); found words pop in, letter by letter, and letters revealed by
+hints show outlined. It fills the space it's given, choosing one or two columns to keep
+tiles as big as possible.
 
 - `rows`: from `boardRows` in `core/board`.
 - `glow`: a found word to briefly highlight (the player spelled it again).
@@ -43,10 +44,11 @@ given, choosing one or two columns to keep tiles as big as possible.
       {#each column as row, index (index)}
         <div class="row" class:glow={row.word !== null && row.word === glow}>
           {#each { length: row.length }, position}
-            {@const letter = row.word?.[position]}
+            {@const letter = position < row.shown ? row.word?.[position] : undefined}
             <div class="tile">
               {#if letter}
                 <span
+                  class:hinted={row.shown < row.length}
                   in:scale={{
                     start: 0.4,
                     duration: DURATION.slow,
@@ -107,6 +109,12 @@ given, choosing one or two columns to keep tiles as big as possible.
     color: var(--color-accent-contrast);
     font-size: calc(var(--tile) * 0.55);
     font-weight: var(--weight-bold);
+  }
+
+  .hinted {
+    background: var(--color-tile);
+    box-shadow: inset 0 0 0 2px var(--color-accent);
+    color: var(--color-accent);
   }
 
   .glow {

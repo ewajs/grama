@@ -34,6 +34,14 @@ change that alters a rule, so code and spec never drift.
 - `bonus`: 2 points per letter.
 - `invalid` / `repeated`: 0.
 
+### Hints (tunable in `src/core/hints.ts`)
+
+- A new game starts with **3 hints**; every **5 bonus words** found earn one more. Hints
+  carry over between levels. The bonus counter's ring shows progress to the next one.
+- A hint reveals the next letter of a target: the one showing the fewest letters, the
+  shortest on a tie, so hints spread over the board. Revealed letters show outlined.
+- A hint never reveals a word's last letter: the player still spells it, for full points.
+
 ### Words and letters (Spanish first)
 
 The game is built around **language packs** so more languages can be added and

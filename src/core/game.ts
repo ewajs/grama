@@ -1,4 +1,5 @@
 import { evaluate, type Submission } from './evaluate';
+import { countBonusWord, STARTING_HINTS } from './hints';
 import type { Level } from './level';
 
 /** Everything that changes while playing. Plain data, so it can be saved as JSON. */
@@ -9,10 +10,23 @@ export type GameState = {
   score: number;
   /** Words found on the current level, targets and bonus, in the order found. */
   found: readonly string[];
+  /** Hints available to spend, on any level. */
+  hints: number;
+  /** Bonus words found toward the next hint (see `core/hints`). */
+  bonusTowardHint: number;
+  /** Letters revealed by hints on the current level, by target. */
+  revealed: Readonly<Record<string, number>>;
 };
 
 /** State at the start of a new game. */
-export const NEW_GAME: GameState = { levelNumber: 1, score: 0, found: [] };
+export const NEW_GAME: GameState = {
+  levelNumber: 1,
+  score: 0,
+  found: [],
+  hints: STARTING_HINTS,
+  bonusTowardHint: 0,
+  revealed: {},
+};
 
 /**
  * Submits a word on the current level.
@@ -27,10 +41,12 @@ export function submitWord(
   if (submission.kind === 'invalid' || submission.kind === 'repeated') {
     return { submission, state };
   }
-  return {
-    submission,
-    state: { ...state, score: state.score + submission.points, found: [...state.found, word] },
+  const scored = {
+    ...state,
+    score: state.score + submission.points,
+    found: [...state.found, word],
   };
+  return { submission, state: submission.kind === 'bonus' ? countBonusWord(scored) : scored };
 }
 
 /** Whether every target of the level has been found. Bonus words don't count. */
@@ -48,7 +64,7 @@ export function levelPoints(level: Level, found: readonly string[]): number {
   }, 0);
 }
 
-/** Moves on to the next level, keeping the score. */
+/** Moves on to the next level, keeping the score and hints. */
 export function nextLevel(state: GameState): GameState {
-  return { ...state, levelNumber: state.levelNumber + 1, found: [] };
+  return { ...state, levelNumber: state.levelNumber + 1, found: [], revealed: {} };
 }

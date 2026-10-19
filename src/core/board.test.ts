@@ -28,4 +28,14 @@ describe('boardRows', () => {
       null,
     ]);
   });
+
+  it('shows the letters hints revealed, after found words of the same length', () => {
+    const rows = boardRows(level, ['SAL'], { SOL: 1, PATO: 2 });
+    expect(rows.slice(0, 4)).toEqual([
+      { length: 3, word: 'SAL', shown: 3 },
+      { length: 3, word: 'SOL', shown: 1 },
+      { length: 4, word: 'PATO', shown: 2 },
+      { length: 4, word: null, shown: 0 },
+    ]);
+  });
 });
