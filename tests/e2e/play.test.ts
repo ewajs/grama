@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { enterGame, openGame } from './app.ts';
 import { level, nonWord, written } from './level.ts';
 import { drawWord } from './wheel.ts';
 
@@ -6,19 +7,19 @@ const first = level(1);
 const target = first.targets[0]!;
 
 test('spelling a target word on the wheel scores it', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await drawWord(page, target);
   await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
 });
 
 test('spelling a word that is not in the level scores nothing', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await drawWord(page, nonWord(first));
   await expect(page.getByLabel('Puntos')).toHaveText('0');
 });
 
 test('letters can still be dragged after shuffling', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   const order = () =>
     page.locator('[data-letter]').evaluateAll((els) => els.map((e) => e.textContent));
   const before = await order();
@@ -30,7 +31,7 @@ test('letters can still be dragged after shuffling', async ({ page }) => {
 });
 
 test('finding every target completes the level and moves on to the next', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   for (const word of first.targets) await drawWord(page, word);
   const points = first.targets.reduce((sum, word) => sum + word.length * 10, 0);
   await expect(page.getByRole('dialog')).toContainText('¡Bien ahí!');
@@ -43,16 +44,17 @@ test('finding every target completes the level and moves on to the next', async 
 });
 
 test('progress survives a reload', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await drawWord(page, target);
   await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
   await page.reload();
+  await enterGame(page);
   await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
   await expect(page.locator('.row', { hasText: [...target].join('') })).toBeVisible();
 });
 
 test('a hint reveals a letter on the board', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await page.getByRole('button', { name: 'Pista: te quedan 3' }).click();
   await expect(page.locator('.hinted')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Pista: te quedan 2' })).toBeVisible();
@@ -60,7 +62,7 @@ test('a hint reveals a letter on the board', async ({ page }) => {
 
 test('tapping the bonus counter lists the bonus words found', async ({ page }) => {
   const bonus = first.bonus[0]!;
-  await page.goto('./');
+  await openGame(page);
   await drawWord(page, bonus);
   await page.getByRole('button', { name: /^Palabras extra: 1/ }).click();
   const dialog = page.getByRole('dialog', { name: 'Palabras extra' });
@@ -70,7 +72,7 @@ test('tapping the bonus counter lists the bonus words found', async ({ page }) =
 });
 
 test('the report button links to a pre-filled GitHub issue', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await drawWord(page, nonWord(first));
   await page.getByRole('button', { name: 'Abrir el menú' }).click();
   await page.getByRole('button', { name: 'Reportar un problema' }).click();
@@ -84,7 +86,7 @@ test('the report button links to a pre-filled GitHub issue', async ({ page }) =>
 test('the shuffled order stays put while playing', async ({ page }) => {
   const order = () =>
     page.locator('[data-letter]').evaluateAll((els) => els.map((e) => e.textContent?.trim()));
-  await page.goto('./');
+  await openGame(page);
   await page.locator('[data-letter]').first().waitFor();
   await page.getByRole('button', { name: 'Mezclar letras' }).click();
   await page.waitForTimeout(400);

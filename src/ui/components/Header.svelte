@@ -5,6 +5,7 @@ The top bar: the level number and the score, which counts up when points are won
 - `level`: level number as shown to the player.
 - `tier`: how hard the level is, shown as a badge under the level number.
 - `score`: total points.
+- `onback()`: back to the home screen.
 - `onmenu()`: the player wants the menu.
 -->
 <script lang="ts">
@@ -14,14 +15,19 @@ The top bar: the level number and the score, which counts up when points are won
   import { strings } from '../../i18n';
   import { SCORE_COUNT_DURATION } from '../lib/motion';
 
-  type Props = { level: number; tier: Tier; score: number; onmenu: () => void };
-  let { level, tier, score, onmenu }: Props = $props();
+  type Props = { level: number; tier: Tier; score: number; onback: () => void; onmenu: () => void };
+  let { level, tier, score, onback, onmenu }: Props = $props();
 
   // Follows `score`, moving smoothly from the old value to the new one.
   const shown = Tween.of(() => score, { duration: SCORE_COUNT_DURATION, easing: cubicOut });
 </script>
 
 <header>
+  <button class="back" aria-label={strings.back} onclick={onback}>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15 5l-7 7 7 7" />
+    </svg>
+  </button>
   <div class="level">
     <span class="title">{strings.level(level)}</span>
     <span class="badge {tier}">{strings.tiers[tier]}</span>
@@ -44,8 +50,8 @@ The top bar: the level number and the score, which counts up when points are won
 <style>
   header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: var(--space-1);
     align-self: stretch;
     font-size: var(--text-lg);
     font-weight: var(--weight-medium);
@@ -55,6 +61,7 @@ The top bar: the level number and the score, which counts up when points are won
     display: grid;
     justify-items: start;
     gap: 2px;
+    margin-right: auto;
   }
 
   .title {
@@ -95,6 +102,11 @@ The top bar: the level number and the score, which counts up when points are won
     gap: var(--space-2);
   }
 
+  .back {
+    margin-left: calc(-1 * var(--space-2));
+  }
+
+  .back,
   .menu {
     display: grid;
     place-items: center;
@@ -109,6 +121,7 @@ The top bar: the level number and the score, which counts up when points are won
     cursor: pointer;
   }
 
+  .back svg,
   .menu svg {
     width: 22px;
     height: 22px;

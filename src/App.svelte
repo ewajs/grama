@@ -2,6 +2,7 @@
 <script lang="ts">
   import { Game } from './app/game.svelte';
   import { Installer } from './app/install.svelte';
+  import { Navigation } from './app/navigation.svelte';
   import { Preferences } from './app/preferences.svelte';
   import { levelFromUrl, startState } from './app/start';
   import { loadWords } from './content';
@@ -9,13 +10,17 @@
   import { loadGame, saveGame } from './storage/save';
   import { loadSettings, saveSettings } from './storage/settings';
   import GameScreen from './ui/components/GameScreen.svelte';
+  import Home from './ui/components/Home.svelte';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const words = loadWords();
   const settings = loadSettings();
-  const start = startState(loadGame(), levelFromUrl(location.search), settings.difficulty);
+  const levelInUrl = levelFromUrl(location.search);
+  const start = startState(loadGame(), levelInUrl, settings.difficulty);
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
+  // ?nivel= is for playtesting: straight into that level.
+  const navigation = new Navigation(levelInUrl === null ? 'home' : 'game');
 
   const preferences = new Preferences(settings, saveSettings);
   const installer = new Installer();
@@ -39,7 +44,13 @@
 {#await words}
   <p class="status">{strings.loading}</p>
 {:then words}
-  <GameScreen game={new Game(words, start, saveGame)} {preferences} {installer} />
+  <!-- One game for the whole visit, kept while moving between screens. -->
+  {@const game = new Game(words, start, saveGame)}
+  {#if navigation.screen === 'game'}
+    <GameScreen {game} {preferences} {installer} onback={() => navigation.back()} />
+  {:else}
+    <Home {game} onplay={() => navigation.go('game')} />
+  {/if}
 {:catch}
   <p class="status">{strings.loadError}</p>
 {/await}

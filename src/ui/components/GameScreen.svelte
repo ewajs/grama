@@ -6,6 +6,7 @@ letter wheel with its controls.
 - `game`: the running game; the screen reads it and sends it the player's words.
 - `preferences`: the player's settings, changed from the menu.
 - `installer`: for the menu's install option.
+- `onback()`: back to the home screen.
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
@@ -30,8 +31,13 @@ letter wheel with its controls.
   import Tutorial from './tutorial/Tutorial.svelte';
   import WordPill from './WordPill.svelte';
 
-  type Props = { game: Game; preferences: Preferences; installer: Installer };
-  let { game, preferences, installer }: Props = $props();
+  type Props = {
+    game: Game;
+    preferences: Preferences;
+    installer: Installer;
+    onback: () => void;
+  };
+  let { game, preferences, installer, onback }: Props = $props();
 
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
   // The tutorial opens by itself on first launch. `untrack` reads the setting once, on
@@ -86,6 +92,7 @@ letter wheel with its controls.
     level={game.levelNumber}
     tier={game.tier}
     score={game.score}
+    {onback}
     onmenu={() => (panel = 'menu')}
   />
 
