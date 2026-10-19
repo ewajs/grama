@@ -29,6 +29,24 @@ export const es = {
   menu: 'Menú',
   openMenu: 'Abrir el menú',
   backToGame: 'Volver al juego',
+  howToPlay: 'Cómo jugar',
+  tutorial: [
+    {
+      title: 'Uní las letras',
+      text: 'Arrastrá el dedo de una letra a otra para formar una palabra. Al soltar, la enviás.',
+    },
+    {
+      title: 'Completá el tablero',
+      text: 'Cada fila es una palabra escondida. Encontralas todas para pasar de nivel.',
+    },
+    {
+      title: 'Extras y pistas',
+      text: 'Otras palabras válidas suman puntos. Cada 5, ganás una pista que revela una letra.',
+    },
+  ],
+  next: 'Siguiente',
+  play: '¡A jugar!',
+  skip: 'Saltear',
   theme: 'Tema',
   vibration: 'Vibración',
   install: 'Instalar Grama',

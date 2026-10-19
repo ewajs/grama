@@ -4,7 +4,7 @@ The menu: settings, help and the rest of the game's options, plus credits.
 
 - `preferences`: the player's settings; changes here apply and save right away.
 - `installer`: whether and how the app can be installed here.
-- `onreport()`, `onreset()`: the player picked one of those options.
+- `ontutorial()`, `onreport()`, `onreset()`: the player picked one of those options.
 - `onclose()`: done.
 -->
 <script lang="ts">
@@ -20,11 +20,12 @@ The menu: settings, help and the rest of the game's options, plus credits.
   type Props = {
     preferences: Preferences;
     installer: Installer;
+    ontutorial: () => void;
     onreport: () => void;
     onreset: () => void;
     onclose: () => void;
   };
-  let { preferences, installer, onreport, onreset, onclose }: Props = $props();
+  let { preferences, installer, ontutorial, onreport, onreset, onclose }: Props = $props();
 
   const themes: { value: Theme; label: string }[] = (['auto', 'light', 'dark'] as const).map(
     (value) => ({ value, label: strings.themes[value] }),
@@ -47,6 +48,7 @@ The menu: settings, help and the rest of the game's options, plus credits.
   {/if}
 
   <section class="actions">
+    <button class="secondary" onclick={ontutorial}>{strings.howToPlay}</button>
     <button class="secondary" onclick={onreport}>{strings.report}</button>
     <button class="secondary" onclick={onreset}>{strings.resetProgress}</button>
   </section>
