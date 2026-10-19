@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { buildWordList, parseWordList } from '../../src/content/words';
 import { spanish } from '../../src/core/spanish';
+import { occurrence, tierFor } from '../../src/core/cadence';
 import { generateLevel } from '../../src/core/generate';
 import type { Level } from '../../src/core/level';
 
@@ -16,7 +17,7 @@ const { words, spellings } = buildWordList(
 
 /** Level `number` exactly as the app generates it, so tests know its words. */
 export function level(number: number): Level {
-  return generateLevel(words, number);
+  return generateLevel(words, number, tierFor(number, 'normal'), occurrence(number, 'normal'));
 }
 
 /** How the app writes a word, with its accents. */

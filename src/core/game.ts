@@ -1,3 +1,4 @@
+import type { Difficulty } from './cadence';
 import { evaluate, type Submission } from './evaluate';
 import { countBonusWord, STARTING_HINTS } from './hints';
 import type { Level } from './level';
@@ -16,6 +17,8 @@ export type GameState = {
   bonusTowardHint: number;
   /** Letters revealed by hints on the current level, by target. */
   revealed: Readonly<Record<string, number>>;
+  /** The player's difficulty when the current level began; it decides its tier. */
+  difficulty: Difficulty;
 };
 
 /** State at the start of a new game. */
@@ -26,6 +29,7 @@ export const NEW_GAME: GameState = {
   hints: STARTING_HINTS,
   bonusTowardHint: 0,
   revealed: {},
+  difficulty: 'normal',
 };
 
 /**
@@ -64,7 +68,10 @@ export function levelPoints(level: Level, found: readonly string[]): number {
   }, 0);
 }
 
-/** Moves on to the next level, keeping the score and hints. */
-export function nextLevel(state: GameState): GameState {
-  return { ...state, levelNumber: state.levelNumber + 1, found: [], revealed: {} };
+/**
+ * Moves on to the next level, keeping the score and hints.
+ * @param difficulty The player's difficulty for the new level (it may have changed).
+ */
+export function nextLevel(state: GameState, difficulty = state.difficulty): GameState {
+  return { ...state, levelNumber: state.levelNumber + 1, found: [], revealed: {}, difficulty };
 }

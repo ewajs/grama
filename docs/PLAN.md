@@ -126,11 +126,11 @@ tutorial alone.
 
 Goal: levels vary in difficulty with a deliberate rhythm, and players choose how hard.
 
-- [ ] Classify levels easy / medium / hard / extra hard from their targets (rarity, length),
+- [x] Classify levels easy / medium / hard / extra hard from their targets (rarity, length),
       calibrated on thousands of generated levels
-- [ ] Generator builds a level of a requested tier; size (letters, targets) still grows
+- [x] Generator builds a level of a requested tier; size (letters, targets) still grows
       with progress
-- [ ] Cadence: 7-level cycle (easy, medium, medium, hard, easy, medium, extra hard), easy
+- [x] Cadence: 7-level cycle (easy, medium, medium, hard, easy, medium, extra hard), easy
       after extra hard, no extra hard before level 15, harder mix with progress
 - [ ] Player setting in the menu (Relajada / Normal / Desafiante) shifts tiers (Relajada: one
       easier, no extra hard; Desafiante: one harder), from the next level

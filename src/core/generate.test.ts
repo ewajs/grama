@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { TIERS } from './difficulty';
 import { generateLevel, levelShape } from './generate';
 import { canSpell, levelProblems } from './level';
 
-// A small list, most common first. The first 20 count as common in these tests.
+// A small list, most common first; every word is within any tier's pool.
 const words = [
   'SOL',
   'SAL',
@@ -35,10 +36,9 @@ const words = [
   'ASADO',
   'ODA',
 ];
-const COMMON = 20;
 
 describe('levelShape', () => {
-  it('follows the difficulty curve', () => {
+  it('grows with progress', () => {
     expect(levelShape(1)).toMatchObject({ letters: 6, targets: 6 });
     expect(levelShape(5)).toMatchObject({ letters: 6, targets: 6 });
     expect(levelShape(6)).toMatchObject({ letters: 6, targets: 7 });
@@ -50,29 +50,33 @@ describe('levelShape', () => {
 });
 
 describe('generateLevel', () => {
-  it('always builds the same level for the same number', () => {
-    expect(generateLevel(words, 7, COMMON)).toEqual(generateLevel(words, 7, COMMON));
+  it('always builds the same level for the same number and tier', () => {
+    expect(generateLevel(words, 7, 'hard')).toEqual(generateLevel(words, 7, 'hard'));
   });
 
-  it('builds valid levels', () => {
-    // This small list only has 6-letter words to spare: levels 1-15 (see DIFFICULTY).
-    for (let number = 1; number <= 15; number++) {
-      expect(levelProblems(generateLevel(words, number, COMMON))).toEqual([]);
+  it('builds valid levels of every tier', () => {
+    // This small list only has 6-letter words to spare: levels 1-15 (see SIZES).
+    for (const tier of TIERS) {
+      for (let number = 1; number <= 15; number++) {
+        expect(levelProblems(generateLevel(words, number, tier))).toEqual([]);
+      }
     }
   });
 
-  it('takes its letters from a common word of the right length', () => {
-    const level = generateLevel(words, 3, COMMON);
+  it('takes its letters from a word of the right length', () => {
+    const level = generateLevel(words, 3);
     expect(level.letters).toHaveLength(6);
-    const seed = level.targets.find((word) => word.length === 6)!;
-    expect(words.indexOf(seed)).toBeLessThan(COMMON);
+    expect(level.targets.some((word) => word.length === 6)).toBe(true);
   });
 
-  it('makes every spellable word valid, but only common ones targets', () => {
-    const level = generateLevel(words, 1, COMMON);
+  it('makes every word the letters spell valid, as a target or a bonus word', () => {
+    const level = generateLevel(words, 1);
     const spellable = words.filter((word) => canSpell(level.letters, word));
     expect([...level.targets, ...level.bonus].sort()).toEqual(spellable.sort());
-    for (const target of level.targets) expect(words.indexOf(target)).toBeLessThan(COMMON);
+  });
+
+  it('labels each level with a tier', () => {
+    expect(TIERS).toContain(generateLevel(words, 1, 'easy').tier);
   });
 
   it('gives up with a clear error when no word can make a level', () => {

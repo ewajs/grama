@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import blocklistText from '../../../scripts/blocklist-es.txt?raw';
-import { COMMON_WORDS, generateLevel, levelShape } from '../../core/generate';
+import { occurrence, tierFor } from '../../core/cadence';
+import { RECIPES, TIERS } from '../../core/difficulty';
+import { generateLevel, levelShape } from '../../core/generate';
 import { levelProblems } from '../../core/level';
 import { spanish } from '../../core/spanish';
 import { buildWordList, parseWordList } from '../words';
@@ -28,12 +30,12 @@ describe('Spanish word lists', () => {
   });
 
   it('only offer dictionary or curated words as targets', () => {
-    const targetable = words.slice(0, COMMON_WORDS);
+    const targetable = words.slice(0, RECIPES.extra.pool);
     expect(targetable.every((word) => dictionary.has(word) || curated.has(word))).toBe(true);
   });
 
   it('let every curated Argentine word be a target', () => {
-    const targetable = new Set(words.slice(0, COMMON_WORDS));
+    const targetable = new Set(words.slice(0, RECIPES.extra.pool));
     expect([...curated].filter((word) => !targetable.has(word))).toEqual([]);
   });
 
@@ -49,15 +51,44 @@ describe('Spanish word lists', () => {
     expect([...curated].filter((word) => blocked.has(word))).toEqual([]);
   });
 
-  it('generate valid levels along the whole difficulty curve', () => {
+  it('generate valid levels of every size and tier', () => {
     const numbers = [...Array(20).keys()].map((index) => index + 1);
     for (const number of [...numbers, 25, 40, 41, 60, 100, 500, 1000]) {
-      const level = generateLevel(words, number);
-      const shape = levelShape(number);
-      expect(levelProblems(level), `level ${number}`).toEqual([]);
-      expect(level.letters).toHaveLength(shape.letters);
-      expect(level.targets.length).toBeLessThanOrEqual(shape.targets);
-      expect(level.targets.every((word) => word.length >= shape.shortestTarget)).toBe(true);
+      for (const tier of TIERS) {
+        const level = generateLevel(words, number, tier);
+        const shape = levelShape(number);
+        expect(levelProblems(level), `level ${number} ${tier}`).toEqual([]);
+        expect(level.letters).toHaveLength(shape.letters);
+        expect(level.targets.length).toBeLessThanOrEqual(shape.targets);
+        expect(level.targets.every((word) => word.length >= shape.shortestTarget)).toBe(true);
+      }
     }
+  });
+
+  it('never repeat a level within 50 levels', () => {
+    const lastSeen = new Map<string, number>();
+    for (let number = 1; number <= 600; number++) {
+      const tier = tierFor(number, 'normal');
+      const level = generateLevel(words, number, tier, occurrence(number, 'normal'));
+      const letters = level.letters.toSorted().join('');
+      const previous = lastSeen.get(letters);
+      if (previous !== undefined) expect(number - previous, `level ${number}`).toBeGreaterThan(50);
+      lastSeen.set(letters, number);
+    }
+  });
+
+  it('almost always land in the tier the cadence asks for, quickly', () => {
+    const start = performance.now();
+    let hits = 0;
+    const count = 210;
+    for (let number = 1; number <= count; number++) {
+      if (
+        generateLevel(words, number, tierFor(number, 'normal')).tier === tierFor(number, 'normal')
+      )
+        hits++;
+    }
+    const perLevel = (performance.now() - start) / count;
+    expect(hits / count).toBeGreaterThan(0.9);
+    expect(perLevel).toBeLessThan(150);
   });
 });

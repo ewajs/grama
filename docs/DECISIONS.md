@@ -8,6 +8,28 @@ delete it, the history is the point.
 
 ---
 
+## D16 · Difficulty tiers: scored targets, calibrated recipes, a 7-level cadence — 2026-10-18
+
+- **Score** (`core/difficulty.ts`): a level's difficulty is the average over its targets
+  of log₁₀(rank + 1) + 0.25 × (length − 3), minus 0.25 per wheel letter beyond 6 (bigger
+  wheels make long words natural). Tiers start at 2.75 (medium), 3.25 (hard), 3.75
+  (extra hard).
+- **Recipes**, calibrated on generated levels (median score): easy = top 1,500 words,
+  most common first (2.49); medium = top 3,000, longest first (2.98); hard = top 8,000,
+  longest first (3.51); extra hard = top 20,000, longest first (4.00). The cut-offs sit
+  between those medians; the generator retries seeds until the level's score matches.
+  Over 600 levels, 96% land in the requested tier.
+- **Size and difficulty are separate**: letters and target count grow with progress
+  (`SIZES`); the tier only changes which words are targets.
+- **Cadence** (`core/cadence.ts`): easy, medium, medium, hard, easy, medium, extra hard,
+  repeating; no extra hard before level 15; from level 50 the middle easy becomes medium.
+- **No repeats nearby**: each tier draws seeds from its own band of ranks, each letter set
+  once across tiers, in a fixed order; each level gets its own block of 3 seeds in it
+  (`occurrence`). A level comes back only after its tier's whole order is used (about
+  180 levels at 8 letters).
+- **Why:** variety and a felt rhythm of challenge and relief, while keeping level N
+  reproducible.
+
 ## D15 · Stay on 0.x while we experiment — 2026-10-18
 
 - **Decision:** Milestones keep bumping the minor version (0.8, 0.9, 0.10…). There's no
