@@ -7,6 +7,7 @@ The screen where a level is played: header, the word being spelled and the lette
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
   import { strings } from '../../i18n';
+  import { shuffled } from '../lib/shuffle';
   import LetterWheel from './LetterWheel.svelte';
 
   let { game }: { game: Game } = $props();
@@ -14,7 +15,8 @@ The screen where a level is played: header, the word being spelled and the lette
   /** The word being spelled on the wheel right now. */
   let word = $state('');
 
-  const tiles = $derived(game.level.letters.map((letter, id) => ({ id, letter })));
+  // Derived from the level, so a new level brings new letters; shuffling overrides it.
+  let tiles = $derived(game.level.letters.map((letter, id) => ({ id, letter })));
 </script>
 
 <main>
@@ -27,7 +29,14 @@ The screen where a level is played: header, the word being spelled and the lette
 
   <div class="pill" class:visible={word !== ''}>{word}</div>
 
-  <LetterWheel {tiles} onword={(next) => (word = next)} onsubmit={(next) => game.submit(next)} />
+  <div class="controls">
+    <LetterWheel {tiles} onword={(next) => (word = next)} onsubmit={(next) => game.submit(next)} />
+    <button class="shuffle" aria-label={strings.shuffle} onclick={() => (tiles = shuffled(tiles))}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
+      </svg>
+    </button>
+  </div>
 </main>
 
 <style>
@@ -52,6 +61,45 @@ The screen where a level is played: header, the word being spelled and the lette
 
   .board {
     flex: 1;
+  }
+
+  .controls {
+    position: relative;
+    display: grid;
+    place-items: center;
+    align-self: stretch;
+  }
+
+  .shuffle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: scale var(--dur-fast) var(--ease-out);
+  }
+
+  .shuffle:active {
+    scale: 0.92;
+  }
+
+  .shuffle svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .pill {

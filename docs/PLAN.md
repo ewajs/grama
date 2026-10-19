@@ -43,7 +43,7 @@ Goal: the input gesture feels great on a phone.
 - [x] Pointer-event drag: hit-testing letters, path line, current word pill
 - [x] Backtrack by returning to the previous letter; cancel by releasing on the start
 - [x] Emits `submit(word)` on release; no page scroll/zoom while dragging
-- [ ] Shuffle button (animated reposition)
+- [x] Shuffle button (animated reposition)
 
 **Verify:** on a real phone via Pages, words can be drawn quickly and reliably,
 including fast diagonal swipes; desktop mouse drag works.
@@ -112,6 +112,8 @@ Goal: installable, works offline, never loses progress.
 
 ## Changelog
 
+- **v0.3.0** (M2) — Letter wheel: drag across letters with touch or mouse, backtrack, release
+  to submit; animated shuffle. Header with level and score.
 - **v0.2.0** (M1) — Game rules in `src/core`: Spanish normalization, levels and their validity
   rules, word evaluation and scoring, game state and level progression. Three hand-written levels.
 - **v0.1.0** (M0) — Svelte 5 + TS scaffold, quality gates, CI, auto-deploy to GitHub Pages, design tokens (light/dark), Spanish UI strings.
