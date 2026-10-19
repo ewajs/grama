@@ -1,7 +1,7 @@
 # Third-party notices
 
-Grama's code is MIT-licensed (see `LICENSE`). These data files are not; each keeps the
-license of its source and carries the same notice in its header.
+Grama's code is MIT-licensed (see `LICENSE`). These data files and the font are not; each
+keeps the license of its source (the data files carry the same notice in their header).
 
 ## Spanish dictionary — `src/content/es/dictionary.txt`
 
@@ -23,3 +23,9 @@ ranked list. This file is licensed under
 ## Argentine words — `src/content/es/argentina.txt`
 
 Written for Grama, not third-party: MIT like the code.
+
+## Font — Outfit
+
+**Outfit**, © 2021 The Outfit Project Authors, https://github.com/Outfitio/Outfit-Fonts,
+bundled from `@fontsource-variable/outfit`. Licensed under the
+[SIL Open Font License 1.1](https://openfontlicense.org).

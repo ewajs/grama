@@ -74,7 +74,7 @@ Goal: levels never run out, generated on the device (D11), good enough to playte
       invariants tested (every level passes `levelProblems`)
 - [x] App loads the word list and generates each level on demand; hand-written levels removed
 - [x] Difficulty curve: letters 6→7→8, target count and lengths grow with the level number
-- [~] Playtest helper: `?nivel=N` opens level N directly; manual playtest of a few dozen levels
+- [x] Playtest helper: `?nivel=N` opens level N directly; manual playtest of a few dozen levels
 
 **Verify:** level N is identical on every reload and device; playing 30 levels in a row
 feels fair (no obscure targets, no offensive words, nothing unspellable).
@@ -215,7 +215,7 @@ Goal: fix what the M12 code review found, and guard against it coming back.
       D10 replaced by D20, which also states the supported browsers (iOS 16.4+)
 - [x] Accessibility: native `<dialog>` with focus handling; tier badge contrast (AA);
       reduced motion in every transition
-- [ ] CLAUDE.md slimmed: imports CONTRIBUTING and a short list of invariants, points to
+- [x] CLAUDE.md slimmed: imports CONTRIBUTING and a short list of invariants, points to
       GAME / PLAN / DECISIONS by path; docs resynced with the code (GAME.md, PLAN.md, D12,
       D16, D18); `npm audit` allowlist; Outfit in NOTICE.md
 

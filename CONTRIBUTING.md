@@ -129,6 +129,7 @@ Two suites, each run where it pays off (D10):
 | `npm run dev`               | Dev server (`--host` to test on a phone on the same Wi-Fi)              |
 | `npm run check`             | Lint + typecheck + unit tests (the PR gate)                             |
 | `npm test`                  | Unit tests in watch mode                                                |
+| `npm run audit`             | Security advisories in what ships (dev tools left out, D18)             |
 | `npm run e2e`               | Playwright tests against a production build                             |
 | `npm run build`             | Production build to `dist/`                                             |
 | `npm run docs`              | Developer docs (guides + API reference) to `dist/docs/`                 |

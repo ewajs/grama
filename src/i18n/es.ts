@@ -188,7 +188,8 @@ export const es = {
   sourceUrl: 'https://github.com/ewajs/grama',
   guide: 'Todo sobre Grama',
   about: 'Acerca de',
-  credits: 'Palabras: diccionario RLA-ES (MPL-2.0) y wordfreq (CC BY-SA 4.0).',
+  credits:
+    'Palabras: diccionario RLA-ES (MPL-2.0) y wordfreq (CC BY-SA 4.0). Letra: Outfit (OFL 1.1).',
   licenses: 'Licencias',
   licensesUrl: 'https://github.com/ewajs/grama/blob/main/NOTICE.md',
   reportTitle: '¿Qué pasó?',

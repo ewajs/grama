@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      # What players download; dev tools' advisories (VitePress's dev server, D18) don't ship.
+      - run: npm run audit
 
   # The production build, played in real browsers: Chromium (touch phone, desktop) and
   # WebKit (iPhone) (D20).
