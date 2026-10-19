@@ -238,7 +238,7 @@ playable with only a keyboard.
 
 A timed mode, apart from the main game (D19).
 
-- [ ] Core: a run as plain data: wheels from a random seed, getting harder; time added
+- [x] Core: a run as plain data: wheels from a random seed, getting harder; time added
       and taken by results and Pasar; points; `tick(run, elapsed)` (time passed in)
 - [ ] Screen: timer, board, wheel, Pasar; pauses when the app is hidden; run summary
       with the best score

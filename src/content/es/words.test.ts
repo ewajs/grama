@@ -5,6 +5,7 @@ import { DAILY_EPOCH, dailyTier, generateDaily } from '../../core/daily';
 import { RECIPES, TIERS } from '../../core/difficulty';
 import { generateLevel, levelShape, LEVELS_VERSION } from '../../core/generate';
 import { THREE_STAR_BONUS } from '../../core/history';
+import { newRun, pass, RAMP, wheelOf } from '../../core/time-trial';
 import { levelProblems } from '../../core/level';
 import { spanish } from '../../core/spanish';
 import { buildWordList, parseWordList } from '../words';
@@ -117,6 +118,21 @@ describe('Spanish word lists', () => {
       expect(seen.has(key(daily.letters)), date).toBe(false);
       seen.add(key(daily.letters));
     }
+  });
+
+  it('make valid Contrarreloj wheels that get harder, quickly', () => {
+    const start = performance.now();
+    for (const seed of [1, 4242, 987_654_321]) {
+      let run = newRun(seed);
+      for (let wheel = 0; wheel < 20; wheel++) {
+        const level = wheelOf(words, run);
+        const step = RAMP.findLast(({ from }) => from <= wheel);
+        expect(levelProblems(level), `${seed}/${wheel}`).toEqual([]);
+        expect(level.letters).toHaveLength(step?.shape.letters ?? 0);
+        run = pass({ ...run, timeLeft: 60_000 });
+      }
+    }
+    expect((performance.now() - start) / 60).toBeLessThan(50);
   });
 
   it('make the same levels until LEVELS_VERSION says otherwise', () => {
