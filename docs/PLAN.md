@@ -55,8 +55,8 @@ Goal: wheel + board + rules = a complete level with fixture data.
 - [x] Board: rows of tiles grouped by length; found words fill their row
 - [x] Feedback per result (shake / fly-in + flip / bonus pulse / repeated glow)
 - [x] Header with level number and animated score
-- [ ] Level-complete overlay → next level
-- [ ] E2E (local, see D10): draw a target word, see it on the board; finish a fixture level
+- [x] Level-complete overlay → next level
+- [x] E2E (local, see D10): draw a target word, see it on the board; finish a fixture level
 
 **Verify:** a fixture level can be fully played on phone and desktop.
 
@@ -112,6 +112,8 @@ Goal: installable, works offline, never loses progress.
 
 ## Changelog
 
+- **v0.4.0** (M3) — First playable MVP: board, feedback for every result, bonus counter,
+  animated score, level-complete celebration and next level. Three hand-written levels.
 - **v0.3.0** (M2) — Letter wheel: drag across letters with touch or mouse, backtrack, release
   to submit; animated shuffle. Header with level and score.
 - **v0.2.0** (M1) — Game rules in `src/core`: Spanish normalization, levels and their validity

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLevelComplete, NEW_GAME, nextLevel, submitWord } from './game';
+import { isLevelComplete, levelPoints, NEW_GAME, nextLevel, submitWord } from './game';
 import type { Level } from './level';
 
 const level: Level = {
@@ -37,6 +37,13 @@ describe('isLevelComplete', () => {
 
   it('is not complete with targets missing, whatever bonus words were found', () => {
     expect(isLevelComplete(level, ['SOL', 'OLA'])).toBe(false);
+  });
+});
+
+describe('levelPoints', () => {
+  it('adds up the points of every word found on the level', () => {
+    expect(levelPoints(level, ['SOL', 'OLA'])).toBe(36);
+    expect(levelPoints(level, [])).toBe(0);
   });
 });
 
