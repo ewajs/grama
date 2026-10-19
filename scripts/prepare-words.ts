@@ -9,6 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { expand, parseAffixes } from './hunspell.ts';
+import { voseoForms } from './voseo.ts';
 import { rankedWords } from './wordfreq.ts';
 import { spanish } from '../src/core/spanish.ts';
 import { preferSpelling, spelling, spellings } from './words.ts';
@@ -74,7 +75,9 @@ const text = (name: string) => new TextDecoder().decode(oxt[name]);
 const affixes = parseAffixes(text('es_AR.aff'));
 // The first line of a .dic file is its entry count.
 const entries = text('es_AR.dic').split('\n').slice(1);
-const expanded = entries.flatMap((entry) => expand(entry, affixes));
+const affixed = new Set(entries.flatMap((entry) => expand(entry, affixes)));
+// The dictionary's voseo is incomplete (tenés but not podés): fill it in.
+const expanded = [...affixed, ...voseoForms(affixed)];
 const inDictionary = new Set(expanded.map(spelling));
 
 // Frequency sources often drop accents ("tenes"): prefer spellings the dictionary knows.
