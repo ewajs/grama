@@ -7,12 +7,15 @@ export const RING_RADIUS = 0.34;
 /** Radius of a letter, as a fraction of the wheel. Also how close the pointer must get. */
 export const LETTER_RADIUS = 0.1;
 
-/** Centers of `count` letters spread evenly around the ring: the first at the top, clockwise. */
+/** Center of letter `index` of `count`, spread evenly on the ring: the first at the top, clockwise. */
+export function letterPosition(index: number, count: number): Point {
+  const angle = -Math.PI / 2 + (2 * Math.PI * index) / count;
+  return { x: 0.5 + RING_RADIUS * Math.cos(angle), y: 0.5 + RING_RADIUS * Math.sin(angle) };
+}
+
+/** Centers of all `count` letters on the ring (see {@link letterPosition}). */
 export function letterPositions(count: number): Point[] {
-  return Array.from({ length: count }, (_, index) => {
-    const angle = -Math.PI / 2 + (2 * Math.PI * index) / count;
-    return { x: 0.5 + RING_RADIUS * Math.cos(angle), y: 0.5 + RING_RADIUS * Math.sin(angle) };
-  });
+  return Array.from({ length: count }, (_, index) => letterPosition(index, count));
 }
 
 /** Index of the letter under `point`, or `null` when the point is between letters. */

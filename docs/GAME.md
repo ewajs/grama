@@ -11,7 +11,8 @@ change that alters a rule, so code and spec never drift.
 2. The player drags across the wheel to build a word. Each letter tile can be
    used once per word. Dragging back onto the previous letter removes the last
    one (undo while dragging).
-3. Lifting the finger (or mouse button) **submits** the word.
+3. Lifting the finger (or mouse button) **submits** the word. Letting go with a single
+   letter selected cancels silently.
 4. The submission is evaluated:
 
    | Result     | Condition                                  | Points | Feedback                                   |
