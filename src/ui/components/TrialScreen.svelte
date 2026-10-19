@@ -276,7 +276,7 @@ is open and the app is visible; when time is up, a summary offers another run.
   .points {
     min-width: 3ch;
     margin-left: var(--space-3);
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     font-size: var(--text-lg);
     font-weight: var(--weight-bold);
     text-align: right;
@@ -347,7 +347,7 @@ is open and the app is visible; when time is up, a summary offers another run.
 
   .score {
     margin: 0;
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     font-size: var(--text-2xl);
     font-weight: var(--weight-bold);
   }

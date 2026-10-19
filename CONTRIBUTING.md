@@ -119,8 +119,10 @@ Two suites, each run where it pays off (D10):
   instead), not from `svelte/transition`; CSS animations stop by themselves.
 - Dialogs are `Dialog.svelte`, a native modal `<dialog>`: focus and the inert page come
   with it. Toasts go over dialogs as popovers (`ui/lib/top-layer`).
-- Text in a status color uses its `-strong` token (`--color-bonus-strong`…), which passes
-  WCAG AA; the plain ones are for fills and icons.
+- Text in a status or accent color uses its `-strong` token (`--color-bonus-strong`,
+  `--color-accent-strong`…), and text on a `-strong` fill uses `--color-on-strong`; they
+  pass WCAG AA in every theme (`ui/styles/contrast.test.ts`). The plain ones are for fills
+  and icons.
 - Touch targets ≥ 44px. Use pointer events (one code path for touch and mouse).
 
 ## Commands

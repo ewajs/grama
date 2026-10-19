@@ -4,10 +4,10 @@
  */
 
 import type { Difficulty } from '../core/cadence';
-import type { Settings, Theme } from '../storage/settings';
+import type { Mode, Settings, Theme } from '../storage/settings';
 
 /**
- * The player's settings, reactive for the UI. Assigning one (`preferences.theme =
+ * The player's settings, reactive for the UI. Assigning one (`preferences.mode =
  * 'dark'`, or `bind:value`) updates the screen and calls `onchange`, e.g. to save.
  */
 export class Preferences {
@@ -23,13 +23,22 @@ export class Preferences {
     this.#onchange = onchange;
   }
 
-  /** Light or dark colors, or following the device. */
+  /** The color theme. */
   get theme(): Theme {
     return this.#settings.theme;
   }
-  /** Picks light or dark colors, or following the device. */
+  /** Picks a color theme. */
   set theme(theme: Theme) {
     this.#update({ theme });
+  }
+
+  /** Light or dark colors, or following the device. */
+  get mode(): Mode {
+    return this.#settings.mode;
+  }
+  /** Picks light or dark colors, or following the device. */
+  set mode(mode: Mode) {
+    this.#update({ mode });
   }
 
   /** How hard levels are, from the next one on. */

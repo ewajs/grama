@@ -1,7 +1,7 @@
 <!--
 @component
 Pick one of a few options, side by side (like a radio group). Bind its value:
-`<Segmented label="Tema" options={…} bind:value={preferences.theme} />`.
+`<Segmented label="Modo" options={…} bind:value={preferences.mode} />`.
 
 - `label`: what is being chosen, for screen readers.
 - `options`: each option's value and visible label.

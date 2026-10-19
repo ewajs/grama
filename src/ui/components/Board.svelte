@@ -135,7 +135,7 @@ tiles as big as possible.
   .hinted {
     background: var(--color-tile);
     box-shadow: inset 0 0 0 2px var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
   }
 
   .glow {

@@ -95,8 +95,8 @@ the next hint. Pulses when the count goes up.
   @keyframes pulse {
     50% {
       scale: 1.2;
-      background: var(--color-bonus);
-      color: var(--color-accent-contrast);
+      background: var(--color-bonus-strong);
+      color: var(--color-on-strong);
     }
   }
 </style>

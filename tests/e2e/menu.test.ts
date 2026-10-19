@@ -6,17 +6,22 @@ import { drawWord } from './wheel.ts';
 const openMenu = (page: import('@playwright/test').Page) =>
   page.getByRole('button', { name: 'Abrir el menú' }).click();
 
-test('the chosen theme applies and survives a reload', async ({ page }) => {
+test('the chosen theme and mode apply and survive a reload', async ({ page }) => {
   await openGame(page);
+  const html = page.locator('html');
+  await expect(html).toHaveAttribute('data-theme', 'grama');
   await openMenu(page);
+  await page.getByRole('radio', { name: 'Argento' }).click();
   await page.getByRole('radio', { name: 'Oscuro' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(html).toHaveAttribute('data-theme', 'argento');
+  await expect(html).toHaveAttribute('data-mode', 'dark');
   await page.reload();
   await enterGame(page);
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(html).toHaveAttribute('data-theme', 'argento');
+  await expect(html).toHaveAttribute('data-mode', 'dark');
   await openMenu(page);
   await page.getByRole('radio', { name: 'Automático' }).click();
-  await expect(page.locator('html')).not.toHaveAttribute('data-theme');
+  await expect(html).not.toHaveAttribute('data-mode');
 });
 
 test('starting over goes back to level 1 with no points', async ({ page }) => {

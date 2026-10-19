@@ -12,10 +12,11 @@ The menu: settings, help and the rest of the game's options, plus credits.
   import type { Preferences } from '../../app/preferences.svelte';
   import { strings } from '../../i18n';
   import type { Difficulty } from '../../core/cadence';
-  import type { Theme } from '../../storage/settings';
+  import type { Mode } from '../../storage/settings';
   import Dialog from './Dialog.svelte';
   import { canVibrate } from '../lib/haptics';
   import Segmented from './Segmented.svelte';
+  import ThemePicker from './ThemePicker.svelte';
   import Toggle from './Toggle.svelte';
 
   type Props = {
@@ -32,8 +33,8 @@ The menu: settings, help and the rest of the game's options, plus credits.
     ['relaxed', 'normal', 'challenging'] as const
   ).map((value) => ({ value, label: strings.difficulties[value] }));
 
-  const themes: { value: Theme; label: string }[] = (['auto', 'light', 'dark'] as const).map(
-    (value) => ({ value, label: strings.themes[value] }),
+  const modes: { value: Mode; label: string }[] = (['auto', 'light', 'dark'] as const).map(
+    (value) => ({ value, label: strings.modes[value] }),
   );
 </script>
 
@@ -50,7 +51,8 @@ The menu: settings, help and the rest of the game's options, plus credits.
 
   <section>
     <h3>{strings.theme}</h3>
-    <Segmented label={strings.theme} options={themes} bind:value={preferences.theme} />
+    <ThemePicker bind:value={preferences.theme} />
+    <Segmented label={strings.mode} options={modes} bind:value={preferences.mode} />
     <Toggle label={strings.sound} bind:checked={preferences.sound} />
     {#if canVibrate}
       <Toggle label={strings.vibration} bind:checked={preferences.vibration} />

@@ -119,7 +119,7 @@ focus goes back where it was when it closes.
   h2 {
     margin: 0;
     font-size: var(--text-2xl);
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     outline: none;
   }
 

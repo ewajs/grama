@@ -9,7 +9,7 @@
   import { strings } from './i18n';
   import { loadGame, saveGame } from './storage/save';
   import { loadTrials, saveTrials } from './storage/trials';
-  import { loadSettings, saveSettings } from './storage/settings';
+  import { loadSettings, saveSettings, type Theme } from './storage/settings';
   import GameScreen from './ui/components/GameScreen.svelte';
   import Home from './ui/components/Home.svelte';
   import LevelMap from './ui/components/LevelMap.svelte';
@@ -46,18 +46,25 @@
   const preferences = new Preferences(settings, saveSettings);
   const installer = new Installer();
 
-  // The browser bar's color for each theme (the page background's top).
-  const BAR_COLOR = { light: '#f7f6fc', dark: '#16152a' };
+  // The browser bar's color for each theme and mode: its --color-bg-top in tokens.css.
+  const BAR_COLOR: Record<Theme, { light: string; dark: string }> = {
+    grama: { light: '#f7f6fc', dark: '#16152a' },
+    argento: { light: '#f5f9fd', dark: '#11243a' },
+    yerba: { light: '#fbf8ef', dark: '#1a2014' },
+    quebrada: { light: '#fcf6f1', dark: '#2a1a14' },
+  };
 
   // $effect runs after rendering and again whenever what it reads changes: here, the
-  // theme. It's for reaching outside the component, like the <html> element.
+  // theme and mode. It's for reaching outside the component, like the <html> element.
   $effect(() => {
-    const { theme } = preferences;
-    if (theme === 'auto') delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = theme;
+    const { theme, mode } = preferences;
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    if (mode === 'auto') delete root.dataset.mode;
+    else root.dataset.mode = mode;
     for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
       const scheme = meta.media.includes('dark') ? 'dark' : 'light';
-      meta.content = BAR_COLOR[theme === 'auto' ? scheme : theme];
+      meta.content = BAR_COLOR[theme][mode === 'auto' ? scheme : mode];
     }
   });
 

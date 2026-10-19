@@ -78,7 +78,7 @@ The top bar: the level number and the score, which counts up when points are won
   .badge {
     padding: 0 var(--space-2);
     border-radius: var(--radius-full);
-    color: var(--color-accent-contrast);
+    color: var(--color-on-strong);
     font-size: 11px;
     font-weight: var(--weight-bold);
     letter-spacing: 0.04em;
@@ -91,7 +91,7 @@ The top bar: the level number and the score, which counts up when points are won
   }
 
   .medium {
-    background: var(--color-accent);
+    background: var(--color-accent-strong);
   }
 
   .hard {

@@ -143,7 +143,7 @@ letter on the board. Loops.
     place-items: center;
     border-radius: inherit;
     box-shadow: inset 0 0 0 2px var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     font-size: 22px;
     font-weight: var(--weight-bold);
     animation: reveal var(--cycle) infinite;

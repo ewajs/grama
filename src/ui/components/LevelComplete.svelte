@@ -193,7 +193,7 @@ stars land one by one, then the points count up.
   }
 
   .tier {
-    color: var(--color-accent-contrast);
+    color: var(--color-on-strong);
     box-shadow: none;
   }
 
