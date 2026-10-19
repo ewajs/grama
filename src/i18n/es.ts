@@ -13,6 +13,8 @@ export const es = {
   pointsWon: (points: number) => `+${points} puntos`,
   bonusWords: (count: number) => (count === 1 ? '1 palabra extra' : `${count} palabras extra`),
   nextLevel: 'Siguiente nivel',
+  updateReady: 'Hay una versión nueva',
+  update: 'Actualizar',
 };
 
 /** The shape every language pack must provide: the same keys as Spanish. */
