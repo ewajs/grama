@@ -117,8 +117,7 @@ Goal: one place for options, and a first launch that teaches the game.
 - [x] Install the app: the browser's prompt where there is one, steps on iOS; hidden
       when already installed
 - [x] Vibration on/off, with haptics while dragging and on results
-- [ ] Difficulty setting (Relajada / Normal / Desafiante), applied from M8
-- [ ] Animated "Cómo jugar" tutorial: on first launch and from the menu
+- [x] Animated "Cómo jugar" tutorial: on first launch and from the menu
 
 **Verify:** every option works and survives a reload; a new player gets the game from the
 tutorial alone.
@@ -133,7 +132,8 @@ Goal: levels vary in difficulty with a deliberate rhythm, and players choose how
       with progress
 - [ ] Cadence: 7-level cycle (easy, medium, medium, hard, easy, medium, extra hard), easy
       after extra hard, no extra hard before level 15, harder mix with progress
-- [ ] Player setting shifts tiers (Relajada: one easier, no extra hard; Desafiante: one harder)
+- [ ] Player setting in the menu (Relajada / Normal / Desafiante) shifts tiers (Relajada: one
+      easier, no extra hard; Desafiante: one harder), from the next level
 - [ ] Tier badge; harder levels score more (×1.5, ×2) and extra hard earns a hint
 
 **Verify:** tier shares over 1,000 levels match the cadence; extra-hard levels feel hard
@@ -160,6 +160,8 @@ but fair in playtests.
 
 ## Changelog
 
+- **v0.8.0** (M7) — Menu: theme (auto/light/dark), install the app, vibration, how to play,
+  report, start over, credits. Animated first-launch tutorial.
 - **v0.7.0** (M6) — Found words shown with accents; hints earned with bonus words; bonus
   words list; report button (pre-filled GitHub issue); Argentine words (generated voseo +
   curated list) and only real words count.

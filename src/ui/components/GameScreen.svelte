@@ -8,6 +8,7 @@ letter wheel with its controls.
 - `installer`: for the menu's install option.
 -->
 <script lang="ts">
+  import { untrack } from 'svelte';
   import type { Game } from '../../app/game.svelte';
   import type { Installer } from '../../app/install.svelte';
   import type { Preferences } from '../../app/preferences.svelte';
@@ -26,13 +27,18 @@ letter wheel with its controls.
   import Menu from './Menu.svelte';
   import ReportDialog from './ReportDialog.svelte';
   import ResetDialog from './ResetDialog.svelte';
+  import Tutorial from './tutorial/Tutorial.svelte';
   import WordPill from './WordPill.svelte';
 
   type Props = { game: Game; preferences: Preferences; installer: Installer };
   let { game, preferences, installer }: Props = $props();
 
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
-  let panel = $state<'menu' | 'report' | 'reset' | 'bonus' | null>(null);
+  // The tutorial opens by itself on first launch. `untrack` reads the setting once, on
+  // purpose: marking it seen later shouldn't change which panel is open.
+  let panel = $state<'menu' | 'tutorial' | 'report' | 'reset' | 'bonus' | null>(
+    untrack(() => (preferences.tutorialSeen ? null : 'tutorial')),
+  );
   const close = () => (panel = null);
   /** The word being spelled on the wheel right now. */
   let word = $state('');
@@ -110,9 +116,17 @@ letter wheel with its controls.
   <Menu
     {preferences}
     {installer}
+    ontutorial={() => (panel = 'tutorial')}
     onreport={() => (panel = 'report')}
     onreset={() => (panel = 'reset')}
     onclose={close}
+  />
+{:else if panel === 'tutorial'}
+  <Tutorial
+    onclose={() => {
+      preferences.tutorialSeen = true;
+      close();
+    }}
   />
 {:else if panel === 'report'}
   <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={close} />

@@ -6,7 +6,11 @@ export default defineConfig({
   testDir: 'tests/e2e',
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  use: { baseURL: `http://localhost:${port}/grama/` },
+  use: {
+    baseURL: `http://localhost:${port}/grama/`,
+    // Tests start past the first-launch tutorial; tutorial.test.ts starts fresh.
+    storageState: 'tests/e2e/tutorial-seen.json',
+  },
   projects: [
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
