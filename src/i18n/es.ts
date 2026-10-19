@@ -163,6 +163,15 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.14',
+      items: [
+        'Los desafíos del día ya no se repiten (por lo menos durante meses).',
+        'Repetir un nivel ya no suma puntos ni pistas: es para mejorar las estrellas.',
+        'Tus estadísticas y logros nunca bajan, y los desafíos también cuentan.',
+        'Ventanas más accesibles y colores más legibles.',
+      ],
+    },
+    {
       version: '0.13',
       items: [
         'Todo sobre Grama: una guía con todo lo que querés saber del juego.',
