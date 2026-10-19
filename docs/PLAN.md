@@ -270,6 +270,9 @@ rescues a dead wheel, and the best score survives reloads.
 
 ## Changelog
 
+- **v0.16.0** (M15) — Contrarreloj: wheel after wheel against the clock (60 s, +3 s a
+  word, +10 s a board, Pasar −10 s), new wheels every run, its own best mark and record
+  saved apart, three achievements, a guide page.
 - **v0.15.0** (M14) — Typing on a keyboard and tap-to-select letters; soft synthesized
   sounds with a setting; Home shows before the words load and the word list builds 2×
   faster (Lighthouse mobile 78 → 92, JS budget in CI); streak freeze every 7 days.

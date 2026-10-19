@@ -189,6 +189,13 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.16',
+      items: [
+        'Contrarreloj: rueda tras rueda contra el reloj, con Pasar y tu mejor marca.',
+        'Tres logros nuevos para el Contrarreloj.',
+      ],
+    },
+    {
       version: '0.15',
       items: [
         'Escribí las palabras con el teclado, o tocá las letras de a una.',
