@@ -207,7 +207,7 @@ Goal: fix what the M12 code review found, and guard against it coming back.
       the tier achievements
 - [x] Home shows the current level and its tier after a replay or daily; sharing uses the
       played date; the clock is injected and the daily refreshes when the app resumes
-- [ ] Input and motion: a cancelled drag clears instead of submitting; dialogs fade out
+- [x] Input and motion: a cancelled drag clears instead of submitting; dialogs fade out
       without delay; board rows keyed by slot so letters fly to the right row
 - [ ] Golden content test (levels 1–100, the next 60 dailies) and a content version in
       the save; the screenshots spec stops hard-coding the save
