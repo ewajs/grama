@@ -86,12 +86,28 @@ Goal: installable, works offline, never loses progress.
 - [ ] Versioned `localStorage` save (current level, score, found words); pre-1.0 an
       unknown version is simply discarded
 - [ ] Manifest, icons, theme color, `base` path for Pages
-- [ ] Service worker: precache app + levels; update prompt on new version
+- [ ] Service worker: precache app + word lists; update prompt on new version
 - [ ] Safe-area insets, standalone display, no pull-to-refresh/overscroll
 
 **Verify:** install on Android and iOS; play offline in airplane mode; reload keeps progress.
 
-### M6 — Polish & release · `v1.0.0`
+### M6 — Helpers · `v0.7.0`
+
+Goal: help when stuck, give bonus words a purpose, read like real Spanish, and make
+playtest feedback easy to send.
+
+- [ ] Accented display of found words (`ÁRBOL`, `TENÉS`), still matched without accents
+- [ ] Hints: earned by finding bonus words, each reveals a letter of a target
+- [ ] Bonus words list: tap the bonus counter to see the ones found
+- [ ] Report button: opens a pre-filled GitHub issue (level, letters, words, recent
+      rejected attempts)
+- [ ] Argentine supplement word list (hand-curated) so _pibe, coima, bondi, subte…_ can
+      be targets
+
+**Verify:** a stuck player can always progress with hints; a report reaches GitHub with
+enough context to reproduce.
+
+### M7 — Polish & release · `v1.0.0`
 
 - [ ] Visual design pass (spacing, motion timing, dark mode, level-complete moment)
 - [ ] Haptics; `prefers-reduced-motion`; accessible labels and contrast check
@@ -102,15 +118,12 @@ Goal: installable, works offline, never loses progress.
 
 ## Backlog (post-MVP, unordered)
 
-- Hints / power-ups (reveal a letter, reveal a word) and a coin economy
+- More power-ups (reveal a whole word) and a coin economy
 - Keyboard input on desktop (type + Enter)
 - Statistics screen, streaks, daily puzzle
 - Crossword-style board layout
 - Sound effects with mute toggle
 - English (or other) language packs + language picker (the structure is in place from M0/M1)
-- Argentine supplement word list (MIT, hand-curated) so words missing from the dictionary
-  (_pibe, coima, bondi, subte_) can be targets
-- Accented display of found words (show `ÁRBOL`, match `ARBOL`)
 - Share results
 
 ## Changelog
