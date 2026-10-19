@@ -69,7 +69,7 @@ daily), so the record lands in the right place.
 - {@link "core/stats"!statsOf | statsOf}: totals over the history and the dailies, plus every hint
   spent. Nothing in them can go down, so achievements stay unlocked.
 - {@link "core/achievements"!ACHIEVEMENTS | ACHIEVEMENTS}: each one a stat reaching a goal.
-- {@link "core/daily"!generateDaily | generateDaily} and {@link "core/daily"!streak | streak}: the daily challenge.
+- {@link "core/daily"!generateDaily | generateDaily} and {@link "core/daily"!streakOf | streakOf}: the daily challenge, and its streak with freezes.
 
 ## The app layer
 
@@ -169,7 +169,7 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
    with {@link "app/game.svelte"!Game.refreshDate | refreshDate} when the app comes back to the
    foreground, since a PWA can sleep past midnight. From the date,
    {@link "core/daily"!dailyNumber | dailyNumber} gives its number,
-   {@link "core/daily"!dailyTier | dailyTier} its weekday tier and {@link "core/daily"!streak | streak} the streak.
+   {@link "core/daily"!dailyTier | dailyTier} its weekday tier and {@link "core/daily"!streakOf | streakOf} the streak.
 2. "Desafío del día" calls `game.playDaily()`: the mode becomes the daily, and
    {@link "core/daily"!generateDaily | generateDaily} builds a 7-letter level from seeds at the far end
    of the tier's order, away from the main levels'.
