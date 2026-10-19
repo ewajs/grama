@@ -89,16 +89,14 @@ letter wheel with its controls.
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-3);
     height: 100dvh;
     max-width: 480px;
     margin: 0 auto;
-    padding: var(--space-4) var(--space-4) var(--space-8);
+    padding: var(--space-3) var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));
   }
 
   .board {
-    /* The board sizes its tiles to fit this box (container query units). */
-    container-type: size;
     flex: 1;
     align-self: stretch;
     min-height: 0;

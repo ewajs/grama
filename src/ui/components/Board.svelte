@@ -1,7 +1,8 @@
 <!--
 @component
 The board: one row of tiles per target word. Empty rows are the player's hint ("two
-words of 3 letters…"); found words pop in, letter by letter.
+words of 3 letters…"); found words pop in, letter by letter. It fills the space it's
+given, choosing one or two columns to keep tiles as big as possible.
 
 - `rows`: from `boardRows` in `core/board`.
 - `glow`: a found word to briefly highlight (the player spelled it again).
@@ -10,31 +11,54 @@ words of 3 letters…"); found words pop in, letter by letter.
   import { backOut } from 'svelte/easing';
   import { scale } from 'svelte/transition';
   import type { BoardRow } from '../../core/board';
+  import { boardLayout, COLUMN_GAP, splitIntoColumns, TILE_GAP } from '../lib/board-layout';
   import { DURATION, TILE_STAGGER } from '../lib/motion';
 
   let { rows, glow = null }: { rows: readonly BoardRow[]; glow?: string | null } = $props();
 
-  const longest = $derived(Math.max(...rows.map((row) => row.length)));
+  // Svelte keeps these in sync with the element's size (bind:clientWidth/Height below).
+  let width = $state(0);
+  let height = $state(0);
+
+  const layout = $derived(
+    boardLayout(
+      rows.map((row) => row.length),
+      width,
+      height,
+    ),
+  );
+  const columns = $derived(splitIntoColumns(rows, layout.columns));
 </script>
 
-<section class="board" style:--cols={longest} style:--rows={rows.length}>
-  {#each rows as row, index (index)}
-    <div class="row" class:glow={row.word !== null && row.word === glow}>
-      {#each { length: row.length }, position}
-        {@const letter = row.word?.[position]}
-        <div class="tile">
-          {#if letter}
-            <span
-              in:scale={{
-                start: 0.4,
-                duration: DURATION.slow,
-                delay: position * TILE_STAGGER,
-                easing: backOut,
-              }}
-            >
-              {letter}
-            </span>
-          {/if}
+<section
+  class="board"
+  bind:clientWidth={width}
+  bind:clientHeight={height}
+  style:--tile="{layout.tile}px"
+  style:--gap="{TILE_GAP}px"
+  style:--column-gap="{COLUMN_GAP}px"
+>
+  {#each columns as column, c (c)}
+    <div class="column">
+      {#each column as row, index (index)}
+        <div class="row" class:glow={row.word !== null && row.word === glow}>
+          {#each { length: row.length }, position}
+            {@const letter = row.word?.[position]}
+            <div class="tile">
+              {#if letter}
+                <span
+                  in:scale={{
+                    start: 0.4,
+                    duration: DURATION.slow,
+                    delay: position * TILE_STAGGER,
+                    easing: backOut,
+                  }}
+                >
+                  {letter}
+                </span>
+              {/if}
+            </div>
+          {/each}
         </div>
       {/each}
     </div>
@@ -43,17 +67,16 @@ words of 3 letters…"); found words pop in, letter by letter.
 
 <style>
   .board {
-    --gap: 6px;
-    /* Largest tile that fits both the longest row and all the rows, capped. */
-    --tile: min(
-      52px,
-      (100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols),
-      (100cqh - (var(--rows) - 1) * var(--gap)) / var(--rows)
-    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--column-gap);
+    height: 100%;
+  }
+
+  .column {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    justify-content: center;
     align-items: center;
     gap: var(--gap);
   }
