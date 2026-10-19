@@ -11,16 +11,20 @@ export const FLIGHT_DURATION = 380;
  * transitions keyed by the letter's position in the word: the pill's letters `send` as
  * they leave, the board's new tiles `receive` as they arrive, and Svelte animates each
  * letter between the two places. A letter with no partner (a hint's, or a word that isn't
- * a target) pops in or out instead. A `delay` staggers letters into a cascade.
+ * a target) pops in, or just goes. A `delay` staggers letters into a cascade.
  */
 export const [sendLetter, receiveLetter] = crossfade({
   duration: () => (prefersReducedMotion.current ? 0 : FLIGHT_DURATION),
   easing: cubicOut,
-  fallback: (node, { delay = 0 }) =>
-    scale(node, {
-      start: 0.4,
-      duration: prefersReducedMotion.current ? 0 : DURATION.slow,
-      delay,
-      easing: backOut,
-    }),
+  // Without a partner, an arriving tile pops in; a leaving pill letter just goes, so the
+  // feedback pill for a word that wasn't a target shows alone.
+  fallback: (node, { delay = 0 }, arriving) =>
+    arriving
+      ? scale(node, {
+          start: 0.4,
+          duration: prefersReducedMotion.current ? 0 : DURATION.slow,
+          delay,
+          easing: backOut,
+        })
+      : { duration: 0 },
 });

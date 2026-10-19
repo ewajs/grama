@@ -17,10 +17,10 @@ change that alters a rule, so code and spec never drift.
 
    | Result     | Condition                                  | Points | Feedback                                   |
    | ---------- | ------------------------------------------ | ------ | ------------------------------------------ |
-   | `invalid`  | Not a word, or shorter than 3 letters      | 0      | Word shakes and fades                      |
+   | `invalid`  | Not a word, or shorter than 3 letters      | 0      | Shakes red in place, fades                 |
    | `target`   | In the level's expected set, not yet found | high   | Its letters fly from the pill into its row |
-   | `bonus`    | Real word, not in the expected set, new    | low    | Word flies to the bonus counter, it pulses |
-   | `repeated` | Already found (target or bonus)            | 0      | The existing row / counter briefly glows   |
+   | `bonus`    | Real word, not in the expected set, new    | low    | Pops amber in place; the counter pulses    |
+   | `repeated` | Already found (target or bonus)            | 0      | Fades grey; its row or the counter glows   |
 
 5. When every target is found the level is **complete**: a short celebration,
    a summary (points, bonus words found) and a "Next level" action.

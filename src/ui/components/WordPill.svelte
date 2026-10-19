@@ -1,8 +1,8 @@
 <!--
 @component
-Shows the word being spelled and, once submitted, briefly how it went: a target's letters
-fly into the board (see `ui/lib/fly`), a word that's not valid shakes red, a bonus word
-flies to the bonus counter, one already found fades grey.
+Shows the word being spelled and, once submitted, briefly how it went, in place: a
+target's letters fly into the board (see `ui/lib/fly`); a word that's not valid shakes
+red, a bonus word pops amber, one already found fades grey.
 
 - `word`: the word being spelled; takes over whenever it's not empty.
 - `result`: the last submission to show, as written, with an `id` so the same word can
@@ -46,6 +46,11 @@ flies to the bonus counter, one already found fades grey.
     flex-shrink: 0;
   }
 
+  /* One spot for every pill: the next one shows on top of the one leaving, never below. */
+  .slot > :global(*) {
+    grid-area: 1 / 1;
+  }
+
   .pill {
     display: flex;
     padding: 0 var(--space-4);
@@ -66,27 +71,36 @@ flies to the bonus counter, one already found fades grey.
     background: var(--color-danger);
     animation:
       shake var(--dur-slow) var(--ease-in-out),
-      fade-out var(--dur-base) var(--dur-slow) forwards;
+      fade-out var(--dur-base) calc(var(--dur-slow) * 2) forwards;
   }
 
   .bonus {
     background: var(--color-bonus);
-    animation: to-bonus var(--dur-slow) var(--dur-fast) var(--ease-in-out) forwards;
+    animation:
+      pop var(--dur-slow) var(--ease-out),
+      fade-out var(--dur-base) calc(var(--dur-slow) * 2) forwards;
   }
 
   .repeated {
     background: var(--color-text-muted);
-    animation: fade-out var(--dur-base) var(--dur-slow) forwards;
+    animation: fade-out var(--dur-base) calc(var(--dur-slow) * 2) forwards;
   }
 
   @keyframes shake {
-    20%,
-    60% {
-      translate: -8px;
+    25% {
+      translate: -5px;
     }
-    40%,
-    80% {
-      translate: 8px;
+    50% {
+      translate: 5px;
+    }
+    75% {
+      translate: -3px;
+    }
+  }
+
+  @keyframes pop {
+    40% {
+      scale: 1.08;
     }
   }
 
@@ -96,12 +110,10 @@ flies to the bonus counter, one already found fades grey.
     }
   }
 
-  /* Towards the bonus counter, at the lower right of the wheel just below. */
-  @keyframes to-bonus {
-    to {
-      translate: calc(var(--wheel-size) / 2) calc(var(--wheel-size) + var(--space-6));
-      scale: 0.3;
-      opacity: 0;
+  @media (prefers-reduced-motion: reduce) {
+    .invalid,
+    .bonus {
+      animation: fade-out var(--dur-base) var(--dur-slow) forwards;
     }
   }
 </style>
