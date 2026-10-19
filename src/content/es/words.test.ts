@@ -88,7 +88,7 @@ describe('Spanish word lists', () => {
         hits++;
     }
     const perLevel = (performance.now() - start) / count;
-    expect(hits / count).toBeGreaterThan(0.9);
+    expect(hits / count).toBeGreaterThan(0.98);
     expect(perLevel).toBeLessThan(150);
   });
 });

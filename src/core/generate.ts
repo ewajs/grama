@@ -38,6 +38,12 @@ export const MIN_TARGETS = 5;
  */
 export const SEED_BLOCK = 3;
 
+/**
+ * When no seed in its block lands in its tier, how many seeds a level tries from the far
+ * side of the order (used about half a cycle away) before settling for another tier.
+ */
+export const FAR_TRIES = 12;
+
 type Ranked = { word: string; rank: number };
 
 /** Letters a word uses, one bit each: a cheap first check before `canSpell`. */
@@ -153,8 +159,8 @@ function buildLevel(
  * the same level. Its letters are a seed word's (see `seedOrder`), shuffled; targets
  * follow the tier's recipe (`RECIPES`) and every other word the letters spell is a bonus
  * word. Each level tries the seeds of its own block of its tier's order (see
- * {@link SEED_BLOCK}) for one whose level lands in the tier, and otherwise takes the
- * first workable one, whatever its tier.
+ * {@link SEED_BLOCK}), then a few from the far side ({@link FAR_TRIES}), for one whose
+ * level lands in the tier; otherwise it takes the first workable one, whatever its tier.
  * @param words Normalized words, most common first, no repeats.
  * @param occurrence How many earlier levels share this one's tier and size (`occurrence`
  * in `core/cadence`): which block of seeds it gets.
@@ -170,8 +176,8 @@ export function generateLevel(
   const order = seedOrder(words, tier, shape.letters);
   const blocks = Math.max(1, Math.floor(order.length / SEED_BLOCK));
   const start = (occurrence % blocks) * SEED_BLOCK;
-  // Its own block first. If none of those seeds works at all (rare), it borrows from the
-  // far side of the order: seeds last used about half a cycle ago, not by a neighbor.
+  // Its own block first. Failing that, it looks for its tier on the far side of the order:
+  // seeds last used about half a cycle ago, not by a neighbor.
   const far = (start + Math.floor(order.length / 2)) % Math.max(order.length, 1);
   const seeds = [
     ...order.slice(start, start + SEED_BLOCK),
@@ -182,7 +188,7 @@ export function generateLevel(
 
   let fallback: Level | null = null;
   for (const [index, seed] of seeds.entries()) {
-    if (index >= SEED_BLOCK && fallback) break;
+    if (index >= SEED_BLOCK + FAR_TRIES && fallback) break;
     const level = buildLevel(words, seed, shape, recipe, random);
     if (!level) continue;
     if (level.tier === tier) return level;
