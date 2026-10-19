@@ -26,13 +26,16 @@ fades grey when it was already found.
 
 <style>
   .slot {
+    /* Fixed, so showing the pill never moves the board above. */
     display: grid;
     place-items: center;
-    min-height: 2.75rem;
+    height: var(--pill-height);
+    flex-shrink: 0;
   }
 
   .pill {
-    padding: var(--space-2) var(--space-4);
+    padding: 0 var(--space-4);
+    line-height: var(--pill-height);
     border-radius: var(--radius-full);
     background: var(--color-accent);
     color: var(--color-accent-contrast);

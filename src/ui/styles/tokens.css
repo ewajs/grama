@@ -40,7 +40,9 @@
   --space-8: 2rem;
 
   /* Layout */
-  --wheel-size: min(78vw, 320px);
+  /* Narrow phones: by width; short screens: by height, leaving room for the board. */
+  --wheel-size: min(72vw, 300px, 36dvh);
+  --pill-height: 3rem;
 
   /* Shape */
   --radius-sm: 8px;
