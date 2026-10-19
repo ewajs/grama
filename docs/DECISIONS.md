@@ -8,6 +8,23 @@ delete it, the history is the point.
 
 ---
 
+## D19 · Contrarreloj: wheel after wheel, apart from the main game — 2026-10-19
+
+- **Decision:** a timed mode. A run starts with 60 seconds; a target adds 3, a bonus word
+  1, and finishing a board adds 10 and brings the next wheel, bigger and harder (6 easy
+  letters first, up to 8). _Pasar_ skips to a new wheel for −10 seconds; there are no
+  hints. The run ends at zero; its score is its points. The clock pauses while the app is
+  hidden. All numbers are tunable constants.
+- **Wheels:** a new random seed every run, passed into core like any other input, so
+  runs are endless and replayable; the player competes with their own best.
+- **Apart from the main game:** its own best score, history and three achievements; it
+  never touches the main score, hints, stars or level.
+- **Why:** the fastest-feeling way to reuse the generator, wheel and board; keeping it
+  separate means it can't be farmed for hints or points (the M12 review's replay problem).
+- **Rejected:** one wheel for 90 seconds (no sense of progress), a fixed number of wheels
+  against the clock (one slow wheel sinks the run), a seeded daily run (one meaningful run
+  a day; can come later).
+
 ## D18 · Docs: VitePress for players, TypeDoc for developers — 2026-10-19
 
 - **Decision:** two separate sites deployed with the game, as in lighting-simulator:
