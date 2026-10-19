@@ -36,6 +36,12 @@ change that alters a rule, so code and spec never drift.
 - Hard levels multiply points by 1.5 and extra-hard ones by 2 (`TIER_MULTIPLIER`);
   finishing an extra-hard level also earns a hint.
 
+### Stars and history (`src/core/history.ts`)
+
+Each completed level is recorded with its tier, hints used, bonus words found and stars:
+**★★★** with no hints and at least 3 bonus words, **★★** with at most one hint, **★**
+otherwise. Replaying a level keeps the best result.
+
 ### Hints (tunable in `src/core/hints.ts`)
 
 - A new game starts with **3 hints**; every **5 bonus words** found earn one more. Hints

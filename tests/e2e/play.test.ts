@@ -35,6 +35,8 @@ test('finding every target completes the level and moves on to the next', async 
   const points = first.targets.reduce((sum, word) => sum + word.length * 10, 0);
   await expect(page.getByRole('dialog')).toContainText('¡Bien ahí!');
   await expect(page.getByRole('dialog')).toContainText(`+${points} puntos`);
+  // No hints and no bonus words: two stars.
+  await expect(page.getByRole('img', { name: '2 estrellas' })).toBeVisible();
   await page.getByRole('button', { name: 'Siguiente nivel' }).click();
   await expect(page.getByText('Nivel 2')).toBeVisible();
   await expect(page.getByRole('dialog')).toBeHidden();
