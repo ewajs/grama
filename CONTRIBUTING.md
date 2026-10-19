@@ -42,7 +42,7 @@ Non-obvious choices (a library, a data source, a trade-off) get an entry in `DEC
 ```
 src/
   core/        Pure game logic. No DOM, no Svelte, no storage. Plain functions + types.
-  content/     Generated level data per language (content/es/…) and its loader.
+  content/     Word lists per language (content/es/…) and their loader.
   i18n/        UI strings per language (es.ts). All player-facing text lives here.
   storage/     Persistence (versioned localStorage). Only place touching storage APIs.
   app/         Game state wiring core + content + storage (Svelte runes store).

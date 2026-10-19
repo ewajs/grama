@@ -8,6 +8,19 @@ delete it, the history is the point.
 
 ---
 
+## D11 · Levels generated on the device, endlessly — 2026-10-18
+
+- **Decision:** The app ships a word list and generates level N on demand with a pure
+  `generateLevel(words, N)` seeded by N. Levels never run out, and level N is the same
+  for everyone on every reload. Replaces D3 and D4.
+- **Why:** Pre-1.0, being able to playtest any number of levels is worth more than a
+  fixed, reviewed set. Seeding keeps levels reproducible ("level 37 has a weird word").
+- **Costs accepted:** a word-list download (a few hundred KB compressed); changing the
+  word list or the generator reshuffles all levels (fine under D5); no human reviews
+  levels, so generator tests and word-list filters are the safety net.
+- **Revisit:** Before 1.0, if level quality needs curation: a script can run the same
+  function and freeze the output as static levels (D4's approach) without new logic.
+
 ## D10 · E2E tests run locally, not in CI — 2026-10-18
 
 - **Decision:** CI runs only `npm run check` (lint, types, unit tests). Playwright runs
@@ -51,7 +64,7 @@ delete it, the history is the point.
 - **Why:** There are no players to protect yet; every shim is code we'd maintain for nobody.
 - **Revisit:** At v1.0.0.
 
-## D4 · Levels generated ahead of time — 2026-10-18
+## D4 · Levels generated ahead of time — 2026-10-18 · _replaced by D11_
 
 - **Decision:** A script generates levels into static JSON that ships with the app. The
   generator itself is a pure function in `src/core`, so it could later run on the device
@@ -59,7 +72,7 @@ delete it, the history is the point.
 - **Why:** Fixed, reviewable, testable data; word-list fixes don't reshuffle levels
   under players. On-device generation would need a shipped dictionary and versioning.
 
-## D3 · Levels carry their own bonus words; no dictionary shipped — 2026-10-18
+## D3 · Levels carry their own bonus words; no dictionary shipped — 2026-10-18 · _replaced by D11_
 
 - **Why:** Keeps the download tiny and validation trivial; bonus words are only ever
   formed from that level's letters.
@@ -67,25 +80,25 @@ delete it, the history is the point.
 ## D2 · Language packs from day one, Spanish first — 2026-10-18
 
 - **Decision:** A language = word rules (`Language` in `src/core`) + level data
-  (`src/content/<lang>`) + UI strings (`src/i18n/<lang>.ts`).
+  (word list in `src/content/<lang>`) + UI strings (`src/i18n/<lang>.ts`).
 - **Why:** Adding a language and a picker later must not need a refactor. The cost now
   is one type and one strings module.
 
 ## D1 · Stack — 2026-10-18
 
-| Concern       | Choice                                    | Why                                                                              |
-| ------------- | ----------------------------------------- | -------------------------------------------------------------------------------- |
-| Language      | TypeScript (strict)                       | Types document the domain; safe refactors as features grow.                      |
-| UI            | Svelte 5 + Vite (plain SPA, no SvelteKit) | Little boilerplate, tiny bundle, built-in transitions/springs. No router needed. |
-| Rendering     | DOM + SVG                                 | Crisp at any DPI, accessible, easy to animate.                                   |
-| Game logic    | Framework-free TS in `src/core`           | Pure functions, trivially unit-tested, independent of the UI layer.              |
-| Unit tests    | Vitest                                    | Shares Vite config, fast.                                                        |
-| E2E tests     | Playwright (mobile + desktop viewport)    | A few smoke tests of the real gesture flow (see D10).                            |
-| Lint / format | ESLint + Prettier + `svelte-check`        | One `npm run check` gate.                                                        |
-| PWA           | `vite-plugin-pwa` (Workbox)               | Manifest + offline service worker with minimal config.                           |
-| Content       | Node script (`scripts/`) → static JSON    | See D4.                                                                          |
-| Hosting / CI  | GitHub Pages + GitHub Actions             | No backend needed; every push to `main` deploys.                                 |
-| Runtime       | Node 24 LTS, npm                          | No extra tooling.                                                                |
+| Concern       | Choice                                                   | Why                                                                              |
+| ------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Language      | TypeScript (strict)                                      | Types document the domain; safe refactors as features grow.                      |
+| UI            | Svelte 5 + Vite (plain SPA, no SvelteKit)                | Little boilerplate, tiny bundle, built-in transitions/springs. No router needed. |
+| Rendering     | DOM + SVG                                                | Crisp at any DPI, accessible, easy to animate.                                   |
+| Game logic    | Framework-free TS in `src/core`                          | Pure functions, trivially unit-tested, independent of the UI layer.              |
+| Unit tests    | Vitest                                                   | Shares Vite config, fast.                                                        |
+| E2E tests     | Playwright (mobile + desktop viewport)                   | A few smoke tests of the real gesture flow (see D10).                            |
+| Lint / format | ESLint + Prettier + `svelte-check`                       | One `npm run check` gate.                                                        |
+| PWA           | `vite-plugin-pwa` (Workbox)                              | Manifest + offline service worker with minimal config.                           |
+| Content       | Word list (`scripts/` prepares it) + on-device generator | See D11.                                                                         |
+| Hosting / CI  | GitHub Pages + GitHub Actions                            | No backend needed; every push to `main` deploys.                                 |
+| Runtime       | Node 24 LTS, npm                                         | No extra tooling.                                                                |
 
 Rejected: React (more ceremony plus an animation library for the same result),
 Phaser/canvas (fights crisp text and accessibility), SvelteKit (routing/SSR we don't need).
