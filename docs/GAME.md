@@ -67,6 +67,19 @@ freeze, end it (`streakOf`). The result
 can be shared: "Grama #3 · Miércoles · Media / ★★☆ · 1 pista · 🔥 3". Points and hints are
 shared with the main game; it never moves the current level.
 
+### Contrarreloj (`src/core/time-trial.ts`, D19)
+
+A timed mode, apart from the main game. A run starts with 60 seconds; a target adds 3,
+a bonus word 1, and finishing a wheel's board adds 10 and brings the next wheel, harder
+as the run goes (`RAMP`: 6 easy letters with 5 targets first, up to 8 hard letters with
+6). **Pasar** skips to a new wheel for 10 seconds, unless that would end the run; there
+are no hints. The run ends at zero, and its score is its points (as in levels).
+
+Every run gets a random seed, so its wheels are new. The clock stops while the app is
+hidden; leaving the screen drops the run. Runs never touch the main score, hints, stars
+or level: they keep their own record (runs played, best run, most wheels), saved apart
+(`storage/trials`), which feeds three achievements.
+
 ### Achievements (`src/core/achievements.ts`)
 
 22 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
