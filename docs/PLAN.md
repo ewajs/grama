@@ -29,8 +29,8 @@ Goal: the whole game logic, tested, with no UI.
 
 - [x] `Language` definition (code, `normalize`) with the Spanish one (accents, `Ñ`, case) + tests
 - [x] `Level` type and a handful of hand-written fixture levels
-- [ ] `evaluate(level, state, word)` → `invalid | target | bonus | repeated` + tests
-- [ ] Scoring and `isComplete(level, state)` + tests
+- [x] `evaluate(level, found, word)` → `invalid | target | bonus | repeated`, with points + tests
+- [ ] Game state: submitting a word updates found words and score; `isLevelComplete` + tests
 - [ ] Level progression: next level id, cycling after the last one + tests
 
 **Verify:** unit tests cover every row of the result table in GAME.md.
