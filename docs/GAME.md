@@ -18,7 +18,7 @@ change that alters a rule, so code and spec never drift.
    | Result     | Condition                                  | Points | Feedback                                   |
    | ---------- | ------------------------------------------ | ------ | ------------------------------------------ |
    | `invalid`  | Not a word, or shorter than 3 letters      | 0      | Word shakes and fades                      |
-   | `target`   | In the level's expected set, not yet found | high   | Word flies into its row, tiles flip in     |
+   | `target`   | In the level's expected set, not yet found | high   | Its letters fly from the pill into its row |
    | `bonus`    | Real word, not in the expected set, new    | low    | Word flies to the bonus counter, it pulses |
    | `repeated` | Already found (target or bonus)            | 0      | The existing row / counter briefly glows   |
 
@@ -60,6 +60,11 @@ shared with the main game; it never moves the current level.
 19 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
 bonus words, levels without hints, dailies and streaks). A toast announces each one as it's earned; the
 Logros screen lists them with progress and the player's stats.
+
+### Definitions
+
+Any found word can be looked up: tap its row on the board, a bonus word in the bonus
+list, or a word in the level-complete recap, for a link to the RAE dictionary.
 
 ### Hints (tunable in `src/core/hints.ts`)
 

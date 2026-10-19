@@ -132,6 +132,8 @@ export const es = {
   starsHow: '3 estrellas: sin pistas y con 3 palabras extra.',
   recap: 'Las palabras · tocá una para ver qué significa',
   definitionOf: (word: string) => `Qué significa ${word}`,
+  definitionHint: 'Mirá qué significa en el diccionario de la Real Academia Española.',
+  seeDefinition: 'Ver definición',
   vibration: 'Vibración',
   install: 'Instalar Grama',
   installIos: 'Para instalarla: en Safari tocá Compartir y elegí «Agregar a inicio».',
