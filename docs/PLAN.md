@@ -225,7 +225,7 @@ pay nothing twice, stats never go down; CI goes red on a broken build or flow.
 ### M14 — Faster & friendlier · `v0.15.0`
 
 - [x] Typing on desktop (letters + Enter, Backspace, Escape) and tap-to-select letters
-- [ ] Sound effects (letter tick, word chime, level done) with a setting
+- [x] Sound effects (letter tick, word chime, level done) with a setting
 - [ ] Fast start: pre-normalized word lists, Home shown before they load; performance
       budget (< 100 KB JS gz, Lighthouse ≥ 90 on mobile)
 - [ ] Streak freeze: one missed day doesn't break the daily streak (earned, not bought)

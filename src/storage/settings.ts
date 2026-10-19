@@ -15,6 +15,8 @@ export type Settings = {
   difficulty: Difficulty;
   /** Vibrate on touch, where the device can. */
   vibration: boolean;
+  /** Play sound effects. */
+  sound: boolean;
   /** Whether the "Cómo jugar" tutorial has been shown. */
   tutorialSeen: boolean;
 };
@@ -24,6 +26,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'auto',
   difficulty: 'normal',
   vibration: true,
+  sound: true,
   tutorialSeen: false,
 };
 
@@ -42,7 +45,7 @@ export function loadSettings(storage: Pick<Storage, 'getItem'> = localStorage): 
   } catch {
     // Unreadable or blocked: defaults it is.
   }
-  const { theme, difficulty, vibration, tutorialSeen } = saved;
+  const { theme, difficulty, vibration, sound, tutorialSeen } = saved;
   return {
     theme: theme === 'light' || theme === 'dark' ? theme : DEFAULT_SETTINGS.theme,
     difficulty:
@@ -50,6 +53,7 @@ export function loadSettings(storage: Pick<Storage, 'getItem'> = localStorage): 
         ? difficulty
         : DEFAULT_SETTINGS.difficulty,
     vibration: typeof vibration === 'boolean' ? vibration : DEFAULT_SETTINGS.vibration,
+    sound: typeof sound === 'boolean' ? sound : DEFAULT_SETTINGS.sound,
     tutorialSeen: typeof tutorialSeen === 'boolean' ? tutorialSeen : DEFAULT_SETTINGS.tutorialSeen,
   };
 }

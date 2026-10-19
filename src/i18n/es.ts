@@ -144,6 +144,7 @@ export const es = {
   definitionHint: 'Mirá qué significa en el diccionario de la Real Academia Española.',
   seeDefinition: 'Ver definición',
   vibration: 'Vibración',
+  sound: 'Sonido',
   install: 'Instalar Grama',
   installIos: 'Para instalarla: en Safari tocá Compartir y elegí «Agregar a inicio».',
   themes: { auto: 'Automático', light: 'Claro', dark: 'Oscuro' },

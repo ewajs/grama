@@ -22,6 +22,11 @@ podés **Empezar de cero** a propósito.
 No. No hay publicidad, ni estadísticas de uso, ni cuentas. Lo único que sale de tu
 dispositivo es lo que vos mandes al reportar un problema.
 
+## ¿Puedo jugar sin sonido?
+
+Sí: en el menú, apagá **Sonido** (y **Vibración**, si tu teléfono vibra). En el iPhone, con
+el modo silencio puesto, Grama no suena, y si estás escuchando música, la deja seguir.
+
 ## ¿Por qué no me tomó una palabra?
 
 Mirá [qué palabras valen](/palabras#por-que-no-me-tomo-una-palabra). Si creés que tendría
