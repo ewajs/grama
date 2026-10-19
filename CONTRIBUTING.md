@@ -118,13 +118,14 @@ Two suites, each run where it pays off (D10):
 
 ## Commands
 
-| Command         | Does                                                       |
-| --------------- | ---------------------------------------------------------- |
-| `npm run dev`   | Dev server (`--host` to test on a phone on the same Wi-Fi) |
-| `npm run check` | Lint + typecheck + unit tests (the PR gate)                |
-| `npm test`      | Unit tests in watch mode                                   |
-| `npm run e2e`   | Playwright tests against a production build                |
-| `npm run build` | Production build to `dist/`                                |
+| Command         | Does                                                           |
+| --------------- | -------------------------------------------------------------- |
+| `npm run dev`   | Dev server (`--host` to test on a phone on the same Wi-Fi)     |
+| `npm run check` | Lint + typecheck + unit tests (the PR gate)                    |
+| `npm test`      | Unit tests in watch mode                                       |
+| `npm run e2e`   | Playwright tests against a production build                    |
+| `npm run build` | Production build to `dist/`                                    |
+| `npm run docs`  | Code reference from TSDoc to `dist/api/` (deployed at `/api/`) |
 
 First-time setup: `npm install`, plus `npx playwright install chromium` to run e2e.
 
