@@ -33,4 +33,8 @@ features:
     title: Desafío del día
     details: Un nivel por día, igual para todos, y una racha para cuidar.
     link: /desafio-del-dia
+  - icon: ⏱️
+    title: Contrarreloj
+    details: Rueda tras rueda contra el reloj, a ver hasta dónde llegás.
+    link: /contrarreloj
 ---

@@ -8,7 +8,7 @@ import { dateKey } from '../src/core/daily.ts';
 import type { LevelRecord } from '../src/core/history.ts';
 import { NEW_PROGRESS, type Progress } from '../src/core/progress.ts';
 import { saveGame } from '../src/storage/save.ts';
-import { level } from '../tests/e2e/level.ts';
+import { level, trialWheel } from '../tests/e2e/level.ts';
 import { drawWord } from '../tests/e2e/wheel.ts';
 
 const OUT = 'guide/public/screenshots';
@@ -136,4 +136,14 @@ test('playing a level, from first words to the end', async ({ page }) => {
   for (const word of rest) await drawWord(page, word);
   await page.waitForTimeout(1500);
   await shot(page, 'nivel-completo');
+});
+
+test('a Contrarreloj run', async ({ page }) => {
+  await page.addInitScript(() => (Math.random = () => 0.5));
+  await open(page);
+  await page.getByRole('button', { name: /^Contrarreloj/ }).click();
+  const wheel = trialWheel(0.5);
+  for (const word of wheel.targets.slice(0, 2)) await drawWord(page, word);
+  await page.waitForTimeout(1200);
+  await shot(page, 'contrarreloj');
 });

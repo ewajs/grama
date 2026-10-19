@@ -244,7 +244,7 @@ A timed mode, apart from the main game (D19).
       with the best score
 - [x] Home card, best score and record (runs, most wheels) saved apart from progress; 3
       achievements
-- [ ] Guide page and GAME.md section
+- [x] Guide page and GAME.md section
 
 **Verify:** a run feels tense but fair: a 6-letter wheel is clearable in time, Pasar
 rescues a dead wheel, and the best score survives reloads.
