@@ -1,18 +1,19 @@
-import type { Submission } from '../core/evaluate';
-import {
-  isLevelComplete,
-  levelPoints,
-  NEW_GAME,
-  nextLevel,
-  submitWord,
-  type GameState,
-} from '../core/game';
+import { boardRows, type BoardRow } from '../core/board';
 import { occurrence, tierFor, type Difficulty } from '../core/cadence';
 import type { Tier } from '../core/difficulty';
+import type { Submission } from '../core/evaluate';
 import { generateLevel } from '../core/generate';
-import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter } from '../core/hints';
-import { boardRows, type BoardRow } from '../core/board';
+import { BONUS_WORDS_PER_HINT } from '../core/hints';
 import type { Level } from '../core/level';
+import {
+  canUseHint,
+  NEW_PROGRESS,
+  nextLevel,
+  playWord,
+  useHint,
+  type Progress,
+} from '../core/progress';
+import { bonusWords, isComplete, sessionPoints } from '../core/session';
 import type { WordList } from '../content/words';
 import { reportUrl, type ReportKind } from './report';
 
@@ -21,8 +22,8 @@ import { reportUrl, type ReportKind } from './report';
  * Getters read `$state`, so whatever displays them re-renders when the state changes.
  */
 export class Game {
-  #state: GameState;
-  #onchange: (state: GameState) => void;
+  #progress: Progress;
+  #onchange: (progress: Progress) => void;
   #spellings: ReadonlyMap<string, string>;
   /** Words rejected on this level, most recent last; kept for reports, not saved. */
   #rejected = $state<string[]>([]);
@@ -31,19 +32,23 @@ export class Game {
 
   /**
    * @param words The language's words (from `loadWords`).
-   * @param state Where to start: a saved game, or a new one.
-   * @param onchange Called with the new state after every change, e.g. to save it.
+   * @param progress Where to start: a saved game, or a new one.
+   * @param onchange Called with the new progress after every change, e.g. to save it.
    */
-  constructor(words: WordList, state: GameState, onchange: (state: GameState) => void = () => {}) {
-    this.#state = $state(state);
+  constructor(
+    words: WordList,
+    progress: Progress,
+    onchange: (progress: Progress) => void = () => {},
+  ) {
+    this.#progress = $state(progress);
     this.#onchange = onchange;
     this.#spellings = words.spellings;
-    // The state is replaced on every word, which re-runs this. Returning the same Level
+    // Progress is replaced on every word, which re-runs this. Returning the same Level
     // object until the level actually changes matters: Svelte only updates what depends
     // on a derived when its value changes (===), so the wheel keeps a shuffled order.
     let current: { key: string; level: Level } | null = null;
     this.level = $derived.by(() => {
-      const { levelNumber, difficulty } = this.#state;
+      const { levelNumber, difficulty } = this.#progress;
       const key = `${levelNumber}:${difficulty}`;
       if (current?.key !== key) {
         const tier = tierFor(levelNumber, difficulty);
@@ -56,32 +61,32 @@ export class Game {
 
   /** The current level's number, starting at 1. */
   get levelNumber(): number {
-    return this.#state.levelNumber;
+    return this.#progress.levelNumber;
+  }
+
+  /** How hard the current level is. */
+  get tier(): Tier {
+    return this.level.tier;
   }
 
   /** Whether every target of the current level has been found. */
   get complete(): boolean {
-    return isLevelComplete(this.level, this.#state.found);
+    return isComplete(this.level, this.#progress.session);
   }
 
   /** Points across all levels. */
   get score(): number {
-    return this.#state.score;
+    return this.#progress.score;
   }
 
   /** Points won on the current level so far. */
   get levelPoints(): number {
-    return levelPoints(this.level, this.#state.found);
-  }
-
-  /** How many bonus words have been found on the current level. */
-  get bonusFound(): number {
-    return this.#state.found.filter((word) => !this.level.targets.includes(word)).length;
+    return sessionPoints(this.level, this.#progress.session);
   }
 
   /** The board's rows, with words as written (accents included). */
   get board(): BoardRow[] {
-    return boardRows(this.level, this.#state.found, this.#state.revealed).map((row) => ({
+    return boardRows(this.level, this.#progress.session).map((row) => ({
       ...row,
       word: row.word && this.written(row.word),
     }));
@@ -89,40 +94,37 @@ export class Game {
 
   /** Hints available to spend. */
   get hints(): number {
-    return this.#state.hints;
+    return this.#progress.hints;
   }
 
   /** Progress toward the next hint, from 0 to 1. */
   get hintProgress(): number {
-    return this.#state.bonusTowardHint / BONUS_WORDS_PER_HINT;
+    return this.#progress.bonusTowardHint / BONUS_WORDS_PER_HINT;
   }
 
   /** Bonus words still to find for the next hint. */
   get bonusUntilHint(): number {
-    return BONUS_WORDS_PER_HINT - this.#state.bonusTowardHint;
+    return BONUS_WORDS_PER_HINT - this.#progress.bonusTowardHint;
   }
 
   /** Whether a hint can be spent now: one is available and a letter is left to reveal. */
   get canHint(): boolean {
-    const { hints, found, revealed } = this.#state;
-    return hints > 0 && hintTarget(this.level, found, revealed) !== null;
+    return canUseHint(this.#progress, this.level, this.#progress.session);
   }
 
   /** Bonus words found on the current level, as written, in the order found. */
   get bonusWords(): string[] {
-    return this.#state.found
-      .filter((word) => !this.level.targets.includes(word))
-      .map((word) => this.written(word));
+    return bonusWords(this.level, this.#progress.session).map((word) => this.written(word));
+  }
+
+  /** How many bonus words have been found on the current level. */
+  get bonusFound(): number {
+    return bonusWords(this.level, this.#progress.session).length;
   }
 
   /** How many bonus words the current level has. */
   get bonusTotal(): number {
     return this.level.bonus.length;
-  }
-
-  /** Words found on the current level, in the order found. */
-  get found(): readonly string[] {
-    return this.#state.found;
   }
 
   /** How a word is written, with its accents: `TENES` → `TENÉS`. */
@@ -132,51 +134,50 @@ export class Game {
 
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
-    const { submission, state } = submitWord(this.#state, this.level, word);
-    if (submission.kind === 'invalid') {
+    const played = playWord(this.#progress, this.level, this.#progress.session, word);
+    if (played.submission.kind === 'invalid') {
       this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
     }
-    this.#update(state);
-    return submission;
+    if (played.session !== this.#progress.session) {
+      this.#update({ ...played.progress, session: played.session });
+    }
+    return played.submission;
   }
 
   /** Spends a hint to reveal a letter on the board. */
   hint(): void {
-    this.#update(revealLetter(this.#state, this.level));
+    const used = useHint(this.#progress, this.level, this.#progress.session);
+    if (used.session !== this.#progress.session) {
+      this.#update({ ...used.progress, session: used.session });
+    }
   }
 
   /** Starts over from level 1, as a new game at the given difficulty. */
   reset(difficulty: Difficulty): void {
     this.#rejected = [];
-    this.#update({ ...NEW_GAME, difficulty });
-  }
-
-  /** How hard the current level is. */
-  get tier(): Tier {
-    return this.level.tier;
+    this.#update({ ...NEW_PROGRESS, difficulty });
   }
 
   /** Moves on to the next level, at the player's current difficulty. */
   next(difficulty: Difficulty): void {
     this.#rejected = [];
-    this.#update(nextLevel(this.#state, difficulty));
+    this.#update(nextLevel(this.#progress, difficulty));
   }
 
   /** A link to report a problem with the current level on GitHub. */
   reportUrl(kind: ReportKind): string {
     return reportUrl(kind, {
-      levelNumber: this.#state.levelNumber,
+      levelNumber: this.#progress.levelNumber,
       letters: this.level.letters,
       targets: this.level.targets.map((word) => this.written(word)),
-      found: this.#state.found.map((word) => this.written(word)),
+      found: this.#progress.session.found.map((word) => this.written(word)),
       rejected: this.#rejected,
       build: __BUILD__,
     });
   }
 
-  #update(state: GameState) {
-    if (state === this.#state) return;
-    this.#state = state;
-    this.#onchange(state);
+  #update(progress: Progress) {
+    this.#progress = progress;
+    this.#onchange(progress);
   }
 }

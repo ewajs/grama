@@ -143,7 +143,7 @@ but fair in playtests.
 
 Goal: a reason to keep going: a record of every level, stars to earn, things to unlock.
 
-- [ ] Split the level being played (session) from the player's progress, so main levels,
+- [x] Split the level being played (session) from the player's progress, so main levels,
       replays and daily challenges share the same rules
 - [ ] History of completed levels with stars (★★★ no hints and 3+ bonus words; ★★ at most
       one hint; ★ completed)

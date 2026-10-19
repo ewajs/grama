@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NEW_GAME } from '../core/game';
+import { NEW_PROGRESS } from '../core/progress';
 import { levelFromUrl, startState } from './start';
 
 describe('levelFromUrl', () => {
@@ -15,15 +15,22 @@ describe('levelFromUrl', () => {
 });
 
 describe('startState', () => {
-  const saved = { ...NEW_GAME, levelNumber: 12, score: 480, found: ['CASA'] };
+  const saved = {
+    ...NEW_PROGRESS,
+    levelNumber: 12,
+    score: 480,
+    session: { found: ['CASA'], revealed: {} },
+  };
 
   it('continues the saved game, or starts a new one', () => {
     expect(startState(saved, null)).toBe(saved);
-    expect(startState(null, null)).toEqual(NEW_GAME);
+    expect(startState(null, null)).toEqual(NEW_PROGRESS);
     expect(startState(null, null, 'relaxed').difficulty).toBe('relaxed');
   });
 
   it('jumps to the level in the URL, keeping the score', () => {
-    expect(startState(saved, 40)).toMatchObject({ levelNumber: 40, score: 480, found: [] });
+    const jumped = startState(saved, 40);
+    expect(jumped).toMatchObject({ levelNumber: 40, score: 480 });
+    expect(jumped.session.found).toEqual([]);
   });
 });

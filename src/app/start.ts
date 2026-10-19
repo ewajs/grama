@@ -1,5 +1,6 @@
 import type { Difficulty } from '../core/cadence';
-import { NEW_GAME, type GameState } from '../core/game';
+import { NEW_PROGRESS, type Progress } from '../core/progress';
+import { NEW_SESSION } from '../core/session';
 
 /**
  * The level asked for in the page's query string: `?nivel=37` asks for level 37, handy
@@ -16,12 +17,12 @@ export function levelFromUrl(search: string): number | null {
  * to the level in the URL when there is one, keeping the score.
  */
 export function startState(
-  saved: GameState | null,
+  saved: Progress | null,
   levelInUrl: number | null,
   difficulty: Difficulty = 'normal',
-): GameState {
-  const state = saved ?? { ...NEW_GAME, difficulty };
+): Progress {
+  const progress = saved ?? { ...NEW_PROGRESS, difficulty };
   return levelInUrl === null
-    ? state
-    : { ...state, levelNumber: levelInUrl, found: [], revealed: {} };
+    ? progress
+    : { ...progress, levelNumber: levelInUrl, session: NEW_SESSION };
 }
