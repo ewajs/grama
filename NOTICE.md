@@ -19,3 +19,7 @@ includes data from Google Books Ngrams, OpenSubtitles 2018 (opensubtitles.org), 
 ParaCrawl and the Leeds Internet Corpus. Modified: filtered, uppercased and converted to a
 ranked list. This file is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+## Argentine words — `src/content/es/argentina.txt`
+
+Written for Grama, not third-party: MIT like the code.

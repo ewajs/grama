@@ -8,6 +8,22 @@ delete it, the history is the point.
 
 ---
 
+## D14 · Argentine words: generated voseo + a curated list — 2026-10-18
+
+- **Decision:**
+  - `scripts/voseo.ts` adds the dictionary's missing voseo present and imperative forms
+    (podés, jugás), regular from each verb's infinitive.
+  - `src/content/es/argentina.txt`, written by us (MIT): everyday Argentine words the
+    dictionary lacks or ranks too low (pibe, bondi, subte, coima, laburo…), every form
+    written out. Always valid, and ranked within the top 2,500 so they can be targets.
+  - Only dictionary and curated words are valid. Words only in the frequency list (8,293:
+    names, places, English, web noise like JAJAJA) no longer count.
+- **Why:** Argentine words could only be bonus words or weren't accepted at all; the
+  frequency list let names and English count.
+- **Costs accepted:** some real words only the frequency list had are lost (diminutives
+  like _carita_, loanwords like _shock_). The report button is how we find the ones
+  that matter.
+
 ## D13 · Grama's code is MIT-licensed — 2026-10-18
 
 - **Decision:** `LICENSE` (MIT) covers our code. Third-party data files keep their own

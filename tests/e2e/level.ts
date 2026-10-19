@@ -5,7 +5,14 @@ import { generateLevel } from '../../src/core/generate';
 import type { Level } from '../../src/core/level';
 
 const read = (file: string) => parseWordList(readFileSync(`src/content/es/${file}`, 'utf8'));
-const { words, spellings } = buildWordList(read('dictionary.txt'), read('frequency.txt'), spanish);
+const { words, spellings } = buildWordList(
+  {
+    dictionary: read('dictionary.txt'),
+    frequency: read('frequency.txt'),
+    curated: read('argentina.txt'),
+  },
+  spanish,
+);
 
 /** Level `number` exactly as the app generates it, so tests know its words. */
 export function level(number: number): Level {
