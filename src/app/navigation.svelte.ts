@@ -1,5 +1,5 @@
 /** The app's screens. */
-export type Screen = 'home' | 'game';
+export type Screen = 'home' | 'game' | 'map';
 
 /**
  * Which screen shows. Moving to a screen adds a browser history entry, so the back
@@ -14,7 +14,7 @@ export class Navigation {
     if (start !== 'home') this.go(start);
     window.addEventListener('popstate', (event) => {
       const screen: unknown = event.state?.screen;
-      this.#screen = screen === 'game' ? screen : 'home';
+      this.#screen = screen === 'game' || screen === 'map' ? screen : 'home';
     });
   }
 

@@ -148,7 +148,7 @@ Goal: a reason to keep going: a record of every level, stars to earn, things to 
 - [x] History of completed levels with stars (★★★ no hints and 3+ bonus words; ★★ at most
       one hint; ★ completed)
 - [~] Home screen: Jugar · Nivel N, Desafío del día, Mapa, Logros; back from the game
-- [ ] Level map: every level so far with its tier and stars; replay a completed one (keeps
+- [x] Level map: every level so far with its tier and stars; replay a completed one (keeps
       the best stars, never moves progress)
 - [ ] Stats screen: levels by tier, stars, words and bonus words found, hints used
 - [ ] Achievements: ~15 to unlock, shown on the stats screen, with a toast when earned

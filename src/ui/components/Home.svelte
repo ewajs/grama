@@ -5,6 +5,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
 
 - `game`: the player's game, for the current level and totals.
 - `onplay()`: continue playing.
+- `onmap()`: open the level map.
 -->
 <script lang="ts">
   import { fly } from 'svelte/transition';
@@ -12,7 +13,11 @@ The home screen: where the app opens. Continue the game from here; more is comin
   import { strings } from '../../i18n';
   import { DURATION } from '../lib/motion';
 
-  let { game, onplay }: { game: Game; onplay: () => void } = $props();
+  type Props = { game: Game; onplay: () => void; onmap: () => void };
+  let { game, onplay, onmap }: Props = $props();
+
+  const results = $derived(Object.values(game.history));
+  const stars = $derived(results.reduce((sum, result) => sum + result.stars, 0));
 </script>
 
 <main in:fly={{ y: 12, duration: DURATION.slow }}>
@@ -28,6 +33,11 @@ The home screen: where the app opens. Continue the game from here; more is comin
       {strings.level(game.levelNumber)}
       <span class="badge {game.tier}">{strings.tiers[game.tier]}</span>
     </span>
+  </button>
+
+  <button class="card" onclick={onmap}>
+    <span class="label">{strings.map}</span>
+    <span class="detail">{strings.mapSummary(results.length, stars)}</span>
   </button>
 
   <dl>
@@ -47,7 +57,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: var(--space-8);
+    gap: var(--space-4);
     min-height: 100dvh;
     max-width: 420px;
     margin: 0 auto;
@@ -56,6 +66,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
   }
 
   header {
+    margin-bottom: var(--space-4);
     display: grid;
     justify-items: center;
     gap: var(--space-2);
@@ -130,6 +141,28 @@ The home screen: where the app opens. Continue the game from here; more is comin
   }
   .extra {
     color: var(--color-danger);
+  }
+
+  .card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4) var(--space-6);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    color: var(--color-text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .card .label {
+    font-size: var(--text-lg);
+  }
+
+  .card .detail {
+    color: var(--color-text-muted);
   }
 
   dl {

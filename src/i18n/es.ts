@@ -12,6 +12,12 @@ export const es = {
   tagline: 'Uní las letras y encontrá todas las palabras.',
   hintsLeft: 'Pistas',
   continuePlaying: 'Jugar',
+  map: 'Mapa',
+  mapSummary: (levels: number, stars: number) =>
+    `${levels === 1 ? '1 nivel' : `${levels} niveles`} · ${stars} ★`,
+  backToMap: 'Volver al mapa',
+  replaying: 'Repetición',
+  playLevel: (level: number) => `Jugar el nivel ${level}`,
   back: 'Volver al inicio',
   loading: 'Cargando palabras…',
   loadError: 'No pudimos cargar las palabras. Revisá tu conexión y volvé a intentar.',

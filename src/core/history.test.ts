@@ -27,8 +27,9 @@ describe('starsFor', () => {
 
 describe('recordOf', () => {
   it('sums up how the level went', () => {
-    expect(recordOf(level, { found: [...all, 'OLA'], revealed: { SOL: 1 } })).toEqual({
+    expect(recordOf(level, { found: [...all, 'OLA'], revealed: { SOL: 1 } }, 'normal')).toEqual({
       tier: 'hard',
+      difficulty: 'normal',
       stars: 2,
       hints: 1,
       bonus: 1,
@@ -40,6 +41,7 @@ describe('recordOf', () => {
 describe('record', () => {
   const result = (stars: 1 | 2 | 3, hints = 0, bonus = 0): LevelRecord => ({
     tier: 'easy',
+    difficulty: 'normal',
     stars,
     hints,
     bonus,

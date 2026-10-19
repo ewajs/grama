@@ -1,3 +1,4 @@
+import type { Difficulty } from './cadence';
 import type { Tier } from './difficulty';
 import type { Level } from './level';
 import { bonusWords, hintsUsed, type Session } from './session';
@@ -11,6 +12,8 @@ export const THREE_STAR_BONUS = 3;
 /** How a completed level went: what the map, stats and achievements read. */
 export type LevelRecord = {
   tier: Tier;
+  /** The player's difficulty when it was played: with the number, it regenerates the level. */
+  difficulty: Difficulty;
   stars: Stars;
   /** Hints spent on it. */
   hints: number;
@@ -33,10 +36,11 @@ export function starsFor(level: Level, session: Session): Stars {
   return hints <= 1 ? 2 : 1;
 }
 
-/** The record of a completed level. */
-export function recordOf(level: Level, session: Session): LevelRecord {
+/** The record of a completed level, played at `difficulty`. */
+export function recordOf(level: Level, session: Session, difficulty: Difficulty): LevelRecord {
   return {
     tier: level.tier,
+    difficulty,
     stars: starsFor(level, session),
     hints: hintsUsed(session),
     bonus: bonusWords(level, session).length,

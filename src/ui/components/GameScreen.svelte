@@ -75,7 +75,12 @@ letter wheel with its controls.
 
   function nextLevel() {
     result = null;
-    game.next(preferences.difficulty);
+    if (game.replaying) {
+      game.endReplay();
+      onback();
+    } else {
+      game.next(preferences.difficulty);
+    }
   }
 
   function submit(next: string) {
@@ -91,6 +96,7 @@ letter wheel with its controls.
   <Header
     level={game.levelNumber}
     tier={game.tier}
+    replay={game.replaying}
     score={game.score}
     {onback}
     onmenu={() => (panel = 'menu')}
@@ -165,6 +171,7 @@ letter wheel with its controls.
     level={game.levelNumber}
     tier={game.tier}
     stars={game.stars}
+    nextLabel={game.replaying ? strings.backToMap : strings.nextLevel}
     points={game.levelPoints}
     bonus={game.bonusFound}
     onnext={nextLevel}
