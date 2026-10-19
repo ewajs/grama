@@ -70,6 +70,7 @@ test('tapping the bonus counter lists the bonus words found', async ({ page }) =
 test('the report button links to a pre-filled GitHub issue', async ({ page }) => {
   await page.goto('./');
   await drawWord(page, nonWord(first));
+  await page.getByRole('button', { name: 'Abrir el menú' }).click();
   await page.getByRole('button', { name: 'Reportar un problema' }).click();
   const link = page.getByRole('link', { name: 'Falta una palabra' });
   const url = new URL((await link.getAttribute('href'))!);

@@ -111,7 +111,7 @@ enough context to reproduce.
 
 Goal: one place for options, and a first launch that teaches the game.
 
-- [ ] Menu panel from the header, with settings saved apart from progress; theme
+- [x] Menu panel from the header, with settings saved apart from progress; theme
       (Automático / Claro / Oscuro); report moves here; reset progress; about (version,
       word-list credits)
 - [ ] Install the app: the browser's prompt where there is one, steps on iOS; hidden

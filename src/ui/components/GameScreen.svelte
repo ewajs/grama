@@ -4,9 +4,11 @@ The screen where a level is played: header, board, the word being spelled and th
 letter wheel with its controls.
 
 - `game`: the running game; the screen reads it and sends it the player's words.
+- `preferences`: the player's settings, changed from the menu.
 -->
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
+  import type { Preferences } from '../../app/preferences.svelte';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
   import { strings } from '../../i18n';
@@ -18,15 +20,16 @@ letter wheel with its controls.
   import BonusWords from './BonusWords.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import LevelComplete from './LevelComplete.svelte';
+  import Menu from './Menu.svelte';
   import ReportDialog from './ReportDialog.svelte';
+  import ResetDialog from './ResetDialog.svelte';
   import WordPill from './WordPill.svelte';
 
-  let { game }: { game: Game } = $props();
+  let { game, preferences }: { game: Game; preferences: Preferences } = $props();
 
-  /** Whether the report dialog is open. */
-  let reporting = $state(false);
-  /** Whether the list of bonus words found is open. */
-  let showingBonus = $state(false);
+  /** The dialog open over the game, if any (the level-complete one shows on its own). */
+  let panel = $state<'menu' | 'report' | 'reset' | 'bonus' | null>(null);
+  const close = () => (panel = null);
   /** The word being spelled on the wheel right now. */
   let word = $state('');
   /** The last submitted word's result, shown briefly. */
@@ -66,7 +69,7 @@ letter wheel with its controls.
 </script>
 
 <main>
-  <Header level={game.levelNumber} score={game.score} onreport={() => (reporting = true)} />
+  <Header level={game.levelNumber} score={game.score} onmenu={() => (panel = 'menu')} />
 
   <div class="board">
     <Board rows={game.board} glow={repeated && game.written(repeated)} />
@@ -90,22 +93,36 @@ letter wheel with its controls.
         progress={game.hintProgress}
         untilHint={game.bonusUntilHint}
         glow={repeated !== null && !game.level.targets.includes(repeated)}
-        onopen={() => (showingBonus = true)}
+        onopen={() => (panel = 'bonus')}
       />
     </div>
   </div>
 </main>
 
-{#if reporting}
-  <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={() => (reporting = false)} />
-{/if}
-
-{#if showingBonus}
+{#if panel === 'menu'}
+  <Menu
+    {preferences}
+    onreport={() => (panel = 'report')}
+    onreset={() => (panel = 'reset')}
+    onclose={close}
+  />
+{:else if panel === 'report'}
+  <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={close} />
+{:else if panel === 'reset'}
+  <ResetDialog
+    onconfirm={() => {
+      result = null;
+      game.reset();
+      close();
+    }}
+    onclose={close}
+  />
+{:else if panel === 'bonus'}
   <BonusWords
     words={game.bonusWords}
     total={game.bonusTotal}
     untilHint={game.bonusUntilHint}
-    onclose={() => (showingBonus = false)}
+    onclose={close}
   />
 {/if}
 

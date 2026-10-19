@@ -1,5 +1,12 @@
 import type { Submission } from '../core/evaluate';
-import { isLevelComplete, levelPoints, nextLevel, submitWord, type GameState } from '../core/game';
+import {
+  isLevelComplete,
+  levelPoints,
+  NEW_GAME,
+  nextLevel,
+  submitWord,
+  type GameState,
+} from '../core/game';
 import { generateLevel } from '../core/generate';
 import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter } from '../core/hints';
 import { boardRows, type BoardRow } from '../core/board';
@@ -121,6 +128,12 @@ export class Game {
   /** Spends a hint to reveal a letter on the board. */
   hint(): void {
     this.#update(revealLetter(this.#state, this.level));
+  }
+
+  /** Starts over from level 1, as a new game. */
+  reset(): void {
+    this.#rejected = [];
+    this.#update(NEW_GAME);
   }
 
   /** Moves on to the next level. */
