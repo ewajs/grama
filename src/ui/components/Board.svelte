@@ -1,7 +1,7 @@
 <!--
 @component
 The board: one row of tiles per target word. Empty rows are the player's hint ("two
-words of 3 letters…"); found words pop in, letter by letter, and letters revealed by
+words of 3 letters…"); found words' letters fly in from the word pill (`ui/lib/fly`), and letters revealed by
 hints show outlined. It fills the space it's given, choosing one or two columns to keep
 tiles as big as possible.
 
@@ -9,11 +9,10 @@ tiles as big as possible.
 - `glow`: a found word to briefly highlight (the player spelled it again).
 -->
 <script lang="ts">
-  import { backOut } from 'svelte/easing';
-  import { scale } from 'svelte/transition';
   import type { BoardRow } from '../../core/board';
   import { boardLayout, COLUMN_GAP, splitIntoColumns, TILE_GAP } from '../lib/board-layout';
-  import { DURATION, TILE_STAGGER } from '../lib/motion';
+  import { receiveLetter } from '../lib/fly';
+  import { TILE_STAGGER } from '../lib/motion';
 
   let { rows, glow = null }: { rows: readonly BoardRow[]; glow?: string | null } = $props();
 
@@ -49,12 +48,7 @@ tiles as big as possible.
               {#if letter}
                 <span
                   class:hinted={row.shown < row.length}
-                  in:scale={{
-                    start: 0.4,
-                    duration: DURATION.slow,
-                    delay: position * TILE_STAGGER,
-                    easing: backOut,
-                  }}
+                  in:receiveLetter={{ key: position, delay: position * TILE_STAGGER }}
                 >
                   {letter}
                 </span>

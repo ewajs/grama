@@ -1,0 +1,26 @@
+import { backOut, cubicOut } from 'svelte/easing';
+import { prefersReducedMotion } from 'svelte/motion';
+import { crossfade, scale } from 'svelte/transition';
+import { DURATION } from './motion';
+
+/** How long a letter takes to fly from the word pill to its tile. */
+export const FLIGHT_DURATION = 380;
+
+/**
+ * Letters flying from the word pill into their tiles on the board, as a pair of
+ * transitions keyed by the letter's position in the word: the pill's letters `send` as
+ * they leave, the board's new tiles `receive` as they arrive, and Svelte animates each
+ * letter between the two places. A letter with no partner (a hint's, or a word that isn't
+ * a target) pops in or out instead. A `delay` staggers letters into a cascade.
+ */
+export const [sendLetter, receiveLetter] = crossfade({
+  duration: () => (prefersReducedMotion.current ? 0 : FLIGHT_DURATION),
+  easing: cubicOut,
+  fallback: (node, { delay = 0 }) =>
+    scale(node, {
+      start: 0.4,
+      duration: prefersReducedMotion.current ? 0 : DURATION.slow,
+      delay,
+      easing: backOut,
+    }),
+});

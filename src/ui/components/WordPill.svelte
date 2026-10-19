@@ -1,8 +1,8 @@
 <!--
 @component
-Shows the word being spelled and, once submitted, briefly how it went: shakes red when
-it's not valid, rises green for a target, flies to the bonus counter for a bonus word,
-fades grey when it was already found.
+Shows the word being spelled and, once submitted, briefly how it went: a target's letters
+fly into the board (see `ui/lib/fly`), a word that's not valid shakes red, a bonus word
+flies to the bonus counter, one already found fades grey.
 
 - `word`: the word being spelled; takes over whenever it's not empty.
 - `result`: the last submission to show, as written, with an `id` so the same word can
@@ -10,6 +10,9 @@ fades grey when it was already found.
 -->
 <script lang="ts">
   import type { Submission } from '../../core/evaluate';
+  import { fade } from 'svelte/transition';
+  import { sendLetter } from '../lib/fly';
+  import { DURATION } from '../lib/motion';
 
   type Props = {
     word: string;
@@ -20,8 +23,14 @@ fades grey when it was already found.
 
 <div class="slot">
   {#if word}
-    <div class="pill">{word}</div>
-  {:else if result}
+    <!-- The pill fades at once; its letters' tiles fly on to the board meanwhile. -->
+    <div class="pill" out:fade={{ duration: DURATION.fast }}>
+      <!-- |global: these letters fly even though the whole pill is what goes away. -->
+      {#each [...word] as letter, index (index)}
+        <span out:sendLetter|global={{ key: index }}>{letter}</span>
+      {/each}
+    </div>
+  {:else if result && result.kind !== 'target'}
     {#key result.id}
       <div class="pill {result.kind}">{result.word}</div>
     {/key}
@@ -38,6 +47,7 @@ fades grey when it was already found.
   }
 
   .pill {
+    display: flex;
     padding: 0 var(--space-4);
     line-height: var(--pill-height);
     border-radius: var(--radius-full);
@@ -48,16 +58,15 @@ fades grey when it was already found.
     letter-spacing: 0.08em;
   }
 
+  span {
+    display: inline-block;
+  }
+
   .invalid {
     background: var(--color-danger);
     animation:
       shake var(--dur-slow) var(--ease-in-out),
       fade-out var(--dur-base) var(--dur-slow) forwards;
-  }
-
-  .target {
-    background: var(--color-success);
-    animation: rise var(--dur-slow) var(--dur-fast) var(--ease-out) forwards;
   }
 
   .bonus {
@@ -83,13 +92,6 @@ fades grey when it was already found.
 
   @keyframes fade-out {
     to {
-      opacity: 0;
-    }
-  }
-
-  @keyframes rise {
-    to {
-      translate: 0 -32px;
       opacity: 0;
     }
   }
