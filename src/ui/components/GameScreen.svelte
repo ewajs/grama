@@ -6,8 +6,10 @@ The screen where a level is played: header, the word being spelled and the lette
 -->
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
+  import { boardRows } from '../../core/board';
   import { strings } from '../../i18n';
   import { shuffled } from '../lib/shuffle';
+  import Board from './Board.svelte';
   import LetterWheel from './LetterWheel.svelte';
 
   let { game }: { game: Game } = $props();
@@ -25,7 +27,9 @@ The screen where a level is played: header, the word being spelled and the lette
     <span aria-label={strings.score}>★ {game.score}</span>
   </header>
 
-  <section class="board"></section>
+  <div class="board">
+    <Board rows={boardRows(game.level, game.found)} />
+  </div>
 
   <div class="pill" class:visible={word !== ''}>{word}</div>
 
@@ -60,7 +64,11 @@ The screen where a level is played: header, the word being spelled and the lette
   }
 
   .board {
+    /* The board sizes its tiles to fit this box (container query units). */
+    container-type: size;
     flex: 1;
+    align-self: stretch;
+    min-height: 0;
   }
 
   .controls {
