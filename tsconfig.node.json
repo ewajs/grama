@@ -5,7 +5,10 @@
     "lib": ["ES2023"],
     "types": ["node"],
     "skipLibCheck": true,
-    "module": "nodenext",
+    // Bundler-style resolution so scripts can share code with src, whose imports omit
+    // extensions. Scripts' own imports keep `.ts` so Node can run them directly.
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -16,5 +19,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts", "playwright.config.ts", "tests/**/*.ts"]
+  "include": ["vite.config.ts", "playwright.config.ts", "tests/**/*.ts", "scripts/**/*.ts"]
 }
