@@ -1,12 +1,10 @@
 name: CI
 
-# Docs-only changes don't affect the app, so they don't run CI or redeploy.
+# Markdown is content too (the guide's pages, the developer docs), so every change runs.
 on:
   pull_request:
-    paths-ignore: ['**.md']
   push:
     branches: [main]
-    paths-ignore: ['**.md']
 
 # A newer push to the same branch or PR supersedes the running one.
 concurrency:
@@ -28,9 +26,22 @@ jobs:
       - run: npm ci
       - run: npm run check
 
+  # The guide and the developer docs build as checks: broken links fail them.
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run docs
+      - run: npm run guide
+
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: check
+    needs: [check, docs]
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -47,6 +58,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run docs
+      - run: npm run guide
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

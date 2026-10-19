@@ -29,3 +29,6 @@ test-results
 
 # Downloaded word sources (scripts/prepare-words.ts)
 .cache
+
+# VitePress
+guide/.vitepress/cache
