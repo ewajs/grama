@@ -6,3 +6,4 @@ Installable as a PWA, playable on phone and desktop. **Play: https://ewajs.githu
 - Game rules and UX: [`docs/GAME.md`](docs/GAME.md)
 - Roadmap and progress: [`docs/PLAN.md`](docs/PLAN.md)
 - How we work: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Code reference (generated from TSDoc): https://ewajs.github.io/grama/api/

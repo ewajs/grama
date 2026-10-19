@@ -25,8 +25,8 @@ delete it, the history is the point.
 - **Why:** Documentation that lives next to the code is the only kind that stays current.
 - **Enforced:** `eslint-plugin-jsdoc` fails `npm run check` when an export in `src/**/*.ts`
   has no doc comment.
-- **Revisit:** Generating and publishing a TypeDoc site is deferred until there's enough
-  API to browse (after M1).
+- **Published:** TypeDoc builds a reference site from these comments on every deploy:
+  https://ewajs.github.io/grama/api/
 
 ## D8 · Rioplatense Spanish, Argentine flavor — 2026-10-18
 

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Grama",
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "exclude": ["**/*.test.ts", "src/main.ts"],
+  "tsconfig": "tsconfig.app.json",
+  "out": "dist/api",
+  "readme": "none",
+  "treatWarningsAsErrors": true
+}
