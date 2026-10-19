@@ -30,8 +30,8 @@ Goal: the whole game logic, tested, with no UI.
 - [x] `Language` definition (code, `normalize`) with the Spanish one (accents, `Ñ`, case) + tests
 - [x] `Level` type and a handful of hand-written fixture levels
 - [x] `evaluate(level, found, word)` → `invalid | target | bonus | repeated`, with points + tests
-- [ ] Game state: submitting a word updates found words and score; `isLevelComplete` + tests
-- [ ] Level progression: next level id, cycling after the last one + tests
+- [x] Game state: submitting a word updates found words and score; `isLevelComplete` + tests
+- [x] Level progression: next level id, cycling after the last one + tests
 
 **Verify:** unit tests cover every row of the result table in GAME.md.
 
@@ -112,4 +112,6 @@ Goal: installable, works offline, never loses progress.
 
 ## Changelog
 
+- **v0.2.0** (M1) — Game rules in `src/core`: Spanish normalization, levels and their validity
+  rules, word evaluation and scoring, game state and level progression. Three hand-written levels.
 - **v0.1.0** (M0) — Svelte 5 + TS scaffold, quality gates, CI, auto-deploy to GitHub Pages, design tokens (light/dark), Spanish UI strings.
