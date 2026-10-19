@@ -24,6 +24,11 @@ export default defineConfig(
     },
   },
   {
+    // Tests index into fixtures they just built; `!` is clearer there than guards.
+    files: ['**/*.test.ts'],
+    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+  },
+  {
     // Exports are the code's reference documentation (CONTRIBUTING › Documentation).
     files: ['src/**/*.ts'],
     ignores: ['**/*.test.ts'],

@@ -39,7 +39,7 @@ Goal: the whole game logic, tested, with no UI.
 
 Goal: the input gesture feels great on a phone.
 
-- [ ] Wheel layout: N letters evenly on a circle (pure geometry fn + test)
+- [x] Wheel layout: N letters evenly on a circle (pure geometry fn + test)
 - [ ] Pointer-event drag: hit-testing letters, path line, current word pill
 - [ ] Backtrack by returning to the previous letter; cancel by releasing on the start
 - [ ] Emits `submit(word)` on release; no page scroll/zoom while dragging
