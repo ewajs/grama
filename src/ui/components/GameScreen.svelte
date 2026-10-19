@@ -13,6 +13,7 @@ letter wheel with its controls.
   import type { Game } from '../../app/game.svelte';
   import type { Installer } from '../../app/install.svelte';
   import type { Preferences } from '../../app/preferences.svelte';
+  import { shareText } from '../../app/share';
   import { vibrate } from '../lib/haptics';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
@@ -76,12 +77,28 @@ letter wheel with its controls.
 
   function nextLevel() {
     result = null;
-    if (game.replaying) {
-      game.endReplay();
+    if (game.replaying || game.daily) {
+      game.playCurrent();
       onback();
     } else {
       game.next(preferences.difficulty);
     }
+  }
+
+  /** Shares today's daily result; returns how it went. */
+  function shareDaily() {
+    const { today } = game;
+    return shareText(
+      strings.shareText({
+        number: today.number,
+        weekday: strings.weekday(today.date),
+        tier: strings.tiers[today.tier],
+        stars: game.stars,
+        hints: game.hintsUsed,
+        streak: today.streak,
+        url: location.origin + import.meta.env.BASE_URL,
+      }),
+    );
   }
 
   function submit(next: string) {
@@ -95,9 +112,12 @@ letter wheel with its controls.
 
 <main>
   <Header
-    level={game.levelNumber}
+    title={game.daily
+      ? strings.dailyTitle(game.levelNumber)
+      : game.replaying
+        ? `${strings.level(game.levelNumber)} · ${strings.replaying}`
+        : strings.level(game.levelNumber)}
     tier={game.tier}
-    replay={game.replaying}
     score={game.score}
     {onback}
     onmenu={() => (panel = 'menu')}
@@ -169,10 +189,17 @@ letter wheel with its controls.
 
 {#if game.complete}
   <LevelComplete
-    level={game.levelNumber}
+    detail={game.daily
+      ? strings.dailyCompleteDetail(game.levelNumber)
+      : strings.levelCompleteDetail(game.levelNumber)}
     tier={game.tier}
     stars={game.stars}
-    nextLabel={game.replaying ? strings.backToMap : strings.nextLevel}
+    nextLabel={game.daily
+      ? strings.backHome
+      : game.replaying
+        ? strings.backToMap
+        : strings.nextLevel}
+    share={game.daily ? shareDaily : undefined}
     points={game.levelPoints}
     bonus={game.bonusFound}
     onnext={nextLevel}

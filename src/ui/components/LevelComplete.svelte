@@ -2,12 +2,13 @@
 @component
 Celebrates a finished level over the game screen, with what was won, and moves on.
 
-- `level`: number of the level just finished.
+- `detail`: what was finished: "Completaste el nivel 12".
 - `tier`: how hard it was; harder levels list their rewards.
 - `stars`: stars earned on it.
 - `points`: points won on it.
 - `bonus`: bonus words found on it.
 - `nextLabel`: the button's label (the next level, or back to the map after a replay).
+- `share()`: when given, a share button (daily challenge); it says how it went.
 - `onnext()`: the player is done here.
 -->
 <script lang="ts">
@@ -19,19 +20,22 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   import Stars from './Stars.svelte';
 
   type Props = {
-    level: number;
+    detail: string;
     tier: Tier;
     stars: number;
     points: number;
     bonus: number;
     nextLabel: string;
+    share?: () => Promise<'shared' | 'copied' | 'failed'>;
     onnext: () => void;
   };
-  let { level, tier, stars, points, bonus, nextLabel, onnext }: Props = $props();
+  let { detail, tier, stars, points, bonus, nextLabel, share, onnext }: Props = $props();
+
+  let copied = $state(false);
 </script>
 
 <Dialog title={strings.levelComplete} delay={CELEBRATION_DELAY}>
-  <p>{strings.levelCompleteDetail(level)}</p>
+  <p>{detail}</p>
   <div class="stars"><Stars {stars} size={44} delay={CELEBRATION_DELAY} /></div>
   {#if stars < 3}
     <p class="how">{strings.starsHow}</p>
@@ -48,7 +52,19 @@ Celebrates a finished level over the game screen, with what was won, and moves o
       <li class="hint">{strings.extraHint}</li>
     {/if}
   </ul>
-  <button class="primary" onclick={onnext}>{nextLabel}</button>
+  {#if share}
+    <button
+      class="primary"
+      onclick={async () => {
+        copied = (await share()) === 'copied';
+      }}
+    >
+      {copied ? strings.copied : strings.share}
+    </button>
+    <button class="secondary" onclick={onnext}>{nextLabel}</button>
+  {:else}
+    <button class="primary" onclick={onnext}>{nextLabel}</button>
+  {/if}
 </Dialog>
 
 <style>

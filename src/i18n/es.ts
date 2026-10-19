@@ -18,6 +18,32 @@ export const es = {
   mapSummary: (levels: number, stars: number) =>
     `${levels === 1 ? '1 nivel' : `${levels} niveles`} · ${stars} ★`,
   backToMap: 'Volver al mapa',
+  backHome: 'Volver al inicio',
+  dailyChallenge: 'Desafío del día',
+  dailyTitle: (number: number) => `Desafío #${number}`,
+  dailyCompleteDetail: (number: number) => `Completaste el desafío #${number}`,
+  weekday: (date: string) =>
+    ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][
+      new Date(`${date}T12:00`).getDay()
+    ] ?? '',
+  dailyDone: 'Completado',
+  streak: (days: number) => `🔥 ${days}`,
+  share: 'Compartir',
+  copied: '¡Copiado!',
+  shareText: (daily: {
+    number: number;
+    weekday: string;
+    tier: string;
+    stars: number;
+    hints: number;
+    streak: number;
+    url: string;
+  }) =>
+    [
+      `Grama #${daily.number} · ${daily.weekday} · ${daily.tier}`,
+      `${'★'.repeat(daily.stars)}${'☆'.repeat(3 - daily.stars)} · ${daily.hints === 1 ? '1 pista' : `${daily.hints} pistas`}${daily.streak > 1 ? ` · 🔥 ${daily.streak}` : ''}`,
+      daily.url,
+    ].join('\n'),
   achievements: 'Logros',
   statsTitle: 'Estadísticas',
   achievementsCount: (done: number, total: number) => `${done} de ${total}`,
@@ -39,9 +65,15 @@ export const es = {
     words1000: ['Diccionario andante', 'Encontrá 1000 palabras del tablero.'],
     bonus50: ['Curioso', 'Encontrá 50 palabras extra.'],
     bonus500: ['Explorador', 'Encontrá 500 palabras extra.'],
+    daily: ['Desafiado', 'Completá un desafío del día.'],
+    streak3: ['Racha', 'Completá el desafío 3 días seguidos.'],
+    streak7: ['Semana redonda', 'Completá el desafío 7 días seguidos.'],
+    streak30: ['Imparable', 'Completá el desafío 30 días seguidos.'],
   } satisfies Record<AchievementId, [string, string]>,
   statLabels: {
     levels: 'Niveles',
+    dailies: 'Desafíos',
+    bestStreak: 'Mejor racha',
     stars: 'Estrellas',
     threeStars: 'Con 3 estrellas',
     words: 'Palabras',

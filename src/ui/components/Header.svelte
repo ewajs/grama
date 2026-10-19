@@ -2,9 +2,8 @@
 @component
 The top bar: the level number and the score, which counts up when points are won.
 
-- `level`: level number as shown to the player.
+- `title`: what's being played: "Nivel 12", "Desafío #3"…
 - `tier`: how hard the level is, shown as a badge under the level number.
-- `replay`: whether it's a replay of an earlier level.
 - `score`: total points.
 - `onback()`: back to the home screen.
 - `onmenu()`: the player wants the menu.
@@ -17,14 +16,13 @@ The top bar: the level number and the score, which counts up when points are won
   import { SCORE_COUNT_DURATION } from '../lib/motion';
 
   type Props = {
-    level: number;
+    title: string;
     tier: Tier;
-    replay?: boolean;
     score: number;
     onback: () => void;
     onmenu: () => void;
   };
-  let { level, tier, replay = false, score, onback, onmenu }: Props = $props();
+  let { title, tier, score, onback, onmenu }: Props = $props();
 
   // Follows `score`, moving smoothly from the old value to the new one.
   const shown = Tween.of(() => score, { duration: SCORE_COUNT_DURATION, easing: cubicOut });
@@ -37,9 +35,7 @@ The top bar: the level number and the score, which counts up when points are won
     </svg>
   </button>
   <div class="level">
-    <span class="title">
-      {strings.level(level)}{#if replay}<small> · {strings.replaying}</small>{/if}
-    </span>
+    <span class="title">{title}</span>
     <span class="badge {tier}">{strings.tiers[tier]}</span>
   </div>
   <div class="end">

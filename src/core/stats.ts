@@ -1,5 +1,6 @@
 import { TIERS, type Tier } from './difficulty';
-import type { History } from './history';
+import { bestStreak } from './daily';
+import type { History, LevelRecord } from './history';
 
 /** The player's totals, from their history of completed levels (best result each). */
 export type Stats = {
@@ -21,10 +22,20 @@ export type Stats = {
   noHints: number;
   /** Extra-hard levels completed without hints. */
   extraNoHints: number;
+  /** Daily challenges completed. */
+  dailies: number;
+  /** The longest run of consecutive days with the daily completed. */
+  bestStreak: number;
 };
 
-/** Totals over every completed level's best result. */
-export function statsOf(history: History): Stats {
+/**
+ * Totals over every completed level's best result, plus the daily challenges'.
+ * @param dailies Completed daily challenges by date.
+ */
+export function statsOf(
+  history: History,
+  dailies: Readonly<Record<string, LevelRecord>> = {},
+): Stats {
   const results = Object.values(history);
   const count = (keep: (result: (typeof results)[number]) => boolean) =>
     results.filter(keep).length;
@@ -42,5 +53,7 @@ export function statsOf(history: History): Stats {
     hints: sum((result) => result.hints),
     noHints: count((result) => result.hints === 0),
     extraNoHints: count((result) => result.tier === 'extra' && result.hints === 0),
+    dailies: Object.keys(dailies).length,
+    bestStreak: bestStreak(dailies),
   };
 }

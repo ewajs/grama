@@ -157,10 +157,10 @@ Goal: a reason to keep going: a record of every level, stars to earn, things to 
 
 ### M10 — Daily challenge · `v0.11.0`
 
-- [ ] One 7-letter level per day, the same for everyone, harder through the week (Monday
+- [x] One 7-letter level per day, the same for everyone, harder through the week (Monday
       easy … Sunday extra hard), with its own progress
-- [ ] Streak of consecutive days; daily stats and achievements
-- [ ] Share the result (Web Share, or copy): "Grama #142 · ★★★ · 0 pistas · 🔥5"
+- [x] Streak of consecutive days; daily stats and achievements
+- [x] Share the result (Web Share, or copy): "Grama #142 · ★★★ · 0 pistas · 🔥5"
 
 **Verify:** two devices get the same daily level; the streak survives reloads and breaks
 after a missed day.
@@ -194,6 +194,8 @@ after a missed day.
 
 ## Changelog
 
+- **v0.11.0** (M10) — Daily challenge: one 7-letter level per date, Monday easy to Sunday
+  extra hard, saved as you go, streaks, sharing, 4 new achievements.
 - **v0.10.0** (M9) — Home screen; history of completed levels with 1-3 stars; level map with
   replays; stats; 15 achievements with toasts. Levels always land in their tier.
 - **v0.9.0** (M8) — Difficulty: levels scored and generated as easy / medium / hard / extra

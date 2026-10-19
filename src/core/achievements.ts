@@ -25,12 +25,18 @@ export type AchievementId =
   | 'words100'
   | 'words1000'
   | 'bonus50'
-  | 'bonus500';
+  | 'bonus500'
+  | 'daily'
+  | 'streak3'
+  | 'streak7'
+  | 'streak30';
 
 /** All achievements, roughly from first to last earned. */
 export const ACHIEVEMENTS: readonly Achievement[] = [
   { id: 'firstLevel', goal: 1, value: (stats) => stats.levels },
+  { id: 'daily', goal: 1, value: (stats) => stats.dailies },
   { id: 'levels10', goal: 10, value: (stats) => stats.levels },
+  { id: 'streak3', goal: 3, value: (stats) => stats.bestStreak },
   { id: 'threeStars', goal: 1, value: (stats) => stats.threeStars },
   { id: 'words100', goal: 100, value: (stats) => stats.words },
   { id: 'extra', goal: 1, value: (stats) => stats.byTier.extra },
@@ -40,10 +46,12 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
   { id: 'extraNoHints', goal: 1, value: (stats) => stats.extraNoHints },
   { id: 'threeStars10', goal: 10, value: (stats) => stats.threeStars },
   { id: 'stars100', goal: 100, value: (stats) => stats.stars },
+  { id: 'streak7', goal: 7, value: (stats) => stats.bestStreak },
   { id: 'extra10', goal: 10, value: (stats) => stats.byTier.extra },
   { id: 'levels100', goal: 100, value: (stats) => stats.levels },
   { id: 'words1000', goal: 1000, value: (stats) => stats.words },
   { id: 'bonus500', goal: 500, value: (stats) => stats.bonus },
+  { id: 'streak30', goal: 30, value: (stats) => stats.bestStreak },
 ];
 
 /** The ids of the achievements reached with these stats, in {@link ACHIEVEMENTS} order. */

@@ -18,9 +18,24 @@ it('adds up the history', () => {
     hints: 3,
     noHints: 2,
     extraNoHints: 1,
+    dailies: 0,
+    bestStreak: 0,
   });
 });
 
 it('is all zeros for a new player', () => {
   expect(statsOf({})).toMatchObject({ levels: 0, stars: 0, words: 0 });
+});
+
+it('counts daily challenges and the best streak', () => {
+  const done = {
+    tier: 'easy',
+    difficulty: 'normal',
+    stars: 2,
+    hints: 0,
+    bonus: 0,
+    targets: 8,
+  } as const;
+  const stats = statsOf({}, { '2026-10-19': done, '2026-10-20': done, '2026-10-22': done });
+  expect(stats).toMatchObject({ dailies: 3, bestStreak: 2, levels: 0 });
 });
