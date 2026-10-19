@@ -115,6 +115,9 @@ Goal: installable, works offline, never loses progress.
 
 ## Changelog
 
+- **v0.5.0** (M4) — Endless levels generated on the device from Spanish word lists (RLA-ES
+  es_AR + wordfreq), difficulty curve from 6 to 8 letters, `?nivel=N`, bigger board that
+  never jumps, reliable swipes on 8-letter wheels. MIT license and third-party notices.
 - **v0.4.0** (M3) — First playable MVP: board, feedback for every result, bonus counter,
   animated score, level-complete celebration and next level. Three hand-written levels.
 - **v0.3.0** (M2) — Letter wheel: drag across letters with touch or mouse, backtrack, release
