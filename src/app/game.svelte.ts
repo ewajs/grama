@@ -35,6 +35,11 @@ export class Game {
     return this.#state.score;
   }
 
+  /** How many bonus words have been found on the current level. */
+  get bonusFound(): number {
+    return this.#state.found.filter((word) => !this.level.targets.includes(word)).length;
+  }
+
   /** Words found on the current level, in the order found. */
   get found(): readonly string[] {
     return this.#state.found;

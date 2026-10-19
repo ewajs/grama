@@ -109,7 +109,7 @@ and mouse work the same way.
   .wheel {
     container-type: size;
     position: relative;
-    width: min(78vw, 320px);
+    width: var(--wheel-size);
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--color-surface);

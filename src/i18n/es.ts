@@ -5,6 +5,7 @@ export const es = {
   score: 'Puntos',
   wheel: 'Letras: arrastrá el dedo de una a otra para formar una palabra',
   shuffle: 'Mezclar letras',
+  bonus: (count: number) => `Palabras extra: ${count}`,
 };
 
 /** The shape every language pack must provide: the same keys as Spanish. */

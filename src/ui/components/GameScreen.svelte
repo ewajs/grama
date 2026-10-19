@@ -1,24 +1,46 @@
 <!--
 @component
-The screen where a level is played: header, the word being spelled and the letter wheel.
+The screen where a level is played: header, board, the word being spelled and the
+letter wheel with its controls.
 
 - `game`: the running game; the screen reads it and sends it the player's words.
 -->
 <script lang="ts">
   import type { Game } from '../../app/game.svelte';
   import { boardRows } from '../../core/board';
+  import type { Submission } from '../../core/evaluate';
   import { strings } from '../../i18n';
+  import { FEEDBACK_DURATION } from '../lib/motion';
   import { shuffled } from '../lib/shuffle';
   import Board from './Board.svelte';
+  import BonusCounter from './BonusCounter.svelte';
   import LetterWheel from './LetterWheel.svelte';
+  import WordPill from './WordPill.svelte';
 
   let { game }: { game: Game } = $props();
 
   /** The word being spelled on the wheel right now. */
   let word = $state('');
+  /** The last submitted word's result, shown briefly. */
+  let result = $state<{ id: number; submission: Submission } | null>(null);
+  let resultCount = 0;
+  let clearResult: ReturnType<typeof setTimeout> | undefined;
 
   // Derived from the level, so a new level brings new letters; shuffling overrides it.
   let tiles = $derived(game.level.letters.map((letter, id) => ({ id, letter })));
+
+  const repeated = $derived(result?.submission.kind === 'repeated' ? result.submission.word : null);
+
+  function spell(next: string) {
+    word = next;
+    if (next) result = null;
+  }
+
+  function submit(next: string) {
+    result = { id: ++resultCount, submission: game.submit(next) };
+    clearTimeout(clearResult);
+    clearResult = setTimeout(() => (result = null), FEEDBACK_DURATION);
+  }
 </script>
 
 <main>
@@ -28,18 +50,24 @@ The screen where a level is played: header, the word being spelled and the lette
   </header>
 
   <div class="board">
-    <Board rows={boardRows(game.level, game.found)} />
+    <Board rows={boardRows(game.level, game.found)} glow={repeated} />
   </div>
 
-  <div class="pill" class:visible={word !== ''}>{word}</div>
+  <WordPill {word} {result} />
 
   <div class="controls">
-    <LetterWheel {tiles} onword={(next) => (word = next)} onsubmit={(next) => game.submit(next)} />
+    <LetterWheel {tiles} onword={spell} onsubmit={submit} />
     <button class="shuffle" aria-label={strings.shuffle} onclick={() => (tiles = shuffled(tiles))}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
       </svg>
     </button>
+    <div class="bonus">
+      <BonusCounter
+        count={game.bonusFound}
+        glow={repeated !== null && !game.level.targets.includes(repeated)}
+      />
+    </div>
   </div>
 </main>
 
@@ -78,9 +106,13 @@ The screen where a level is played: header, the word being spelled and the lette
     align-self: stretch;
   }
 
-  .shuffle {
+  .shuffle,
+  .bonus {
     position: absolute;
     bottom: 0;
+  }
+
+  .shuffle {
     left: 0;
     display: grid;
     place-items: center;
@@ -110,22 +142,7 @@ The screen where a level is played: header, the word being spelled and the lette
     stroke-linejoin: round;
   }
 
-  .pill {
-    min-width: 6rem;
-    min-height: 2.75rem;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
-    background: var(--color-accent);
-    color: var(--color-accent-contrast);
-    font-size: var(--text-xl);
-    font-weight: var(--weight-bold);
-    letter-spacing: 0.08em;
-    text-align: center;
-    opacity: 0;
-    transition: opacity var(--dur-fast);
-  }
-
-  .pill.visible {
-    opacity: 1;
+  .bonus {
+    right: 0;
   }
 </style>

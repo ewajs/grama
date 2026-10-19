@@ -39,6 +39,9 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
 
+  /* Layout */
+  --wheel-size: min(78vw, 320px);
+
   /* Shape */
   --radius-sm: 8px;
   --radius-md: 14px;
