@@ -4,6 +4,7 @@ Celebrates a finished level over the game screen, with what was won, and moves o
 
 - `level`: number of the level just finished.
 - `tier`: how hard it was; harder levels list their rewards.
+- `stars`: stars earned on it.
 - `points`: points won on it.
 - `bonus`: bonus words found on it.
 - `onnext()`: the player wants the next level.
@@ -14,13 +15,25 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   import { strings } from '../../i18n';
   import { CELEBRATION_DELAY } from '../lib/motion';
   import Dialog from './Dialog.svelte';
+  import Stars from './Stars.svelte';
 
-  type Props = { level: number; tier: Tier; points: number; bonus: number; onnext: () => void };
-  let { level, tier, points, bonus, onnext }: Props = $props();
+  type Props = {
+    level: number;
+    tier: Tier;
+    stars: number;
+    points: number;
+    bonus: number;
+    onnext: () => void;
+  };
+  let { level, tier, stars, points, bonus, onnext }: Props = $props();
 </script>
 
 <Dialog title={strings.levelComplete} delay={CELEBRATION_DELAY}>
   <p>{strings.levelCompleteDetail(level)}</p>
+  <div class="stars"><Stars {stars} size={44} delay={CELEBRATION_DELAY} /></div>
+  {#if stars < 3}
+    <p class="how">{strings.starsHow}</p>
+  {/if}
   <ul>
     {#if tier === 'hard' || tier === 'extra'}
       <li class="tier {tier}">
@@ -40,6 +53,14 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   p {
     margin: 0;
     color: var(--color-text-muted);
+  }
+
+  .stars {
+    margin: var(--space-2) 0 0;
+  }
+
+  .how {
+    font-size: var(--text-sm);
   }
 
   ul {

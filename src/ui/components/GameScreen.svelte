@@ -157,6 +157,7 @@ letter wheel with its controls.
   <LevelComplete
     level={game.levelNumber}
     tier={game.tier}
+    stars={game.stars}
     points={game.levelPoints}
     bonus={game.bonusFound}
     onnext={nextLevel}

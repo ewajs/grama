@@ -13,6 +13,7 @@ import {
   useHint,
   type Progress,
 } from '../core/progress';
+import { starsFor, type Stars } from '../core/history';
 import { bonusWords, isComplete, sessionPoints } from '../core/session';
 import type { WordList } from '../content/words';
 import { reportUrl, type ReportKind } from './report';
@@ -72,6 +73,11 @@ export class Game {
   /** Whether every target of the current level has been found. */
   get complete(): boolean {
     return isComplete(this.level, this.#progress.session);
+  }
+
+  /** Stars the current level earns as played so far (final once complete). */
+  get stars(): Stars {
+    return starsFor(this.level, this.#progress.session);
   }
 
   /** Points across all levels. */
@@ -134,7 +140,8 @@ export class Game {
 
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
-    const played = playWord(this.#progress, this.level, this.#progress.session, word);
+    const { levelNumber, session } = this.#progress;
+    const played = playWord(this.#progress, this.level, levelNumber, session, word);
     if (played.submission.kind === 'invalid') {
       this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
     }

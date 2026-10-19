@@ -15,7 +15,7 @@ const level: Level = {
 function play(words: readonly string[], on = level) {
   let progress = NEW_PROGRESS;
   let session: Session = NEW_SESSION;
-  for (const word of words) ({ progress, session } = playWord(progress, on, session, word));
+  for (const word of words) ({ progress, session } = playWord(progress, on, 1, session, word));
   return { progress, session };
 }
 
@@ -28,10 +28,10 @@ describe('playWord', () => {
 
   it('leaves both untouched for invalid and repeated words', () => {
     const { progress, session } = play(['SOL']);
-    const again = playWord(progress, level, session, 'SOL');
+    const again = playWord(progress, level, 1, session, 'SOL');
     expect(again.progress).toBe(progress);
     expect(again.session).toBe(session);
-    expect(playWord(progress, level, session, 'XYZ').progress).toBe(progress);
+    expect(playWord(progress, level, 1, session, 'XYZ').progress).toBe(progress);
   });
 
   it('starts the game with a few hints', () => {
@@ -53,6 +53,17 @@ describe('playWord', () => {
     const extra = { ...level, tier: 'extra' as const };
     expect(play(extra.targets, extra).progress.hints).toBe(STARTING_HINTS + EXTRA_HARD_HINTS);
     expect(play(level.targets).progress.hints).toBe(STARTING_HINTS);
+  });
+});
+
+describe('completing a level', () => {
+  it('records it in the history', () => {
+    const { progress } = play(level.targets);
+    expect(progress.history[1]).toMatchObject({ tier: 'medium', stars: 2, hints: 0, bonus: 0 });
+  });
+
+  it('records nothing before it is complete', () => {
+    expect(play(['SOL']).progress.history).toEqual({});
   });
 });
 
