@@ -26,7 +26,7 @@ change that alters a rule, so code and spec never drift.
 6. Levels cycle: after the last authored level the game continues from a
    defined loop point (never a dead end).
 
-### Scoring (initial values, tunable in one place in `src/core`)
+### Scoring (tunable in `POINTS_PER_LETTER`, `src/core/evaluate.ts`)
 
 - `target`: 10 points per letter.
 - `bonus`: 2 points per letter.
