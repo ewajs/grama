@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { tierFor } from '../core/cadence';
 import { NEW_PROGRESS } from '../core/progress';
+import { NEW_SESSION } from '../core/session';
 import { NEW_TRIAL_RECORD } from '../core/time-trial';
 import { Game } from './game.svelte';
 
@@ -119,5 +120,47 @@ describe('Game', () => {
     expect(saved.runs).toBe(1);
     expect(game.score).toBe(0);
     expect(game.achievements).toEqual(expect.arrayContaining(['trial', 'trialPoints']));
+  });
+
+  it('collects every word found in the dictionary, replays included', () => {
+    let saved: readonly string[] = [];
+    const game = new Game(NEW_PROGRESS, { ondictionary: (dictionary) => (saved = dictionary) });
+    game.words = words;
+    const [target] = game.level.targets;
+    game.submit(target!);
+    game.submit(target!);
+    game.submit('XYZ');
+    expect(game.dictionary).toEqual([target]);
+    finish(game);
+    game.next('normal');
+    game.replay(1);
+    const [bonus] = game.level.bonus;
+    game.submit(bonus!);
+    expect(game.dictionary).toEqual([...game.level.targets, bonus]);
+    expect(saved).toEqual(game.dictionary);
+  });
+
+  it('takes Contrarreloj words, each once', () => {
+    let saves = 0;
+    const game = new Game(NEW_PROGRESS, { dictionary: ['SOL'], ondictionary: () => saves++ });
+    game.addToDictionary('SAL');
+    game.addToDictionary('SOL');
+    expect(game.dictionary).toEqual(['SOL', 'SAL']);
+    expect(saves).toBe(1);
+  });
+
+  it('starts with the words of the levels in play, saving only if that adds any', () => {
+    let saved: readonly string[] | null = null;
+    const progress = {
+      ...NEW_PROGRESS,
+      session: { ...NEW_SESSION, found: ['SOL', 'SAL'] },
+      daily: { date: '2026-10-19', session: { ...NEW_SESSION, found: ['SAL', 'PATO'] } },
+    };
+    const game = new Game(progress, { ondictionary: (dictionary) => (saved = dictionary) });
+    expect(game.dictionary).toEqual(['SOL', 'SAL', 'PATO']);
+    expect(saved).toEqual(['SOL', 'SAL', 'PATO']);
+    saved = null;
+    new Game(progress, { dictionary: ['PATO', 'SOL', 'SAL'], ondictionary: (d) => (saved = d) });
+    expect(saved).toBeNull();
   });
 });

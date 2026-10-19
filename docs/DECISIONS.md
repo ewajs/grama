@@ -8,6 +8,17 @@ delete it, the history is the point.
 
 ---
 
+## D24 · Tu diccionario saved apart from the progress — 2026-10-19
+
+- **Decision:** the words found are saved under their own key (`grama.words`), like the
+  Contrarreloj record (D19), not in `Progress`. Contrarreloj words count too, and
+  starting over keeps the dictionary.
+- **Why:** a new `Progress` shape means a new save version, which discards every save
+  (D5): adding the dictionary there would have cost every player their levels and score.
+  Apart, it also takes Contrarreloj words without touching the main game.
+- **Costs accepted:** saves before it only kept counts, so the dictionary starts with the
+  levels in play and grows from there.
+
 ## D23 · Color themes: Grama, Argento, Yerba, Quebrada — 2026-10-19
 
 - **Decision:** four themes, each a set of color tokens with light and dark values

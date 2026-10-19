@@ -8,6 +8,7 @@ import { unlocked, type AchievementId } from '../core/achievements';
 import { boardRows, byBoardOrder, type BoardRow } from '../core/board';
 import { occurrence, tierFor, type Difficulty } from '../core/cadence';
 import { dailyFor, dailyNumber, dailyTier, generateDaily, streakOf } from '../core/daily';
+import { collect, NEW_DICTIONARY, type Dictionary } from '../core/dictionary';
 import type { Tier } from '../core/difficulty';
 import type { Submission } from '../core/evaluate';
 import { generateLevel } from '../core/generate';
@@ -73,6 +74,10 @@ export type GameOptions = {
   trials?: TrialRecord;
   /** Called with the new Contrarreloj record after each run, e.g. to save it. */
   ontrials?: (trials: TrialRecord) => void;
+  /** Tu diccionario so far: every word found. */
+  dictionary?: Dictionary;
+  /** Called with the dictionary whenever it gains words, e.g. to save it. */
+  ondictionary?: (dictionary: Dictionary) => void;
 };
 
 /**
@@ -84,6 +89,8 @@ export class Game {
   #onchange: (progress: Progress) => void;
   #trials: TrialRecord;
   #ontrials: (trials: TrialRecord) => void;
+  #dictionary: Dictionary;
+  #ondictionary: (dictionary: Dictionary) => void;
   #words = $state<WordList | null>(null);
   #clock: () => string;
   /** Today's date, read from the clock when the game starts and on {@link refreshDate}. */
@@ -105,11 +112,24 @@ export class Game {
       clock = today,
       trials = NEW_TRIAL_RECORD,
       ontrials = () => {},
+      dictionary = NEW_DICTIONARY,
+      ondictionary = () => {},
     } = options;
     this.#progress = $state(progress);
     this.#onchange = onchange;
     this.#trials = $state(trials);
     this.#ontrials = ontrials;
+    // Saves from before the dictionary existed still have the levels in play: their words
+    // go in at once.
+    const seeded = collect(dictionary, [
+      ...progress.session.found,
+      ...progress.daily.session.found,
+    ]);
+    // $state.raw: reactive when replaced, but not watched inside. The dictionary is only
+    // ever replaced, and can grow to thousands of words, so that's all it needs.
+    this.#dictionary = $state.raw(seeded);
+    this.#ondictionary = ondictionary;
+    if (seeded !== dictionary) ondictionary(seeded);
     this.#clock = clock;
     this.#today = $state(clock());
     // Progress is replaced on every word, which re-runs this. Returning the same Level
@@ -208,6 +228,19 @@ export class Game {
   /** The best Contrarreloj run, if any. */
   get trialBest(): RunResult | null {
     return this.#trials.best;
+  }
+
+  /** Tu diccionario: every word found, normalized, in the order found. */
+  get dictionary(): Dictionary {
+    return this.#dictionary;
+  }
+
+  /** Adds a word found outside the levels (a Contrarreloj run) to the dictionary. */
+  addToDictionary(word: string): void {
+    const added = collect(this.#dictionary, [word]);
+    if (added === this.#dictionary) return;
+    this.#dictionary = added;
+    this.#ondictionary(added);
   }
 
   /** Keeps a finished Contrarreloj run in the record (never in the main progress). */
@@ -322,7 +355,11 @@ export class Game {
       this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
     }
     if (played.session !== session) this.#apply(played.progress, played.session);
-    return played.submission;
+    const { submission } = played;
+    if (submission.kind === 'target' || submission.kind === 'bonus') {
+      this.addToDictionary(submission.word);
+    }
+    return submission;
   }
 
   /** Spends a hint to reveal a letter on the board. */
