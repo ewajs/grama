@@ -46,6 +46,12 @@ The **map** shows every level reached, by tier, with its stars; tapping an earli
 replays it as it was generated. Replays share score, hints and history but never change
 the current level, and the extra-hard hint is only earned the first time.
 
+### Achievements (`src/core/achievements.ts`)
+
+15 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
+bonus words, levels without hints). A toast announces each one as it's earned; the
+Logros screen lists them with progress and the player's stats.
+
 ### Hints (tunable in `src/core/hints.ts`)
 
 - A new game starts with **3 hints**; every **5 bonus words** found earn one more. Hints

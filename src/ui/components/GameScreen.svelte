@@ -21,6 +21,7 @@ letter wheel with its controls.
   import Board from './Board.svelte';
   import Header from './Header.svelte';
   import HintButton from './HintButton.svelte';
+  import AchievementToast from './AchievementToast.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import BonusWords from './BonusWords.svelte';
   import LetterWheel from './LetterWheel.svelte';
@@ -177,6 +178,8 @@ letter wheel with its controls.
     onnext={nextLevel}
   />
 {/if}
+
+<AchievementToast unlocked={game.achievements} />
 
 <style>
   main {

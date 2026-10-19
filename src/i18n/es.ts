@@ -1,3 +1,5 @@
+import type { AchievementId } from '../core/achievements';
+
 const reportKinds = {
   missing: 'Falta una palabra',
   wrong: 'Palabra rara u ofensiva',
@@ -18,7 +20,26 @@ export const es = {
   backToMap: 'Volver al mapa',
   achievements: 'Logros',
   statsTitle: 'Estadísticas',
-  statsSummary: (stars: number) => `${stars} ★ ganadas`,
+  achievementsCount: (done: number, total: number) => `${done} de ${total}`,
+  achievementUnlocked: 'Logro desbloqueado',
+  achievementsUnlocked: (done: number, total: number) => `${done} de ${total} desbloqueados`,
+  achievementList: {
+    firstLevel: ['Primer paso', 'Completá tu primer nivel.'],
+    levels10: ['Arrancando', 'Completá 10 niveles.'],
+    levels50: ['Constante', 'Completá 50 niveles.'],
+    levels100: ['Cien de cien', 'Completá 100 niveles.'],
+    threeStars: ['Tres estrellas', 'Ganá 3 estrellas en un nivel.'],
+    threeStars10: ['Estrellado', 'Ganá 3 estrellas en 10 niveles.'],
+    stars100: ['Cielo lleno', 'Juntá 100 estrellas.'],
+    extra: ['Sin miedo', 'Completá un nivel extra difícil.'],
+    extra10: ['Duro de roer', 'Completá 10 niveles extra difíciles.'],
+    extraNoHints: ['A pulmón', 'Completá un nivel extra difícil sin pistas.'],
+    noHints10: ['Por mi cuenta', 'Completá 10 niveles sin pistas.'],
+    words100: ['Cien palabras', 'Encontrá 100 palabras del tablero.'],
+    words1000: ['Diccionario andante', 'Encontrá 1000 palabras del tablero.'],
+    bonus50: ['Curioso', 'Encontrá 50 palabras extra.'],
+    bonus500: ['Explorador', 'Encontrá 500 palabras extra.'],
+  } satisfies Record<AchievementId, [string, string]>,
   statLabels: {
     levels: 'Niveles',
     stars: 'Estrellas',

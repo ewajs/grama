@@ -16,6 +16,7 @@ import {
 } from '../core/progress';
 import { starsFor } from '../core/history';
 import { statsOf, type Stats } from '../core/stats';
+import { unlocked, type AchievementId } from '../core/achievements';
 import { bonusWords, isComplete, NEW_SESSION, sessionPoints, type Session } from '../core/session';
 import type { WordList } from '../content/words';
 import { reportUrl, type ReportKind } from './report';
@@ -92,6 +93,11 @@ export class Game {
   /** The player's totals, from the history. */
   get stats(): Stats {
     return statsOf(this.#progress.history);
+  }
+
+  /** The achievements the player has reached. */
+  get achievements(): AchievementId[] {
+    return unlocked(this.stats);
   }
 
   /** How hard the current level is. */

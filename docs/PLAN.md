@@ -147,11 +147,11 @@ Goal: a reason to keep going: a record of every level, stars to earn, things to 
       replays and daily challenges share the same rules
 - [x] History of completed levels with stars (★★★ no hints and 3+ bonus words; ★★ at most
       one hint; ★ completed)
-- [~] Home screen: Jugar · Nivel N, Desafío del día, Mapa, Logros; back from the game
+- [x] Home screen: Jugar · Nivel N, Desafío del día, Mapa, Logros; back from the game
 - [x] Level map: every level so far with its tier and stars; replay a completed one (keeps
       the best stars, never moves progress)
 - [x] Stats screen: levels by tier, stars, words and bonus words found, hints used
-- [ ] Achievements: ~15 to unlock, shown on the stats screen, with a toast when earned
+- [x] Achievements: ~15 to unlock, shown on the stats screen, with a toast when earned
 
 **Verify:** history and stars survive reloads; replaying never changes the current level.
 
@@ -194,6 +194,8 @@ after a missed day.
 
 ## Changelog
 
+- **v0.10.0** (M9) — Home screen; history of completed levels with 1-3 stars; level map with
+  replays; stats; 15 achievements with toasts. Levels always land in their tier.
 - **v0.9.0** (M8) — Difficulty: levels scored and generated as easy / medium / hard / extra
   hard, 7-level cadence, no nearby repeats, Relajada / Normal / Desafiante setting, badge,
   ×1.5 / ×2 points and a hint for extra hard. Level generation ~5× faster.

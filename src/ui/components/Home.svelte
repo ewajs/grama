@@ -11,6 +11,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
 <script lang="ts">
   import { fly } from 'svelte/transition';
   import type { Game } from '../../app/game.svelte';
+  import { ACHIEVEMENTS } from '../../core/achievements';
   import { strings } from '../../i18n';
   import { DURATION } from '../lib/motion';
 
@@ -43,7 +44,9 @@ The home screen: where the app opens. Continue the game from here; more is comin
 
   <button class="card" onclick={onstats}>
     <span class="label">{strings.achievements}</span>
-    <span class="detail">{strings.statsSummary(stars)}</span>
+    <span class="detail">
+      {strings.achievementsCount(game.achievements.length, ACHIEVEMENTS.length)}
+    </span>
   </button>
 
   <dl>
