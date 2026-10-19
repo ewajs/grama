@@ -1,21 +1,40 @@
 <!--
 @component
-The circle of letters the player drags across to spell a word. Pointer events, so touch
-and mouse work the same way.
+The circle of letters the player spells words on. Pointer events, so touch and mouse
+work the same way. Three ways to spell:
+
+- **Drag** across letters; letting go submits.
+- **Tap** letters one by one; the word waits (tap the last letter to take it back, the
+  empty wheel to start over) until `submit()`, e.g. from tapping the word pill.
+- **Type** them, through `type(letter)`, `erase()`, `submit()` and `clear()`, which the
+  game screen calls from the keyboard.
+
+Props:
 
 - `tiles`: letters in display order. `id` keeps a letter's identity when the order
-  changes, so it glides to its new place instead of jumping.
-- `onword(word)`: the word being spelled changed during a drag.
-- `onsubmit(word)`: the player let go after selecting two or more letters.
+  changes, so it glides to its new place instead of jumping. A new order (shuffle, next
+  level) drops a waiting word.
+- `onword(word, waiting)`: the word being spelled changed; `waiting` when it's tapped or
+  typed and waits to be submitted, not dragged.
+- `onsubmit(word)`: a word of two or more letters was submitted.
 -->
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { strings } from '../../i18n';
-  import { extendPath, letterAt, letterPosition, letterPositions, type Point } from '../lib/wheel';
+  import {
+    extendPath,
+    letterAt,
+    letterPosition,
+    letterPositions,
+    tapLetter,
+    typeLetter,
+    type Point,
+  } from '../lib/wheel';
 
   type Tile = { id: number; letter: string };
   type Props = {
     tiles: readonly Tile[];
-    onword?: (word: string) => void;
+    onword?: (word: string, waiting: boolean) => void;
     onsubmit: (word: string) => void;
   };
   type WheelPointerEvent = PointerEvent & { currentTarget: HTMLElement };
@@ -26,8 +45,10 @@ and mouse work the same way.
   let path = $state<readonly number[]>([]);
   /** Where the dragging pointer is, while it's down. */
   let pointer = $state<Point | null>(null);
-  /** Which pointer is dragging, so a second finger can't interfere. */
+  /** Which pointer is down, so a second finger can't interfere. */
   let pointerId: number | null = null;
+  /** The press so far: the letter pressed, the word before it, and whether it dragged. */
+  let press: { index: number; before: readonly number[]; dragged: boolean } | null = null;
 
   const positions = $derived(letterPositions(tiles.length));
   const line = $derived(
@@ -44,7 +65,44 @@ and mouse work the same way.
   function setPath(next: readonly number[]) {
     if (next === path) return;
     path = next;
-    onword?.(wordOf(next));
+    // Waiting: no finger down, so it was tapped or typed.
+    onword?.(wordOf(next), next.length > 0 && press === null);
+  }
+
+  // Indices point at places on the wheel: when the letters move, a waiting word is void.
+  $effect(() => {
+    void tiles;
+    untrack(() => setPath([]));
+  });
+
+  /** Adds a typed letter (normalized: `A`…`Z`, `Ñ`) to the word, if one is left. */
+  export function type(letter: string) {
+    if (pointerId === null)
+      setPath(
+        typeLetter(
+          path,
+          tiles.map((tile) => tile.letter),
+          letter,
+        ),
+      );
+  }
+
+  /** Takes back the last letter. */
+  export function erase() {
+    if (pointerId === null) setPath(path.slice(0, -1));
+  }
+
+  /** Drops the word being spelled. */
+  export function clear() {
+    if (pointerId === null) setPath([]);
+  }
+
+  /** Submits the waiting word; a single letter is just dropped. */
+  export function submit() {
+    if (pointerId !== null) return;
+    const word = wordOf(path);
+    setPath([]);
+    if (word.length > 1) onsubmit(word);
   }
 
   function toWheel(event: WheelPointerEvent): Point {
@@ -56,24 +114,36 @@ and mouse work the same way.
     if (pointerId !== null) return;
     const point = toWheel(event);
     const index = letterAt(point, positions);
-    if (index === null) return;
+    // A tap on the wheel between letters starts over.
+    if (index === null) return setPath([]);
     event.currentTarget.setPointerCapture(event.pointerId);
     pointerId = event.pointerId;
     pointer = point;
-    setPath([index]);
+    press = { index, before: path, dragged: false };
+    // A new letter shows selected at once; the last one is only taken back on a tap.
+    if (!path.includes(index)) setPath([...path, index]);
   }
 
   function move(event: WheelPointerEvent) {
-    if (event.pointerId !== pointerId) return;
+    if (event.pointerId !== pointerId || !press) return;
     pointer = toWheel(event);
-    setPath(extendPath(path, letterAt(pointer, positions)));
+    const next = extendPath(path, letterAt(pointer, positions));
+    if (next !== path) press.dragged = true;
+    setPath(next);
   }
 
   function end(event: WheelPointerEvent) {
-    if (event.pointerId !== pointerId) return;
-    const word = wordOf(path);
-    cancel(event);
-    if (word.length > 1) onsubmit(word);
+    if (event.pointerId !== pointerId || !press) return;
+    const { index, before, dragged } = press;
+    pointerId = null;
+    pointer = null;
+    press = null;
+    if (dragged) {
+      submit();
+    } else {
+      // A tap: the word waits for more letters, or for submit().
+      setPath(tapLetter(before, index));
+    }
   }
 
   // The system took the pointer (an edge swipe, a call): drop the word, don't submit it.
@@ -81,6 +151,7 @@ and mouse work the same way.
     if (event.pointerId !== pointerId) return;
     pointerId = null;
     pointer = null;
+    press = null;
     setPath([]);
   }
 </script>

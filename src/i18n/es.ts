@@ -96,6 +96,7 @@ export const es = {
   score: 'Puntos',
   wheel: 'Letras: arrastrá el dedo de una a otra para formar una palabra',
   shuffle: 'Mezclar letras',
+  submitWord: (word: string) => `Probar ${word}`,
   bonus: (count: number, untilHint: number) =>
     `Palabras extra: ${count}. ${untilHint} más para ganar una pista`,
   hint: (count: number) => (count === 1 ? 'Pista: te queda 1' : `Pista: te quedan ${count}`),

@@ -15,6 +15,13 @@ de la rueda.
 - **Soltá** el dedo para enviar la palabra. Si soltás con una sola letra, no pasa nada.
 - En la computadora funciona igual, con el mouse.
 
+Si arrastrar te cuesta, **tocá las letras de a una**: la palabra espera arriba de la rueda
+con un ✓, y la probás tocándola. Tocá otra vez la última letra para sacarla, o la rueda
+entre letras para empezar de nuevo.
+
+Con un teclado, **escribí** la palabra y apretá **Enter**. **Borrar** saca la última letra
+y **Esc** la borra entera.
+
 El botón de las flechas cruzadas, abajo a la izquierda, **mezcla** las letras de la rueda.
 A veces verlas en otro orden es todo lo que hace falta.
 
