@@ -268,6 +268,12 @@ rescues a dead wheel, and the best score survives reloads.
 
 ## Changelog
 
+- **v0.14.0** (M13) — Fixes from the M12 code review: dailies with their own seeds (no
+  repeats for months), no repeated levels after a difficulty change, replays pay nothing,
+  stats only grow (dailies count), Home shows the current level, the daily follows the
+  clock; cancelled drags, quick dialog exits, letters fly to their own row; golden content
+  test and a levels version in saves; e2e in CI on Chromium and WebKit; native dialogs,
+  AA contrast, reduced motion; slimmer CLAUDE.md.
 - **v0.13.0** (M12) — Calm in-place feedback; tidier menu and an Acerca de window (version,
   news, check for updates); "Todo sobre Grama" player guide at `/guia/`; developer docs with
   guides and diagrams at `/docs/`; docs built on every PR.
