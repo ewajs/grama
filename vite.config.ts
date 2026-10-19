@@ -44,6 +44,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,txt}'],
         // The dictionary is ~1.1 MB uncompressed.
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+        // The guide and the developer docs are their own sites under the same path: the
+        // app's offline fallback must not answer for them.
+        navigateFallbackDenylist: [/\/guia\//, /\/docs\//, /\/api\//],
       },
     }),
   ],

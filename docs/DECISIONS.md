@@ -8,6 +8,19 @@ delete it, the history is the point.
 
 ---
 
+## D18 · Docs: VitePress for players, TypeDoc for developers — 2026-10-19
+
+- **Decision:** two separate sites deployed with the game, as in lighting-simulator:
+  - _Todo sobre Grama_ (`guide/`, VitePress 1.6, Spanish) at `/grama/guia/`: how the game
+    works for a curious player. Screenshots are taken from the real game by Playwright
+    (`npm run guide:screenshots`) and committed.
+  - Developer docs (TypeDoc, English) at `/grama/docs/`: the API reference plus
+    hand-written guides with SVG diagrams.
+  - Both build on every PR (the `docs` CI job) so broken links fail early.
+- **Why:** different readers, different tools; both are what worked in lighting-simulator.
+- **Costs accepted:** VitePress 1.6 bundles an older Vite whose dev server has known
+  advisories (`npm audit`); they only affect `vitepress dev` locally, not the static site.
+
 ## D17 · A home screen, stars from hints and bonus words, replays, a weekday daily — 2026-10-18
 
 - **Navigation:** the app opens on a home screen (play, daily challenge, map,

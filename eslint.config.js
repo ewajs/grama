@@ -8,7 +8,7 @@ import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 
 export default defineConfig(
-  { ignores: ['dist', 'playwright-report', 'test-results'] },
+  { ignores: ['dist', 'playwright-report', 'test-results', 'guide/.vitepress/cache'] },
   js.configs.recommended,
   ts.configs.strict,
   svelte.configs.recommended,
@@ -26,7 +26,7 @@ export default defineConfig(
   },
   {
     // Tests index into fixtures they just built; `!` is clearer there than guards.
-    files: ['**/*.test.ts', 'tests/**/*.ts'],
+    files: ['**/*.test.ts', 'tests/**/*.ts', 'guide/*.spec.ts'],
     rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
   {

@@ -1,0 +1,40 @@
+/* The game's own brand: its accent and font (src/ui/styles/tokens.css). */
+:root {
+  --vp-c-brand-1: #5b5bd6;
+  --vp-c-brand-2: #4a4ac4;
+  --vp-c-brand-3: #5b5bd6;
+  --vp-c-brand-soft: rgb(91 91 214 / 0.14);
+  --vp-font-family-base: 'Outfit Variable', system-ui, sans-serif;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #7c79f4, #4440c2);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #7c79f4 40%, #f0b93a 60%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+.dark {
+  --vp-c-brand-1: #8b8bf5;
+  --vp-c-brand-2: #a3a3f8;
+  --vp-c-brand-3: #6f6fe0;
+  --vp-c-brand-soft: rgb(139 139 245 / 0.16);
+}
+
+/* Screenshots of the game: phone-sized, framed. */
+.vp-doc img.screen {
+  display: block;
+  width: min(100%, 320px);
+  margin: 1.5rem auto;
+  border-radius: 20px;
+  box-shadow: 0 6px 24px rgb(29 27 46 / 0.18);
+}
+
+.vp-doc .screens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.vp-doc .screens img.screen {
+  width: min(100%, 240px);
+  margin: 0;
+}

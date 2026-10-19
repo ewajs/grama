@@ -180,7 +180,7 @@ Goal: calmer feedback, a tidier menu, a guide for curious players and docs for d
 - [x] Feedback for invalid, repeated and bonus words plays in place (no flying, no jumps)
 - [ ] Menu: small links (Todo sobre Grama · Reportar un problema · Acerca de); Acerca de
       window with version, novedades, "Buscar actualizaciones", credits and licenses
-- [ ] Player guide "Todo sobre Grama" (VitePress, Spanish) at `/grama/guia/`: how to
+- [x] Player guide "Todo sobre Grama" (VitePress, Spanish) at `/grama/guia/`: how to
       play, which words count, how levels and difficulty work, hints, stars, achievements,
       the daily challenge, FAQ; screenshots generated with Playwright
 - [ ] Developer docs (TypeDoc, English) at `/grama/docs/`: API reference plus guides (how
