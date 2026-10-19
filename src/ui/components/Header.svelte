@@ -3,24 +3,31 @@
 The top bar: the level number and the score, which counts up when points are won.
 
 - `level`: level number as shown to the player.
+- `tier`: how hard the level is; hard and extra-hard levels show a badge.
 - `score`: total points.
 - `onmenu()`: the player wants the menu.
 -->
 <script lang="ts">
   import { cubicOut } from 'svelte/easing';
   import { Tween } from 'svelte/motion';
+  import type { Tier } from '../../core/difficulty';
   import { strings } from '../../i18n';
   import { SCORE_COUNT_DURATION } from '../lib/motion';
 
-  type Props = { level: number; score: number; onmenu: () => void };
-  let { level, score, onmenu }: Props = $props();
+  type Props = { level: number; tier: Tier; score: number; onmenu: () => void };
+  let { level, tier, score, onmenu }: Props = $props();
 
   // Follows `score`, moving smoothly from the old value to the new one.
   const shown = Tween.of(() => score, { duration: SCORE_COUNT_DURATION, easing: cubicOut });
 </script>
 
 <header>
-  <span>{strings.level(level)}</span>
+  <div class="level">
+    <span>{strings.level(level)}</span>
+    {#if tier === 'hard' || tier === 'extra'}
+      <span class="badge {tier}">{strings.tiers[tier]}</span>
+    {/if}
+  </div>
   <div class="end">
     <span class="score" aria-label={strings.score}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -44,6 +51,28 @@ The top bar: the level number and the score, which counts up when points are won
     align-self: stretch;
     font-size: var(--text-lg);
     font-weight: var(--weight-medium);
+  }
+
+  .level {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .badge {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-full);
+    color: var(--color-accent-contrast);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+  }
+
+  .hard {
+    background: var(--color-bonus);
+  }
+
+  .extra {
+    background: var(--color-danger);
   }
 
   .end {

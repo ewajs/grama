@@ -1,3 +1,4 @@
+import type { Difficulty } from '../core/cadence';
 import type { Settings, Theme } from '../storage/settings';
 
 /**
@@ -23,6 +24,14 @@ export class Preferences {
   }
   set theme(theme: Theme) {
     this.#update({ theme });
+  }
+
+  /** How hard levels are, from the next one on. */
+  get difficulty(): Difficulty {
+    return this.#settings.difficulty;
+  }
+  set difficulty(difficulty: Difficulty) {
+    this.#update({ difficulty });
   }
 
   /** Whether to vibrate on touch. */

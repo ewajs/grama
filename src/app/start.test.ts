@@ -19,7 +19,8 @@ describe('startState', () => {
 
   it('continues the saved game, or starts a new one', () => {
     expect(startState(saved, null)).toBe(saved);
-    expect(startState(null, null)).toBe(NEW_GAME);
+    expect(startState(null, null)).toEqual(NEW_GAME);
+    expect(startState(null, null, 'relaxed').difficulty).toBe('relaxed');
   });
 
   it('jumps to the level in the URL, keeping the score', () => {

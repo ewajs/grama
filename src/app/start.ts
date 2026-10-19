@@ -1,3 +1,4 @@
+import type { Difficulty } from '../core/cadence';
 import { NEW_GAME, type GameState } from '../core/game';
 
 /**
@@ -11,11 +12,15 @@ export function levelFromUrl(search: string): number | null {
 }
 
 /**
- * Where the game starts: the saved game (or a new one), moved to the level in the URL
- * when there is one, keeping the score.
+ * Where the game starts: the saved game (or a new one at the player's difficulty), moved
+ * to the level in the URL when there is one, keeping the score.
  */
-export function startState(saved: GameState | null, levelInUrl: number | null): GameState {
-  const state = saved ?? NEW_GAME;
+export function startState(
+  saved: GameState | null,
+  levelInUrl: number | null,
+  difficulty: Difficulty = 'normal',
+): GameState {
+  const state = saved ?? { ...NEW_GAME, difficulty };
   return levelInUrl === null
     ? state
     : { ...state, levelNumber: levelInUrl, found: [], revealed: {} };

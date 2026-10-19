@@ -7,6 +7,9 @@ export const STARTING_HINTS = 3;
 /** Bonus words to find for each hint earned. */
 export const BONUS_WORDS_PER_HINT = 5;
 
+/** Hints earned for completing an extra-hard level. */
+export const EXTRA_HARD_HINTS = 1;
+
 /** The state after finding a bonus word: a step closer to the next hint, or a hint earned. */
 export function countBonusWord(state: GameState): GameState {
   const progress = state.bonusTowardHint + 1;

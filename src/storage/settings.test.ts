@@ -16,7 +16,12 @@ describe('settings', () => {
 
   it('restore what was saved', () => {
     const storage = memoryStorage();
-    const settings = { theme: 'dark', vibration: false, tutorialSeen: true } as const;
+    const settings = {
+      theme: 'dark',
+      difficulty: 'challenging',
+      vibration: false,
+      tutorialSeen: true,
+    } as const;
     saveSettings(settings, storage);
     expect(loadSettings(storage)).toEqual(settings);
   });
