@@ -52,16 +52,14 @@ Spanish rules:
 
 ### Level shape
 
-A level is static data, fully self-contained (no global dictionary is shipped):
+A level is static, self-contained data (no global dictionary is shipped): the
+letters on the wheel (a letter may repeat), its target words and its bonus words.
+The type is `Level` in `src/core/level.ts`. A level is valid when:
 
-```ts
-type Level = {
-  id: string;
-  letters: string[]; // normalized, e.g. ["C","A","S","I","L","F"]
-  targets: string[]; // the board: words the level requires
-  bonus: string[]; // every other valid word formable from `letters`
-};
-```
+- it has at least 6 letters;
+- every word has 3+ letters and can be spelled with the level's letters, each used once;
+- no word appears twice, across targets and bonus;
+- at least one target uses every letter.
 
 Difficulty ramps with the level number: more letters, more and longer targets.
 
