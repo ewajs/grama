@@ -51,3 +51,29 @@ export function extendPath(path: readonly number[], index: number | null): reado
   if (path.includes(index)) return path;
   return [...path, index];
 }
+
+/**
+ * The selected letters after a tap on letter `index` (pressed and released without
+ * dragging): a new letter is added, the last one is taken back, and any other selected
+ * letter changes nothing.
+ * @param path Indices of the selected letters, in order.
+ */
+export function tapLetter(path: readonly number[], index: number): readonly number[] {
+  if (index === path.at(-1)) return path.slice(0, -1);
+  if (path.includes(index)) return path;
+  return [...path, index];
+}
+
+/**
+ * The selected letters after typing `letter` on a keyboard: the first tile with that
+ * letter not selected yet is added; with none left, nothing changes.
+ * @param letters The tiles' letters, in display order.
+ */
+export function typeLetter(
+  path: readonly number[],
+  letters: readonly string[],
+  letter: string,
+): readonly number[] {
+  const index = letters.findIndex((other, at) => other === letter && !path.includes(at));
+  return index === -1 ? path : [...path, index];
+}

@@ -224,7 +224,7 @@ pay nothing twice, stats never go down; CI goes red on a broken build or flow.
 
 ### M14 — Faster & friendlier · `v0.15.0`
 
-- [ ] Typing on desktop (letters + Enter, Backspace, Escape) and tap-to-select letters
+- [x] Typing on desktop (letters + Enter, Backspace, Escape) and tap-to-select letters
 - [ ] Sound effects (letter tick, word chime, level done) with a setting
 - [ ] Fast start: pre-normalized word lists, Home shown before they load; performance
       budget (< 100 KB JS gz, Lighthouse ≥ 90 on mobile)

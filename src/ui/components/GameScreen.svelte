@@ -17,6 +17,7 @@ letter wheel with its controls.
   import { vibrate } from '../lib/haptics';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
+  import { spanish } from '../../core/spanish';
   import { strings } from '../../i18n';
   import { FEEDBACK_DURATION } from '../lib/motion';
   import Board from './Board.svelte';
@@ -54,6 +55,9 @@ letter wheel with its controls.
   let defining = $state('');
   /** The word being spelled on the wheel right now. */
   let word = $state('');
+  /** Whether that word was tapped or typed, and waits to be submitted. */
+  let waiting = $state(false);
+  let wheel: LetterWheel;
   /** The last submitted word's result, shown briefly. */
   let result = $state<{ id: number; submission: Submission } | null>(null);
   let resultCount = 0;
@@ -73,10 +77,28 @@ letter wheel with its controls.
     },
   );
 
-  function spell(next: string) {
+  function spell(next: string, waits: boolean) {
     if (preferences.vibration && next.length > word.length) vibrate('letter');
     word = next;
+    waiting = waits;
     if (next) result = null;
+  }
+
+  /**
+   * Typing on a keyboard: letters spell, Backspace erases, Enter submits, Escape clears.
+   * With no word started, Enter and the rest do what they would (e.g. press a button).
+   */
+  function key(event: KeyboardEvent) {
+    if (panel !== null || game.complete || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (word && event.key === 'Enter') wheel.submit();
+    else if (word && event.key === 'Backspace') wheel.erase();
+    else if (word && event.key === 'Escape') wheel.clear();
+    else if (event.key.length === 1) {
+      const letter = spanish.normalize(event.key);
+      if (/^[A-ZÑ]$/.test(letter)) wheel.type(letter);
+      else return;
+    } else return;
+    event.preventDefault();
   }
 
   function nextLevel() {
@@ -115,6 +137,8 @@ letter wheel with its controls.
   }
 </script>
 
+<svelte:window onkeydown={key} />
+
 <main>
   <Header
     title={game.daily
@@ -139,10 +163,10 @@ letter wheel with its controls.
     />
   </div>
 
-  <WordPill {word} result={shown} />
+  <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
 
   <div class="controls">
-    <LetterWheel {tiles} onword={spell} onsubmit={submit} />
+    <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
     <button class="shuffle" aria-label={strings.shuffle} onclick={() => (tiles = shuffled(tiles))}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />

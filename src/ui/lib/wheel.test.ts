@@ -5,6 +5,8 @@ import {
   LETTER_RADIUS,
   letterAt,
   letterPositions,
+  tapLetter,
+  typeLetter,
   RING_RADIUS,
   type Point,
 } from './wheel';
@@ -74,5 +76,33 @@ describe('extendPath', () => {
     expect(extendPath(path, 5)).toBe(path);
     expect(extendPath(path, null)).toBe(path);
     expect(extendPath(path, 0)).toBe(path);
+  });
+});
+
+describe('tapLetter', () => {
+  it('adds a new letter and takes back the last one', () => {
+    expect(tapLetter([], 2)).toEqual([2]);
+    expect(tapLetter([2], 0)).toEqual([2, 0]);
+    expect(tapLetter([2, 0], 0)).toEqual([2]);
+  });
+
+  it('ignores a letter selected earlier', () => {
+    const path = [2, 0];
+    expect(tapLetter(path, 2)).toBe(path);
+  });
+});
+
+describe('typeLetter', () => {
+  const letters = ['C', 'A', 'S', 'A'];
+
+  it('takes the first tile with that letter not used yet', () => {
+    expect(typeLetter([], letters, 'A')).toEqual([1]);
+    expect(typeLetter([1], letters, 'A')).toEqual([1, 3]);
+  });
+
+  it('changes nothing when no such letter is left', () => {
+    const path = [1, 3];
+    expect(typeLetter(path, letters, 'A')).toBe(path);
+    expect(typeLetter(path, letters, 'Z')).toBe(path);
   });
 });

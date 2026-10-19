@@ -25,6 +25,31 @@ test('a drag the system cancels submits nothing', async ({ page }) => {
   await expect(page.getByLabel('Puntos')).toHaveText('0');
 });
 
+test('a word can be typed on a keyboard', async ({ page }) => {
+  await openGame(page);
+  await page.locator('[data-letter]').first().waitFor();
+  await page.keyboard.type(target.toLowerCase());
+  await page.keyboard.press('Backspace');
+  await page.keyboard.type(target.at(-1)!.toLowerCase());
+  await page.keyboard.press('Enter');
+  await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
+});
+
+test('a word can be tapped letter by letter, then tried from the pill', async ({ page }) => {
+  await openGame(page);
+  const letters = page.locator('[data-letter]');
+  await letters.first().waitFor();
+  const used = new Set<number>();
+  for (const letter of target) {
+    const all = await letters.evaluateAll((nodes) => nodes.map((node) => node.textContent?.trim()));
+    const index = all.findIndex((other, at) => other === letter && !used.has(at));
+    used.add(index);
+    await letters.nth(index).click();
+  }
+  await page.getByRole('button', { name: `Probar ${target}` }).click();
+  await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
+});
+
 test('letters can still be dragged after shuffling', async ({ page }) => {
   await openGame(page);
   const order = () =>

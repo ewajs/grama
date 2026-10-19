@@ -13,7 +13,12 @@ change that alters a rule, so code and spec never drift.
    one (undo while dragging).
 3. Lifting the finger (or mouse button) **submits** the word. Letting go with a single
    letter selected cancels silently, and so does a drag the system interrupts (an edge
-   swipe, a call).
+   swipe, a call). Two other ways to spell:
+   - **Tap** letters one by one: the word waits in the pill, with a check; tapping the
+     pill submits it. Tapping the last letter again takes it back; tapping the wheel
+     between letters starts over. Shuffling drops a waiting word.
+   - **Type** on a keyboard (accents ignored, `Ñ` included): Enter submits, Backspace
+     takes back the last letter, Escape clears.
 4. The submission is evaluated:
 
    | Result     | Condition                                  | Points | Feedback                                   |
@@ -168,8 +173,8 @@ Rough layout (portrait phone):
 └───────────────────────────┘
 ```
 
-Desktop: same layout, centered, max width ~480px. Mouse drag works the same;
-typing on the keyboard + Enter is planned (M14 in PLAN.md).
+Desktop: same layout, centered, max width ~480px. Mouse drag works the same, and so
+does typing.
 
 ### Motion
 
