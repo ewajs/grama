@@ -12,6 +12,7 @@
   import GameScreen from './ui/components/GameScreen.svelte';
   import Home from './ui/components/Home.svelte';
   import LevelMap from './ui/components/LevelMap.svelte';
+  import StatsScreen from './ui/components/StatsScreen.svelte';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const words = loadWords();
@@ -58,6 +59,8 @@
       }}
       onback={() => navigation.back()}
     />
+  {:else if navigation.screen === 'stats'}
+    <StatsScreen {game} onback={() => navigation.back()} />
   {:else}
     <Home
       {game}
@@ -66,6 +69,7 @@
         navigation.go('game');
       }}
       onmap={() => navigation.go('map')}
+      onstats={() => navigation.go('stats')}
     />
   {/if}
 {:catch}
