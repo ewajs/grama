@@ -139,7 +139,41 @@ Goal: levels vary in difficulty with a deliberate rhythm, and players choose how
 **Verify:** tier shares over 1,000 levels match the cadence; extra-hard levels feel hard
 but fair in playtests.
 
-### M9 — Polish · `v0.10.0`
+### M9 — Progress · `v0.10.0`
+
+Goal: a reason to keep going: a record of every level, stars to earn, things to unlock.
+
+- [ ] Split the level being played (session) from the player's progress, so main levels,
+      replays and daily challenges share the same rules
+- [ ] History of completed levels with stars (★★★ no hints and 3+ bonus words; ★★ at most
+      one hint; ★ completed)
+- [ ] Home screen: Jugar · Nivel N, Desafío del día, Mapa, Logros; back from the game
+- [ ] Level map: every level so far with its tier and stars; replay a completed one (keeps
+      the best stars, never moves progress)
+- [ ] Stats screen: levels by tier, stars, words and bonus words found, hints used
+- [ ] Achievements: ~15 to unlock, shown on the stats screen, with a toast when earned
+
+**Verify:** history and stars survive reloads; replaying never changes the current level.
+
+### M10 — Daily challenge · `v0.11.0`
+
+- [ ] One 7-letter level per day, the same for everyone, harder through the week (Monday
+      easy … Sunday extra hard), with its own progress
+- [ ] Streak of consecutive days; daily stats and achievements
+- [ ] Share the result (Web Share, or copy): "Grama #142 · ★★★ · 0 pistas · 🔥5"
+
+**Verify:** two devices get the same daily level; the streak survives reloads and breaks
+after a missed day.
+
+### M11 — Feel · `v0.12.0`
+
+- [ ] Level-complete celebration: confetti, and a recap of the words found
+- [ ] Found letters fly from the wheel into their row on the board
+- [ ] Tap a found word for a link to its definition (RAE dictionary)
+
+**Verify:** feels good on a phone; respects reduced motion.
+
+### M12 — Polish · `v0.13.0`
 
 - [ ] Visual design pass (level-complete moment, landscape and tablet layouts)
 - [ ] `prefers-reduced-motion`; accessible labels and contrast check
