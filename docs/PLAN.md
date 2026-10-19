@@ -168,7 +168,7 @@ after a missed day.
 ### M11 — Feel · `v0.12.0`
 
 - [x] Level-complete celebration: confetti, and a recap of the words found
-- [ ] Found letters fly from the wheel into their row on the board
+- [x] Found letters fly from the wheel into their row on the board
 - [ ] Tap a found word for a link to its definition (RAE dictionary)
 
 **Verify:** feels good on a phone; respects reduced motion.
