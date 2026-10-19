@@ -43,8 +43,8 @@ The home screen: where the app opens. Continue the game from here; more is comin
   <button class="play" onclick={onplay}>
     <span class="label">{strings.continuePlaying}</span>
     <span class="detail">
-      {strings.level(game.levelNumber)}
-      <span class="badge {game.tier}">{strings.tiers[game.tier]}</span>
+      {strings.level(game.currentLevel)}
+      <span class="badge {game.currentTier}">{strings.tiers[game.currentTier]}</span>
     </span>
   </button>
 

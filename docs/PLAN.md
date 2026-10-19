@@ -205,7 +205,7 @@ Goal: fix what the M12 code review found, and guard against it coming back.
       the session keeps what it paid, and Level Complete shows only that
 - [x] Stats only grow: cumulative counters and sticky achievements; dailies count toward
       the tier achievements
-- [ ] Home shows the current level and its tier after a replay or daily; sharing uses the
+- [x] Home shows the current level and its tier after a replay or daily; sharing uses the
       played date; the clock is injected and the daily refreshes when the app resumes
 - [ ] Input and motion: a cancelled drag clears instead of submitting; dialogs fade out
       without delay; board rows keyed by slot so letters fly to the right row

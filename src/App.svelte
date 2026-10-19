@@ -15,10 +15,11 @@
   import StatsScreen from './ui/components/StatsScreen.svelte';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
-  const words = loadWords();
   const settings = loadSettings();
   const levelInUrl = levelFromUrl(location.search);
   const start = startState(loadGame(), levelInUrl, settings.difficulty);
+  // One game for the whole visit, kept while moving between screens.
+  const game = loadWords().then((words) => new Game(words, start, saveGame));
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
   // ?nivel= is for playtesting: straight into that level.
@@ -41,13 +42,20 @@
       meta.content = BAR_COLOR[theme === 'auto' ? scheme : theme];
     }
   });
+
+  // Back from the background (a PWA can sleep for days), the daily may have changed.
+  $effect(() => {
+    const refresh = async () => {
+      if (document.visibilityState === 'visible') (await game).refreshDate();
+    };
+    document.addEventListener('visibilitychange', refresh);
+    return () => document.removeEventListener('visibilitychange', refresh);
+  });
 </script>
 
-{#await words}
+{#await game}
   <p class="status">{strings.loading}</p>
-{:then words}
-  <!-- One game for the whole visit, kept while moving between screens. -->
-  {@const game = new Game(words, start, saveGame)}
+{:then game}
   {#if navigation.screen === 'game'}
     <GameScreen {game} {preferences} {installer} onback={() => navigation.back()} />
   {:else if navigation.screen === 'map'}

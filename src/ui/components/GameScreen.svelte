@@ -89,17 +89,18 @@ letter wheel with its controls.
     }
   }
 
-  /** Shares today's daily result; returns how it went. */
-  function shareDaily() {
-    const { today } = game;
+  /** Shares the result of the daily on screen; returns how it went. */
+  async function shareDaily(): Promise<'shared' | 'copied' | 'failed'> {
+    const daily = game.dailyOnScreen;
+    if (!daily) return 'failed';
     return shareText(
       strings.shareText({
-        number: today.number,
-        weekday: strings.weekday(today.date),
-        tier: strings.tiers[today.tier],
+        number: daily.number,
+        weekday: strings.weekday(daily.date),
+        tier: strings.tiers[daily.tier],
         stars: game.stars,
         hints: game.hintsUsed,
-        streak: today.streak,
+        streak: daily.streak,
         url: location.origin + import.meta.env.BASE_URL,
       }),
     );
