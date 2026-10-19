@@ -1,6 +1,7 @@
 <!-- @component Root of the app: loads the words, then starts or resumes the game. -->
 <script lang="ts">
   import { Game } from './app/game.svelte';
+  import { Installer } from './app/install.svelte';
   import { Preferences } from './app/preferences.svelte';
   import { levelFromUrl, startState } from './app/start';
   import { loadWords } from './content';
@@ -16,6 +17,7 @@
   history.replaceState(null, '', location.pathname);
 
   const preferences = new Preferences(loadSettings(), saveSettings);
+  const installer = new Installer();
 
   // The browser bar's color for each theme (the page background's top).
   const BAR_COLOR = { light: '#f7f6fc', dark: '#16152a' };
@@ -36,7 +38,7 @@
 {#await words}
   <p class="status">{strings.loading}</p>
 {:then words}
-  <GameScreen game={new Game(words, start, saveGame)} {preferences} />
+  <GameScreen game={new Game(words, start, saveGame)} {preferences} {installer} />
 {:catch}
   <p class="status">{strings.loadError}</p>
 {/await}

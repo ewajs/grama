@@ -114,9 +114,9 @@ Goal: one place for options, and a first launch that teaches the game.
 - [x] Menu panel from the header, with settings saved apart from progress; theme
       (Automático / Claro / Oscuro); report moves here; reset progress; about (version,
       word-list credits)
-- [ ] Install the app: the browser's prompt where there is one, steps on iOS; hidden
+- [x] Install the app: the browser's prompt where there is one, steps on iOS; hidden
       when already installed
-- [ ] Vibration on/off, with haptics while dragging and on results
+- [x] Vibration on/off, with haptics while dragging and on results
 - [ ] Difficulty setting (Relajada / Normal / Desafiante), applied from M8
 - [ ] Animated "Cómo jugar" tutorial: on first launch and from the menu
 
