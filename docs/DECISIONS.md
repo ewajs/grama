@@ -18,7 +18,7 @@ delete it, the history is the point.
   most common first (2.49); medium = top 3,000, longest first (2.98); hard = top 8,000,
   longest first (3.51); extra hard = top 20,000, longest first (4.00). The cut-offs sit
   between those medians; the generator retries seeds until the level's score matches.
-  Over 600 levels, 96% land in the requested tier.
+  Over 600 levels, 100% land in the requested tier.
 - **Size and difficulty are separate**: letters and target count grow with progress
   (`SIZES`); the tier only changes which words are targets.
 - **Cadence** (`core/cadence.ts`): easy, medium, medium, hard, easy, medium, extra hard,
