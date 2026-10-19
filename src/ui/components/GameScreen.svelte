@@ -22,6 +22,7 @@ letter wheel with its controls.
   import Board from './Board.svelte';
   import Header from './Header.svelte';
   import HintButton from './HintButton.svelte';
+  import AboutDialog from './AboutDialog.svelte';
   import AchievementToast from './AchievementToast.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import BonusWords from './BonusWords.svelte';
@@ -45,9 +46,9 @@ letter wheel with its controls.
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
   // The tutorial opens by itself on first launch. `untrack` reads the setting once, on
   // purpose: marking it seen later shouldn't change which panel is open.
-  let panel = $state<'menu' | 'tutorial' | 'report' | 'reset' | 'bonus' | 'definition' | null>(
-    untrack(() => (preferences.tutorialSeen ? null : 'tutorial')),
-  );
+  let panel = $state<
+    'menu' | 'tutorial' | 'report' | 'reset' | 'about' | 'bonus' | 'definition' | null
+  >(untrack(() => (preferences.tutorialSeen ? null : 'tutorial')));
   const close = () => (panel = null);
   /** The word whose definition is offered, when that panel is open. */
   let defining = $state('');
@@ -167,7 +168,7 @@ letter wheel with its controls.
     {installer}
     ontutorial={() => (panel = 'tutorial')}
     onreport={() => (panel = 'report')}
-    onreset={() => (panel = 'reset')}
+    onabout={() => (panel = 'about')}
     onclose={close}
   />
 {:else if panel === 'tutorial'}
@@ -179,6 +180,8 @@ letter wheel with its controls.
   />
 {:else if panel === 'report'}
   <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={close} />
+{:else if panel === 'about'}
+  <AboutDialog onreset={() => (panel = 'reset')} onclose={close} />
 {:else if panel === 'reset'}
   <ResetDialog
     onconfirm={() => {

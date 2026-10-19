@@ -136,4 +136,6 @@ First-time setup: `npm install`, plus `npx playwright install chromium` to run e
 ## Commits and releases
 
 - Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-- Tag `v0.N.0` at the end of each milestone and add a changelog line in PLAN.md.
+- At the end of each milestone: set `package.json`'s version to `0.N.0` (the app shows it
+  in Acerca de), add a changelog line in PLAN.md and the players' news in `src/i18n` (`news`),
+  then tag `v0.N.0`.
