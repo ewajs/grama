@@ -3,7 +3,7 @@ import type { GameState } from '../core/game';
 const KEY = 'grama.save';
 
 /** Bump whenever `GameState` changes shape. Pre-1.0 an older save is discarded (D5). */
-const VERSION = 2;
+const VERSION = 3;
 
 type Save = { version: number; state: GameState };
 
@@ -46,6 +46,7 @@ function isSave(value: unknown): value is Save {
     Number.isInteger(state.hints) &&
     Number.isInteger(state.bonusTowardHint) &&
     typeof state.revealed === 'object' &&
-    state.revealed !== null
+    state.revealed !== null &&
+    ['relaxed', 'normal', 'challenging'].includes(state.difficulty ?? '')
   );
 }

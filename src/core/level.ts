@@ -1,3 +1,5 @@
+import type { Tier } from './difficulty';
+
 /** A puzzle: the letters on the wheel and the words they spell. Words are normalized. */
 export type Level = {
   /** Letters on the wheel. A letter may repeat, e.g. two `A`s for `ASADO`. */
@@ -6,6 +8,8 @@ export type Level = {
   targets: readonly string[];
   /** Other valid words the letters spell. Worth points, but not required. */
   bonus: readonly string[];
+  /** How hard its targets are (see `core/difficulty`). */
+  tier: Tier;
 };
 
 /** Shortest word the game accepts. */

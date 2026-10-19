@@ -6,6 +6,7 @@ const level: Level = {
   letters: ['S', 'A', 'L', 'T', 'O', 'P'],
   targets: ['SOL', 'PLATO', 'PLATOS'],
   bonus: ['OLA', 'SAPO'],
+  tier: 'medium',
 };
 
 describe('evaluate', () => {

@@ -7,6 +7,7 @@ const level: Level = {
   letters: ['S', 'A', 'L', 'T', 'O', 'P'],
   targets: ['PLATOS', 'SOL', 'PATO', 'SAL'],
   bonus: ['OLA', 'LOS', 'LAS', 'TOS', 'ASO', 'OSA'],
+  tier: 'medium',
 };
 
 describe('earning hints', () => {

@@ -24,6 +24,7 @@ describe('levelProblems', () => {
     letters: ['S', 'O', 'L', 'A', 'R', 'E'],
     targets: ['SOL', 'ROSAL', 'ORALES'],
     bonus: ['OLA', 'SALE'],
+    tier: 'medium',
   };
 
   it('finds nothing wrong with a valid level', () => {
@@ -31,7 +32,7 @@ describe('levelProblems', () => {
   });
 
   it('requires enough letters', () => {
-    const level = { letters: ['S', 'O', 'L'], targets: ['SOL'], bonus: [] };
+    const level = { ...valid, letters: ['S', 'O', 'L'], targets: ['SOL'], bonus: [] };
     expect(levelProblems(level)).toEqual(['has 3 letters, needs at least 6']);
   });
 

@@ -7,6 +7,7 @@ import {
   submitWord,
   type GameState,
 } from '../core/game';
+import { occurrence, tierFor } from '../core/cadence';
 import { generateLevel } from '../core/generate';
 import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter } from '../core/hints';
 import { boardRows, type BoardRow } from '../core/board';
@@ -36,7 +37,11 @@ export class Game {
     this.#state = $state(state);
     this.#onchange = onchange;
     this.#spellings = words.spellings;
-    this.level = $derived(generateLevel(words.words, this.#state.levelNumber));
+    this.level = $derived.by(() => {
+      const { levelNumber, difficulty } = this.#state;
+      const tier = tierFor(levelNumber, difficulty);
+      return generateLevel(words.words, levelNumber, tier, occurrence(levelNumber, difficulty));
+    });
   }
 
   /** The current level's number, starting at 1. */

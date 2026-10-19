@@ -6,6 +6,7 @@ const level: Level = {
   letters: ['S', 'A', 'L', 'T', 'O', 'P'],
   targets: ['SOL', 'PLATOS'],
   bonus: ['OLA'],
+  tier: 'medium',
 };
 
 describe('submitWord', () => {

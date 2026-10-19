@@ -27,7 +27,7 @@ describe('saving and loading', () => {
   it('discards saves from another version or with an unexpected shape', () => {
     const old = JSON.stringify({ version: 0, state });
     expect(loadGame(memoryStorage({ 'grama.save': old }))).toBeNull();
-    const broken = JSON.stringify({ version: 2, state: { levelNumber: 'x' } });
+    const broken = JSON.stringify({ version: 3, state: { levelNumber: 'x' } });
     expect(loadGame(memoryStorage({ 'grama.save': broken }))).toBeNull();
     expect(loadGame(memoryStorage({ 'grama.save': '{not json' }))).toBeNull();
   });

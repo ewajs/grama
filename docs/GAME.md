@@ -78,9 +78,16 @@ valid word they spell is a bonus word. A level is valid when:
 - no word appears twice, across targets and bonus;
 - at least one target uses every letter.
 
-Difficulty ramps with the level number (`DIFFICULTY` in `src/core/generate.ts`): 6
-letters at first, 7 from level 16 and 8 from level 41, with 6 to 9 targets and, from 8
-letters on, no 3-letter targets.
+Size grows with the level number (`SIZES` in `src/core/generate.ts`): 6 letters at
+first, 7 from level 16 and 8 from level 41, with 6 to 9 targets and, from 8 letters on,
+no 3-letter targets.
+
+### Difficulty
+
+Every level is **easy, medium, hard or extra hard**, scored from how rare and long its
+targets are (D16). Tiers follow a 7-level rhythm (easy, medium, medium, hard, easy,
+medium, extra hard), with an easy level after each extra hard, no extra hard before level
+15, and a harder mix from level 50.
 
 ## UX and visual direction
 
