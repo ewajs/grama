@@ -8,6 +8,17 @@ delete it, the history is the point.
 
 ---
 
+## D17 · A home screen, stars from hints and bonus words, replays, a weekday daily — 2026-10-18
+
+- **Navigation:** the app opens on a home screen (play, daily challenge, map,
+  achievements); the game has a way back. Chosen over header shortcuts (crowded) and a
+  tab bar (takes room from the board).
+- **Stars:** ★★★ no hints and at least 3 bonus words; ★★ at most one hint; ★ completed.
+- **Replays:** completed levels can be replayed from the map, for better stars; a replay
+  never moves the player's current level.
+- **Daily challenge:** 7 letters, difficulty by weekday (Monday easy … Sunday extra hard),
+  the same for everyone so results can be compared.
+
 ## D16 · Difficulty tiers: scored targets, calibrated recipes, a 7-level cadence — 2026-10-18
 
 - **Score** (`core/difficulty.ts`): a level's difficulty is the average over its targets
