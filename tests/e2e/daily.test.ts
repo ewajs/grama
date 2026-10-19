@@ -1,4 +1,8 @@
 import { expect, test } from '@playwright/test';
+import { dateKey } from '../../src/core/daily';
+import type { LevelRecord } from '../../src/core/history';
+import { NEW_PROGRESS } from '../../src/core/progress';
+import { saveGame } from '../../src/storage/save';
 import { todaysDaily } from './level.ts';
 import { drawWord } from './wheel.ts';
 
@@ -28,4 +32,29 @@ test("today's daily challenge can be played, shared and starts a streak", async 
   await expect(page.getByRole('button', { name: /^Desafío del día.*🔥 1/ })).toBeVisible();
   // The main game didn't move.
   await expect(page.getByRole('button', { name: /^Jugar.*Nivel 1/ })).toBeVisible();
+});
+
+test('seven days in a row earn a streak freeze, shown on the home screen', async ({ page }) => {
+  const record: LevelRecord = {
+    tier: 'easy',
+    difficulty: 'normal',
+    occurrence: 0,
+    stars: 2,
+    hints: 0,
+    bonus: 0,
+    targets: 8,
+  };
+  const dailies: Record<string, LevelRecord> = {};
+  for (let back = 1; back <= 7; back++) {
+    const date = new Date();
+    date.setDate(date.getDate() - back);
+    dailies[dateKey(date)] = record;
+  }
+  let saved = '';
+  saveGame({ ...NEW_PROGRESS, dailies }, { setItem: (_key, value) => (saved = value) });
+  await page.addInitScript((save) => localStorage.setItem('grama.save', save), saved);
+  await page.goto('./');
+  const daily = page.getByRole('button', { name: /^Desafío del día/ });
+  await expect(daily).toContainText('🔥 7');
+  await expect(daily.getByRole('img', { name: /Racha protegida/ })).toBeVisible();
 });

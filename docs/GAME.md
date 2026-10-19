@@ -60,7 +60,10 @@ changes the current level.
 One level per date (the player's own), the same for everyone: 7 letters, up to 8 targets, and a
 difficulty by weekday (Monday–Tuesday easy, Wednesday–Thursday medium, Friday–Saturday
 hard, Sunday extra hard). It's saved as it's played; completing it records the date and
-keeps a **streak** of consecutive days, alive until the day without one ends. The result
+keeps a **streak** of consecutive days, alive until the day without one ends. Every 7
+days in a row earn a **streak freeze** (one held at a time, shown as ❄️ on Home): a
+missed day spends it and the streak holds; two missed days in a row, or one without a
+freeze, end it (`streakOf`). The result
 can be shared: "Grama #3 · Miércoles · Media / ★★☆ · 1 pista · 🔥 3". Points and hints are
 shared with the main game; it never moves the current level.
 

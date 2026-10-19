@@ -59,6 +59,9 @@ The home screen: where the app opens. Continue the game from here; more is comin
       {#if today.streak > 0}
         <span class="streak">{strings.streak(today.streak)}</span>
       {/if}
+      {#if today.freezes > 0}
+        <span role="img" aria-label={strings.streakFreeze} title={strings.streakFreeze}>❄️</span>
+      {/if}
     </span>
   </button>
 

@@ -7,7 +7,7 @@
 import { unlocked, type AchievementId } from '../core/achievements';
 import { boardRows, type BoardRow } from '../core/board';
 import { occurrence, tierFor, type Difficulty } from '../core/cadence';
-import { dailyFor, dailyNumber, dailyTier, generateDaily, streak } from '../core/daily';
+import { dailyFor, dailyNumber, dailyTier, generateDaily, streakOf } from '../core/daily';
 import type { Tier } from '../core/difficulty';
 import type { Submission } from '../core/evaluate';
 import { generateLevel } from '../core/generate';
@@ -51,6 +51,8 @@ export type DailySummary = {
   result: LevelRecord | undefined;
   /** Consecutive days completed up to it, still alive through the day before. */
   streak: number;
+  /** Streak freezes in hand: missed days the streak would survive. */
+  freezes: number;
 };
 
 /**
@@ -350,12 +352,14 @@ export class Game {
   }
 
   #dailySummary(date: string): DailySummary {
+    const { current, freezes } = streakOf(this.#progress.dailies, date);
     return {
       number: dailyNumber(date),
       date,
       tier: dailyTier(date),
       result: this.#progress.dailies[date],
-      streak: streak(this.#progress.dailies, date),
+      streak: current,
+      freezes,
     };
   }
 

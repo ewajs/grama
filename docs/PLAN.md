@@ -229,7 +229,7 @@ pay nothing twice, stats never go down; CI goes red on a broken build or flow.
 - [x] Fast start: Home shown before the words load (fetched at low priority), word list
       built 2× faster; performance budget in CI (< 100 KB JS gz; now 45 KB); Lighthouse
       mobile 92 (was 78)
-- [ ] Streak freeze: one missed day doesn't break the daily streak (earned, not bought)
+- [x] Streak freeze: one missed day doesn't break the daily streak (earned, not bought)
 
 **Verify:** a cold start on a mid-range phone shows Home in under a second; the game is
 playable with only a keyboard.
