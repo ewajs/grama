@@ -6,6 +6,7 @@
   import { strings } from './i18n';
   import { loadGame, saveGame } from './storage/save';
   import GameScreen from './ui/components/GameScreen.svelte';
+  import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const words = loadWords();
   const start = startState(loadGame(), levelFromUrl(location.search));
@@ -20,6 +21,8 @@
 {:catch}
   <p class="status">{strings.loadError}</p>
 {/await}
+
+<UpdatePrompt />
 
 <style>
   .status {

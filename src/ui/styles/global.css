@@ -7,6 +7,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  /* No pull-to-refresh or rubber-banding: it's an app, not a page. */
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
   min-height: 100dvh;
@@ -16,4 +22,7 @@ body {
   background: linear-gradient(var(--color-bg-top), var(--color-bg-bottom)) fixed;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }

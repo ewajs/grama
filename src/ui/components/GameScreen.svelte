@@ -93,7 +93,8 @@ letter wheel with its controls.
     height: 100dvh;
     max-width: 480px;
     margin: 0 auto;
-    padding: var(--space-3) var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));
+    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4)
+      max(var(--space-4), env(safe-area-inset-bottom));
   }
 
   .board {

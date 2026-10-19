@@ -85,9 +85,9 @@ Goal: installable, works offline, never loses progress.
 
 - [x] Versioned `localStorage` save (current level, score, found words); pre-1.0 an
       unknown version is simply discarded
-- [ ] Manifest, icons, theme color, `base` path for Pages
-- [ ] Service worker: precache app + word lists; update prompt on new version
-- [ ] Safe-area insets, standalone display, no pull-to-refresh/overscroll
+- [x] Manifest, icons, theme color, `base` path for Pages
+- [x] Service worker: precache app + word lists; update prompt on new version
+- [x] Safe-area insets, standalone display, no pull-to-refresh/overscroll
 
 **Verify:** install on Android and iOS; play offline in airplane mode; reload keeps progress.
 
@@ -128,6 +128,8 @@ enough context to reproduce.
 
 ## Changelog
 
+- **v0.6.0** (M5) — Progress saved across reloads; installable app with its own icon,
+  playable offline (app and word lists cached), update prompt, safe areas, no overscroll.
 - **v0.5.0** (M4) — Endless levels generated on the device from Spanish word lists (RLA-ES
   es_AR + wordfreq), difficulty curve from 6 to 8 letters, `?nivel=N`, bigger board that
   never jumps, reliable swipes on 8-letter wheels. MIT license and third-party notices.
