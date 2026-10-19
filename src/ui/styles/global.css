@@ -59,3 +59,15 @@ body {
 .secondary:active {
   scale: 0.96;
 }
+
+/* Less motion when the device asks for it: CSS animations and transitions end at once.
+   Svelte transitions do the same through ui/lib/motion and ui/lib/fly. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

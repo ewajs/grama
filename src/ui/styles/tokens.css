@@ -18,6 +18,11 @@
   --color-success: light-dark(#2f9e6e, #4cc38a);
   --color-bonus: light-dark(#d99a14, #f0b93a);
   --color-danger: light-dark(#e5484d, #f26c70);
+  /* The same hues dark enough for text on a light surface, or behind white text (WCAG AA,
+     4.5:1). The ones above are for fills, rings and icons. */
+  --color-success-strong: light-dark(#1f7a52, #4cc38a);
+  --color-bonus-strong: light-dark(#9a6200, #f0b93a);
+  --color-danger-strong: light-dark(#c62f35, #f26c70);
   --color-tile: light-dark(#ffffff, #2a2942);
   --color-tile-border: light-dark(#dcd9ec, #3a3956);
 

@@ -8,9 +8,8 @@ A level's stars: three, filled as earned. They can pop in one after another.
 -->
 <script lang="ts">
   import { backOut } from 'svelte/easing';
-  import { scale } from 'svelte/transition';
   import { strings } from '../../i18n';
-  import { DURATION } from '../lib/motion';
+  import { DURATION, scale } from '../lib/motion';
 
   type Props = { stars: number; size?: number; delay?: number };
   let { stars, size = 20, delay }: Props = $props();

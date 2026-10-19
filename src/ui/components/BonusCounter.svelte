@@ -62,7 +62,7 @@ the next hint. Pulses when the count goes up.
     cursor: pointer;
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
-    color: var(--color-bonus);
+    color: var(--color-bonus-strong);
     font-weight: var(--weight-bold);
   }
 

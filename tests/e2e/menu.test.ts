@@ -103,3 +103,23 @@ test('Acerca de shows the version and checks for updates', async ({ page }) => {
   await about.getByRole('button', { name: 'Buscar actualizaciones' }).click();
   await expect(about.getByRole('status')).toHaveText('Ya tenés la última versión.');
 });
+
+test('a dialog keeps focus inside and gives it back when it closes', async ({
+  page,
+  browserName,
+}) => {
+  // Safari neither focuses a button on click nor tabs to buttons by default.
+  test.skip(browserName === 'webkit', 'Safari moves focus differently');
+  await openGame(page);
+  const menuButton = page.getByRole('button', { name: 'Abrir el menú' });
+  await menuButton.click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  for (let step = 0; step < 12; step++) {
+    await page.keyboard.press('Tab');
+    expect(await dialog.evaluate((node) => node.contains(document.activeElement))).toBe(true);
+  }
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(menuButton).toBeFocused();
+});

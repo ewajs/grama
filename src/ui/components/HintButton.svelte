@@ -9,9 +9,8 @@ changes (a hint earned or spent).
 -->
 <script lang="ts">
   import { backOut } from 'svelte/easing';
-  import { scale } from 'svelte/transition';
   import { strings } from '../../i18n';
-  import { DURATION } from '../lib/motion';
+  import { DURATION, scale } from '../lib/motion';
 
   type Props = { count: number; disabled: boolean; onhint: () => void };
   let { count, disabled, onhint }: Props = $props();

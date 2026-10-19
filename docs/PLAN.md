@@ -213,7 +213,7 @@ Goal: fix what the M12 code review found, and guard against it coming back.
       the save; the screenshots spec stops hard-coding the save
 - [x] CI on PRs runs `build` and e2e (Chromium + WebKit, touch on the phone project);
       D10 replaced by D20, which also states the supported browsers (iOS 16.4+)
-- [ ] Accessibility: native `<dialog>` with focus handling; tier badge contrast (AA);
+- [x] Accessibility: native `<dialog>` with focus handling; tier badge contrast (AA);
       reduced motion in every transition
 - [ ] CLAUDE.md slimmed: imports CONTRIBUTING and a short list of invariants, points to
       GAME / PLAN / DECISIONS by path; docs resynced with the code (GAME.md, PLAN.md, D12,
