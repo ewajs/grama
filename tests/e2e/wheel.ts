@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 /** Drags across the wheel's letters to spell `word`, then releases. */
 export async function drawWord(page: Page, word: string): Promise<void> {
   const letters = page.locator('[data-letter]');
+  await letters.first().waitFor(); // the wheel appears once the words have loaded
   const available = await letters.evaluateAll((elements) =>
     elements.map((element) => {
       const box = element.getBoundingClientRect();
