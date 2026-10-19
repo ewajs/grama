@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { NEW_GAME, nextLevel, submitWord } from './game';
-import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter, STARTING_HINTS } from './hints';
+import {
+  BONUS_WORDS_PER_HINT,
+  EXTRA_HARD_HINTS,
+  hintTarget,
+  revealLetter,
+  STARTING_HINTS,
+} from './hints';
 import type { Level } from './level';
 
 const level: Level = {
@@ -24,6 +30,16 @@ describe('earning hints', () => {
     expect(state.bonusTowardHint).toBe(0);
     state = submitWord(state, level, level.bonus[BONUS_WORDS_PER_HINT]!).state;
     expect(state.bonusTowardHint).toBe(1);
+  });
+
+  it('earns one for finishing an extra-hard level', () => {
+    const extra = { ...level, tier: 'extra' as const };
+    let state = NEW_GAME;
+    for (const word of extra.targets) state = submitWord(state, extra, word).state;
+    expect(state.hints).toBe(STARTING_HINTS + EXTRA_HARD_HINTS);
+    let easy = NEW_GAME;
+    for (const word of level.targets) easy = submitWord(easy, level, word).state;
+    expect(easy.hints).toBe(STARTING_HINTS);
   });
 
   it('does not count targets', () => {

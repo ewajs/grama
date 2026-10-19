@@ -7,7 +7,8 @@ import {
   submitWord,
   type GameState,
 } from '../core/game';
-import { occurrence, tierFor } from '../core/cadence';
+import { occurrence, tierFor, type Difficulty } from '../core/cadence';
+import type { Tier } from '../core/difficulty';
 import { generateLevel } from '../core/generate';
 import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter } from '../core/hints';
 import { boardRows, type BoardRow } from '../core/board';
@@ -135,16 +136,21 @@ export class Game {
     this.#update(revealLetter(this.#state, this.level));
   }
 
-  /** Starts over from level 1, as a new game. */
-  reset(): void {
+  /** Starts over from level 1, as a new game at the given difficulty. */
+  reset(difficulty: Difficulty): void {
     this.#rejected = [];
-    this.#update(NEW_GAME);
+    this.#update({ ...NEW_GAME, difficulty });
   }
 
-  /** Moves on to the next level. */
-  next(): void {
+  /** How hard the current level is. */
+  get tier(): Tier {
+    return this.level.tier;
+  }
+
+  /** Moves on to the next level, at the player's current difficulty. */
+  next(difficulty: Difficulty): void {
     this.#rejected = [];
-    this.#update(nextLevel(this.#state));
+    this.#update(nextLevel(this.#state, difficulty));
   }
 
   /** A link to report a problem with the current level on GitHub. */

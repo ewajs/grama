@@ -69,7 +69,7 @@ letter wheel with its controls.
 
   function nextLevel() {
     result = null;
-    game.next();
+    game.next(preferences.difficulty);
   }
 
   function submit(next: string) {
@@ -82,7 +82,12 @@ letter wheel with its controls.
 </script>
 
 <main>
-  <Header level={game.levelNumber} score={game.score} onmenu={() => (panel = 'menu')} />
+  <Header
+    level={game.levelNumber}
+    tier={game.tier}
+    score={game.score}
+    onmenu={() => (panel = 'menu')}
+  />
 
   <div class="board">
     <Board rows={game.board} glow={repeated && game.written(repeated)} />
@@ -134,7 +139,7 @@ letter wheel with its controls.
   <ResetDialog
     onconfirm={() => {
       result = null;
-      game.reset();
+      game.reset(preferences.difficulty);
       close();
     }}
     onclose={close}
@@ -151,6 +156,7 @@ letter wheel with its controls.
 {#if game.complete}
   <LevelComplete
     level={game.levelNumber}
+    tier={game.tier}
     points={game.levelPoints}
     bonus={game.bonusFound}
     onnext={nextLevel}

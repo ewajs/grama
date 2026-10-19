@@ -57,3 +57,21 @@ test('the vibration switch survives a reload', async ({ page }) => {
   await openMenu(page);
   await expect(page.getByRole('switch', { name: 'Vibración' })).not.toBeChecked();
 });
+
+test('the difficulty setting survives a reload', async ({ page }) => {
+  await page.goto('./');
+  await openMenu(page);
+  await page.getByRole('radio', { name: 'Desafiante' }).click();
+  await page.reload();
+  await openMenu(page);
+  await expect(page.getByRole('radio', { name: 'Desafiante' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+});
+
+test('extra-hard levels show their badge', async ({ page }) => {
+  // Level 21 closes the third 7-level cycle: extra hard (see core/cadence.ts).
+  await page.goto('./?nivel=21');
+  await expect(page.getByText('Extra difícil')).toBeVisible();
+});

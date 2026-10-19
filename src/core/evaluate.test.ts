@@ -31,4 +31,9 @@ describe('evaluate', () => {
     expect(evaluate(level, found, 'SOL')).toEqual({ kind: 'repeated', word: 'SOL' });
     expect(evaluate(level, found, 'OLA')).toEqual({ kind: 'repeated', word: 'OLA' });
   });
+
+  it('multiplies points on harder levels', () => {
+    expect(evaluate({ ...level, tier: 'hard' }, [], 'PLATO')).toMatchObject({ points: 75 });
+    expect(evaluate({ ...level, tier: 'extra' }, [], 'SAPO')).toMatchObject({ points: 16 });
+  });
 });

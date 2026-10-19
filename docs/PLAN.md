@@ -132,9 +132,9 @@ Goal: levels vary in difficulty with a deliberate rhythm, and players choose how
       with progress
 - [x] Cadence: 7-level cycle (easy, medium, medium, hard, easy, medium, extra hard), easy
       after extra hard, no extra hard before level 15, harder mix with progress
-- [ ] Player setting in the menu (Relajada / Normal / Desafiante) shifts tiers (Relajada: one
+- [x] Player setting in the menu (Relajada / Normal / Desafiante) shifts tiers (Relajada: one
       easier, no extra hard; Desafiante: one harder), from the next level
-- [ ] Tier badge; harder levels score more (×1.5, ×2) and extra hard earns a hint
+- [x] Tier badge; harder levels score more (×1.5, ×2) and extra hard earns a hint
 
 **Verify:** tier shares over 1,000 levels match the cadence; extra-hard levels feel hard
 but fair in playtests.
@@ -160,6 +160,9 @@ but fair in playtests.
 
 ## Changelog
 
+- **v0.9.0** (M8) — Difficulty: levels scored and generated as easy / medium / hard / extra
+  hard, 7-level cadence, no nearby repeats, Relajada / Normal / Desafiante setting, badge,
+  ×1.5 / ×2 points and a hint for extra hard. Level generation ~5× faster.
 - **v0.8.0** (M7) — Menu: theme (auto/light/dark), install the app, vibration, how to play,
   report, start over, credits. Animated first-launch tutorial.
 - **v0.7.0** (M6) — Found words shown with accents; hints earned with bonus words; bonus

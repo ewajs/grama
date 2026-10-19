@@ -33,6 +33,8 @@ change that alters a rule, so code and spec never drift.
 - `target`: 10 points per letter.
 - `bonus`: 2 points per letter.
 - `invalid` / `repeated`: 0.
+- Hard levels multiply points by 1.5 and extra-hard ones by 2 (`TIER_MULTIPLIER`);
+  finishing an extra-hard level also earns a hint.
 
 ### Hints (tunable in `src/core/hints.ts`)
 
@@ -87,7 +89,10 @@ no 3-letter targets.
 Every level is **easy, medium, hard or extra hard**, scored from how rare and long its
 targets are (D16). Tiers follow a 7-level rhythm (easy, medium, medium, hard, easy,
 medium, extra hard), with an easy level after each extra hard, no extra hard before level
-15, and a harder mix from level 50.
+15, and a harder mix from level 50. Hard and extra-hard levels show a badge.
+
+The player picks **Relajada** (one tier easier, never extra hard), **Normal** or
+**Desafiante** (one tier harder) in the menu; it applies from the next level.
 
 ## UX and visual direction
 

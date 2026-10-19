@@ -11,6 +11,7 @@ The menu: settings, help and the rest of the game's options, plus credits.
   import type { Installer } from '../../app/install.svelte';
   import type { Preferences } from '../../app/preferences.svelte';
   import { strings } from '../../i18n';
+  import type { Difficulty } from '../../core/cadence';
   import type { Theme } from '../../storage/settings';
   import Dialog from './Dialog.svelte';
   import { canVibrate } from '../lib/haptics';
@@ -27,12 +28,26 @@ The menu: settings, help and the rest of the game's options, plus credits.
   };
   let { preferences, installer, ontutorial, onreport, onreset, onclose }: Props = $props();
 
+  const difficulties: { value: Difficulty; label: string }[] = (
+    ['relaxed', 'normal', 'challenging'] as const
+  ).map((value) => ({ value, label: strings.difficulties[value] }));
+
   const themes: { value: Theme; label: string }[] = (['auto', 'light', 'dark'] as const).map(
     (value) => ({ value, label: strings.themes[value] }),
   );
 </script>
 
 <Dialog title={strings.menu} {onclose}>
+  <section>
+    <h3>{strings.difficulty}</h3>
+    <Segmented
+      label={strings.difficulty}
+      options={difficulties}
+      bind:value={preferences.difficulty}
+    />
+    <p class="note">{strings.difficultyNote}</p>
+  </section>
+
   <section>
     <h3>{strings.theme}</h3>
     <Segmented label={strings.theme} options={themes} bind:value={preferences.theme} />
@@ -76,6 +91,12 @@ The menu: settings, help and the rest of the game's options, plus credits.
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
+  }
+
+  .note {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .install {

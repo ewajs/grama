@@ -1,6 +1,6 @@
 import type { Difficulty } from './cadence';
 import { evaluate, type Submission } from './evaluate';
-import { countBonusWord, STARTING_HINTS } from './hints';
+import { countBonusWord, EXTRA_HARD_HINTS, STARTING_HINTS } from './hints';
 import type { Level } from './level';
 
 /** Everything that changes while playing. Plain data, so it can be saved as JSON. */
@@ -50,7 +50,13 @@ export function submitWord(
     score: state.score + submission.points,
     found: [...state.found, word],
   };
-  return { submission, state: submission.kind === 'bonus' ? countBonusWord(scored) : scored };
+  if (submission.kind === 'bonus') return { submission, state: countBonusWord(scored) };
+  // Finishing an extra-hard level earns a hint.
+  const earned = level.tier === 'extra' && isLevelComplete(level, scored.found);
+  return {
+    submission,
+    state: earned ? { ...scored, hints: scored.hints + EXTRA_HARD_HINTS } : scored,
+  };
 }
 
 /** Whether every target of the level has been found. Bonus words don't count. */

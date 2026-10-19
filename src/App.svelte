@@ -12,11 +12,12 @@
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const words = loadWords();
-  const start = startState(loadGame(), levelFromUrl(location.search));
+  const settings = loadSettings();
+  const start = startState(loadGame(), levelFromUrl(location.search), settings.difficulty);
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
 
-  const preferences = new Preferences(loadSettings(), saveSettings);
+  const preferences = new Preferences(settings, saveSettings);
   const installer = new Installer();
 
   // The browser bar's color for each theme (the page background's top).
