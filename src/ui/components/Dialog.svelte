@@ -23,7 +23,12 @@ passed as children, e.g. `<Dialog title="…">content</Dialog>`.
 
 <svelte:window onkeydown={(event) => event.key === 'Escape' && onclose?.()} />
 
-<div class="backdrop" transition:fade={{ duration: DURATION.base, delay }}>
+<!-- The delay is for appearing only: leaving is quick, so the next screen isn't covered. -->
+<div
+  class="backdrop"
+  in:fade={{ duration: DURATION.base, delay }}
+  out:fade={{ duration: DURATION.fast }}
+>
   {#if onclose}
     <button class="scrim" aria-label={strings.close} onclick={onclose}></button>
   {/if}

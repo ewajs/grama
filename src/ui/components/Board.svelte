@@ -47,7 +47,8 @@ tiles as big as possible.
 >
   {#each columns as column, c (c)}
     <div class="column">
-      {#each column as row, index (index)}
+      <!-- Keyed by word, so a row keeps its tiles when a found word lands above it. -->
+      {#each column as row, index (row.word ?? `empty:${row.length}:${index}`)}
         <div class="row" class:glow={row.word !== null && row.word === glow}>
           {#each { length: row.length }, position}
             {@const letter = position < row.shown ? row.word?.[position] : undefined}
@@ -55,7 +56,7 @@ tiles as big as possible.
               {#if letter}
                 <span
                   class:hinted={row.shown < row.length}
-                  in:receiveLetter={{ key: position, delay: position * TILE_STAGGER }}
+                  in:receiveLetter|global={{ key: position, delay: position * TILE_STAGGER }}
                 >
                   {letter}
                 </span>

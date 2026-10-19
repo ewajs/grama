@@ -1,7 +1,10 @@
 import type { Page } from '@playwright/test';
 
-/** Drags across the wheel's letters to spell `word`, then releases. */
-export async function drawWord(page: Page, word: string): Promise<void> {
+/**
+ * Drags across the wheel's letters to spell `word`, then releases; with `cancel`, the
+ * system takes the pointer instead (as an edge swipe or a call would) before release.
+ */
+export async function drawWord(page: Page, word: string, { cancel = false } = {}): Promise<void> {
   const letters = page.locator('[data-letter]');
   await letters.first().waitFor(); // the wheel appears once the words have loaded
   const available = await letters.evaluateAll((elements) =>
@@ -24,5 +27,7 @@ export async function drawWord(page: Page, word: string): Promise<void> {
   await page.mouse.move(first!.x, first!.y);
   await page.mouse.down();
   for (const point of rest) await page.mouse.move(point.x, point.y, { steps: 5 });
+  // Chromium's mouse is pointer 1.
+  if (cancel) await page.getByRole('application').dispatchEvent('pointercancel', { pointerId: 1 });
   await page.mouse.up();
 }

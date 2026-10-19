@@ -12,7 +12,8 @@ change that alters a rule, so code and spec never drift.
    used once per word. Dragging back onto the previous letter removes the last
    one (undo while dragging).
 3. Lifting the finger (or mouse button) **submits** the word. Letting go with a single
-   letter selected cancels silently.
+   letter selected cancels silently, and so does a drag the system interrupts (an edge
+   swipe, a call).
 4. The submission is evaluated:
 
    | Result     | Condition                                  | Points | Feedback                                   |

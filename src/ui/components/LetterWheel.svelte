@@ -72,10 +72,16 @@ and mouse work the same way.
   function end(event: WheelPointerEvent) {
     if (event.pointerId !== pointerId) return;
     const word = wordOf(path);
+    cancel(event);
+    if (word.length > 1) onsubmit(word);
+  }
+
+  // The system took the pointer (an edge swipe, a call): drop the word, don't submit it.
+  function cancel(event: WheelPointerEvent) {
+    if (event.pointerId !== pointerId) return;
     pointerId = null;
     pointer = null;
     setPath([]);
-    if (word.length > 1) onsubmit(word);
   }
 </script>
 
@@ -86,7 +92,7 @@ and mouse work the same way.
   onpointerdown={start}
   onpointermove={move}
   onpointerup={end}
-  onpointercancel={end}
+  onpointercancel={cancel}
 >
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <polyline points={line} />

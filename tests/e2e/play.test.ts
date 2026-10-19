@@ -18,6 +18,13 @@ test('spelling a word that is not in the level scores nothing', async ({ page })
   await expect(page.getByLabel('Puntos')).toHaveText('0');
 });
 
+test('a drag the system cancels submits nothing', async ({ page }) => {
+  await openGame(page);
+  await drawWord(page, target, { cancel: true });
+  await expect(page.getByText(written(target))).toHaveCount(0);
+  await expect(page.getByLabel('Puntos')).toHaveText('0');
+});
+
 test('letters can still be dragged after shuffling', async ({ page }) => {
   await openGame(page);
   const order = () =>
