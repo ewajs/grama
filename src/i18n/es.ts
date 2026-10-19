@@ -35,6 +35,7 @@ export const es = {
     ] ?? '',
   dailyDone: 'Completado',
   streak: (days: number) => `🔥 ${days}`,
+  streakFreeze: 'Racha protegida: si un día no jugás, sigue igual',
   share: 'Compartir',
   copied: '¡Copiado!',
   shareText: (daily: {

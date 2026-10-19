@@ -23,7 +23,11 @@ pantalla de inicio.
 ## La racha
 
 Cada día seguido que completás el desafío suma a tu **racha** 🔥. Si un día todavía no lo
-jugaste, la racha sigue viva hasta que termina ese día. Hay [logros](/progreso#logros)
+jugaste, la racha sigue viva hasta que termina ese día.
+
+Cada **7 días seguidos** ganás una **protección** ❄️ (de a una por vez): si un día no
+jugás, la usás y tu racha sigue. Dos días seguidos sin jugar, o uno sin protección, la
+cortan. Hay [logros](/progreso#logros)
 para 3, 7 y 30 días seguidos.
 
 ## Compartir

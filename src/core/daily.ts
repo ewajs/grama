@@ -101,36 +101,57 @@ export function dailyFor(saved: DailyPlay, today: string): DailyPlay {
   return saved.date === today ? saved : { date: today, session: NEW_SESSION };
 }
 
+/** Consecutive days with the daily completed that earn a streak freeze. */
+export const DAYS_PER_FREEZE = 7;
+
+/** Most streak freezes held at once: a freeze covers one missed day, never two in a row. */
+export const MAX_FREEZES = 1;
+
+/** The daily streak: how it stands, the best it's been, and freezes in hand. */
+export type Streak = {
+  /** Consecutive days completed up to today, or to yesterday while today's isn't done. */
+  current: number;
+  /** The longest the streak has ever been. */
+  best: number;
+  /** Freezes in hand: each lets one missed day pass without breaking the streak. */
+  freezes: number;
+};
+
 /**
- * Consecutive days with the daily completed, up to today, or to yesterday while today's
- * isn't done yet (the streak is still alive until the day ends).
+ * The daily streak as of `today`, replayed day by day from the first daily completed:
+ * each completed day adds one; every {@link DAYS_PER_FREEZE} completed days in a row earn
+ * a freeze (up to {@link MAX_FREEZES}); a missed day uses a freeze if there is one (the
+ * streak holds) and otherwise ends the streak. Today counts as missed only once it's over.
+ * Nothing extra is saved: the completed dailies say it all.
  * @param dailies Completed dailies by date.
  */
-export function streak(dailies: Readonly<Record<string, LevelRecord>>, today: string): number {
-  let day = today in dailies ? today : previousDay(today);
-  let count = 0;
-  while (day in dailies) {
-    count++;
-    day = previousDay(day);
+export function streakOf(dailies: Readonly<Record<string, LevelRecord>>, today: string): Streak {
+  const days = Object.keys(dailies).sort();
+  const first = days[0];
+  const result: Streak = { current: 0, best: 0, freezes: 0 };
+  if (!first) return result;
+  let toward = 0;
+  for (let day = first; day <= today; day = nextDay(day)) {
+    if (day in dailies) {
+      result.current++;
+      result.best = Math.max(result.best, result.current);
+      if (++toward === DAYS_PER_FREEZE) {
+        toward = 0;
+        result.freezes = Math.min(result.freezes + 1, MAX_FREEZES);
+      }
+    } else if (day === today) {
+      // Still time to play it.
+    } else if (result.freezes > 0 && result.current > 0) {
+      result.freezes--;
+    } else {
+      result.current = 0;
+      toward = 0;
+    }
   }
-  return count;
+  return result;
 }
 
-/** The longest run of consecutive days with the daily completed. */
-export function bestStreak(dailies: Readonly<Record<string, LevelRecord>>): number {
-  let best = 0;
-  for (const day of Object.keys(dailies)) {
-    // Count runs from their first day only.
-    if (previousDay(day) in dailies) continue;
-    let length = 0;
-    for (
-      let next = day;
-      next in dailies;
-      next = new Date(utc(next) + DAY).toISOString().slice(0, 10)
-    ) {
-      length++;
-    }
-    best = Math.max(best, length);
-  }
-  return best;
+/** The day after, as `YYYY-MM-DD`. */
+function nextDay(key: string): string {
+  return new Date(utc(key) + DAY).toISOString().slice(0, 10);
 }

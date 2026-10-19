@@ -4,7 +4,7 @@
  */
 
 import { TIERS, type Tier } from './difficulty';
-import { bestStreak } from './daily';
+import { streakOf } from './daily';
 import type { Progress } from './progress';
 
 /**
@@ -32,7 +32,7 @@ export type Stats = {
   extraNoHints: number;
   /** Daily challenges completed. */
   dailies: number;
-  /** The longest run of consecutive days with the daily completed. */
+  /** The longest daily streak (streak freezes included, see `streakOf`). */
   bestStreak: number;
 };
 
@@ -60,6 +60,6 @@ export function statsOf({
     noHints: count((result) => result.hints === 0),
     extraNoHints: count((result) => result.tier === 'extra' && result.hints === 0),
     dailies: Object.keys(dailies).length,
-    bestStreak: bestStreak(dailies),
+    bestStreak: streakOf(dailies, Object.keys(dailies).sort().at(-1) ?? '').best,
   };
 }
