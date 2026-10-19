@@ -99,10 +99,10 @@ Unit tests live next to the code: `evaluate.ts` + `evaluate.test.ts`.
 
 Two suites, each run where it pays off (D10):
 
-| Suite      | Tool       | Covers                                         | Runs                                                     |
-| ---------- | ---------- | ---------------------------------------------- | -------------------------------------------------------- |
-| Unit       | Vitest     | `core`, `scripts`, pure helpers in `ui/lib`    | `npm run check`, locally and in CI on every PR           |
-| End-to-end | Playwright | Real flows in a browser (drag a word, a level) | Locally, `npm run e2e`, when touching input, flow or PWA |
+| Suite      | Tool       | Covers                                         | Runs                                                              |
+| ---------- | ---------- | ---------------------------------------------- | ----------------------------------------------------------------- |
+| Unit       | Vitest     | `core`, `scripts`, pure helpers in `ui/lib`    | `npm run check`, locally and in CI on every PR                    |
+| End-to-end | Playwright | Real flows in a browser (drag a word, a level) | In CI on every PR (D20); locally when touching input, flow or PWA |
 
 - Unit-test every rule and edge case in `core`: that's where bugs hurt most and tests
   are cheapest.
@@ -132,7 +132,7 @@ Two suites, each run where it pays off (D10):
 | `npm run guide`             | Build the player guide to `dist/guia/` (`guide:dev` to preview it live) |
 | `npm run guide:screenshots` | Retake the guide's screenshots from the real game                       |
 
-First-time setup: `npm install`, plus `npx playwright install chromium` to run e2e.
+First-time setup: `npm install`, plus `npx playwright install chromium webkit` to run e2e.
 
 ## Commits and releases
 

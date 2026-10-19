@@ -15,7 +15,8 @@ Notes for agents:
 - Work one PLAN.md task per cycle; stop at the end of the cycle for review
   instead of starting the next task.
 - Run `npm run check` before calling a task done, and report failures as they are.
-  Run `npm run e2e` only when the change touches input, page flow or PWA behavior (D10).
+  Run `npm run e2e` locally when the change touches input, page flow or PWA behavior; CI
+  runs it on every PR (D20).
 - Keep `core` pure; if game rules change, update GAME.md in the same change.
 - The project owner is learning Svelte through this project. When a change introduces a
   Svelte concept for the first time (runes, snippets, transitions, actions…), explain it

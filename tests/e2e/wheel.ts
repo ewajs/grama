@@ -24,10 +24,27 @@ export async function drawWord(page: Page, word: string, { cancel = false } = {}
   });
 
   const [first, ...rest] = route;
+  if (await touchDrags(page)) {
+    // Real touch input, so the wheel gets touch pointers (and the browser's scroll handling).
+    const cdp = await page.context().newCDPSession(page);
+    const touch = (type: string, point?: { x: number; y: number }) =>
+      cdp.send('Input.dispatchTouchEvent', { type, touchPoints: point ? [point] : [] });
+    await touch('touchStart', first);
+    for (const point of rest) await touch('touchMove', point);
+    await touch(cancel ? 'touchCancel' : 'touchEnd');
+    await cdp.detach();
+    return;
+  }
   await page.mouse.move(first!.x, first!.y);
   await page.mouse.down();
   for (const point of rest) await page.mouse.move(point.x, point.y, { steps: 5 });
-  // Chromium's mouse is pointer 1.
+  // The mouse is pointer 1.
   if (cancel) await page.getByRole('application').dispatchEvent('pointercancel', { pointerId: 1 });
   await page.mouse.up();
+}
+
+/** Whether drags can be real touches: a touch screen, in Chromium (which takes them). */
+async function touchDrags(page: Page): Promise<boolean> {
+  const chromium = page.context().browser()?.browserType().name() === 'chromium';
+  return chromium && (await page.evaluate(() => navigator.maxTouchPoints > 0));
 }

@@ -10,24 +10,25 @@ version.
 
 ## Commands
 
-| Command                     | Does                                                       |
-| --------------------------- | ---------------------------------------------------------- |
-| `npm run dev`               | The game, live (`--host` to open it from a phone)          |
-| `npm run check`             | Lint, types and unit tests: what CI requires               |
-| `npm run e2e`               | Browser tests against a production build (local, D10)      |
-| `npm run build`             | The game, to `dist/`                                       |
-| `npm run docs`              | These developer docs, to `dist/docs/`                      |
-| `npm run guide`             | The player guide, to `dist/guia/` (`guide:dev` to preview) |
-| `npm run guide:screenshots` | Retake the guide's screenshots from the real game          |
-| `npm run words`             | Rebuild the word lists from their pinned sources           |
-| `npm run icons`             | Render the app icon to PNG                                 |
+| Command                     | Does                                                        |
+| --------------------------- | ----------------------------------------------------------- |
+| `npm run dev`               | The game, live (`--host` to open it from a phone)           |
+| `npm run check`             | Lint, types and unit tests: what CI requires                |
+| `npm run e2e`               | Browser tests against a production build (Chromium, WebKit) |
+| `npm run build`             | The game, to `dist/`                                        |
+| `npm run docs`              | These developer docs, to `dist/docs/`                       |
+| `npm run guide`             | The player guide, to `dist/guia/` (`guide:dev` to preview)  |
+| `npm run guide:screenshots` | Retake the guide's screenshots from the real game           |
+| `npm run words`             | Rebuild the word lists from their pinned sources            |
+| `npm run icons`             | Render the app icon to PNG                                  |
 
 ## How changes are made
 
 One task from `docs/PLAN.md` per branch and PR, small enough to review in minutes. CI
-runs `check` and builds both doc sites; merging to `main` deploys the game, the guide
-(`/grama/guia/`) and these docs (`/grama/docs/`) to GitHub Pages. Run `npm run e2e`
-locally when a change touches input, flow or the PWA.
+runs `check`, the e2e suite (Chromium and WebKit, D20) and builds both doc sites;
+merging to `main` deploys the game, the guide (`/grama/guia/`) and these docs
+(`/grama/docs/`) to GitHub Pages. Run `npm run e2e` locally too when a change touches
+input, flow or the PWA.
 
 A non-obvious choice gets an entry in `docs/DECISIONS.md`; a rule change updates
 `docs/GAME.md` in the same PR; a change players notice may need the guide (`guide/`)
