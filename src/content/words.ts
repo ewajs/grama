@@ -8,48 +8,63 @@ export type WordList = {
   spellings: ReadonlyMap<string, string>;
 };
 
+/** A language's shipped lists, words written with accents (see D12, D14). */
+export type SourceLists = {
+  /** Every valid word, from the dictionary. */
+  dictionary: readonly string[];
+  /** Frequent words, most frequent first; only ranks words, doesn't make them valid. */
+  frequency: readonly string[];
+  /** Hand-picked everyday words: always valid, and common enough to be targets. */
+  curated: readonly string[];
+};
+
+/** The lowest rank a curated word can get: well within the words that can be targets. */
+export const CURATED_RANK = 2500;
+
 /**
- * The words of a shipped word-list file: one per line; `#` lines are its license header.
+ * The words of a shipped word-list file: one per line; `#` lines are comments, like the
+ * license header.
  */
 export function parseWordList(text: string): string[] {
   return text.split('\n').filter((line) => line !== '' && !line.startsWith('#'));
 }
 
 /**
- * Combines a language's two lists into every valid word, most common first. Frequent
- * words that are also in the dictionary lead, in frequency order; they're the only ones
- * common enough to be targets (D12). The rest follow: dictionary words, then frequent
- * words the dictionary lacks (often names), valid but never targets.
- * @param dictionary Every valid word.
- * @param frequency Frequent words, most frequent first.
+ * Every valid word, most common first. Valid words that are frequent lead, in frequency
+ * order: they're the ones common enough to be targets. Curated words rank no lower than
+ * {@link CURATED_RANK}. The rest of the dictionary follows.
  */
-export function rankWords(dictionary: readonly string[], frequency: readonly string[]): string[] {
-  const valid = new Set(dictionary);
+export function rankWords({ dictionary, frequency, curated }: SourceLists): string[] {
+  const valid = new Set([...dictionary, ...curated]);
   const common = frequency.filter((word) => valid.has(word));
-  const ranked = new Set(common);
-  return [
-    ...common,
-    ...dictionary.filter((word) => !ranked.has(word)),
-    ...frequency.filter((word) => !valid.has(word)),
-  ];
+  const late = new Set(
+    curated.filter((word) => {
+      const rank = common.indexOf(word);
+      return rank === -1 || rank > CURATED_RANK;
+    }),
+  );
+  const ranked = common.filter((word) => !late.has(word));
+  ranked.splice(CURATED_RANK, 0, ...late);
+  const placed = new Set(ranked);
+  return [...ranked, ...dictionary.filter((word) => !placed.has(word))];
 }
 
 /**
- * Builds a language's word list from its two shipped lists, written with accents.
- * Each word keeps its most frequent spelling.
+ * Builds a language's word list from its shipped lists. Each word keeps its most
+ * frequent spelling.
  */
-export function buildWordList(
-  dictionary: readonly string[],
-  frequency: readonly string[],
-  language: Language,
-): WordList {
+export function buildWordList(lists: SourceLists, language: Language): WordList {
   const spellings = new Map<string, string>();
-  for (const written of [...frequency, ...dictionary]) {
+  for (const written of [...lists.frequency, ...lists.curated, ...lists.dictionary]) {
     const word = language.normalize(written);
     if (!spellings.has(word)) spellings.set(word, written);
   }
   return {
-    words: rankWords(dictionary.map(language.normalize), frequency.map(language.normalize)),
+    words: rankWords({
+      dictionary: lists.dictionary.map(language.normalize),
+      frequency: lists.frequency.map(language.normalize),
+      curated: lists.curated.map(language.normalize),
+    }),
     spellings,
   };
 }

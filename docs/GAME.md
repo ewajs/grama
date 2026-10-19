@@ -58,9 +58,11 @@ Spanish rules:
   shows plain letters; found words are shown as written, with accents (its most
   frequent spelling: `TENÉS`, `ÁRBOL`).
 - Minimum word length is 3.
-- Any word in the dictionary or the frequency list is valid (sources in D12).
-  Targets are among the 5,000 most frequent words that are also in the dictionary;
-  offensive words (`scripts/blocklist-es.txt`) are never targets.
+- Valid words are the dictionary's (with generated voseo forms) plus our Argentine list,
+  `src/content/es/argentina.txt` (D12, D14). The frequency list only ranks them.
+- Targets are among the 5,000 most frequent valid words; every word on the Argentine list
+  ranks within the top 2,500, so all of them can be targets. Offensive words
+  (`scripts/blocklist-es.txt`) are never targets.
 - Every level has at least one target that uses **all** its letters.
 
 ### Level shape

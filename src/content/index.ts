@@ -1,6 +1,7 @@
+import { spanish } from '../core/spanish';
+import curatedUrl from './es/argentina.txt?url';
 import dictionaryUrl from './es/dictionary.txt?url';
 import frequencyUrl from './es/frequency.txt?url';
-import { spanish } from '../core/spanish';
 import { buildWordList, parseWordList, type WordList } from './words';
 
 async function fetchWordList(url: string): Promise<string[]> {
@@ -11,9 +12,10 @@ async function fetchWordList(url: string): Promise<string[]> {
 
 /** Downloads the current language's word lists. Only Spanish exists for now. */
 export async function loadWords(): Promise<WordList> {
-  const [dictionary, frequency] = await Promise.all([
+  const [dictionary, frequency, curated] = await Promise.all([
     fetchWordList(dictionaryUrl),
     fetchWordList(frequencyUrl),
+    fetchWordList(curatedUrl),
   ]);
-  return buildWordList(dictionary, frequency, spanish);
+  return buildWordList({ dictionary, frequency, curated }, spanish);
 }

@@ -101,7 +101,7 @@ playtest feedback easy to send.
 - [x] Bonus words list: tap the bonus counter to see the ones found
 - [x] Report button: opens a pre-filled GitHub issue (level, letters, words, recent
       rejected attempts)
-- [ ] Argentine supplement word list (hand-curated) so _pibe, coima, bondi, subte…_ can
+- [x] Argentine supplement word list (hand-curated) so _pibe, coima, bondi, subte…_ can
       be targets
 
 **Verify:** a stuck player can always progress with hints; a report reaches GitHub with
@@ -128,6 +128,9 @@ enough context to reproduce.
 
 ## Changelog
 
+- **v0.7.0** (M6) — Found words shown with accents; hints earned with bonus words; bonus
+  words list; report button (pre-filled GitHub issue); Argentine words (generated voseo +
+  curated list) and only real words count.
 - **v0.6.0** (M5) — Progress saved across reloads; installable app with its own icon,
   playable offline (app and word lists cached), update prompt, safe areas, no overscroll.
 - **v0.5.0** (M4) — Endless levels generated on the device from Spanish word lists (RLA-ES
