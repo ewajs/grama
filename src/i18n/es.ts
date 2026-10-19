@@ -15,6 +15,12 @@ export const es = {
   pointsWon: (points: number) => `+${points} puntos`,
   bonusWords: (count: number) => (count === 1 ? '1 palabra extra' : `${count} palabras extra`),
   nextLevel: 'Siguiente nivel',
+  close: 'Cerrar',
+  bonusTitle: 'Palabras extra',
+  bonusFoundOf: (found: number, total: number) => `Encontraste ${found} de ${total}`,
+  untilHint: (count: number) =>
+    count === 1 ? '1 más para una pista' : `${count} más para una pista`,
+  bonusNone: 'Todavía ninguna. Probá combinar las letras: cada 5, una pista.',
   updateReady: 'Hay una versión nueva',
   update: 'Actualizar',
 };

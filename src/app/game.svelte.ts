@@ -83,6 +83,18 @@ export class Game {
     return hints > 0 && hintTarget(this.level, found, revealed) !== null;
   }
 
+  /** Bonus words found on the current level, as written, in the order found. */
+  get bonusWords(): string[] {
+    return this.#state.found
+      .filter((word) => !this.level.targets.includes(word))
+      .map((word) => this.written(word));
+  }
+
+  /** How many bonus words the current level has. */
+  get bonusTotal(): number {
+    return this.level.bonus.length;
+  }
+
   /** Words found on the current level, in the order found. */
   get found(): readonly string[] {
     return this.#state.found;

@@ -15,12 +15,15 @@ letter wheel with its controls.
   import Header from './Header.svelte';
   import HintButton from './HintButton.svelte';
   import BonusCounter from './BonusCounter.svelte';
+  import BonusWords from './BonusWords.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import LevelComplete from './LevelComplete.svelte';
   import WordPill from './WordPill.svelte';
 
   let { game }: { game: Game } = $props();
 
+  /** Whether the list of bonus words found is open. */
+  let showingBonus = $state(false);
   /** The word being spelled on the wheel right now. */
   let word = $state('');
   /** The last submitted word's result, shown briefly. */
@@ -84,10 +87,20 @@ letter wheel with its controls.
         progress={game.hintProgress}
         untilHint={game.bonusUntilHint}
         glow={repeated !== null && !game.level.targets.includes(repeated)}
+        onopen={() => (showingBonus = true)}
       />
     </div>
   </div>
 </main>
+
+{#if showingBonus}
+  <BonusWords
+    words={game.bonusWords}
+    total={game.bonusTotal}
+    untilHint={game.bonusUntilHint}
+    onclose={() => (showingBonus = false)}
+  />
+{/if}
 
 {#if game.complete}
   <LevelComplete

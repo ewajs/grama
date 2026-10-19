@@ -7,23 +7,31 @@ the next hint. Pulses when the count goes up.
 - `progress`: how far along toward the next hint, from 0 to 1.
 - `untilHint`: bonus words still to find for the next hint.
 - `glow`: briefly highlight it (the player spelled a bonus word again).
+- `onopen()`: the player tapped it, to see the bonus words found.
 -->
 <script lang="ts">
   import { strings } from '../../i18n';
 
-  type Props = { count: number; progress: number; untilHint: number; glow?: boolean };
-  let { count, progress, untilHint, glow = false }: Props = $props();
+  type Props = {
+    count: number;
+    progress: number;
+    untilHint: number;
+    glow?: boolean;
+    onopen: () => void;
+  };
+  let { count, progress, untilHint, glow = false, onopen }: Props = $props();
 
   // The ring's length, so `progress` can be drawn as a share of it.
   const CIRCUMFERENCE = 2 * Math.PI * 22;
 </script>
 
 {#key count}
-  <div
+  <button
     class="counter"
     class:pulse={count > 0}
     class:glow
     aria-label={strings.bonus(count, untilHint)}
+    onclick={onopen}
   >
     <svg viewBox="0 0 48 48" aria-hidden="true">
       <circle class="track" cx="24" cy="24" r="22" />
@@ -37,7 +45,7 @@ the next hint. Pulses when the count goes up.
       />
     </svg>
     +{count}
-  </div>
+  </button>
 {/key}
 
 <style>
@@ -47,7 +55,11 @@ the next hint. Pulses when the count goes up.
     place-items: center;
     width: 48px;
     height: 48px;
+    padding: 0;
+    border: none;
     border-radius: 50%;
+    font: inherit;
+    cursor: pointer;
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
     color: var(--color-bonus);
