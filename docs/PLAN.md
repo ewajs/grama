@@ -269,6 +269,9 @@ rescues a dead wheel, and the best score survives reloads.
 
 ## Changelog
 
+- **v0.15.0** (M14) — Typing on a keyboard and tap-to-select letters; soft synthesized
+  sounds with a setting; Home shows before the words load and the word list builds 2×
+  faster (Lighthouse mobile 78 → 92, JS budget in CI); streak freeze every 7 days.
 - **v0.14.0** (M13) — Fixes from the M12 code review: dailies with their own seeds (no
   repeats for months), no repeated levels after a difficulty change, replays pay nothing,
   stats only grow (dailies count), Home shows the current level, the daily follows the

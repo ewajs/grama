@@ -166,6 +166,15 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.15',
+      items: [
+        'Escribí las palabras con el teclado, o tocá las letras de a una.',
+        'Sonidos suaves (se apagan en el menú).',
+        'Arranca más rápido: el inicio aparece enseguida.',
+        'Cada 7 días seguidos de desafío, una protección ❄️ para tu racha.',
+      ],
+    },
+    {
       version: '0.14',
       items: [
         'Los desafíos del día ya no se repiten (por lo menos durante meses).',
