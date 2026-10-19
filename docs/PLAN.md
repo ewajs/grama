@@ -173,7 +173,25 @@ after a missed day.
 
 **Verify:** feels good on a phone; respects reduced motion.
 
-### M12 — Polish · `v0.13.0`
+### M12 — Docs & clarity · `v0.13.0`
+
+Goal: calmer feedback, a tidier menu, a guide for curious players and docs for developers.
+
+- [ ] Feedback for invalid, repeated and bonus words plays in place (no flying, no jumps)
+- [ ] Menu: small links (Todo sobre Grama · Reportar un problema · Acerca de); Acerca de
+      window with version, novedades, "Buscar actualizaciones", credits and licenses
+- [ ] Player guide "Todo sobre Grama" (VitePress, Spanish) at `/grama/guia/`: how to
+      play, which words count, how levels and difficulty work, hints, stars, achievements,
+      the daily challenge, FAQ; screenshots generated with Playwright
+- [ ] Developer docs (TypeDoc, English) at `/grama/docs/`: API reference plus guides (how
+      it works with walkthroughs, words pipeline, difficulty, working on it) with SVG
+      diagrams; module overviews; links validated
+- [ ] Both doc sites built on every PR as checks and deployed with the game
+
+**Verify:** a player can answer "why didn't my word count?" from the guide; a developer
+can follow a word from the wheel to the score from the docs alone.
+
+### M13 — Polish · `v0.14.0`
 
 - [ ] Visual design pass (level-complete moment, landscape and tablet layouts)
 - [ ] `prefers-reduced-motion`; accessible labels and contrast check
