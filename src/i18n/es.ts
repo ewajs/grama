@@ -1,8 +1,9 @@
 /** Player-facing text in Rioplatense Spanish (voseo). */
 export const es = {
   appName: 'Grama',
-  tagline: 'Uní las letras y encontrá todas las palabras.',
-  comingSoon: 'Muy pronto',
+  level: (number: number) => `Nivel ${number}`,
+  score: 'Puntos',
+  wheel: 'Letras: arrastrá el dedo de una a otra para formar una palabra',
 };
 
 /** The shape every language pack must provide: the same keys as Spanish. */
