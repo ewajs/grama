@@ -45,15 +45,45 @@ export function tierFor(levelNumber: number, difficulty: Difficulty): Tier {
 }
 
 /**
- * How many levels before `levelNumber` share its tier and size: where it starts in its
- * tier's seed order, so consecutive levels of a kind don't repeat (see `generateLevel`).
+ * How many levels of each tier and size came before the current one, keyed like
+ * `"easy:6"`: where the next level of each kind starts in its tier's seed order. Counting
+ * the levels actually played (not recounting them at today's difficulty) means a change
+ * of difficulty never sends the player back to seeds they already used.
+ */
+export type Occurrences = Readonly<Record<string, number>>;
+
+function kindOf(levelNumber: number, tier: Tier): string {
+  return `${tier}:${levelShape(levelNumber).letters}`;
+}
+
+/** Level `levelNumber`'s place in its tier's seed order, after the levels counted. */
+export function occurrenceIn(counted: Occurrences, levelNumber: number, tier: Tier): number {
+  return counted[kindOf(levelNumber, tier)] ?? 0;
+}
+
+/** The counts with level `levelNumber`, of `tier`, added. */
+export function countLevel(counted: Occurrences, levelNumber: number, tier: Tier): Occurrences {
+  const kind = kindOf(levelNumber, tier);
+  return { ...counted, [kind]: (counted[kind] ?? 0) + 1 };
+}
+
+/** The counts for levels 1 to `levelNumber − 1`, all played at one difficulty. */
+export function occurrencesBefore(levelNumber: number, difficulty: Difficulty): Occurrences {
+  let counted: Occurrences = {};
+  for (let earlier = 1; earlier < levelNumber; earlier++) {
+    counted = countLevel(counted, earlier, tierFor(earlier, difficulty));
+  }
+  return counted;
+}
+
+/**
+ * Level `levelNumber`'s place in its tier's seed order when every level before it was
+ * played at `difficulty` (see `generateLevel`): what `?nivel=N` and tests use.
  */
 export function occurrence(levelNumber: number, difficulty: Difficulty): number {
-  const tier = tierFor(levelNumber, difficulty);
-  const { letters } = levelShape(levelNumber);
-  let count = 0;
-  for (let earlier = 1; earlier < levelNumber; earlier++) {
-    if (tierFor(earlier, difficulty) === tier && levelShape(earlier).letters === letters) count++;
-  }
-  return count;
+  return occurrenceIn(
+    occurrencesBefore(levelNumber, difficulty),
+    levelNumber,
+    tierFor(levelNumber, difficulty),
+  );
 }

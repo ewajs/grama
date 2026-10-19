@@ -4,6 +4,8 @@
  */
 
 import type { AchievementId } from '../core/achievements';
+import type { Tier } from '../core/difficulty';
+import type { Place } from '../core/progress';
 
 const reportKinds = {
   missing: 'Falta una palabra',
@@ -191,10 +193,11 @@ export const es = {
   reportTitle: '¿Qué pasó?',
   reportIntro: 'Se abre GitHub con los datos del nivel. Ahí nos contás el resto.',
   reportKinds,
-  reportIssueTitle: (kind: keyof typeof reportKinds, level: number) =>
-    `${reportKinds[kind]} (nivel ${level})`,
+  reportIssueTitle: (kind: keyof typeof reportKinds, place: Place) =>
+    `${reportKinds[kind]} (${place.kind === 'daily' ? `desafío del ${place.date}` : `nivel ${place.levelNumber}`})`,
   reportIssueBody: (context: {
-    levelNumber: number;
+    place: Place;
+    tier: Tier;
     letters: readonly string[];
     targets: readonly string[];
     found: readonly string[];
@@ -206,7 +209,10 @@ export const es = {
       '',
       '',
       '---',
-      `Nivel: ${context.levelNumber}`,
+      context.place.kind === 'daily'
+        ? `Desafío del día: ${context.place.date}`
+        : `Nivel: ${context.place.levelNumber} · ${context.place.difficulty} · bloque ${context.place.occurrence}`,
+      `Dificultad: ${context.tier}`,
       `Letras: ${context.letters.join(' ')}`,
       `Palabras del nivel: ${list(context.targets)}`,
       `Encontradas: ${list(context.found)}`,

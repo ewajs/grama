@@ -16,6 +16,7 @@ import { NEW_SESSION } from './session';
 const done: LevelRecord = {
   tier: 'easy',
   difficulty: 'normal',
+  occurrence: 0,
   stars: 2,
   hints: 0,
   bonus: 1,

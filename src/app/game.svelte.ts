@@ -16,6 +16,7 @@ import { starsFor, type History, type LevelRecord, type Stars } from '../core/hi
 import type { Level } from '../core/level';
 import {
   canUseHint,
+  currentPlace,
   NEW_PROGRESS,
   nextLevel,
   playWord,
@@ -36,10 +37,13 @@ import type { WordList } from '../content/words';
 import { today } from './clock';
 import { reportUrl, type ReportKind } from './report';
 
+/** A numbered level's place. */
+type LevelPlace = Extract<Place, { kind: 'level' }>;
+
 /** What's being played: the player's current level, a replay of an earlier one, or a daily. */
 type Mode =
   | { kind: 'current' }
-  | { kind: 'replay'; levelNumber: number; difficulty: Difficulty; session: Session }
+  | { kind: 'replay'; place: LevelPlace; session: Session }
   | { kind: 'daily'; date: string };
 
 /** Today's daily challenge, as the home screen shows it. */
@@ -89,7 +93,10 @@ export class Game {
     let current: { key: string; level: Level } | null = null;
     this.level = $derived.by(() => {
       const { place } = this.#playing;
-      const key = place.kind === 'daily' ? place.date : `${place.levelNumber}:${place.difficulty}`;
+      const key =
+        place.kind === 'daily'
+          ? place.date
+          : `${place.levelNumber}:${place.difficulty}:${place.occurrence}`;
       if (current?.key !== key) current = { key, level: generate(words.words, place) };
       return current.level;
     });
@@ -105,8 +112,9 @@ export class Game {
         session: dailyFor(progress.daily, mode.date).session,
       };
     }
-    const { levelNumber, difficulty, session } = mode.kind === 'replay' ? mode : progress;
-    return { place: { kind: 'level', levelNumber, difficulty }, session };
+    return mode.kind === 'replay'
+      ? mode
+      : { place: currentPlace(progress), session: progress.session };
   }
 
   /** The number of the level on screen; for a daily challenge, the daily's number. */
@@ -272,9 +280,17 @@ export class Game {
    */
   replay(levelNumber: number): void {
     if (levelNumber >= this.#progress.levelNumber) return this.playCurrent();
-    const difficulty = this.#progress.history[levelNumber]?.difficulty ?? this.#progress.difficulty;
+    // Without a record (levels skipped with ?nivel=N), as if played at today's difficulty.
+    const { difficulty, occurrence: block } = this.#progress.history[levelNumber] ?? {
+      difficulty: this.#progress.difficulty,
+      occurrence: occurrence(levelNumber, this.#progress.difficulty),
+    };
     this.#rejected = [];
-    this.#mode = { kind: 'replay', levelNumber, difficulty, session: NEW_SESSION };
+    this.#mode = {
+      kind: 'replay',
+      place: { kind: 'level', levelNumber, difficulty, occurrence: block },
+      session: NEW_SESSION,
+    };
   }
 
   /** Plays today's daily challenge, picking up where it was left. */
@@ -299,7 +315,8 @@ export class Game {
   /** A link to report a problem with the level on screen on GitHub. */
   reportUrl(kind: ReportKind): string {
     return reportUrl(kind, {
-      levelNumber: this.levelNumber,
+      place: this.#playing.place,
+      tier: this.level.tier,
       letters: this.level.letters,
       targets: this.level.targets.map((word) => this.written(word)),
       found: this.#playing.session.found.map((word) => this.written(word)),
@@ -331,6 +348,5 @@ export class Game {
 function generate(words: readonly string[], place: Place): Level {
   if (place.kind === 'daily') return generateDaily(words, place.date);
   const { levelNumber, difficulty } = place;
-  const tier = tierFor(levelNumber, difficulty);
-  return generateLevel(words, levelNumber, tier, occurrence(levelNumber, difficulty));
+  return generateLevel(words, levelNumber, tierFor(levelNumber, difficulty), place.occurrence);
 }

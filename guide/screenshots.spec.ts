@@ -3,6 +3,7 @@
  * `npm run guide:screenshots` after changing what they show; the images are committed.
  */
 import { test, type Page } from '@playwright/test';
+import { occurrence, occurrencesBefore } from '../src/core/cadence.ts';
 import { level } from '../tests/e2e/level.ts';
 import { drawWord } from '../tests/e2e/wheel.ts';
 
@@ -26,21 +27,31 @@ function veteran() {
     history[number] = {
       tier,
       difficulty: 'normal',
+      occurrence: occurrence(number, 'normal'),
       stars,
       hints: stars === 3 ? 0 : 1,
       bonus: 3,
       targets: 7,
     };
   }
-  const daily = { tier: 'easy', difficulty: 'normal', stars: 3, hints: 0, bonus: 4, targets: 8 };
+  const daily = {
+    tier: 'easy',
+    difficulty: 'normal',
+    occurrence: 0,
+    stars: 3,
+    hints: 0,
+    bonus: 4,
+    targets: 8,
+  };
   return {
-    version: 7,
+    version: 8,
     progress: {
       levelNumber: 25,
       score: 12840,
       hints: 4,
       bonusTowardHint: 3,
       difficulty: 'normal',
+      occurrences: occurrencesBefore(25, 'normal'),
       session: { found: [], revealed: {} },
       history,
       daily: { date: '', session: { found: [], revealed: {} } },

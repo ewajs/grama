@@ -198,7 +198,7 @@ Goal: fix what the M12 code review found, and guard against it coming back.
 - [x] Dailies don't repeat: their own seeds, counted per tier, from the end of each order
       (no repeat for about seven months, the word list's limit); every level has 3+ bonus
       words, so ★★★ is always possible
-- [ ] Levels don't repeat after a difficulty change: a "next block" counter per tier and
+- [x] Levels don't repeat after a difficulty change: a "next block" counter per tier and
       size saved in progress; reports carry difficulty, tier and the daily's date; guide
       claims fixed ("level 37 is the same on every phone")
 - [ ] Replays don't pay twice: no points or hint progress for words already found on

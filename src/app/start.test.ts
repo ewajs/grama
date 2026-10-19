@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { NEW_PROGRESS } from '../core/progress';
+import { occurrence } from '../core/cadence';
+import { currentPlace, NEW_PROGRESS } from '../core/progress';
 import { levelFromUrl, startState } from './start';
 
 describe('levelFromUrl', () => {
@@ -32,5 +33,6 @@ describe('startState', () => {
     const jumped = startState(saved, 40);
     expect(jumped).toMatchObject({ levelNumber: 40, score: 480 });
     expect(jumped.session.found).toEqual([]);
+    expect(currentPlace(jumped).occurrence).toBe(occurrence(40, 'normal'));
   });
 });

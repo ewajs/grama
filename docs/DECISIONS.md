@@ -73,6 +73,10 @@ delete it, the history is the point.
   once across tiers, in a fixed order; each level gets its own block of 3 seeds in it
   (`occurrence`). A level comes back only after its tier's whole order is used (about
   180 levels at 8 letters).
+  - _Since v0.14_ progress counts the levels actually played of each tier and size, so a
+    change of difficulty doesn't recount earlier levels and reuse their blocks. Level N
+    is therefore the same for everyone only for players who kept one difficulty (as
+    `?nivel=N` assumes); reports carry the difficulty and block.
 - **Why:** variety and a felt rhythm of challenge and relief, while keeping level N
   reproducible.
 

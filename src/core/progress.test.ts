@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { BONUS_WORDS_PER_HINT, EXTRA_HARD_HINTS, STARTING_HINTS } from './hints';
 import type { Level } from './level';
-import { NEW_PROGRESS, nextLevel, playWord, useHint } from './progress';
+import { occurrence, tierFor } from './cadence';
+import { levelShape } from './generate';
+import { currentPlace, NEW_PROGRESS, nextLevel, playWord, useHint } from './progress';
 import { NEW_SESSION, type Session } from './session';
 
 const level: Level = {
@@ -11,7 +13,7 @@ const level: Level = {
   tier: 'medium',
 };
 
-const current = { kind: 'level', levelNumber: 1, difficulty: 'normal' } as const;
+const current = { kind: 'level', levelNumber: 1, difficulty: 'normal', occurrence: 0 } as const;
 
 /** Plays words in turn, returning the final progress and session. */
 function play(words: readonly string[], on = level) {
@@ -119,5 +121,23 @@ describe('nextLevel', () => {
 
   it('takes the difficulty for the new level', () => {
     expect(nextLevel(NEW_PROGRESS, 'challenging').difficulty).toBe('challenging');
+  });
+
+  it('follows the cadence while the difficulty stays the same', () => {
+    let progress = NEW_PROGRESS;
+    for (let number = 1; number < 60; number++) progress = nextLevel(progress);
+    expect(currentPlace(progress).occurrence).toBe(occurrence(60, 'normal'));
+  });
+
+  it('never gives two levels of a kind the same seeds, across difficulty changes', () => {
+    const used = new Set<string>();
+    let progress = NEW_PROGRESS;
+    for (let number = 1; number <= 200; number++) {
+      const { levelNumber, difficulty, occurrence: block } = currentPlace(progress);
+      const kind = `${tierFor(levelNumber, difficulty)}:${levelShape(levelNumber).letters}`;
+      expect(used.has(`${kind}:${block}`), `level ${levelNumber}`).toBe(false);
+      used.add(`${kind}:${block}`);
+      progress = nextLevel(progress, (['normal', 'challenging', 'relaxed'] as const)[number % 3]);
+    }
   });
 });

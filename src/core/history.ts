@@ -18,8 +18,10 @@ export const THREE_STAR_BONUS = 3;
 export type LevelRecord = {
   /** How hard the level was. */
   tier: Tier;
-  /** The player's difficulty when it was played: with the number, it regenerates the level. */
+  /** The player's difficulty when it was played: with the number, it decides the tier. */
   difficulty: Difficulty;
+  /** Its place in its tier's seed order: with the rest, it regenerates the level. */
+  occurrence: number;
   /** Stars earned: see {@link starsFor}. */
   stars: Stars;
   /** Hints spent on it. */
@@ -43,11 +45,17 @@ export function starsFor(level: Level, session: Session): Stars {
   return hints <= 1 ? 2 : 1;
 }
 
-/** The record of a completed level, played at `difficulty`. */
-export function recordOf(level: Level, session: Session, difficulty: Difficulty): LevelRecord {
+/** The record of a completed level, played at `difficulty` from its seed `occurrence`. */
+export function recordOf(
+  level: Level,
+  session: Session,
+  difficulty: Difficulty,
+  occurrence: number,
+): LevelRecord {
   return {
     tier: level.tier,
     difficulty,
+    occurrence,
     stars: starsFor(level, session),
     hints: hintsUsed(session),
     bonus: bonusWords(level, session).length,
