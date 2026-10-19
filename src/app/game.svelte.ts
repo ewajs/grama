@@ -38,10 +38,19 @@ export class Game {
     this.#state = $state(state);
     this.#onchange = onchange;
     this.#spellings = words.spellings;
+    // The state is replaced on every word, which re-runs this. Returning the same Level
+    // object until the level actually changes matters: Svelte only updates what depends
+    // on a derived when its value changes (===), so the wheel keeps a shuffled order.
+    let current: { key: string; level: Level } | null = null;
     this.level = $derived.by(() => {
       const { levelNumber, difficulty } = this.#state;
-      const tier = tierFor(levelNumber, difficulty);
-      return generateLevel(words.words, levelNumber, tier, occurrence(levelNumber, difficulty));
+      const key = `${levelNumber}:${difficulty}`;
+      if (current?.key !== key) {
+        const tier = tierFor(levelNumber, difficulty);
+        const occurs = occurrence(levelNumber, difficulty);
+        current = { key, level: generateLevel(words.words, levelNumber, tier, occurs) };
+      }
+      return current.level;
     });
   }
 
