@@ -3,28 +3,104 @@
  * Components use var(--…) so a theme change is an edit here, not a hunt.
  */
 
-:root {
-  /* Each color is light-dark(light theme, dark theme). The theme follows the device
-     unless the player picks one in the menu (data-theme on <html>). */
-  color-scheme: light dark;
-
+/*
+ * Colors come in themes (data-theme on <html>, picked in the menu; Grama by default), each
+ * color as light-dark(light mode, dark mode). The mode follows the device unless the
+ * player picks one (data-mode on <html>). A theme's colors also apply to any element with
+ * its data-theme, so the menu's samples show each theme's own colors. Every theme passes
+ * WCAG AA, checked by contrast.test.ts:
+ * - text and text-muted read on surface, bg-top and tile;
+ * - accent-contrast is text on an accent fill (found tiles, buttons);
+ * - accent-strong is the accent as text (titles, links, hinted letters); it and the other
+ *   -strong colors read on surface and tile, and behind on-strong text (badges).
+ * The plain status colors are for fills, rings and icons.
+ */
+:root,
+[data-theme='grama'] {
   --color-bg-top: light-dark(#f7f6fc, #16152a);
   --color-bg-bottom: light-dark(#e9e7f6, #0f0e1c);
   --color-surface: light-dark(#ffffff, #232238);
   --color-text: light-dark(#1d1b2e, #f1f0fa);
   --color-text-muted: light-dark(#6b6880, #a19fb8);
   --color-accent: light-dark(#5b5bd6, #8b8bf5);
+  --color-accent-strong: light-dark(#5b5bd6, #8b8bf5);
   --color-accent-contrast: light-dark(#ffffff, #12111f);
   --color-success: light-dark(#2f9e6e, #4cc38a);
-  --color-bonus: light-dark(#d99a14, #f0b93a);
-  --color-danger: light-dark(#e5484d, #f26c70);
-  /* The same hues dark enough for text on a light surface, or behind white text (WCAG AA,
-     4.5:1). The ones above are for fills, rings and icons. */
   --color-success-strong: light-dark(#1f7a52, #4cc38a);
+  --color-bonus: light-dark(#d99a14, #f0b93a);
   --color-bonus-strong: light-dark(#9a6200, #f0b93a);
+  --color-danger: light-dark(#e5484d, #f26c70);
   --color-danger-strong: light-dark(#c62f35, #f26c70);
   --color-tile: light-dark(#ffffff, #2a2942);
   --color-tile-border: light-dark(#dcd9ec, #3a3956);
+}
+
+/* The flag's light blue on a muted white, with the sun of May's gold. */
+[data-theme='argento'] {
+  --color-bg-top: light-dark(#f5f9fd, #11243a);
+  --color-bg-bottom: light-dark(#dde9f5, #0a1828);
+  --color-surface: light-dark(#ffffff, #18304a);
+  --color-text: light-dark(#13304d, #eef5fb);
+  --color-text-muted: light-dark(#52708c, #9fbad2);
+  --color-accent: light-dark(#74acdf, #74acdf);
+  --color-accent-strong: light-dark(#2a6db0, #8cc0ee);
+  --color-accent-contrast: light-dark(#0b2540, #0b2540);
+  --color-success: light-dark(#2f9e6e, #4cc38a);
+  --color-success-strong: light-dark(#1f7a52, #4cc38a);
+  --color-bonus: light-dark(#f6b40e, #f6b40e);
+  --color-bonus-strong: light-dark(#8a5a00, #f6c242);
+  --color-danger: light-dark(#e5484d, #f26c70);
+  --color-danger-strong: light-dark(#c62f35, #f78e91);
+  --color-tile: light-dark(#ffffff, #1e3956);
+  --color-tile-border: light-dark(#cddcea, #2d4b6c);
+}
+
+/* Mate green on warm paper; found words turn teal, so they don't blur into the green. */
+[data-theme='yerba'] {
+  --color-bg-top: light-dark(#fbf8ef, #1a2014);
+  --color-bg-bottom: light-dark(#efe9d6, #11160d);
+  --color-surface: light-dark(#fffdf7, #242c1c);
+  --color-text: light-dark(#26301a, #f1f3e6);
+  --color-text-muted: light-dark(#636c4b, #a9b394);
+  --color-accent: light-dark(#557a1f, #a3c45a);
+  --color-accent-strong: light-dark(#557a1f, #a3c45a);
+  --color-accent-contrast: light-dark(#ffffff, #142008);
+  --color-success: light-dark(#1d8aa6, #56c2da);
+  --color-success-strong: light-dark(#16687d, #56c2da);
+  --color-bonus: light-dark(#d99a14, #f0b93a);
+  --color-bonus-strong: light-dark(#8f5b00, #f0b93a);
+  --color-danger: light-dark(#e5484d, #f26c70);
+  --color-danger-strong: light-dark(#c62f35, #f78e91);
+  --color-tile: light-dark(#fffdf7, #2b3421);
+  --color-tile-border: light-dark(#e0d9c0, #3c4830);
+}
+
+/* The Quebrada's terracotta with a turquoise bonus; errors in a cooler red that the
+   terracotta doesn't swallow. */
+[data-theme='quebrada'] {
+  --color-bg-top: light-dark(#fcf6f1, #2a1a14);
+  --color-bg-bottom: light-dark(#f3e3d6, #1c110c);
+  --color-surface: light-dark(#fffbf8, #36241c);
+  --color-text: light-dark(#3a2219, #f7ebe3);
+  --color-text-muted: light-dark(#7a5a4c, #c4a596);
+  --color-accent: light-dark(#b4502c, #ec8a5e);
+  --color-accent-strong: light-dark(#b4502c, #ec8a5e);
+  --color-accent-contrast: light-dark(#ffffff, #2a1208);
+  --color-success: light-dark(#2f9e6e, #4cc38a);
+  --color-success-strong: light-dark(#1f7a52, #4cc38a);
+  --color-bonus: light-dark(#1a9e9a, #4fd1c5);
+  --color-bonus-strong: light-dark(#0f6d6a, #4fd1c5);
+  --color-danger: light-dark(#d23a78, #f27aa8);
+  --color-danger-strong: light-dark(#a82a5e, #f27aa8);
+  --color-tile: light-dark(#fffbf8, #3f2a21);
+  --color-tile-border: light-dark(#ead7c8, #553a2e);
+}
+
+:root {
+  color-scheme: light dark;
+
+  /* Text on a -strong fill, in every theme. */
+  --color-on-strong: light-dark(#ffffff, #12111f);
 
   /* Typography */
   --font-sans: 'Outfit Variable', system-ui, sans-serif;
@@ -65,10 +141,10 @@
   --ease-in-out: cubic-bezier(0.6, 0, 0.4, 1);
 }
 
-:root[data-theme='light'] {
+:root[data-mode='light'] {
   color-scheme: light;
 }
 
-:root[data-theme='dark'] {
+:root[data-mode='dark'] {
   color-scheme: dark;
 }

@@ -107,7 +107,7 @@ starting over.
   }
 
   a {
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
   }
 
   .reset {

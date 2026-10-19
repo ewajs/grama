@@ -5,12 +5,21 @@
 
 import type { Difficulty } from '../core/cadence';
 
+/** The color themes, in the menu's order; the first is the default. */
+export const THEMES = ['grama', 'argento', 'yerba', 'quebrada'] as const;
+
+/** A color theme; its colors are in `ui/styles/tokens.css`. */
+export type Theme = (typeof THEMES)[number];
+
 /** Light or dark colors: following the device, or the player's pick. */
-export type Theme = 'auto' | 'light' | 'dark';
+export type Mode = 'auto' | 'light' | 'dark';
 
 /** The player's options, saved apart from their progress. */
 export type Settings = {
+  /** The color theme. */
   theme: Theme;
+  /** Light or dark colors, or the device's. */
+  mode: Mode;
   /** How hard the levels are, from the next one on. */
   difficulty: Difficulty;
   /** Vibrate on touch, where the device can. */
@@ -23,7 +32,8 @@ export type Settings = {
 
 /** Settings for a first launch. */
 export const DEFAULT_SETTINGS: Settings = {
-  theme: 'auto',
+  theme: THEMES[0],
+  mode: 'auto',
   difficulty: 'normal',
   vibration: true,
   sound: true,
@@ -45,9 +55,10 @@ export function loadSettings(storage: Pick<Storage, 'getItem'> = localStorage): 
   } catch {
     // Unreadable or blocked: defaults it is.
   }
-  const { theme, difficulty, vibration, sound, tutorialSeen } = saved;
+  const { theme, mode, difficulty, vibration, sound, tutorialSeen } = saved;
   return {
-    theme: theme === 'light' || theme === 'dark' ? theme : DEFAULT_SETTINGS.theme,
+    theme: THEMES.find((known) => known === theme) ?? DEFAULT_SETTINGS.theme,
+    mode: mode === 'light' || mode === 'dark' ? mode : DEFAULT_SETTINGS.mode,
     difficulty:
       difficulty === 'relaxed' || difficulty === 'challenging'
         ? difficulty

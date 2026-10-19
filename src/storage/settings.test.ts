@@ -17,7 +17,8 @@ describe('settings', () => {
   it('restore what was saved', () => {
     const storage = memoryStorage();
     const settings = {
-      theme: 'dark',
+      theme: 'quebrada',
+      mode: 'dark',
       difficulty: 'challenging',
       vibration: false,
       sound: false,
@@ -28,7 +29,7 @@ describe('settings', () => {
   });
 
   it('keep each understood setting and default the rest', () => {
-    const saved = JSON.stringify({ theme: 'sepia', vibration: false });
+    const saved = JSON.stringify({ theme: 'sepia', mode: 'dim', vibration: false });
     expect(loadSettings(memoryStorage({ 'grama.settings': saved }))).toEqual({
       ...DEFAULT_SETTINGS,
       vibration: false,

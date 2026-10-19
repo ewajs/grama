@@ -27,6 +27,13 @@ dispositivo es lo que vos mandes al reportar un problema.
 Sí: en el menú, apagá **Sonido** (y **Vibración**, si tu teléfono vibra). En el iPhone, con
 el modo silencio puesto, Grama no suena, y si estás escuchando música, la deja seguir.
 
+## ¿Puedo cambiar los colores?
+
+Sí: en el menú, **Tema** tiene cuatro: **Grama** (el de siempre), **Argento** (celeste y
+sol de mayo), **Yerba** (verde mate) y **Quebrada** (terracota, como los cerros de colores).
+Debajo elegís el modo: **Automático** sigue a tu teléfono, o lo dejás siempre **Claro** u
+**Oscuro**.
+
 ## ¿Por qué no me tomó una palabra?
 
 Mirá [qué palabras valen](/palabras#por-que-no-me-tomo-una-palabra). Si creés que tendría

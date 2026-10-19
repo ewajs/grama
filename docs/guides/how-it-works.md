@@ -110,7 +110,7 @@ Svelte components render what `Game` exposes and call its methods. TypeDoc can't
 
 | Component                                      | Shows                                                    |
 | ---------------------------------------------- | -------------------------------------------------------- |
-| `App`                                          | Loads words, picks the screen, applies the theme         |
+| `App`                                          | Loads words, picks the screen, applies theme and mode    |
 | `TrialScreen`                                  | Contrarreloj: the clock, a wheel, Pasar, the summary     |
 | `Home`, `LevelMap`, `StatsScreen`              | The hub, the map with replays, achievements and stats    |
 | `GameScreen`                                   | A level: wires the pieces below and the dialogs          |

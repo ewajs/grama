@@ -9,7 +9,7 @@ Read these when the task needs them (they're not loaded up front):
 - `docs/GAME.md`: the rules and UX as they are. Read before changing gameplay or anything
   players see.
 - `docs/PLAN.md`: milestones and tasks; the next unchecked task is the work.
-- `docs/DECISIONS.md`: why things are the way they are (D1…D22).
+- `docs/DECISIONS.md`: why things are the way they are (D1…D23).
 - `docs/guides/`: how the code fits together (published at https://ewajs.github.io/grama/docs/).
 - `guide/`: the players' guide, "Todo sobre Grama" (Spanish, VitePress).
 
@@ -22,7 +22,8 @@ Read these when the task needs them (they're not loaded up front):
 - The generator, its numbers or the word lists change any level → bump `LEVELS_VERSION`
   (`src/core/generate.ts`) and the golden hash in `src/content/es/words.test.ts`.
 - Player-facing text only in `src/i18n` (Rioplatense, voseo); colors and durations are
-  tokens; status-colored text uses the `-strong` tokens.
+  tokens, set per theme in `tokens.css`; status- or accent-colored text uses the `-strong`
+  tokens.
 - Never merge red: `npm run check` passes locally (check its exit code, not just its
   output) and CI is green (check, e2e, docs) before merging.
 

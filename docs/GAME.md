@@ -166,7 +166,11 @@ The player picks **Relajada** (one tier easier, never extra hard), **Normal** or
 The reference app is functional but noisy. We aim for **calm and focused**:
 
 - One background (soft gradient or solid), no photos, no ads, no clutter.
-- One accent color; neutral tiles; high contrast letters. Light and dark themes.
+- One accent color; neutral tiles; high contrast letters.
+- Four color themes, picked in the menu (**Tema**): Grama (indigo, the default), Argento
+  (the flag's light blue and the sun of May), Yerba (mate green) and Quebrada
+  (terracotta, turquoise bonus). Each has a light and a dark mode; the mode (**Modo**)
+  follows the device unless the player picks Claro or Oscuro. Every theme passes WCAG AA.
 - Rounded geometric sans-serif, large letters, generous spacing.
 - Header: back to home and the level number with its tier badge (left); score and the
   menu (right).

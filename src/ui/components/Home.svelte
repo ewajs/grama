@@ -133,7 +133,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
   h1 {
     margin: var(--space-2) 0 0;
     font-size: var(--text-2xl);
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     letter-spacing: 0.04em;
   }
 
@@ -176,7 +176,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
   .badge {
     padding: 1px var(--space-2);
     border-radius: var(--radius-full);
-    background: var(--color-accent-contrast);
+    background: var(--color-surface);
     font-size: 0.7rem;
     font-weight: var(--weight-bold);
     text-transform: uppercase;
@@ -186,7 +186,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
     color: var(--color-success-strong);
   }
   .medium {
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
   }
   .hard {
     color: var(--color-bonus-strong);

@@ -8,6 +8,19 @@ delete it, the history is the point.
 
 ---
 
+## D23 · Color themes: Grama, Argento, Yerba, Quebrada — 2026-10-19
+
+- **Decision:** four themes, each a set of color tokens with light and dark values
+  (`[data-theme]` blocks in `tokens.css`), picked in the menu apart from the mode
+  (Automático, Claro, Oscuro), as in truco. Grama stays the default. Two tokens join the
+  `-strong` family: `--color-accent-strong` (the accent as text) and `--color-on-strong`
+  (text on a `-strong` fill); `contrast.test.ts` checks every theme against WCAG AA.
+- **Why:** a more personal look, with an Argentine theme, as truco has; the tokens made it
+  a CSS change. Argento's light blue only reads well with dark text, so the accent as
+  text and as a fill had to come apart.
+- **Costs accepted:** the browser bar colors live in `App.svelte` too, by hand; until
+  the app's script loads, the page shows Grama's background.
+
 ## D22 · On `main`, only `check` before deploying — 2026-10-19 · _amends D20_
 
 - **Decision:** e2e and the docs build run on PRs only. A push to `main` runs `check`
