@@ -3,8 +3,8 @@ import type { Level } from './level';
 
 /** Everything that changes while playing. Plain data, so it can be saved as JSON. */
 export type GameState = {
-  /** Position of the current level in the level list. */
-  levelIndex: number;
+  /** The level being played, starting at 1. Levels never run out. */
+  levelNumber: number;
   /** Points across all levels. */
   score: number;
   /** Words found on the current level, targets and bonus, in the order found. */
@@ -12,7 +12,7 @@ export type GameState = {
 };
 
 /** State at the start of a new game. */
-export const NEW_GAME: GameState = { levelIndex: 0, score: 0, found: [] };
+export const NEW_GAME: GameState = { levelNumber: 1, score: 0, found: [] };
 
 /**
  * Submits a word on the current level.
@@ -48,7 +48,7 @@ export function levelPoints(level: Level, found: readonly string[]): number {
   }, 0);
 }
 
-/** Moves on to the next level, starting over from the first after the last one. */
-export function nextLevel(state: GameState, levelCount: number): GameState {
-  return { ...state, levelIndex: (state.levelIndex + 1) % levelCount, found: [] };
+/** Moves on to the next level, keeping the score. */
+export function nextLevel(state: GameState): GameState {
+  return { ...state, levelNumber: state.levelNumber + 1, found: [] };
 }

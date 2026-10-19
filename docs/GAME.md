@@ -24,8 +24,9 @@ change that alters a rule, so code and spec never drift.
 
 5. When every target is found the level is **complete**: a short celebration,
    a summary (points, bonus words found) and a "Next level" action.
-6. Levels cycle: after the last level, play starts over from the first (never a
-   dead end). The score keeps growing across levels.
+6. Levels never run out: level N is generated on the device from the word list, and
+   is the same for everyone (D11). The score keeps growing across levels.
+   `?nivel=N` in the URL opens level N directly, for playtesting.
 
 ### Scoring (tunable in `POINTS_PER_LETTER`, `src/core/evaluate.ts`)
 
@@ -36,8 +37,8 @@ change that alters a rule, so code and spec never drift.
 ### Words and letters (Spanish first)
 
 The game is built around **language packs** so more languages can be added and
-picked by the player later. A pack is: the alphabet and normalization rules, the
-level data, and the UI strings. Spanish is the only pack in the MVP.
+picked by the player later. A pack is: the normalization rules, the word lists, and
+the UI strings. Spanish is the only pack in the MVP.
 
 Spanish is Rioplatense: the UI speaks with voseo ("Uní las letras") and any
 cultural references or imagery are Argentine.
@@ -47,22 +48,26 @@ Spanish rules:
 - Words are compared in a **normalized form**: uppercase, accents stripped
   (`Á→A`, `É→E`, `Í→I`, `Ó→O`, `Ú→U`, `Ü→U`). `Ñ` is its own letter.
 - Minimum word length is 3.
-- Target words are common words; bonus words come from a broader dictionary.
-  Offensive words are never targets. Proper nouns and abbreviations are excluded.
+- Any word in the dictionary or the frequency list is valid (sources in D12).
+  Targets are among the 5,000 most frequent words that are also in the dictionary;
+  offensive words (`scripts/blocklist-es.txt`) are never targets.
 - Every level has at least one target that uses **all** its letters.
 
 ### Level shape
 
-A level is static, self-contained data (no global dictionary is shipped): the
-letters on the wheel (a letter may repeat), its target words and its bonus words.
-The type is `Level` in `src/core/level.ts`. A level is valid when:
+A level is the letters on the wheel (a letter may repeat), its target words and its
+bonus words: the type `Level` in `src/core/level.ts`. `generateLevel` in
+`src/core/generate.ts` builds level N: its letters are a common word's, shuffled; the
+most common words they spell (that one included, up to 8) are the targets; every other
+valid word they spell is a bonus word. A level is valid when:
 
 - it has at least 6 letters;
 - every word has 3+ letters and can be spelled with the level's letters, each used once;
 - no word appears twice, across targets and bonus;
 - at least one target uses every letter.
 
-Difficulty ramps with the level number: more letters, more and longer targets.
+Every level has 6 letters for now; difficulty will ramp with the level number (more
+letters, more and longer targets).
 
 ## UX and visual direction
 

@@ -1,6 +1,8 @@
 /** Player-facing text in Rioplatense Spanish (voseo). */
 export const es = {
   appName: 'Grama',
+  loading: 'Cargando palabras…',
+  loadError: 'No pudimos cargar las palabras. Revisá tu conexión y volvé a intentar.',
   level: (number: number) => `Nivel ${number}`,
   score: 'Puntos',
   wheel: 'Letras: arrastrá el dedo de una a otra para formar una palabra',
