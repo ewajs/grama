@@ -195,8 +195,10 @@ Rough layout (portrait phone):
 └───────────────────────────┘
 ```
 
-Desktop: same layout, centered, max width ~480px. Mouse drag works the same, and so
-does typing.
+Wide screens (a phone on its side, a tablet or computer in landscape) put the board on
+the left and the wheel on the right, as big as the height allows; an upright tablet gets
+a wider column with a bigger board and wheel. Mouse drag works the same, and so does
+typing. The installed app stays upright on Android; iPhones and browsers turn freely.
 
 ### Motion
 

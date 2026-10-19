@@ -112,7 +112,8 @@ Two suites, each run where it pays off (D10):
 ## UI and motion
 
 - Use design tokens (`var(--color-accent)`, `var(--dur-fast)`); no ad-hoc colors or durations.
-- Mobile first; test at 375×667 and desktop. Respect safe areas.
+- Mobile first; test at 375×667, a phone on its side (844×390) and desktop. Respect safe
+  areas.
 - Animations: transform/opacity only, 120–250 ms, never block input.
   Honor `prefers-reduced-motion`: take `fly` and `scale` from `ui/lib/motion` (they fade
   instead), not from `svelte/transition`; CSS animations stop by themselves.
