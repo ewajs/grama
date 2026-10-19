@@ -191,24 +191,79 @@ Goal: calmer feedback, a tidier menu, a guide for curious players and docs for d
 **Verify:** a player can answer "why didn't my word count?" from the guide; a developer
 can follow a word from the wheel to the score from the docs alone.
 
-### M13 — Polish · `v0.14.0`
+### M13 — Solid ground · `v0.14.0`
+
+Goal: fix what the M12 code review found, and guard against it coming back.
+
+- [ ] Dailies never repeat: their own seeds, counted per tier; a test over several years.
+      A daily with fewer than 3 bonus words is regenerated (★★★ must be possible)
+- [ ] Levels don't repeat after a difficulty change: a "next block" counter per tier and
+      size saved in progress; reports carry difficulty, tier and the daily's date; guide
+      claims fixed ("level 37 is the same on every phone")
+- [ ] Replays don't pay twice: no points or hint progress for words already found on
+      that level; `playWord` says what was earned, and Level Complete shows only that
+- [ ] Stats only grow: cumulative counters and sticky achievements; dailies count toward
+      the tier achievements
+- [ ] Home shows the current level and its tier after a replay or daily; sharing uses the
+      played date; the clock is injected and the daily refreshes when the app resumes
+- [ ] Input and motion: a cancelled drag clears instead of submitting; dialogs fade out
+      without delay; board rows keyed by slot so letters fly to the right row
+- [ ] Golden content test (levels 1–100, the next 60 dailies) and a content version in
+      the save; the screenshots spec stops hard-coding the save
+- [ ] CI on PRs runs `build` and e2e (Chromium + WebKit, touch on the phone project);
+      D10 replaced; a `browserslist` so older Safari gets what it needs
+- [ ] Accessibility: native `<dialog>` with focus handling; tier badge contrast (AA);
+      reduced motion in every transition
+- [ ] CLAUDE.md slimmed: imports CONTRIBUTING and a short list of invariants, points to
+      GAME / PLAN / DECISIONS by path; docs resynced with the code (GAME.md, PLAN.md, D12,
+      D16, D18); `npm audit` allowlist; Outfit in NOTICE.md
+
+**Verify:** the review's probes find nothing: no daily or nearby level repeats, replays
+pay nothing twice, stats never go down; CI goes red on a broken build or flow.
+
+### M14 — Faster & friendlier · `v0.15.0`
+
+- [ ] Typing on desktop (letters + Enter, Backspace, Escape) and tap-to-select letters
+- [ ] Sound effects (letter tick, word chime, level done) with a setting
+- [ ] Fast start: pre-normalized word lists, Home shown before they load; performance
+      budget (< 100 KB JS gz, Lighthouse ≥ 90 on mobile)
+- [ ] Streak freeze: one missed day doesn't break the daily streak (earned, not bought)
+
+**Verify:** a cold start on a mid-range phone shows Home in under a second; the game is
+playable with only a keyboard.
+
+### M15 — Contrarreloj · `v0.16.0`
+
+A timed mode, apart from the main game (D19).
+
+- [ ] Core: a run as plain data: wheels from a random seed, getting harder; time added
+      and taken by results and Pasar; points; `tick(run, elapsed)` (time passed in)
+- [ ] Screen: timer, board, wheel, Pasar; pauses when the app is hidden; run summary
+      with the best score
+- [ ] Home card, best score and history saved apart from progress; 3 achievements
+- [ ] Guide page and GAME.md section
+
+**Verify:** a run feels tense but fair: a 6-letter wheel is clearable in time, Pasar
+rescues a dead wheel, and the best score survives reloads.
+
+### M16 — Polish · `v0.17.0`
 
 - [ ] Visual design pass (level-complete moment, landscape and tablet layouts)
-- [ ] `prefers-reduced-motion`; accessible labels and contrast check
-- [ ] Keyboard input on desktop (type + Enter)
-- [ ] Performance budget: < 100 KB JS gz, Lighthouse ≥ 90 on mobile
 - [ ] Real-device checklist: install and offline on Android and iOS
 
 **Verify:** fresh-install playthrough of levels 1–20 on a mid-range phone with no rough edges.
 
 ## Backlog (post-MVP, unordered)
 
-- More power-ups (reveal a whole word) and a coin economy
-- Statistics screen, streaks, daily puzzle
+- More hint types (reveal a whole word, a letter in every row)
+- "Tu diccionario": every word found, collected, with its definition
+- Chapters with Argentine scenes (Quebrada, Patagonia, Iguazú…) every 20 levels
+- A golden letter per level: the word that uses it pays extra
 - Crossword-style board layout
-- Sound effects with mute toggle
+- Sharing an image of a result, for any level
 - English (or other) language packs + language picker (the structure is in place from M0/M1)
-- Share results
+- Tooling: a release script (version, changelog, news, tag in one step); a repo script for
+  before/after screenshots of UI changes
 
 ## Changelog
 
