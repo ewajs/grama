@@ -260,10 +260,21 @@ rescues a dead wheel, and the best score survives reloads.
 
 **Verify:** fresh-install playthrough of levels 1–20 on a mid-range phone with no rough edges.
 
+### M17 — Tu diccionario · `v0.18.0`
+
+- [x] Core and saving: every word found (levels, dailies, Contrarreloj) collected once,
+      saved apart from the progress (D24)
+- [ ] Screen: a Home card, the words in alphabetical order with a letter index and
+      search; tapping one shows its definition
+- [ ] New words marked as found, the count in Logros, achievements for its size; guide
+      page and screenshots
+
+**Verify:** words found anywhere show up in the dictionary, once, and survive a reload and
+starting over.
+
 ## Backlog (post-MVP, unordered)
 
 - More hint types (reveal a whole word, a letter in every row)
-- "Tu diccionario": every word found, collected, with its definition
 - Chapters with Argentine scenes (Quebrada, Patagonia, Iguazú…) every 20 levels
 - A golden letter per level: the word that uses it pays extra
 - Crossword-style board layout

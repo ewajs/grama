@@ -190,6 +190,9 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
   progress stays but the levels in play start over.
 - {@link "storage/settings"!loadSettings | loadSettings} keeps each setting it understands and defaults
   the rest, so new settings never wipe old ones.
+- The Contrarreloj record ({@link "storage/trials"!saveTrials | saveTrials}) and Tu diccionario
+  ({@link "storage/dictionary"!saveDictionary | saveDictionary}) have keys of their own, so a new
+  save version never wipes them (D19, D24).
 - The service worker (`vite-plugin-pwa`) precaches the app and the word lists. Its offline
   fallback must not answer for `/guia/` and `/docs/`, which are separate sites under the
   same path (`navigateFallbackDenylist` in `vite.config.ts`).

@@ -7,6 +7,7 @@
   import { levelFromUrl, startState } from './app/start';
   import { loadWords } from './content';
   import { strings } from './i18n';
+  import { loadDictionary, saveDictionary } from './storage/dictionary';
   import { loadGame, saveGame } from './storage/save';
   import { loadTrials, saveTrials } from './storage/trials';
   import { loadSettings, saveSettings, type Theme } from './storage/settings';
@@ -27,6 +28,8 @@
     onchange: saveGame,
     trials: loadTrials(),
     ontrials: saveTrials,
+    dictionary: loadDictionary(),
+    ondictionary: saveDictionary,
   });
   let words = $state<WordList | null>(null);
   let failed = $state(false);
@@ -93,6 +96,7 @@
       {preferences}
       best={game.trialBest}
       unlocked={game.achievements}
+      onword={(word) => game.addToDictionary(word)}
       onfinish={(result) => game.recordRun(result)}
       onback={() => navigation.back()}
     />

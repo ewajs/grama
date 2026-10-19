@@ -7,6 +7,7 @@ is open and the app is visible; when time is up, a summary offers another run.
 - `preferences`: sound and vibration.
 - `best`: the best run so far, if any, to show with the result.
 - `unlocked`: the achievements reached, so new ones are announced.
+- `onword(word)`: a word was found (normalized), for Tu diccionario.
 - `onfinish(result)`: a run ended; its result, to keep.
 - `onback()`: back to the home screen (a run in play is dropped).
 -->
@@ -35,10 +36,11 @@ is open and the app is visible; when time is up, a summary offers another run.
     preferences: Preferences;
     best: RunResult | null;
     unlocked: readonly AchievementId[];
+    onword: (word: string) => void;
     onfinish: (result: RunResult) => void;
     onback: () => void;
   };
-  let { words, preferences, best, unlocked, onfinish, onback }: Props = $props();
+  let { words, preferences, best, unlocked, onword, onfinish, onback }: Props = $props();
 
   // One trial per visit to the screen; "Otra vez" restarts it.
   // svelte-ignore state_referenced_locally
@@ -102,6 +104,7 @@ is open and the app is visible; when time is up, a summary offers another run.
     const before = trial.wheelNumber;
     const submission = trial.submit(next);
     if (submission.kind === 'target' || submission.kind === 'bonus') {
+      onword(submission.word);
       const cleared = trial.wheelNumber !== before;
       gained = {
         id: resultCount + 1,
