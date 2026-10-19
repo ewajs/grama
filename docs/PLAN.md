@@ -52,7 +52,7 @@ including fast diagonal swipes; desktop mouse drag works.
 
 Goal: wheel + board + rules = a complete level with fixture data.
 
-- [ ] Board: rows of tiles grouped by length; found words fill their row
+- [x] Board: rows of tiles grouped by length; found words fill their row
 - [ ] Feedback per result (shake / fly-in + flip / bonus pulse / repeated glow)
 - [ ] Header with level number and animated score
 - [ ] Level-complete overlay → next level

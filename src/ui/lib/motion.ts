@@ -1,0 +1,8 @@
+/**
+ * Durations in milliseconds for animations driven from script (Svelte transitions,
+ * tweens). They mirror the `--dur-*` tokens in `styles/tokens.css`; keep both in sync.
+ */
+export const DURATION = { fast: 120, base: 180, slow: 250 } as const;
+
+/** Delay between consecutive tiles of a word appearing, for a quick cascade. */
+export const TILE_STAGGER = 45;
