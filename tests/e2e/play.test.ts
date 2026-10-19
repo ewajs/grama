@@ -12,3 +12,15 @@ test('spelling a word that is not in the level scores nothing', async ({ page })
   await drawWord(page, 'LOT');
   await expect(page.getByLabel('Puntos')).toHaveText('★ 0');
 });
+
+test('letters can still be dragged after shuffling', async ({ page }) => {
+  await page.goto('./');
+  const order = () =>
+    page.locator('[data-letter]').evaluateAll((els) => els.map((e) => e.textContent));
+  const before = await order();
+  await page.getByRole('button', { name: 'Mezclar letras' }).click();
+  expect(await order()).not.toEqual(before);
+  await page.waitForTimeout(400); // let the letters glide into place
+  await drawWord(page, 'SOL');
+  await expect(page.getByLabel('Puntos')).toHaveText('★ 30');
+});
