@@ -65,8 +65,9 @@ daily), so the record lands in the right place.
 ### Records and rewards
 
 - {@link "core/history"!starsFor | starsFor} and {@link "core/history"!record | record}: stars, and the best
-  result per level.
-- {@link "core/stats"!statsOf | statsOf}: totals over the history and the dailies.
+  of every play per level (most stars, fewest hints, most bonus words).
+- {@link "core/stats"!statsOf | statsOf}: totals over the history and the dailies, plus every hint
+  spent. Nothing in them can go down, so achievements stay unlocked.
 - {@link "core/achievements"!ACHIEVEMENTS | ACHIEVEMENTS}: each one a stat reaching a goal.
 - {@link "core/daily"!generateDaily | generateDaily} and {@link "core/daily"!streak | streak}: the daily challenge.
 

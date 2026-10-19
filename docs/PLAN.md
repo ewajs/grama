@@ -203,7 +203,7 @@ Goal: fix what the M12 code review found, and guard against it coming back.
       claims fixed ("level 37 is the same on every phone")
 - [x] Replays don't pay twice: a completed level pays no points or hint progress again;
       the session keeps what it paid, and Level Complete shows only that
-- [ ] Stats only grow: cumulative counters and sticky achievements; dailies count toward
+- [x] Stats only grow: cumulative counters and sticky achievements; dailies count toward
       the tier achievements
 - [ ] Home shows the current level and its tier after a replay or daily; sharing uses the
       played date; the clock is injected and the daily refreshes when the app resumes

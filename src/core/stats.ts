@@ -1,17 +1,20 @@
 /**
- * Totals over the player's history, for the stats screen and achievements.
+ * The player's totals, for the stats screen and achievements. They only ever grow.
  * @module
  */
 
 import { TIERS, type Tier } from './difficulty';
 import { bestStreak } from './daily';
-import type { History, LevelRecord } from './history';
+import type { Progress } from './progress';
 
-/** The player's totals, from their history of completed levels (best result each). */
+/**
+ * The player's totals. Except for `levels` and `dailies`, they count numbered levels and
+ * daily challenges alike, each by its best (see `record`).
+ */
 export type Stats = {
-  /** Levels completed. */
+  /** Numbered levels completed. */
   levels: number;
-  /** Levels completed, by tier. */
+  /** Levels and dailies completed, by tier. */
   byTier: Readonly<Record<Tier, number>>;
   /** Stars earned. */
   stars: number;
@@ -21,7 +24,7 @@ export type Stats = {
   words: number;
   /** Bonus words found. */
   bonus: number;
-  /** Hints spent. */
+  /** Hints spent, ever. */
   hints: number;
   /** Levels completed without hints. */
   noHints: number;
@@ -33,21 +36,19 @@ export type Stats = {
   bestStreak: number;
 };
 
-/**
- * Totals over every completed level's best result, plus the daily challenges'.
- * @param dailies Completed daily challenges by date.
- */
-export function statsOf(
-  history: History,
-  dailies: Readonly<Record<string, LevelRecord>> = {},
-): Stats {
-  const results = Object.values(history);
+/** The player's totals, from their completed levels and dailies and the hints they spent. */
+export function statsOf({
+  history,
+  dailies,
+  hintsSpent,
+}: Pick<Progress, 'history' | 'dailies' | 'hintsSpent'>): Stats {
+  const results = [...Object.values(history), ...Object.values(dailies)];
   const count = (keep: (result: (typeof results)[number]) => boolean) =>
     results.filter(keep).length;
   const sum = (value: (result: (typeof results)[number]) => number) =>
     results.reduce((total, result) => total + value(result), 0);
   return {
-    levels: results.length,
+    levels: Object.keys(history).length,
     byTier: Object.fromEntries(
       TIERS.map((tier) => [tier, count((result) => result.tier === tier)]),
     ) as Record<Tier, number>,
@@ -55,7 +56,7 @@ export function statsOf(
     threeStars: count((result) => result.stars === 3),
     words: sum((result) => result.targets),
     bonus: sum((result) => result.bonus),
-    hints: sum((result) => result.hints),
+    hints: hintsSpent,
     noHints: count((result) => result.hints === 0),
     extraNoHints: count((result) => result.tier === 'extra' && result.hints === 0),
     dailies: Object.keys(dailies).length,

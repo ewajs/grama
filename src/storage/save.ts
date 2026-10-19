@@ -8,7 +8,7 @@ import type { Progress } from '../core/progress';
 const KEY = 'grama.save';
 
 /** Bump whenever `Progress` changes shape. Pre-1.0 an older save is discarded (D5). */
-const VERSION = 9;
+const VERSION = 10;
 
 type Save = { version: number; progress: Progress };
 
@@ -48,6 +48,7 @@ function isSave(value: unknown): value is Save {
     (progress?.levelNumber ?? 0) >= 1 &&
     typeof progress?.score === 'number' &&
     Number.isInteger(progress.hints) &&
+    Number.isInteger(progress.hintsSpent) &&
     Number.isInteger(progress.bonusTowardHint) &&
     ['relaxed', 'normal', 'challenging'].includes(progress.difficulty) &&
     typeof progress.occurrences === 'object' &&

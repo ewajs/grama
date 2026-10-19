@@ -41,7 +41,8 @@ change that alters a rule, so code and spec never drift.
 
 Each completed level is recorded with its tier, hints used, bonus words found and stars:
 **★★★** with no hints and at least 3 bonus words, **★★** with at most one hint, **★**
-otherwise. Replaying a level keeps the best result.
+otherwise. Replaying a level keeps the best of every play (most stars, fewest hints, most
+bonus words), so stats and achievements never go down.
 
 The **map** shows every level reached, by tier, with its stars; tapping an earlier level
 replays it as it was generated. A replay only counts for better stars: it pays no points,
@@ -60,8 +61,10 @@ shared with the main game; it never moves the current level.
 ### Achievements (`src/core/achievements.ts`)
 
 19 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
-bonus words, levels without hints, dailies and streaks). A toast announces each one as it's earned; the
-Logros screen lists them with progress and the player's stats.
+bonus words, levels without hints, dailies and streaks). Dailies count like levels for
+stars, words, hints and tiers, but not toward the number of levels completed. Stats only
+grow; "hints used" counts every hint ever spent. A toast announces each achievement as
+it's earned; the Logros screen lists them with progress and the player's stats.
 
 ### Definitions
 

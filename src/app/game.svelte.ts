@@ -148,9 +148,9 @@ export class Game {
     return this.#progress.history;
   }
 
-  /** The player's totals, from the history and the daily challenges. */
+  /** The player's totals, from the history, the daily challenges and the hints spent. */
   get stats(): Stats {
-    return statsOf(this.#progress.history, this.#progress.dailies);
+    return statsOf(this.#progress);
   }
 
   /** The achievements the player has reached. */

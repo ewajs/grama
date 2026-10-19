@@ -131,6 +131,7 @@ describe('useHint', () => {
   it('spends a hint to show one more letter', () => {
     const { progress, session } = useHint(NEW_PROGRESS, level, NEW_SESSION);
     expect(progress.hints).toBe(STARTING_HINTS - 1);
+    expect(progress.hintsSpent).toBe(1);
     expect(session.revealed).toEqual({ SOL: 1 });
   });
 

@@ -1,5 +1,5 @@
 /**
- * Results of completed levels: stars, and keeping the best result per level.
+ * Results of completed levels: stars, and keeping the best of every play per level.
  * @module
  */
 
@@ -32,7 +32,7 @@ export type LevelRecord = {
   targets: number;
 };
 
-/** Completed levels by number: the player's best result on each. */
+/** Completed levels by number: the player's best on each. */
 export type History = Readonly<Record<number, LevelRecord>>;
 
 /**
@@ -63,17 +63,11 @@ export function recordOf(
   };
 }
 
-/** Whether `record` beats `best`: more stars, or as many with fewer hints or more bonus. */
-function beats(record: LevelRecord, best: LevelRecord): boolean {
-  if (record.stars !== best.stars) return record.stars > best.stars;
-  if (record.hints !== best.hints) return record.hints < best.hints;
-  return record.bonus > best.bonus;
-}
-
 /**
- * Results with a level's new one, kept only if it's the best so far. Works for numbered
- * levels and for daily challenges (keyed by date).
- * @returns The same results when the new one doesn't beat the old one.
+ * Results with a level's new one merged in: the most stars, the fewest hints and the most
+ * bonus words of every play, so nothing counted from them ever goes down. Works for
+ * numbered levels and for daily challenges (keyed by date).
+ * @returns The same results when the new one improves nothing.
  */
 export function record<Key extends string | number>(
   results: Readonly<Record<Key, LevelRecord>>,
@@ -81,5 +75,15 @@ export function record<Key extends string | number>(
   result: LevelRecord,
 ): Readonly<Record<Key, LevelRecord>> {
   const best: LevelRecord | undefined = results[key];
-  return best && !beats(result, best) ? results : { ...results, [key]: result };
+  if (!best) return { ...results, [key]: result };
+  if (result.stars <= best.stars && result.hints >= best.hints && result.bonus <= best.bonus) {
+    return results;
+  }
+  const merged: LevelRecord = {
+    ...best,
+    stars: Math.max(result.stars, best.stars) as Stars,
+    hints: Math.min(result.hints, best.hints),
+    bonus: Math.max(result.bonus, best.bonus),
+  };
+  return { ...results, [key]: merged };
 }
