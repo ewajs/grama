@@ -7,7 +7,9 @@ export const es = {
   score: 'Puntos',
   wheel: 'Letras: arrastrá el dedo de una a otra para formar una palabra',
   shuffle: 'Mezclar letras',
-  bonus: (count: number) => `Palabras extra: ${count}`,
+  bonus: (count: number, untilHint: number) =>
+    `Palabras extra: ${count}. ${untilHint} más para ganar una pista`,
+  hint: (count: number) => (count === 1 ? 'Pista: te queda 1' : `Pista: te quedan ${count}`),
   levelComplete: '¡Bien ahí!',
   levelCompleteDetail: (level: number) => `Completaste el nivel ${level}`,
   pointsWon: (points: number) => `+${points} puntos`,

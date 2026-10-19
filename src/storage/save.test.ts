@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../core/game';
+import { NEW_GAME, type GameState } from '../core/game';
 import { loadGame, saveGame } from './save';
 
 /** An in-memory stand-in for `localStorage`. */
@@ -11,7 +11,7 @@ function memoryStorage(initial: Record<string, string> = {}) {
   };
 }
 
-const state: GameState = { levelNumber: 12, score: 480, found: ['CASA', 'SOL'] };
+const state: GameState = { ...NEW_GAME, levelNumber: 12, score: 480, found: ['CASA', 'SOL'] };
 
 describe('saving and loading', () => {
   it('restores what was saved', () => {
@@ -27,7 +27,7 @@ describe('saving and loading', () => {
   it('discards saves from another version or with an unexpected shape', () => {
     const old = JSON.stringify({ version: 0, state });
     expect(loadGame(memoryStorage({ 'grama.save': old }))).toBeNull();
-    const broken = JSON.stringify({ version: 1, state: { levelNumber: 'x' } });
+    const broken = JSON.stringify({ version: 2, state: { levelNumber: 'x' } });
     expect(loadGame(memoryStorage({ 'grama.save': broken }))).toBeNull();
     expect(loadGame(memoryStorage({ 'grama.save': '{not json' }))).toBeNull();
   });

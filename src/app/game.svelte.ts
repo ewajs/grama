@@ -1,6 +1,8 @@
 import type { Submission } from '../core/evaluate';
 import { isLevelComplete, levelPoints, nextLevel, submitWord, type GameState } from '../core/game';
 import { generateLevel } from '../core/generate';
+import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter } from '../core/hints';
+import { boardRows, type BoardRow } from '../core/board';
 import type { Level } from '../core/level';
 import type { WordList } from '../content/words';
 
@@ -52,6 +54,35 @@ export class Game {
     return this.#state.found.filter((word) => !this.level.targets.includes(word)).length;
   }
 
+  /** The board's rows, with words as written (accents included). */
+  get board(): BoardRow[] {
+    return boardRows(this.level, this.#state.found, this.#state.revealed).map((row) => ({
+      ...row,
+      word: row.word && this.written(row.word),
+    }));
+  }
+
+  /** Hints available to spend. */
+  get hints(): number {
+    return this.#state.hints;
+  }
+
+  /** Progress toward the next hint, from 0 to 1. */
+  get hintProgress(): number {
+    return this.#state.bonusTowardHint / BONUS_WORDS_PER_HINT;
+  }
+
+  /** Bonus words still to find for the next hint. */
+  get bonusUntilHint(): number {
+    return BONUS_WORDS_PER_HINT - this.#state.bonusTowardHint;
+  }
+
+  /** Whether a hint can be spent now: one is available and a letter is left to reveal. */
+  get canHint(): boolean {
+    const { hints, found, revealed } = this.#state;
+    return hints > 0 && hintTarget(this.level, found, revealed) !== null;
+  }
+
   /** Words found on the current level, in the order found. */
   get found(): readonly string[] {
     return this.#state.found;
@@ -67,6 +98,11 @@ export class Game {
     const { submission, state } = submitWord(this.#state, this.level, word);
     this.#update(state);
     return submission;
+  }
+
+  /** Spends a hint to reveal a letter on the board. */
+  hint(): void {
+    this.#update(revealLetter(this.#state, this.level));
   }
 
   /** Moves on to the next level. */

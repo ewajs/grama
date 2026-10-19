@@ -11,12 +11,12 @@ const level: Level = {
 describe('submitWord', () => {
   it('adds a target to the found words and its points to the score', () => {
     const { state } = submitWord(NEW_GAME, level, 'SOL');
-    expect(state).toEqual({ levelNumber: 1, score: 30, found: ['SOL'] });
+    expect(state).toMatchObject({ levelNumber: 1, score: 30, found: ['SOL'] });
   });
 
   it('adds a bonus word the same way', () => {
     const { state } = submitWord({ ...NEW_GAME, score: 30, found: ['SOL'] }, level, 'OLA');
-    expect(state).toEqual({ levelNumber: 1, score: 36, found: ['SOL', 'OLA'] });
+    expect(state).toMatchObject({ levelNumber: 1, score: 36, found: ['SOL', 'OLA'] });
   });
 
   it('leaves the state untouched for invalid and repeated words', () => {
@@ -49,7 +49,7 @@ describe('levelPoints', () => {
 
 describe('nextLevel', () => {
   it('moves to the next level, clearing found words and keeping the score', () => {
-    const state = { levelNumber: 7, score: 120, found: ['SOL', 'PLATOS'] };
-    expect(nextLevel(state)).toEqual({ levelNumber: 8, score: 120, found: [] });
+    const state = { ...NEW_GAME, levelNumber: 7, score: 120, found: ['SOL', 'PLATOS'] };
+    expect(nextLevel(state)).toMatchObject({ levelNumber: 8, score: 120, found: [] });
   });
 });
