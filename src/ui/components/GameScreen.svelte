@@ -194,6 +194,7 @@ letter wheel with its controls.
       : strings.levelCompleteDetail(game.levelNumber)}
     tier={game.tier}
     stars={game.stars}
+    words={game.targetWords}
     nextLabel={game.daily
       ? strings.backHome
       : game.replaying

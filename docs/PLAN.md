@@ -167,7 +167,7 @@ after a missed day.
 
 ### M11 — Feel · `v0.12.0`
 
-- [ ] Level-complete celebration: confetti, and a recap of the words found
+- [x] Level-complete celebration: confetti, and a recap of the words found
 - [ ] Found letters fly from the wheel into their row on the board
 - [ ] Tap a found word for a link to its definition (RAE dictionary)
 

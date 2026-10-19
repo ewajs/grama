@@ -130,6 +130,8 @@ export const es = {
   extraHint: '+1 pista',
   starsLabel: (stars: number) => (stars === 1 ? '1 estrella' : `${stars} estrellas`),
   starsHow: '3 estrellas: sin pistas y con 3 palabras extra.',
+  recap: 'Las palabras · tocá una para ver qué significa',
+  definitionOf: (word: string) => `Qué significa ${word}`,
   vibration: 'Vibración',
   install: 'Instalar Grama',
   installIos: 'Para instalarla: en Safari tocá Compartir y elegí «Agregar a inicio».',

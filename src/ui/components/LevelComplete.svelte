@@ -5,6 +5,7 @@ Celebrates a finished level over the game screen, with what was won, and moves o
 - `detail`: what was finished: "Completaste el nivel 12".
 - `tier`: how hard it was; harder levels list their rewards.
 - `stars`: stars earned on it.
+- `words`: its targets, as written, each linking to its definition.
 - `points`: points won on it.
 - `bonus`: bonus words found on it.
 - `nextLabel`: the button's label (the next level, or back to the map after a replay).
@@ -16,6 +17,8 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   import { TIER_MULTIPLIER } from '../../core/evaluate';
   import { strings } from '../../i18n';
   import { CELEBRATION_DELAY } from '../lib/motion';
+  import { definitionUrl } from '../../app/dictionary';
+  import Confetti from './Confetti.svelte';
   import Dialog from './Dialog.svelte';
   import Stars from './Stars.svelte';
 
@@ -23,16 +26,19 @@ Celebrates a finished level over the game screen, with what was won, and moves o
     detail: string;
     tier: Tier;
     stars: number;
+    words: readonly string[];
     points: number;
     bonus: number;
     nextLabel: string;
     share?: () => Promise<'shared' | 'copied' | 'failed'>;
     onnext: () => void;
   };
-  let { detail, tier, stars, points, bonus, nextLabel, share, onnext }: Props = $props();
+  let { detail, tier, stars, words, points, bonus, nextLabel, share, onnext }: Props = $props();
 
   let copied = $state(false);
 </script>
+
+<Confetti delay={CELEBRATION_DELAY} />
 
 <Dialog title={strings.levelComplete} delay={CELEBRATION_DELAY}>
   <p>{detail}</p>
@@ -52,6 +58,19 @@ Celebrates a finished level over the game screen, with what was won, and moves o
       <li class="hint">{strings.extraHint}</li>
     {/if}
   </ul>
+  <section class="recap">
+    <h3>{strings.recap}</h3>
+    <div>
+      {#each words as word (word)}
+        <a
+          href={definitionUrl(word)}
+          target="_blank"
+          rel="noopener"
+          aria-label={strings.definitionOf(word)}>{word}</a
+        >
+      {/each}
+    </div>
+  </section>
   {#if share}
     <button
       class="primary"
@@ -71,6 +90,35 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   p {
     margin: 0;
     color: var(--color-text-muted);
+  }
+
+  .recap {
+    margin: 0 0 var(--space-2);
+  }
+
+  .recap h3 {
+    margin: 0 0 var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: var(--weight-medium);
+  }
+
+  .recap div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+
+  .recap a {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.04em;
+    text-decoration: none;
   }
 
   .stars {

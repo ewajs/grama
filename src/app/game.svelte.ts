@@ -211,6 +211,13 @@ export class Game {
     return bonusWords(this.level, this.#playing.session).map((word) => this.written(word));
   }
 
+  /** The targets of the level on screen, as written, in board order (shortest first). */
+  get targetWords(): string[] {
+    return this.level.targets
+      .toSorted((a, b) => a.length - b.length)
+      .map((word) => this.written(word));
+  }
+
   /** How many bonus words have been found on the level on screen. */
   get bonusFound(): number {
     return bonusWords(this.level, this.#playing.session).length;
