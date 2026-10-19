@@ -78,3 +78,20 @@ test('the report button links to a pre-filled GitHub issue', async ({ page }) =>
   expect(url.searchParams.get('title')).toBe('Falta una palabra (nivel 1)');
   expect(url.searchParams.get('body')).toContain(`Intentos rechazados: ${nonWord(first)}`);
 });
+
+test('the shuffled order stays put while playing', async ({ page }) => {
+  const order = () =>
+    page.locator('[data-letter]').evaluateAll((els) => els.map((e) => e.textContent?.trim()));
+  await page.goto('./');
+  await page.locator('[data-letter]').first().waitFor();
+  await page.getByRole('button', { name: 'Mezclar letras' }).click();
+  await page.waitForTimeout(400);
+  const shuffledOrder = await order();
+  await drawWord(page, target);
+  await expect(page.getByLabel('Puntos')).not.toHaveText('0');
+  expect(await order()).toEqual(shuffledOrder);
+  await drawWord(page, first.bonus[0]!);
+  expect(await order()).toEqual(shuffledOrder);
+  await page.getByRole('button', { name: /^Pista/ }).click();
+  expect(await order()).toEqual(shuffledOrder);
+});
