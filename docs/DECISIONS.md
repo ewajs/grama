@@ -8,6 +8,15 @@ delete it, the history is the point.
 
 ---
 
+## D21 · Board rows alphabetical, each word in a fixed row — 2026-10-19
+
+- **Decision:** within a length, board rows follow alphabetical order (`Ñ` after `N`),
+  and each target owns its row from the start (`byBoardOrder` in `src/core/board.ts`).
+- **Why:** a predictable board reads better, and the level-complete list matches it.
+- **Costs accepted:** where a found word lands is a small clue (found in the second row of
+  3, the missing one comes before it). Before, rows filled in the order found to hide
+  this; the slightly easier game is fine.
+
 ## D20 · E2E in CI on every PR, Chromium and WebKit — 2026-10-19 · _replaces D10_
 
 - **Decision:** CI runs the Playwright suite on every PR and on `main`, against the
