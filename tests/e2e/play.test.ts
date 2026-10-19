@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { drawWord } from './wheel';
+import { drawWord } from './wheel.ts';
 
 test('spelling a target word on the wheel scores it', async ({ page }) => {
   await page.goto('./');
