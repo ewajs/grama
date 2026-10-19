@@ -9,6 +9,10 @@ const list = (words: readonly string[]) => (words.length > 0 ? words.join(', ') 
 /** Player-facing text in Rioplatense Spanish (voseo). */
 export const es = {
   appName: 'Grama',
+  tagline: 'Uní las letras y encontrá todas las palabras.',
+  hintsLeft: 'Pistas',
+  continuePlaying: 'Jugar',
+  back: 'Volver al inicio',
   loading: 'Cargando palabras…',
   loadError: 'No pudimos cargar las palabras. Revisá tu conexión y volvé a intentar.',
   level: (number: number) => `Nivel ${number}`,

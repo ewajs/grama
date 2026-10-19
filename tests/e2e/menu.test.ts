@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { enterGame, openGame } from './app.ts';
 import { level } from './level.ts';
 import { drawWord } from './wheel.ts';
 
@@ -6,11 +7,12 @@ const openMenu = (page: import('@playwright/test').Page) =>
   page.getByRole('button', { name: 'Abrir el menú' }).click();
 
 test('the chosen theme applies and survives a reload', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await openMenu(page);
   await page.getByRole('radio', { name: 'Oscuro' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.reload();
+  await enterGame(page);
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await openMenu(page);
   await page.getByRole('radio', { name: 'Automático' }).click();
@@ -30,7 +32,7 @@ test('starting over goes back to level 1 with no points', async ({ page }) => {
 });
 
 test('offers to install the app when the browser can', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await page.locator('[data-letter]').first().waitFor();
   // Simulates Chrome offering its install prompt.
   await page.evaluate(() => {
@@ -48,21 +50,23 @@ test('offers to install the app when the browser can', async ({ page }) => {
 });
 
 test('the vibration switch survives a reload', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await openMenu(page);
   const vibration = page.getByRole('switch', { name: 'Vibración' });
   await expect(vibration).toBeChecked();
   await vibration.uncheck();
   await page.reload();
+  await enterGame(page);
   await openMenu(page);
   await expect(page.getByRole('switch', { name: 'Vibración' })).not.toBeChecked();
 });
 
 test('the difficulty setting survives a reload', async ({ page }) => {
-  await page.goto('./');
+  await openGame(page);
   await openMenu(page);
   await page.getByRole('radio', { name: 'Desafiante' }).click();
   await page.reload();
+  await enterGame(page);
   await openMenu(page);
   await expect(page.getByRole('radio', { name: 'Desafiante' })).toHaveAttribute(
     'aria-checked',
@@ -73,7 +77,7 @@ test('the difficulty setting survives a reload', async ({ page }) => {
 test('the header always shows the level’s difficulty', async ({ page }) => {
   // The level's own tier: usually the cadence's, but the generator may settle for another.
   const labels = { easy: 'Fácil', medium: 'Media', hard: 'Difícil', extra: 'Extra difícil' };
-  await page.goto('./');
+  await openGame(page);
   await expect(
     page.locator('header').getByText(labels[level(1).tier], { exact: true }),
   ).toBeVisible();
