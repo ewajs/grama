@@ -60,23 +60,24 @@ Goal: wheel + board + rules = a complete level with fixture data.
 
 **Verify:** a fixture level can be fully played on phone and desktop.
 
-### M4 — Content pipeline · `v0.5.0`
+### M4 — Endless levels · `v0.5.0`
 
-Goal: hundreds of good Spanish levels, reproducibly generated.
+Goal: levels never run out, generated on the device (D11), good enough to playtest.
 
 - [ ] Choose word sources (common words + broad dictionary) and **verify licenses**;
       record the decision in DECISIONS.md. Must include Argentine usage (voseo forms like
       _tenés_, _sabés_; words like _che_, _pibe_) at least as valid bonus words
 - [ ] `scripts/prepare-words.ts`: normalize and filter the sources (length, proper nouns,
-      offensive list) into a compact word list with frequency ranks
-- [ ] `src/core/generate.ts`: pure `generateLevel(words, seed, index)`: pick seed word,
-      compute sub-anagrams, choose targets vs bonus, seeded RNG
-- [ ] `scripts/build-levels.ts`: run the generator for N levels, write chunked JSON
-- [ ] Difficulty curve: letters 6→7→8, target count and lengths grow with level index
-- [ ] Generator invariants tested (every target formable, one full-length target, no dupes)
-- [ ] Ship generated levels; manual playtest of the first ~30
+      offensive list) into a compact word list with frequency ranks, shipped as a static file
+- [ ] `src/core/generate.ts`: pure `generateLevel(words, levelNumber)`: seeded RNG, pick a
+      seed word, find every word its letters spell, choose targets (common) vs bonus (rest);
+      invariants tested (every level passes `levelProblems`)
+- [ ] App loads the word list and generates each level on demand; hand-written levels removed
+- [ ] Difficulty curve: letters 6→7→8, target count and lengths grow with the level number
+- [ ] Playtest helper: `?nivel=N` opens level N directly; manual playtest of a few dozen levels
 
-**Verify:** `npm run levels` regenerates byte-identical output; first 30 levels feel fair.
+**Verify:** level N is identical on every reload and device; playing 30 levels in a row
+feels fair (no obscure targets, no offensive words, nothing unspellable).
 
 ### M5 — Persistence + PWA · `v0.6.0`
 
