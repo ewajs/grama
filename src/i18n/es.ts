@@ -16,6 +16,17 @@ export const es = {
   mapSummary: (levels: number, stars: number) =>
     `${levels === 1 ? '1 nivel' : `${levels} niveles`} · ${stars} ★`,
   backToMap: 'Volver al mapa',
+  achievements: 'Logros',
+  statsTitle: 'Estadísticas',
+  statsSummary: (stars: number) => `${stars} ★ ganadas`,
+  statLabels: {
+    levels: 'Niveles',
+    stars: 'Estrellas',
+    threeStars: 'Con 3 estrellas',
+    words: 'Palabras',
+    bonus: 'Palabras extra',
+    hints: 'Pistas usadas',
+  },
   replaying: 'Repetición',
   playLevel: (level: number) => `Jugar el nivel ${level}`,
   back: 'Volver al inicio',

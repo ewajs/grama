@@ -15,6 +15,7 @@ import {
   type Progress,
 } from '../core/progress';
 import { starsFor } from '../core/history';
+import { statsOf, type Stats } from '../core/stats';
 import { bonusWords, isComplete, NEW_SESSION, sessionPoints, type Session } from '../core/session';
 import type { WordList } from '../content/words';
 import { reportUrl, type ReportKind } from './report';
@@ -86,6 +87,11 @@ export class Game {
   /** Every completed level's best result. */
   get history(): History {
     return this.#progress.history;
+  }
+
+  /** The player's totals, from the history. */
+  get stats(): Stats {
+    return statsOf(this.#progress.history);
   }
 
   /** How hard the current level is. */

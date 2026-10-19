@@ -6,6 +6,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
 - `game`: the player's game, for the current level and totals.
 - `onplay()`: continue playing.
 - `onmap()`: open the level map.
+- `onstats()`: open the achievements and stats.
 -->
 <script lang="ts">
   import { fly } from 'svelte/transition';
@@ -13,8 +14,8 @@ The home screen: where the app opens. Continue the game from here; more is comin
   import { strings } from '../../i18n';
   import { DURATION } from '../lib/motion';
 
-  type Props = { game: Game; onplay: () => void; onmap: () => void };
-  let { game, onplay, onmap }: Props = $props();
+  type Props = { game: Game; onplay: () => void; onmap: () => void; onstats: () => void };
+  let { game, onplay, onmap, onstats }: Props = $props();
 
   const results = $derived(Object.values(game.history));
   const stars = $derived(results.reduce((sum, result) => sum + result.stars, 0));
@@ -38,6 +39,11 @@ The home screen: where the app opens. Continue the game from here; more is comin
   <button class="card" onclick={onmap}>
     <span class="label">{strings.map}</span>
     <span class="detail">{strings.mapSummary(results.length, stars)}</span>
+  </button>
+
+  <button class="card" onclick={onstats}>
+    <span class="label">{strings.achievements}</span>
+    <span class="detail">{strings.statsSummary(stars)}</span>
   </button>
 
   <dl>
