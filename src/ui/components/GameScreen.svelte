@@ -9,9 +9,9 @@ letter wheel with its controls.
   import type { Game } from '../../app/game.svelte';
   import { boardRows } from '../../core/board';
   import type { Submission } from '../../core/evaluate';
+  import { shuffled } from '../../core/random';
   import { strings } from '../../i18n';
   import { FEEDBACK_DURATION } from '../lib/motion';
-  import { shuffled } from '../lib/shuffle';
   import Board from './Board.svelte';
   import Header from './Header.svelte';
   import BonusCounter from './BonusCounter.svelte';

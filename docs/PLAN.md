@@ -69,7 +69,7 @@ Goal: levels never run out, generated on the device (D11), good enough to playte
       _tenés_, _sabés_; words like _che_, _pibe_) at least as valid bonus words
 - [ ] `scripts/prepare-words.ts`: normalize and filter the sources (length, proper nouns,
       offensive list) into a compact word list with frequency ranks, shipped as a static file
-- [ ] `src/core/generate.ts`: pure `generateLevel(words, levelNumber)`: seeded RNG, pick a
+- [x] `src/core/generate.ts`: pure `generateLevel(words, levelNumber)`: seeded RNG, pick a
       seed word, find every word its letters spell, choose targets (common) vs bonus (rest);
       invariants tested (every level passes `levelProblems`)
 - [ ] App loads the word list and generates each level on demand; hand-written levels removed

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { shuffled } from './shuffle';
+import { seededRandom, shuffled } from './random';
 
 /** A fake random source that returns the given numbers in turn. */
 function sequence(...numbers: number[]): () => number {
@@ -25,5 +25,26 @@ describe('shuffled', () => {
   it('handles empty and single-item lists', () => {
     expect(shuffled([])).toEqual([]);
     expect(shuffled(['A'])).toEqual(['A']);
+  });
+});
+
+describe('seededRandom', () => {
+  it('repeats the same sequence for the same seed', () => {
+    const a = seededRandom(37);
+    const b = seededRandom(37);
+    expect([a(), a(), a()]).toEqual([b(), b(), b()]);
+  });
+
+  it('gives different sequences for different seeds', () => {
+    expect(seededRandom(1)()).not.toBe(seededRandom(2)());
+  });
+
+  it('stays within [0, 1)', () => {
+    const random = seededRandom(5);
+    for (let i = 0; i < 1000; i++) {
+      const value = random();
+      expect(value).toBeGreaterThanOrEqual(0);
+      expect(value).toBeLessThan(1);
+    }
   });
 });
