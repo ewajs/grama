@@ -8,6 +8,10 @@ const background = '#f7f6fc'; // --color-bg-top, light theme
 
 export default defineConfig({
   base,
+  define: {
+    // CI builds name their commit; local builds say so.
+    __BUILD__: JSON.stringify(process.env.GITHUB_SHA?.slice(0, 7) ?? 'local'),
+  },
   plugins: [
     svelte(),
     // Installable app that works offline: the service worker caches the app and the

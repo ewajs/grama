@@ -18,10 +18,13 @@ letter wheel with its controls.
   import BonusWords from './BonusWords.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import LevelComplete from './LevelComplete.svelte';
+  import ReportDialog from './ReportDialog.svelte';
   import WordPill from './WordPill.svelte';
 
   let { game }: { game: Game } = $props();
 
+  /** Whether the report dialog is open. */
+  let reporting = $state(false);
   /** Whether the list of bonus words found is open. */
   let showingBonus = $state(false);
   /** The word being spelled on the wheel right now. */
@@ -63,7 +66,7 @@ letter wheel with its controls.
 </script>
 
 <main>
-  <Header level={game.levelNumber} score={game.score} />
+  <Header level={game.levelNumber} score={game.score} onreport={() => (reporting = true)} />
 
   <div class="board">
     <Board rows={game.board} glow={repeated && game.written(repeated)} />
@@ -92,6 +95,10 @@ letter wheel with its controls.
     </div>
   </div>
 </main>
+
+{#if reporting}
+  <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={() => (reporting = false)} />
+{/if}
 
 {#if showingBonus}
   <BonusWords

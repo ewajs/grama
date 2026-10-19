@@ -66,3 +66,14 @@ test('tapping the bonus counter lists the bonus words found', async ({ page }) =
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
 });
+
+test('the report button links to a pre-filled GitHub issue', async ({ page }) => {
+  await page.goto('./');
+  await drawWord(page, nonWord(first));
+  await page.getByRole('button', { name: 'Reportar un problema' }).click();
+  const link = page.getByRole('link', { name: 'Falta una palabra' });
+  const url = new URL((await link.getAttribute('href'))!);
+  expect(url.origin + url.pathname).toBe('https://github.com/ewajs/grama/issues/new');
+  expect(url.searchParams.get('title')).toBe('Falta una palabra (nivel 1)');
+  expect(url.searchParams.get('body')).toContain(`Intentos rechazados: ${nonWord(first)}`);
+});
