@@ -1,6 +1,7 @@
 <!--
 @component
-The player's totals: levels by tier, stars, words and hints. Achievements join it soon.
+The player's achievements, earned and still to earn, and their totals: levels by tier,
+stars, words and hints.
 
 - `game`: the player's game, for its stats.
 - `onback()`: back to the home screen.
@@ -8,6 +9,7 @@ The player's totals: levels by tier, stars, words and hints. Achievements join i
 <script lang="ts">
   import { fly } from 'svelte/transition';
   import type { Game } from '../../app/game.svelte';
+  import { achievementProgress, ACHIEVEMENTS } from '../../core/achievements';
   import { TIERS } from '../../core/difficulty';
   import { strings } from '../../i18n';
   import { DURATION } from '../lib/motion';
@@ -16,6 +18,7 @@ The player's totals: levels by tier, stars, words and hints. Achievements join i
   let { game, onback }: { game: Game; onback: () => void } = $props();
 
   const stats = $derived(game.stats);
+  const done = $derived(ACHIEVEMENTS.filter((item) => achievementProgress(item, stats) === 1));
   const totals = $derived(
     (['levels', 'stars', 'threeStars', 'words', 'bonus', 'hints'] as const).map((key) => ({
       label: strings.statLabels[key],
@@ -26,6 +29,32 @@ The player's totals: levels by tier, stars, words and hints. Achievements join i
 
 <main in:fly={{ y: 12, duration: DURATION.slow }}>
   <ScreenHeader title={strings.achievements} {onback} />
+
+  <section>
+    <h2>
+      {strings.achievementsUnlocked(done.length, ACHIEVEMENTS.length)}
+    </h2>
+    <ul class="achievements">
+      {#each ACHIEVEMENTS as achievement (achievement.id)}
+        {@const progress = achievementProgress(achievement, stats)}
+        {@const [title, description] = strings.achievementList[achievement.id]}
+        <li class:done={progress === 1}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M8 21h8m-4-4v4M7 4h10v5a5 5 0 0 1-10 0V4Zm0 2H4v1a3 3 0 0 0 3 3m10-4h3v1a3 3 0 0 1-3 3"
+            />
+          </svg>
+          <div>
+            <b>{title}</b>
+            <span>{description}</span>
+            {#if progress < 1}
+              <progress value={progress} aria-label={title}></progress>
+            {/if}
+          </div>
+        </li>
+      {/each}
+    </ul>
+  </section>
 
   <section>
     <h2>{strings.statsTitle}</h2>
@@ -61,6 +90,78 @@ The player's totals: levels by tier, stars, words and hints. Achievements join i
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
+  }
+
+  .achievements {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .achievements li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    opacity: 0.7;
+  }
+
+  .achievements li.done {
+    opacity: 1;
+  }
+
+  .achievements svg {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    fill: none;
+    stroke: var(--color-tile-border);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .done svg {
+    stroke: var(--color-bonus);
+  }
+
+  .achievements div {
+    display: grid;
+    flex: 1;
+    gap: 2px;
+  }
+
+  .achievements span {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  progress {
+    width: 100%;
+    height: 6px;
+    margin-top: var(--space-1);
+    appearance: none;
+    border: none;
+    border-radius: var(--radius-full);
+    background: var(--color-tile-border);
+    overflow: hidden;
+  }
+
+  progress::-webkit-progress-bar {
+    background: var(--color-tile-border);
+  }
+
+  progress::-webkit-progress-value {
+    background: var(--color-accent);
+  }
+
+  progress::-moz-progress-bar {
+    background: var(--color-accent);
   }
 
   .totals {
