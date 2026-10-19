@@ -1,6 +1,7 @@
 import dictionaryUrl from './es/dictionary.txt?url';
 import frequencyUrl from './es/frequency.txt?url';
-import { parseWordList, rankWords } from './words';
+import { spanish } from '../core/spanish';
+import { buildWordList, parseWordList, type WordList } from './words';
 
 async function fetchWordList(url: string): Promise<string[]> {
   const response = await fetch(url);
@@ -8,14 +9,11 @@ async function fetchWordList(url: string): Promise<string[]> {
   return parseWordList(await response.text());
 }
 
-/**
- * Downloads the current language's word lists (only Spanish exists for now) and returns
- * every valid word, most common first: the input `generateLevel` expects.
- */
-export async function loadWords(): Promise<string[]> {
+/** Downloads the current language's word lists. Only Spanish exists for now. */
+export async function loadWords(): Promise<WordList> {
   const [dictionary, frequency] = await Promise.all([
     fetchWordList(dictionaryUrl),
     fetchWordList(frequencyUrl),
   ]);
-  return rankWords(dictionary, frequency);
+  return buildWordList(dictionary, frequency, spanish);
 }

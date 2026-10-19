@@ -2,6 +2,7 @@ import type { Submission } from '../core/evaluate';
 import { isLevelComplete, levelPoints, nextLevel, submitWord, type GameState } from '../core/game';
 import { generateLevel } from '../core/generate';
 import type { Level } from '../core/level';
+import type { WordList } from '../content/words';
 
 /**
  * The running game: the rules from `core` plus reactive state the UI reads.
@@ -10,22 +11,20 @@ import type { Level } from '../core/level';
 export class Game {
   #state: GameState;
   #onchange: (state: GameState) => void;
+  #spellings: ReadonlyMap<string, string>;
   /** The level being played, generated once per level number. */
   readonly level: Level;
 
   /**
-   * @param words Every valid word, most common first (from `loadWords`).
+   * @param words The language's words (from `loadWords`).
    * @param state Where to start: a saved game, or a new one.
    * @param onchange Called with the new state after every change, e.g. to save it.
    */
-  constructor(
-    words: readonly string[],
-    state: GameState,
-    onchange: (state: GameState) => void = () => {},
-  ) {
+  constructor(words: WordList, state: GameState, onchange: (state: GameState) => void = () => {}) {
     this.#state = $state(state);
     this.#onchange = onchange;
-    this.level = $derived(generateLevel(words, this.#state.levelNumber));
+    this.#spellings = words.spellings;
+    this.level = $derived(generateLevel(words.words, this.#state.levelNumber));
   }
 
   /** The current level's number, starting at 1. */
@@ -56,6 +55,11 @@ export class Game {
   /** Words found on the current level, in the order found. */
   get found(): readonly string[] {
     return this.#state.found;
+  }
+
+  /** How a word is written, with its accents: `TENES` → `TENÉS`. */
+  written(word: string): string {
+    return this.#spellings.get(word) ?? word;
   }
 
   /** Submits a word spelled on the wheel and returns how it went. */

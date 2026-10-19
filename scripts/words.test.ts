@@ -1,33 +1,53 @@
 import { describe, expect, it } from 'vitest';
-import { gameWord, gameWords } from './words.ts';
+import { preferSpelling, spelling, spellings } from './words.ts';
 
-describe('gameWord', () => {
-  it('normalizes Spanish words', () => {
-    expect(gameWord('tenés')).toBe('TENES');
-    expect(gameWord('ñandú')).toBe('ÑANDU');
+describe('spelling', () => {
+  it('uppercases, keeping accents and Ñ', () => {
+    expect(spelling('tenés')).toBe('TENÉS');
+    expect(spelling('ñandú')).toBe('ÑANDÚ');
   });
 
   it('drops capitalized words (names, acronyms), symbols and digits', () => {
-    expect(gameWord('Juan')).toBeNull();
-    expect(gameWord('ADN')).toBeNull();
-    expect(gameWord("o'clock")).toBeNull();
-    expect(gameWord('mp3')).toBeNull();
+    expect(spelling('Juan')).toBeNull();
+    expect(spelling('ADN')).toBeNull();
+    expect(spelling("o'clock")).toBeNull();
+    expect(spelling('mp3')).toBeNull();
   });
 
   it('keeps words of 3 to 8 letters only', () => {
-    expect(gameWord('la')).toBeNull();
-    expect(gameWord('sol')).toBe('SOL');
-    expect(gameWord('pantalón')).toBe('PANTALON');
-    expect(gameWord('pantalones')).toBeNull();
+    expect(spelling('la')).toBeNull();
+    expect(spelling('sol')).toBe('SOL');
+    expect(spelling('pantalón')).toBe('PANTALÓN');
+    expect(spelling('pantalones')).toBeNull();
   });
 });
 
-describe('gameWords', () => {
-  it('keeps the first of words that normalize the same, in order', () => {
-    expect(gameWords(['sé', 'casa', 'mamá', 'mama'])).toEqual(['CASA', 'MAMA']);
+describe('spellings', () => {
+  it('keeps one spelling per word, the first seen, in order', () => {
+    expect(spellings(['está', 'casa', 'esta', 'mamá', 'mama'])).toEqual(['ESTÁ', 'CASA', 'MAMÁ']);
   });
 
-  it('leaves out blocked words', () => {
-    expect(gameWords(['casa', 'mate'], new Set(['MATE']))).toEqual(['CASA']);
+  it('leaves out blocked words, whatever their accents', () => {
+    expect(spellings(['casa', 'maría'], { blocked: new Set(['MARIA']) })).toEqual(['CASA']);
+  });
+
+  it('lets `prefer` replace a spelling, keeping the position of the first one seen', () => {
+    const prefer = () => true;
+    expect(spellings(['tenes', 'casa', 'tenés'], { prefer })).toEqual(['TENÉS', 'CASA']);
+  });
+});
+
+describe('preferSpelling', () => {
+  const prefer = preferSpelling((written) => written !== 'ARBOL');
+  const seen = (written: string, position: number) => ({ written, position });
+
+  it('prefers a proper spelling to one that is not', () => {
+    expect(prefer(seen('ÁRBOL', 900), seen('ARBOL', 10))).toBe(true);
+    expect(prefer(seen('ARBOL', 900), seen('ÁRBOL', 10))).toBe(false);
+  });
+
+  it('prefers the accented spelling unless it is much rarer', () => {
+    expect(prefer(seen('TENÉS', 5585), seen('TENES', 2152))).toBe(true);
+    expect(prefer(seen('ÉSTE', 1013), seen('ESTE', 32))).toBe(false);
   });
 });

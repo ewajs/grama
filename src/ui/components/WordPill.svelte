@@ -5,12 +5,16 @@ it's not valid, rises green for a target, flies to the bonus counter for a bonus
 fades grey when it was already found.
 
 - `word`: the word being spelled; takes over whenever it's not empty.
-- `result`: the last submission to show, with an `id` so the same word can replay.
+- `result`: the last submission to show, as written, with an `id` so the same word can
+  replay.
 -->
 <script lang="ts">
   import type { Submission } from '../../core/evaluate';
 
-  type Props = { word: string; result: { id: number; submission: Submission } | null };
+  type Props = {
+    word: string;
+    result: { id: number; kind: Submission['kind']; word: string } | null;
+  };
   let { word, result }: Props = $props();
 </script>
 
@@ -19,7 +23,7 @@ fades grey when it was already found.
     <div class="pill">{word}</div>
   {:else if result}
     {#key result.id}
-      <div class="pill {result.submission.kind}">{result.submission.word}</div>
+      <div class="pill {result.kind}">{result.word}</div>
     {/key}
   {/if}
 </div>

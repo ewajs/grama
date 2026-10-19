@@ -31,6 +31,10 @@ delete it, the history is the point.
   RAE CREA/CORPES (no clear license).
 - **Costs accepted:** about 500 KB compressed to download once; wordfreq's data is a
   frozen ~2021 snapshot; some names count as valid bonus words (harmless).
+- **Spellings:** both files keep accents; the app compares without them and shows the
+  stored spelling. Where a word has several, the dictionary's beats the frequency list's
+  (which often drops accents), and the accented one wins unless it's over 3× rarer
+  (`preferSpelling` in `scripts/words.ts`).
 - **Neither license touches our code:** MPL is file-level; CC BY-SA applies to the
   adapted data file, not to code that loads it.
 

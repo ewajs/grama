@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
-import { parseWordList, rankWords } from '../../src/content/words';
+import { buildWordList, parseWordList } from '../../src/content/words';
+import { spanish } from '../../src/core/spanish';
 import { generateLevel } from '../../src/core/generate';
 import type { Level } from '../../src/core/level';
 
 const read = (file: string) => parseWordList(readFileSync(`src/content/es/${file}`, 'utf8'));
-const words = rankWords(read('dictionary.txt'), read('frequency.txt'));
+const { words } = buildWordList(read('dictionary.txt'), read('frequency.txt'), spanish);
 
 /** Level `number` exactly as the app generates it, so tests know its words. */
 export function level(number: number): Level {

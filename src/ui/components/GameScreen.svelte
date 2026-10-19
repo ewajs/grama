@@ -33,6 +33,21 @@ letter wheel with its controls.
 
   const repeated = $derived(result?.submission.kind === 'repeated' ? result.submission.word : null);
 
+  // What the player sees: words as written, with their accents.
+  const rows = $derived(
+    boardRows(game.level, game.found).map((row) => ({
+      ...row,
+      word: row.word && game.written(row.word),
+    })),
+  );
+  const shown = $derived(
+    result && {
+      id: result.id,
+      kind: result.submission.kind,
+      word: game.written(result.submission.word),
+    },
+  );
+
   function spell(next: string) {
     word = next;
     if (next) result = null;
@@ -54,10 +69,10 @@ letter wheel with its controls.
   <Header level={game.levelNumber} score={game.score} />
 
   <div class="board">
-    <Board rows={boardRows(game.level, game.found)} glow={repeated} />
+    <Board {rows} glow={repeated && game.written(repeated)} />
   </div>
 
-  <WordPill {word} {result} />
+  <WordPill {word} result={shown} />
 
   <div class="controls">
     <LetterWheel {tiles} onword={spell} onsubmit={submit} />
