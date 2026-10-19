@@ -4,6 +4,7 @@ import {
   DAILY_EPOCH,
   dailyFor,
   dailyNumber,
+  dailyOccurrence,
   dailyTier,
   dateKey,
   previousDay,
@@ -46,6 +47,18 @@ describe('dailyTier', () => {
       dailyTier(`2026-10-${day}`),
     );
     expect(week).toEqual(['easy', 'easy', 'medium', 'medium', 'hard', 'hard', 'extra']);
+  });
+});
+
+describe('dailyOccurrence', () => {
+  it('counts the earlier dailies of the same tier', () => {
+    // The epoch is a Monday: Monday and Tuesday are easy, Sunday extra hard.
+    expect(dailyOccurrence('2026-10-19')).toBe(0);
+    expect(dailyOccurrence('2026-10-20')).toBe(1);
+    expect(dailyOccurrence('2026-10-25')).toBe(0);
+    expect(dailyOccurrence('2026-10-26')).toBe(2);
+    expect(dailyOccurrence('2026-11-01')).toBe(1);
+    expect(dailyOccurrence('2027-10-18')).toBe(52 * 2);
   });
 });
 

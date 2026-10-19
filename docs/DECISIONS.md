@@ -48,6 +48,11 @@ delete it, the history is the point.
   never moves the player's current level.
 - **Daily challenge:** 7 letters, difficulty by weekday (Monday easy … Sunday extra hard),
   the same for everyone so results can be compared.
+  - _Seeds_ (since v0.14): each tier's dailies take their own blocks from the end of its
+    seed order, counted per tier; main levels take them from the start. A daily repeats
+    another after about seven months at the earliest: easy and medium have only about 220
+    workable 7-letter seeds each, at two dailies a week. A bigger word list is the fix if
+    that ever matters.
 
 ## D16 · Difficulty tiers: scored targets, calibrated recipes, a 7-level cadence — 2026-10-18
 

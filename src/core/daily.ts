@@ -26,9 +26,7 @@ export const DAILY_TIERS: readonly Tier[] = [
   'extra',
 ];
 
-// Dailies take seeds from further along each tier's order than the main levels reach,
-// and shuffle letters with their own numbers, so they don't repeat a main level.
-const DAILY_OCCURRENCE_BASE = 40;
+// Dailies shuffle letters with numbers of their own, far from the main levels'.
 const DAILY_LEVEL_BASE = 1_000_000;
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -61,14 +59,31 @@ export function dailyTier(key: string): Tier {
   return DAILY_TIERS[monday] ?? 'medium';
 }
 
-/** A date's daily challenge: the same level for everyone on that date. */
+/** How many dailies before a date (from {@link DAILY_EPOCH}) share its tier. */
+export function dailyOccurrence(key: string): number {
+  const tier = dailyTier(key);
+  const before = Math.max(dailyNumber(key) - 1, 0);
+  const perWeek = DAILY_TIERS.filter((other) => other === tier).length;
+  let count = Math.floor(before / 7) * perWeek;
+  // The rest of the last week: the days just before this one.
+  for (let day = key, left = before % 7; left > 0; left--) {
+    day = previousDay(day);
+    if (dailyTier(day) === tier) count++;
+  }
+  return count;
+}
+
+/**
+ * A date's daily challenge: the same level for everyone on that date. Each tier's dailies
+ * take seeds from the end of its order backwards, while main levels take them from the
+ * start, so a daily never repeats a main level or a recent daily.
+ */
 export function generateDaily(words: readonly string[], key: string): Level {
-  const number = dailyNumber(key);
   return generateLevel(
     words,
-    DAILY_LEVEL_BASE + number,
+    DAILY_LEVEL_BASE + dailyNumber(key),
     dailyTier(key),
-    DAILY_OCCURRENCE_BASE + number,
+    -1 - dailyOccurrence(key),
     DAILY_SHAPE,
   );
 }

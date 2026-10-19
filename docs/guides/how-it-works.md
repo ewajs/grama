@@ -161,8 +161,8 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
    local date, {@link "core/daily"!dailyNumber | dailyNumber} its number,
    {@link "core/daily"!dailyTier | dailyTier} its weekday tier, {@link "core/daily"!streak | streak} the streak.
 2. "Desafío del día" calls `game.playDaily()`: the mode becomes the daily, and
-   {@link "core/daily"!generateDaily | generateDaily} builds a 7-letter level from seeds further along the
-   tier's order than main levels reach.
+   {@link "core/daily"!generateDaily | generateDaily} builds a 7-letter level from seeds at the far end
+   of the tier's order, away from the main levels'.
 3. Words are played exactly as in walkthrough 1, with a `daily` place: the session is saved
    in `progress.daily`, and completion is recorded in `progress.dailies` under the date.
 4. "Compartir" builds the text from the result and calls {@link "app/share"!shareText | shareText}.
