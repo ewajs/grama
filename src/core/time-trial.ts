@@ -138,3 +138,25 @@ export function pass(run: Run): Run {
   if (!canPass(run)) return run;
   return { ...run, wheel: run.wheel + 1, session: NEW_SESSION, timeLeft: run.timeLeft - PASS_COST };
 }
+
+/** The player's Contrarreloj record: plain data, saved apart from their progress. */
+export type TrialRecord = {
+  /** Runs played to the end. */
+  runs: number;
+  /** The run with the most points, if any. */
+  best: RunResult | null;
+  /** The most wheels finished in one run. */
+  mostCleared: number;
+};
+
+/** A record before the first run. */
+export const NEW_TRIAL_RECORD: TrialRecord = { runs: 0, best: null, mostCleared: 0 };
+
+/** The record with a finished run in it. */
+export function recordRun(record: TrialRecord, result: RunResult): TrialRecord {
+  return {
+    runs: record.runs + 1,
+    best: !record.best || result.points > record.best.points ? result : record.best,
+    mostCleared: Math.max(record.mostCleared, result.cleared),
+  };
+}

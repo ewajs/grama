@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { tierFor } from '../core/cadence';
 import { NEW_PROGRESS } from '../core/progress';
+import { NEW_TRIAL_RECORD } from '../core/time-trial';
 import { Game } from './game.svelte';
 
 // A small list, most common first, with enough 6-letter words for the first levels.
@@ -43,11 +44,7 @@ const words = {
 /** A game on the small list, with a clock that says whatever `date.now` says. */
 function newGame() {
   const date = { now: '2026-10-19' };
-  const game = new Game(
-    NEW_PROGRESS,
-    () => {},
-    () => date.now,
-  );
+  const game = new Game(NEW_PROGRESS, { clock: () => date.now });
   game.words = words;
   return { game, date };
 }
@@ -112,5 +109,15 @@ describe('Game', () => {
     game.refreshDate();
     expect(game.dailyOnScreen).toMatchObject({ date: '2026-10-19', number: 1 });
     expect(game.today.date).toBe('2026-10-20');
+  });
+
+  it('keeps Contrarreloj runs apart from the main progress, for stats and achievements', () => {
+    let saved = NEW_TRIAL_RECORD;
+    const game = new Game(NEW_PROGRESS, { ontrials: (trials) => (saved = trials) });
+    game.recordRun({ points: 520, cleared: 3, words: 20 });
+    expect(game.trialBest?.points).toBe(520);
+    expect(saved.runs).toBe(1);
+    expect(game.score).toBe(0);
+    expect(game.achievements).toEqual(expect.arrayContaining(['trial', 'trialPoints']));
   });
 });

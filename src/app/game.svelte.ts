@@ -26,6 +26,7 @@ import {
 } from '../core/progress';
 import { bonusWords, hintsUsed, isComplete, NEW_SESSION, type Session } from '../core/session';
 import { statsOf, type Stats } from '../core/stats';
+import { NEW_TRIAL_RECORD, recordRun, type RunResult, type TrialRecord } from '../core/time-trial';
 import type { WordList } from '../content/words';
 import { today } from './clock';
 import { reportUrl, type ReportKind } from './report';
@@ -55,6 +56,18 @@ export type DailySummary = {
   freezes: number;
 };
 
+/** How a {@link Game} connects to the rest of the app. Each has a default. */
+export type GameOptions = {
+  /** Called with the new progress after every change, e.g. to save it. */
+  onchange?: (progress: Progress) => void;
+  /** Today's date as `YYYY-MM-DD`; the device's clock unless a test passes one. */
+  clock?: () => string;
+  /** The Contrarreloj record so far. */
+  trials?: TrialRecord;
+  /** Called with the new Contrarreloj record after each run, e.g. to save it. */
+  ontrials?: (trials: TrialRecord) => void;
+};
+
 /**
  * The running game: the rules from `core` plus reactive state the UI reads.
  * Getters read `$state`, so whatever displays them re-renders when the state changes.
@@ -62,6 +75,8 @@ export type DailySummary = {
 export class Game {
   #progress: Progress;
   #onchange: (progress: Progress) => void;
+  #trials: TrialRecord;
+  #ontrials: (trials: TrialRecord) => void;
   #words = $state<WordList | null>(null);
   #clock: () => string;
   /** Today's date, read from the clock when the game starts and on {@link refreshDate}. */
@@ -76,16 +91,18 @@ export class Game {
    * The game starts without its words, so the home screen can show at once; the level on
    * screen needs them (see {@link ready}).
    * @param progress Where to start: a saved game, or a new one.
-   * @param onchange Called with the new progress after every change, e.g. to save it.
-   * @param clock Today's date as `YYYY-MM-DD`; the device's clock unless a test passes one.
    */
-  constructor(
-    progress: Progress,
-    onchange: (progress: Progress) => void = () => {},
-    clock: () => string = today,
-  ) {
+  constructor(progress: Progress, options: GameOptions = {}) {
+    const {
+      onchange = () => {},
+      clock = today,
+      trials = NEW_TRIAL_RECORD,
+      ontrials = () => {},
+    } = options;
     this.#progress = $state(progress);
     this.#onchange = onchange;
+    this.#trials = $state(trials);
+    this.#ontrials = ontrials;
     this.#clock = clock;
     this.#today = $state(clock());
     // Progress is replaced on every word, which re-runs this. Returning the same Level
@@ -178,7 +195,18 @@ export class Game {
 
   /** The player's totals, from the history, the daily challenges and the hints spent. */
   get stats(): Stats {
-    return statsOf(this.#progress);
+    return statsOf(this.#progress, this.#trials);
+  }
+
+  /** The best Contrarreloj run, if any. */
+  get trialBest(): RunResult | null {
+    return this.#trials.best;
+  }
+
+  /** Keeps a finished Contrarreloj run in the record (never in the main progress). */
+  recordRun(result: RunResult): void {
+    this.#trials = recordRun(this.#trials, result);
+    this.#ontrials(this.#trials);
   }
 
   /** The achievements the player has reached. */

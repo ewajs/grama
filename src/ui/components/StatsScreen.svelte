@@ -20,7 +20,19 @@ stars, words and hints.
   const done = $derived(ACHIEVEMENTS.filter((item) => achievementProgress(item, stats) === 1));
   const totals = $derived(
     (
-      ['levels', 'dailies', 'bestStreak', 'stars', 'threeStars', 'words', 'bonus', 'hints'] as const
+      [
+        'levels',
+        'dailies',
+        'bestStreak',
+        'stars',
+        'threeStars',
+        'words',
+        'bonus',
+        'hints',
+        'trialRuns',
+        'trialPoints',
+        'trialWheels',
+      ] as const
     ).map((key) => ({
       label: strings.statLabels[key],
       value: stats[key],

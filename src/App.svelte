@@ -8,6 +8,7 @@
   import { loadWords } from './content';
   import { strings } from './i18n';
   import { loadGame, saveGame } from './storage/save';
+  import { loadTrials, saveTrials } from './storage/trials';
   import { loadSettings, saveSettings } from './storage/settings';
   import GameScreen from './ui/components/GameScreen.svelte';
   import Home from './ui/components/Home.svelte';
@@ -15,7 +16,6 @@
   import StatsScreen from './ui/components/StatsScreen.svelte';
   import TrialScreen from './ui/components/TrialScreen.svelte';
   import type { WordList } from './content/words';
-  import type { RunResult } from './core/time-trial';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const settings = loadSettings();
@@ -23,7 +23,11 @@
   const start = startState(loadGame(), levelInUrl, settings.difficulty);
   // One game for the whole visit, kept while moving between screens. It starts at once,
   // so the home screen shows while the words download; only playing a level needs them.
-  const game = new Game(start, saveGame);
+  const game = new Game(start, {
+    onchange: saveGame,
+    trials: loadTrials(),
+    ontrials: saveTrials,
+  });
   let words = $state<WordList | null>(null);
   let failed = $state(false);
   loadWords().then(
@@ -33,7 +37,7 @@
     },
     () => (failed = true),
   );
-  let trialBest = $state<RunResult | null>(null);
+
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
   // ?nivel= is for playtesting: straight into that level.
@@ -80,10 +84,9 @@
     <TrialScreen
       {words}
       {preferences}
-      best={trialBest}
-      onfinish={(result) => {
-        if (!trialBest || result.points > trialBest.points) trialBest = result;
-      }}
+      best={game.trialBest}
+      unlocked={game.achievements}
+      onfinish={(result) => game.recordRun(result)}
       onback={() => navigation.back()}
     />
   {:else if failed}
@@ -111,7 +114,7 @@
     }}
     onmap={() => navigation.go('map')}
     onstats={() => navigation.go('stats')}
-    {trialBest}
+    trialBest={game.trialBest}
     ontrial={() => navigation.go('trial')}
     ondaily={() => {
       game.playDaily();

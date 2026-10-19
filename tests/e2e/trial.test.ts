@@ -32,6 +32,11 @@ test('Contrarreloj: words win time, Pasar skips, and the run ends with a summary
   const summary = page.getByRole('dialog');
   await expect(summary).toContainText('¡Tiempo!');
   await expect(summary).toContainText('¡Tu mejor marca!');
+  await expect(page.getByRole('status')).toContainText('Contra el reloj');
   await summary.getByRole('button', { name: 'Volver al inicio' }).click();
   await expect(page.getByRole('button', { name: /^Contrarreloj.*Mejor: \d+/ })).toBeVisible();
+  // Saved apart from the main game, it's still there after a reload.
+  await page.reload();
+  await expect(page.getByRole('button', { name: /^Contrarreloj.*Mejor: \d+/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^Jugar.*Nivel 1/ })).toBeVisible();
 });

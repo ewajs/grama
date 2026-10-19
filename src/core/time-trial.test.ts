@@ -4,6 +4,8 @@ import {
   canPass,
   isOver,
   newRun,
+  NEW_TRIAL_RECORD,
+  recordRun,
   pass,
   PASS_COST,
   playTrialWord,
@@ -67,5 +69,17 @@ describe('pass', () => {
     const late = tick(newRun(7), START_TIME - PASS_COST);
     expect(canPass(late)).toBe(false);
     expect(pass(late)).toBe(late);
+  });
+});
+
+describe('recordRun', () => {
+  it('counts runs and keeps the best points and the most wheels', () => {
+    let record = recordRun(NEW_TRIAL_RECORD, { points: 300, cleared: 2, words: 12 });
+    record = recordRun(record, { points: 200, cleared: 3, words: 10 });
+    expect(record).toEqual({
+      runs: 2,
+      best: { points: 300, cleared: 2, words: 12 },
+      mostCleared: 3,
+    });
   });
 });

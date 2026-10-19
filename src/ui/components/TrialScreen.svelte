@@ -6,6 +6,7 @@ is open and the app is visible; when time is up, a summary offers another run.
 - `words`: the language's words, for the wheels.
 - `preferences`: sound and vibration.
 - `best`: the best run so far, if any, to show with the result.
+- `unlocked`: the achievements reached, so new ones are announced.
 - `onfinish(result)`: a run ended; its result, to keep.
 - `onback()`: back to the home screen (a run in play is dropped).
 -->
@@ -13,6 +14,7 @@ is open and the app is visible; when time is up, a summary offers another run.
   import { untrack } from 'svelte';
   import type { Preferences } from '../../app/preferences.svelte';
   import { Trial } from '../../app/time-trial.svelte';
+  import type { AchievementId } from '../../core/achievements';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
   import { TIME_FOR, type RunResult } from '../../core/time-trial';
@@ -22,6 +24,7 @@ is open and the app is visible; when time is up, a summary offers another run.
   import { wheelKey } from '../lib/keyboard';
   import { FEEDBACK_DURATION } from '../lib/motion';
   import { play } from '../lib/sound';
+  import AchievementToast from './AchievementToast.svelte';
   import Board from './Board.svelte';
   import Dialog from './Dialog.svelte';
   import LetterWheel from './LetterWheel.svelte';
@@ -31,10 +34,11 @@ is open and the app is visible; when time is up, a summary offers another run.
     words: WordList;
     preferences: Preferences;
     best: RunResult | null;
+    unlocked: readonly AchievementId[];
     onfinish: (result: RunResult) => void;
     onback: () => void;
   };
-  let { words, preferences, best, onfinish, onback }: Props = $props();
+  let { words, preferences, best, unlocked, onfinish, onback }: Props = $props();
 
   // One trial per visit to the screen; "Otra vez" restarts it.
   // svelte-ignore state_referenced_locally
@@ -165,6 +169,8 @@ is open and the app is visible; when time is up, a summary offers another run.
     </button>
   </div>
 </main>
+
+<AchievementToast {unlocked} />
 
 {#if trial.over}
   <Dialog title={strings.timeUp}>
