@@ -8,6 +8,16 @@ delete it, the history is the point.
 
 ---
 
+## D22 · On `main`, only `check` before deploying — 2026-10-19 · _amends D20_
+
+- **Decision:** e2e and the docs build run on PRs only. A push to `main` runs `check`
+  and deploys; the deploy builds the game, the docs and the guide itself, so a broken
+  build or link still stops it.
+- **Why:** a squash merge of a green PR ships the code that PR tested, so running e2e
+  again only delayed the deploy (about 4 minutes after merging instead of about 1).
+- **Costs accepted:** with no branch protection (D6), two PRs merged back to back are
+  never tested together; the next PR's e2e catches it.
+
 ## D21 · Board rows alphabetical, each word in a fixed row — 2026-10-19
 
 - **Decision:** within a length, board rows follow alphabetical order (`Ñ` after `N`),
@@ -17,11 +27,12 @@ delete it, the history is the point.
   3, the missing one comes before it). Before, rows filled in the order found to hide
   this; the slightly easier game is fine.
 
-## D20 · E2E in CI on every PR, Chromium and WebKit — 2026-10-19 · _replaces D10_
+## D20 · E2E in CI on every PR, Chromium and WebKit — 2026-10-19 · _replaces D10, amended by D22_
 
-- **Decision:** CI runs the Playwright suite on every PR and on `main`, against the
-  production build, in three projects: a touch phone (Chromium, real touch drags), an
-  iPhone (WebKit, Safari's engine) and a desktop. Deploying waits for it.
+- **Decision:** CI runs the Playwright suite on every PR (and, until D22, on `main`),
+  against the production build, in three projects: a touch phone (Chromium, real touch
+  drags), an iPhone (WebKit, Safari's engine) and a desktop. Deploying waited for it
+  until D22.
 - **Why:** the suite now guards flows we'd hate to break (drawing words, replays, the
   daily, the PWA), and two PRs once merged during a review without them. WebKit is how
   iPhones run the game; nothing else tested it.

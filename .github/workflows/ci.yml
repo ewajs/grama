@@ -29,8 +29,9 @@ jobs:
       - run: npm run audit
 
   # The production build, played in real browsers: Chromium (touch phone, desktop) and
-  # WebKit (iPhone) (D20).
+  # WebKit (iPhone) (D20). On PRs only: a squash merge ships the code the PR tested (D22).
   e2e:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -50,8 +51,10 @@ jobs:
           path: test-results
           retention-days: 7
 
-  # The guide and the developer docs build as checks: broken links fail them.
+  # The guide and the developer docs build as checks: broken links fail them. On main,
+  # deploy builds them anyway.
   docs:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -65,7 +68,7 @@ jobs:
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [check, e2e, docs]
+    needs: [check]
     runs-on: ubuntu-latest
     permissions:
       pages: write
