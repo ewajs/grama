@@ -177,7 +177,7 @@ after a missed day.
 
 Goal: calmer feedback, a tidier menu, a guide for curious players and docs for developers.
 
-- [ ] Feedback for invalid, repeated and bonus words plays in place (no flying, no jumps)
+- [x] Feedback for invalid, repeated and bonus words plays in place (no flying, no jumps)
 - [ ] Menu: small links (Todo sobre Grama · Reportar un problema · Acerca de); Acerca de
       window with version, novedades, "Buscar actualizaciones", credits and licenses
 - [ ] Player guide "Todo sobre Grama" (VitePress, Spanish) at `/grama/guia/`: how to
