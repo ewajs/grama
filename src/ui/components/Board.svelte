@@ -92,7 +92,8 @@ given, choosing one or two columns to keep tiles as big as possible.
     width: var(--tile);
     height: var(--tile);
     border: 1px solid var(--color-tile-border);
-    border-radius: var(--radius-sm);
+    /* Proportional, so small tiles stay squares with rounded corners, not circles. */
+    border-radius: calc(var(--tile) * 0.18);
     background: var(--color-tile);
   }
 

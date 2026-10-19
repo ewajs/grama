@@ -2,10 +2,17 @@
 export type Point = { x: number; y: number };
 
 /** Distance from the wheel's center to each letter's center, as a fraction of the wheel. */
-export const RING_RADIUS = 0.34;
+export const RING_RADIUS = 0.36;
 
-/** Radius of a letter, as a fraction of the wheel. Also how close the pointer must get. */
+/** Radius of a letter, as a fraction of the wheel. */
 export const LETTER_RADIUS = 0.1;
+
+/**
+ * How close to a letter's center the pointer must get to select it. A bit less than the
+ * letter itself, so a straight swipe between two letters of an 8-letter wheel doesn't
+ * catch the one in between (tested).
+ */
+export const HIT_RADIUS = 0.085;
 
 /** Center of letter `index` of `count`, spread evenly on the ring: the first at the top, clockwise. */
 export function letterPosition(index: number, count: number): Point {
@@ -21,7 +28,7 @@ export function letterPositions(count: number): Point[] {
 /** Index of the letter under `point`, or `null` when the point is between letters. */
 export function letterAt(point: Point, positions: readonly Point[]): number | null {
   const index = positions.findIndex(
-    (center) => Math.hypot(center.x - point.x, center.y - point.y) <= LETTER_RADIUS,
+    (center) => Math.hypot(center.x - point.x, center.y - point.y) <= HIT_RADIUS,
   );
   return index === -1 ? null : index;
 }

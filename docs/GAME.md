@@ -67,7 +67,7 @@ valid word they spell is a bonus word. A level is valid when:
 - at least one target uses every letter.
 
 Difficulty ramps with the level number (`DIFFICULTY` in `src/core/generate.ts`): 6
-letters at first, 7 from level 16 and 8 from level 41, with more targets and, from 8
+letters at first, 7 from level 16 and 8 from level 41, with 6 to 9 targets and, from 8
 letters on, no 3-letter targets.
 
 ## UX and visual direction
