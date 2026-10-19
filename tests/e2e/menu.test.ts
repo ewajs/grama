@@ -50,7 +50,8 @@ test('offers to install the app when the browser can', async ({ page }) => {
   );
 });
 
-test('the vibration switch survives a reload', async ({ page }) => {
+test('the vibration switch survives a reload', async ({ page, browserName }) => {
+  test.skip(browserName === 'webkit', 'Safari has no vibration, so no switch');
   await openGame(page);
   await openMenu(page);
   const vibration = page.getByRole('switch', { name: 'Vibración' });

@@ -8,6 +8,19 @@ delete it, the history is the point.
 
 ---
 
+## D20 · E2E in CI on every PR, Chromium and WebKit — 2026-10-19 · _replaces D10_
+
+- **Decision:** CI runs the Playwright suite on every PR and on `main`, against the
+  production build, in three projects: a touch phone (Chromium, real touch drags), an
+  iPhone (WebKit, Safari's engine) and a desktop. Deploying waits for it.
+- **Why:** the suite now guards flows we'd hate to break (drawing words, replays, the
+  daily, the PWA), and two PRs once merged during a review without them. WebKit is how
+  iPhones run the game; nothing else tested it.
+- **Supported browsers:** what Vite's default build target supports: Safari / iOS 16.4+,
+  Chrome 111+, Firefox 115+. Older ones (iOS 15) aren't supported; we use their missing
+  features (`toSorted`, container units) without polyfills.
+- **Costs accepted:** about two more minutes per PR.
+
 ## D19 · Contrarreloj: wheel after wheel, apart from the main game — 2026-10-19
 
 - **Decision:** a timed mode. A run starts with 60 seconds; a target adds 3, a bonus word
@@ -147,7 +160,7 @@ delete it, the history is the point.
 - **Revisit:** Before 1.0, if level quality needs curation: a script can run the same
   function and freeze the output as static levels (D4's approach) without new logic.
 
-## D10 · E2E tests run locally, not in CI — 2026-10-18
+## D10 · E2E tests run locally, not in CI — 2026-10-18 · _replaced by D20_
 
 - **Decision:** CI runs only `npm run check` (lint, types, unit tests). Playwright runs
   locally, on demand, when a change touches input, page flow or PWA behavior.

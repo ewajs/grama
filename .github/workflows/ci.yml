@@ -26,6 +26,26 @@ jobs:
       - run: npm ci
       - run: npm run check
 
+  # The production build, played in real browsers: Chromium (touch phone, desktop) and
+  # WebKit (iPhone) (D20).
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run e2e
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-results
+          path: test-results
+          retention-days: 7
+
   # The guide and the developer docs build as checks: broken links fail them.
   docs:
     runs-on: ubuntu-latest
@@ -41,7 +61,7 @@ jobs:
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [check, docs]
+    needs: [check, e2e, docs]
     runs-on: ubuntu-latest
     permissions:
       pages: write
