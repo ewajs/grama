@@ -4,21 +4,22 @@
  */
 
 :root {
+  /* Each color is light-dark(light theme, dark theme). The theme follows the device
+     unless the player picks one in the menu (data-theme on <html>). */
   color-scheme: light dark;
 
-  /* Color — light theme */
-  --color-bg-top: #f7f6fc;
-  --color-bg-bottom: #e9e7f6;
-  --color-surface: #ffffff;
-  --color-text: #1d1b2e;
-  --color-text-muted: #6b6880;
-  --color-accent: #5b5bd6;
-  --color-accent-contrast: #ffffff;
-  --color-success: #2f9e6e;
-  --color-bonus: #d99a14;
-  --color-danger: #e5484d;
-  --color-tile: #ffffff;
-  --color-tile-border: #dcd9ec;
+  --color-bg-top: light-dark(#f7f6fc, #16152a);
+  --color-bg-bottom: light-dark(#e9e7f6, #0f0e1c);
+  --color-surface: light-dark(#ffffff, #232238);
+  --color-text: light-dark(#1d1b2e, #f1f0fa);
+  --color-text-muted: light-dark(#6b6880, #a19fb8);
+  --color-accent: light-dark(#5b5bd6, #8b8bf5);
+  --color-accent-contrast: light-dark(#ffffff, #12111f);
+  --color-success: light-dark(#2f9e6e, #4cc38a);
+  --color-bonus: light-dark(#d99a14, #f0b93a);
+  --color-danger: light-dark(#e5484d, #f26c70);
+  --color-tile: light-dark(#ffffff, #2a2942);
+  --color-tile-border: light-dark(#dcd9ec, #3a3956);
 
   /* Typography */
   --font-sans: 'Outfit Variable', system-ui, sans-serif;
@@ -48,8 +49,8 @@
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-full: 999px;
-  --shadow-sm: 0 1px 2px rgb(29 27 46 / 0.08);
-  --shadow-md: 0 6px 20px rgb(29 27 46 / 0.12);
+  --shadow-sm: 0 1px 2px light-dark(rgb(29 27 46 / 0.08), rgb(0 0 0 / 0.3));
+  --shadow-md: 0 6px 20px light-dark(rgb(29 27 46 / 0.12), rgb(0 0 0 / 0.4));
 
   /* Motion: fast and purposeful (see docs/GAME.md › Motion) */
   --dur-fast: 120ms;
@@ -59,21 +60,10 @@
   --ease-in-out: cubic-bezier(0.6, 0, 0.4, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-top: #16152a;
-    --color-bg-bottom: #0f0e1c;
-    --color-surface: #232238;
-    --color-text: #f1f0fa;
-    --color-text-muted: #a19fb8;
-    --color-accent: #8b8bf5;
-    --color-accent-contrast: #12111f;
-    --color-success: #4cc38a;
-    --color-bonus: #f0b93a;
-    --color-danger: #f26c70;
-    --color-tile: #2a2942;
-    --color-tile-border: #3a3956;
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow-md: 0 6px 20px rgb(0 0 0 / 0.4);
-  }
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }

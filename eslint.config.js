@@ -15,7 +15,8 @@ export default defineConfig(
   prettier,
   svelte.configs.prettier,
   {
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    // __BUILD__ is set at build time (vite.config.ts, src/globals.d.ts).
+    languageOptions: { globals: { ...globals.browser, ...globals.node, __BUILD__: 'readonly' } },
   },
   {
     files: ['**/*.svelte', '**/*.svelte.ts'],

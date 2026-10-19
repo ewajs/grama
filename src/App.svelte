@@ -1,10 +1,12 @@
 <!-- @component Root of the app: loads the words, then starts or resumes the game. -->
 <script lang="ts">
   import { Game } from './app/game.svelte';
+  import { Preferences } from './app/preferences.svelte';
   import { levelFromUrl, startState } from './app/start';
   import { loadWords } from './content';
   import { strings } from './i18n';
   import { loadGame, saveGame } from './storage/save';
+  import { loadSettings, saveSettings } from './storage/settings';
   import GameScreen from './ui/components/GameScreen.svelte';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
@@ -12,12 +14,29 @@
   const start = startState(loadGame(), levelFromUrl(location.search));
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
+
+  const preferences = new Preferences(loadSettings(), saveSettings);
+
+  // The browser bar's color for each theme (the page background's top).
+  const BAR_COLOR = { light: '#f7f6fc', dark: '#16152a' };
+
+  // $effect runs after rendering and again whenever what it reads changes: here, the
+  // theme. It's for reaching outside the component, like the <html> element.
+  $effect(() => {
+    const { theme } = preferences;
+    if (theme === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = theme;
+    for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+      const scheme = meta.media.includes('dark') ? 'dark' : 'light';
+      meta.content = BAR_COLOR[theme === 'auto' ? scheme : theme];
+    }
+  });
 </script>
 
 {#await words}
   <p class="status">{strings.loading}</p>
 {:then words}
-  <GameScreen game={new Game(words, start, saveGame)} />
+  <GameScreen game={new Game(words, start, saveGame)} {preferences} />
 {:catch}
   <p class="status">{strings.loadError}</p>
 {/await}
