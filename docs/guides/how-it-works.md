@@ -178,7 +178,9 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 ## Storage and offline
 
 - {@link "storage/save"!saveGame | saveGame} stores {@link "core/progress"!Progress | Progress} with a version
-  number; pre-1.0 an older version is simply discarded (D5, D15).
+  number; pre-1.0 an older version is simply discarded (D5, D15). It also stores
+  {@link "core/generate"!LEVELS_VERSION | LEVELS_VERSION}: when the levels have changed since, the
+  progress stays but the levels in play start over.
 - {@link "storage/settings"!loadSettings | loadSettings} keeps each setting it understands and defaults
   the rest, so new settings never wipe old ones.
 - The service worker (`vite-plugin-pwa`) precaches the app and the word lists. Its offline

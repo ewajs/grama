@@ -120,4 +120,5 @@ If the word lists change a lot, or the tiers stop feeling right:
    change the recipes.
 3. Check the tests: levels valid in every size and tier, more than 98% landing in their
    tier, no repeat within 50 levels.
-4. Record the new numbers in D16.
+4. Record the new numbers in D16, and bump
+   {@link "core/generate"!LEVELS_VERSION | LEVELS_VERSION} (the golden test asks for it).

@@ -36,6 +36,14 @@ export function levelShape(levelNumber: number): LevelShape {
   return step;
 }
 
+/**
+ * Which levels the generator makes from the shipped words. Bump it whenever a change to
+ * the generator, its numbers or the word lists changes any level: the golden test in
+ * `content/es/words.test.ts` fails until you do. A save from before keeps the player's
+ * progress but drops the levels in play, which would now be other levels.
+ */
+export const LEVELS_VERSION = 1;
+
 /** Fewest targets a generated level may have; fewer would make a dull board. */
 export const MIN_TARGETS = 5;
 

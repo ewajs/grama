@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import blocklistText from '../../../scripts/blocklist-es.txt?raw';
 import { occurrence, tierFor } from '../../core/cadence';
-import { dailyTier, generateDaily } from '../../core/daily';
+import { DAILY_EPOCH, dailyTier, generateDaily } from '../../core/daily';
 import { RECIPES, TIERS } from '../../core/difficulty';
-import { generateLevel, levelShape } from '../../core/generate';
+import { generateLevel, levelShape, LEVELS_VERSION } from '../../core/generate';
 import { THREE_STAR_BONUS } from '../../core/history';
 import { levelProblems } from '../../core/level';
 import { spanish } from '../../core/spanish';
@@ -118,4 +118,32 @@ describe('Spanish word lists', () => {
       seen.add(key(daily.letters));
     }
   });
+
+  it('make the same levels until LEVELS_VERSION says otherwise', () => {
+    const levels = [];
+    for (let number = 1; number <= 100; number++) {
+      const tier = tierFor(number, 'normal');
+      levels.push(generateLevel(words, number, tier, occurrence(number, 'normal')));
+    }
+    const epoch = Date.parse(DAILY_EPOCH);
+    for (let day = 0; day < 60; day++) {
+      const date = new Date(epoch + day * 86_400_000).toISOString().slice(0, 10);
+      levels.push(generateDaily(words, date));
+    }
+    // A new hash means players would get other levels: if that's intended, bump
+    // LEVELS_VERSION (saves then drop their levels in play) and update both numbers here.
+    expect({ LEVELS_VERSION, hash: hash(JSON.stringify(levels)) }).toEqual({
+      LEVELS_VERSION: 1,
+      hash: 'dee65d0f',
+    });
+  });
 });
+
+/** A short fingerprint of a text (FNV-1a, 32 bits): enough to notice any change. */
+function hash(text: string): string {
+  let value = 0x811c9dc5;
+  for (let index = 0; index < text.length; index++) {
+    value = Math.imul(value ^ text.charCodeAt(index), 0x01000193) >>> 0;
+  }
+  return value.toString(16).padStart(8, '0');
+}
