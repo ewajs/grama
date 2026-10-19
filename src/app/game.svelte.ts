@@ -5,6 +5,7 @@ import { BONUS_WORDS_PER_HINT, hintTarget, revealLetter } from '../core/hints';
 import { boardRows, type BoardRow } from '../core/board';
 import type { Level } from '../core/level';
 import type { WordList } from '../content/words';
+import { reportUrl, type ReportKind } from './report';
 
 /**
  * The running game: the rules from `core` plus reactive state the UI reads.
@@ -14,6 +15,8 @@ export class Game {
   #state: GameState;
   #onchange: (state: GameState) => void;
   #spellings: ReadonlyMap<string, string>;
+  /** Words rejected on this level, most recent last; kept for reports, not saved. */
+  #rejected = $state<string[]>([]);
   /** The level being played, generated once per level number. */
   readonly level: Level;
 
@@ -108,6 +111,9 @@ export class Game {
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
     const { submission, state } = submitWord(this.#state, this.level, word);
+    if (submission.kind === 'invalid') {
+      this.#rejected = [...this.#rejected.filter((other) => other !== word), word].slice(-10);
+    }
     this.#update(state);
     return submission;
   }
@@ -119,7 +125,20 @@ export class Game {
 
   /** Moves on to the next level. */
   next(): void {
+    this.#rejected = [];
     this.#update(nextLevel(this.#state));
+  }
+
+  /** A link to report a problem with the current level on GitHub. */
+  reportUrl(kind: ReportKind): string {
+    return reportUrl(kind, {
+      levelNumber: this.#state.levelNumber,
+      letters: this.level.letters,
+      targets: this.level.targets.map((word) => this.written(word)),
+      found: this.#state.found.map((word) => this.written(word)),
+      rejected: this.#rejected,
+      build: __BUILD__,
+    });
   }
 
   #update(state: GameState) {

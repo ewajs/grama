@@ -1,3 +1,11 @@
+const reportKinds = {
+  missing: 'Falta una palabra',
+  wrong: 'Palabra rara u ofensiva',
+  other: 'Otro problema',
+};
+
+const list = (words: readonly string[]) => (words.length > 0 ? words.join(', ') : '—');
+
 /** Player-facing text in Rioplatense Spanish (voseo). */
 export const es = {
   appName: 'Grama',
@@ -16,6 +24,33 @@ export const es = {
   bonusWords: (count: number) => (count === 1 ? '1 palabra extra' : `${count} palabras extra`),
   nextLevel: 'Siguiente nivel',
   close: 'Cerrar',
+  cancel: 'Cancelar',
+  report: 'Reportar un problema',
+  reportTitle: '¿Qué pasó?',
+  reportIntro: 'Se abre GitHub con los datos del nivel. Ahí nos contás el resto.',
+  reportKinds,
+  reportIssueTitle: (kind: keyof typeof reportKinds, level: number) =>
+    `${reportKinds[kind]} (nivel ${level})`,
+  reportIssueBody: (context: {
+    levelNumber: number;
+    letters: readonly string[];
+    targets: readonly string[];
+    found: readonly string[];
+    rejected: readonly string[];
+    build: string;
+  }) =>
+    [
+      'Contanos qué pasó (qué palabra, y por qué):',
+      '',
+      '',
+      '---',
+      `Nivel: ${context.levelNumber}`,
+      `Letras: ${context.letters.join(' ')}`,
+      `Palabras del nivel: ${list(context.targets)}`,
+      `Encontradas: ${list(context.found)}`,
+      `Intentos rechazados: ${list(context.rejected)}`,
+      `Versión: ${context.build}`,
+    ].join('\n'),
   bonusTitle: 'Palabras extra',
   bonusFoundOf: (found: number, total: number) => `Encontraste ${found} de ${total}`,
   untilHint: (count: number) =>
