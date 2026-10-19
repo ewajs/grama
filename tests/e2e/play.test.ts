@@ -4,13 +4,13 @@ import { drawWord } from './wheel.ts';
 test('spelling a target word on the wheel scores it', async ({ page }) => {
   await page.goto('./');
   await drawWord(page, 'SOL');
-  await expect(page.getByLabel('Puntos')).toHaveText('★ 30');
+  await expect(page.getByLabel('Puntos')).toHaveText('30');
 });
 
 test('spelling a word that is not in the level scores nothing', async ({ page }) => {
   await page.goto('./');
   await drawWord(page, 'LOT');
-  await expect(page.getByLabel('Puntos')).toHaveText('★ 0');
+  await expect(page.getByLabel('Puntos')).toHaveText('0');
 });
 
 test('letters can still be dragged after shuffling', async ({ page }) => {
@@ -22,5 +22,5 @@ test('letters can still be dragged after shuffling', async ({ page }) => {
   expect(await order()).not.toEqual(before);
   await page.waitForTimeout(400); // let the letters glide into place
   await drawWord(page, 'SOL');
-  await expect(page.getByLabel('Puntos')).toHaveText('★ 30');
+  await expect(page.getByLabel('Puntos')).toHaveText('30');
 });

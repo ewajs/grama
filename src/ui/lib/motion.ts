@@ -4,6 +4,9 @@
  */
 export const DURATION = { fast: 120, base: 180, slow: 250 } as const;
 
+/** How long the score takes to count up to a new value. */
+export const SCORE_COUNT_DURATION = 400;
+
 /** How long the result of a submitted word stays on screen. */
 export const FEEDBACK_DURATION = 600;
 
