@@ -9,7 +9,7 @@ Read these when the task needs them (they're not loaded up front):
 - `docs/GAME.md`: the rules and UX as they are. Read before changing gameplay or anything
   players see.
 - `docs/PLAN.md`: milestones and tasks; the next unchecked task is the work.
-- `docs/DECISIONS.md`: why things are the way they are (D1…D21).
+- `docs/DECISIONS.md`: why things are the way they are (D1…D22).
 - `docs/guides/`: how the code fits together (published at https://ewajs.github.io/grama/docs/).
 - `guide/`: the players' guide, "Todo sobre Grama" (Spanish, VitePress).
 
