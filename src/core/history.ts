@@ -56,10 +56,15 @@ function beats(record: LevelRecord, best: LevelRecord): boolean {
 }
 
 /**
- * The history with a level's new result, kept only if it's the best so far.
- * @returns The same history when the new result doesn't beat the old one.
+ * Results with a level's new one, kept only if it's the best so far. Works for numbered
+ * levels and for daily challenges (keyed by date).
+ * @returns The same results when the new one doesn't beat the old one.
  */
-export function record(history: History, levelNumber: number, result: LevelRecord): History {
-  const best = history[levelNumber];
-  return best && !beats(result, best) ? history : { ...history, [levelNumber]: result };
+export function record<Key extends string | number>(
+  results: Readonly<Record<Key, LevelRecord>>,
+  key: Key,
+  result: LevelRecord,
+): Readonly<Record<Key, LevelRecord>> {
+  const best: LevelRecord | undefined = results[key];
+  return best && !beats(result, best) ? results : { ...results, [key]: result };
 }

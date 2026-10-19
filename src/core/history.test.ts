@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { record, recordOf, starsFor, type LevelRecord } from './history';
+import { record, recordOf, starsFor, type History, type LevelRecord } from './history';
 import type { Level } from './level';
 
 const level: Level = {
@@ -39,6 +39,7 @@ describe('recordOf', () => {
 });
 
 describe('record', () => {
+  const none: History = {};
   const result = (stars: 1 | 2 | 3, hints = 0, bonus = 0): LevelRecord => ({
     tier: 'easy',
     difficulty: 'normal',
@@ -49,11 +50,11 @@ describe('record', () => {
   });
 
   it('adds a first result', () => {
-    expect(record({}, 4, result(2))).toEqual({ 4: result(2) });
+    expect(record(none, 4, result(2))).toEqual({ 4: result(2) });
   });
 
   it('keeps the best result per level', () => {
-    const history = record({}, 4, result(2, 1));
+    const history = record(none, 4, result(2, 1));
     expect(record(history, 4, result(1))).toBe(history);
     expect(record(history, 4, result(3))[4]).toEqual(result(3));
     expect(record(history, 4, result(2, 0))[4]).toEqual(result(2, 0));
