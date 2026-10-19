@@ -103,3 +103,23 @@ drogas
 falopa
 porro
 porros
+# Dictionary words that players read as first names (kept: julio, clara, rosa, sol, luz…).
+maría
+juan
+pedro
+luis
+jorge
+diego
+lucas
+marta
+ramón
+enrique
+lucía
+paula
+carmen
+teresa
+cristina
+mateo
+santiago
+martín
+agustín

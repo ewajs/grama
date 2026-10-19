@@ -73,7 +73,7 @@ Goal: levels never run out, generated on the device (D11), good enough to playte
       seed word, find every word its letters spell, choose targets (common) vs bonus (rest);
       invariants tested (every level passes `levelProblems`)
 - [x] App loads the word list and generates each level on demand; hand-written levels removed
-- [ ] Difficulty curve: letters 6→7→8, target count and lengths grow with the level number
+- [x] Difficulty curve: letters 6→7→8, target count and lengths grow with the level number
 - [~] Playtest helper: `?nivel=N` opens level N directly; manual playtest of a few dozen levels
 
 **Verify:** level N is identical on every reload and device; playing 30 levels in a row
