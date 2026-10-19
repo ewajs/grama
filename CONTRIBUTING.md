@@ -114,7 +114,12 @@ Two suites, each run where it pays off (D10):
 - Use design tokens (`var(--color-accent)`, `var(--dur-fast)`); no ad-hoc colors or durations.
 - Mobile first; test at 375×667 and desktop. Respect safe areas.
 - Animations: transform/opacity only, 120–250 ms, never block input.
-  Honor `prefers-reduced-motion`.
+  Honor `prefers-reduced-motion`: take `fly` and `scale` from `ui/lib/motion` (they fade
+  instead), not from `svelte/transition`; CSS animations stop by themselves.
+- Dialogs are `Dialog.svelte`, a native modal `<dialog>`: focus and the inert page come
+  with it. Toasts go over dialogs as popovers (`ui/lib/top-layer`).
+- Text in a status color uses its `-strong` token (`--color-bonus-strong`…), which passes
+  WCAG AA; the plain ones are for fills and icons.
 - Touch targets ≥ 44px. Use pointer events (one code path for touch and mouse).
 
 ## Commands

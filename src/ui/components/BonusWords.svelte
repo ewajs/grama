@@ -67,7 +67,7 @@ The bonus words found on this level, newest first, and how far along the next hi
   }
 
   a {
-    color: var(--color-bonus);
+    color: var(--color-bonus-strong);
     text-decoration: none;
   }
 </style>

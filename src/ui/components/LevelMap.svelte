@@ -8,10 +8,9 @@ plays it: the current one to continue, an earlier one to replay it for better st
 - `onback()`: back to the home screen.
 -->
 <script lang="ts">
-  import { fly } from 'svelte/transition';
   import type { Game } from '../../app/game.svelte';
   import { strings } from '../../i18n';
-  import { DURATION } from '../lib/motion';
+  import { DURATION, fly } from '../lib/motion';
   import ScreenHeader from './ScreenHeader.svelte';
   import Stars from './Stars.svelte';
 

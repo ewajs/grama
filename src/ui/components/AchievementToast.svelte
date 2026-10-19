@@ -7,10 +7,10 @@ Announces achievements as they're earned: a toast slides in from the top, one at
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { fly } from 'svelte/transition';
   import type { AchievementId } from '../../core/achievements';
   import { strings } from '../../i18n';
-  import { DURATION } from '../lib/motion';
+  import { onTop } from '../lib/top-layer';
+  import { DURATION, fly } from '../lib/motion';
 
   /** How long each toast stays. */
   const SHOWN_FOR = 2600;
@@ -37,7 +37,13 @@ Announces achievements as they're earned: a toast slides in from the top, one at
 
 {#each queue.slice(0, 1) as id (id)}
   {@const [title] = strings.achievementList[id]}
-  <div class="toast" role="status" transition:fly={{ y: -24, duration: DURATION.slow }}>
+  <div
+    class="toast"
+    role="status"
+    popover="manual"
+    {@attach onTop}
+    transition:fly={{ y: -24, duration: DURATION.slow }}
+  >
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
         d="M8 21h8m-4-4v4M7 4h10v5a5 5 0 0 1-10 0V4Zm0 2H4v1a3 3 0 0 0 3 3m10-4h3v1a3 3 0 0 1-3 3"
@@ -51,11 +57,16 @@ Announces achievements as they're earned: a toast slides in from the top, one at
 {/each}
 
 <style>
+  /* A popover (see onTop), with the browser's popover styles undone. */
   .toast {
     position: fixed;
+    inset: auto;
+    margin: 0;
+    border: none;
+    color: inherit;
+    overflow: visible;
     top: max(var(--space-3), env(safe-area-inset-top));
     left: 50%;
-    z-index: 2;
     translate: -50%;
     display: flex;
     align-items: center;

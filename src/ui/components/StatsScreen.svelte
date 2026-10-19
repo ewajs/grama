@@ -7,12 +7,11 @@ stars, words and hints.
 - `onback()`: back to the home screen.
 -->
 <script lang="ts">
-  import { fly } from 'svelte/transition';
   import type { Game } from '../../app/game.svelte';
   import { achievementProgress, ACHIEVEMENTS } from '../../core/achievements';
   import { TIERS } from '../../core/difficulty';
   import { strings } from '../../i18n';
-  import { DURATION } from '../lib/motion';
+  import { DURATION, fly } from '../lib/motion';
   import ScreenHeader from './ScreenHeader.svelte';
 
   let { game, onback }: { game: Game; onback: () => void } = $props();

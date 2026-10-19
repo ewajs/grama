@@ -68,7 +68,7 @@ letter on the board. Loops.
     border-radius: 50%;
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
-    color: var(--color-bonus);
+    color: var(--color-bonus-strong);
     font-weight: var(--weight-bold);
   }
 

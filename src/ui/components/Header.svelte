@@ -87,7 +87,7 @@ The top bar: the level number and the score, which counts up when points are won
   }
 
   .easy {
-    background: var(--color-success);
+    background: var(--color-success-strong);
   }
 
   .medium {
@@ -95,11 +95,11 @@ The top bar: the level number and the score, which counts up when points are won
   }
 
   .hard {
-    background: var(--color-bonus);
+    background: var(--color-bonus-strong);
   }
 
   .extra {
-    background: var(--color-danger);
+    background: var(--color-danger-strong);
   }
 
   .end {

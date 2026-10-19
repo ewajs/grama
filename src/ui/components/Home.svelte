@@ -10,11 +10,10 @@ The home screen: where the app opens. Continue the game from here; more is comin
 - `ondaily()`: play today's daily challenge.
 -->
 <script lang="ts">
-  import { fly } from 'svelte/transition';
   import type { Game } from '../../app/game.svelte';
   import { ACHIEVEMENTS } from '../../core/achievements';
   import { strings } from '../../i18n';
-  import { DURATION } from '../lib/motion';
+  import { DURATION, fly } from '../lib/motion';
   import Stars from './Stars.svelte';
 
   type Props = {
@@ -166,16 +165,16 @@ The home screen: where the app opens. Continue the game from here; more is comin
   }
 
   .easy {
-    color: var(--color-success);
+    color: var(--color-success-strong);
   }
   .medium {
     color: var(--color-accent);
   }
   .hard {
-    color: var(--color-bonus);
+    color: var(--color-bonus-strong);
   }
   .extra {
-    color: var(--color-danger);
+    color: var(--color-danger-strong);
   }
 
   .card {

@@ -41,9 +41,10 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   let copied = $state(false);
 </script>
 
-<Confetti delay={CELEBRATION_DELAY} />
-
 <Dialog title={strings.levelComplete} delay={CELEBRATION_DELAY}>
+  {#snippet behind()}
+    <Confetti delay={CELEBRATION_DELAY} />
+  {/snippet}
   <p>{detail}</p>
   <div class="stars"><Stars {stars} size={44} delay={CELEBRATION_DELAY} /></div>
   {#if stars < 3}
@@ -155,12 +156,12 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   }
 
   .points {
-    color: var(--color-success);
+    color: var(--color-success-strong);
   }
 
   .bonus,
   .hint {
-    color: var(--color-bonus);
+    color: var(--color-bonus-strong);
   }
 
   .tier {
@@ -169,10 +170,10 @@ Celebrates a finished level over the game screen, with what was won, and moves o
   }
 
   .tier.hard {
-    background: var(--color-bonus);
+    background: var(--color-bonus-strong);
   }
 
   .tier.extra {
-    background: var(--color-danger);
+    background: var(--color-danger-strong);
   }
 </style>

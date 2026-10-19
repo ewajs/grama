@@ -114,7 +114,7 @@ starting over.
     min-height: 36px;
     border: none;
     background: none;
-    color: var(--color-danger);
+    color: var(--color-danger-strong);
     font: inherit;
     font-size: var(--text-sm);
     cursor: pointer;

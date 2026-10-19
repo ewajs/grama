@@ -1,7 +1,18 @@
 /**
- * Durations for animations driven from script, matching the CSS tokens.
+ * Durations for animations driven from script, matching the CSS tokens, and the
+ * transitions that move things, toned down for players who ask for less motion.
  * @module
  */
+
+import { prefersReducedMotion } from 'svelte/motion';
+import {
+  fade,
+  fly as svelteFly,
+  scale as svelteScale,
+  type FlyParams,
+  type ScaleParams,
+  type TransitionConfig,
+} from 'svelte/transition';
 
 /**
  * Durations in milliseconds for animations driven from script (Svelte transitions,
@@ -20,3 +31,19 @@ export const CELEBRATION_DELAY = 500;
 
 /** Delay between consecutive tiles of a word appearing, for a quick cascade. */
 export const TILE_STAGGER = 45;
+
+/**
+ * Svelte's `fly`, or a plain fade when the device asks for reduced motion. Use it instead
+ * of the one in `svelte/transition`.
+ */
+export function fly(node: Element, params: FlyParams = {}): TransitionConfig {
+  return prefersReducedMotion.current ? fade(node, params) : svelteFly(node, params);
+}
+
+/**
+ * Svelte's `scale`, or a plain fade when the device asks for reduced motion. Use it
+ * instead of the one in `svelte/transition`.
+ */
+export function scale(node: Element, params: ScaleParams = {}): TransitionConfig {
+  return prefersReducedMotion.current ? fade(node, params) : svelteScale(node, params);
+}
