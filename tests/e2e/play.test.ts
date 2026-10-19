@@ -39,3 +39,12 @@ test('finding every target completes the level and moves on to the next', async 
   await expect(page.getByText('Nivel 2')).toBeVisible();
   await expect(page.getByRole('dialog')).toBeHidden();
 });
+
+test('progress survives a reload', async ({ page }) => {
+  await page.goto('./');
+  await drawWord(page, target);
+  await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
+  await page.reload();
+  await expect(page.getByLabel('Puntos')).toHaveText(String(target.length * 10));
+  await expect(page.locator('.row', { hasText: [...target].join('') })).toBeVisible();
+});
