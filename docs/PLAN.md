@@ -98,7 +98,7 @@ playtest feedback easy to send.
 
 - [x] Accented display of found words (`ÁRBOL`, `TENÉS`), still matched without accents
 - [x] Hints: earned by finding bonus words, each reveals a letter of a target
-- [ ] Bonus words list: tap the bonus counter to see the ones found
+- [x] Bonus words list: tap the bonus counter to see the ones found
 - [ ] Report button: opens a pre-filled GitHub issue (level, letters, words, recent
       rejected attempts)
 - [ ] Argentine supplement word list (hand-curated) so _pibe, coima, bondi, subte…_ can

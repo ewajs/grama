@@ -5,11 +5,16 @@ import { generateLevel } from '../../src/core/generate';
 import type { Level } from '../../src/core/level';
 
 const read = (file: string) => parseWordList(readFileSync(`src/content/es/${file}`, 'utf8'));
-const { words } = buildWordList(read('dictionary.txt'), read('frequency.txt'), spanish);
+const { words, spellings } = buildWordList(read('dictionary.txt'), read('frequency.txt'), spanish);
 
 /** Level `number` exactly as the app generates it, so tests know its words. */
 export function level(number: number): Level {
   return generateLevel(words, number);
+}
+
+/** How the app writes a word, with its accents. */
+export function written(word: string): string {
+  return spellings.get(word) ?? word;
 }
 
 /** Three of the level's letters that don't spell any of its words. */

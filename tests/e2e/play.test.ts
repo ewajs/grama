@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { level, nonWord } from './level.ts';
+import { level, nonWord, written } from './level.ts';
 import { drawWord } from './wheel.ts';
 
 const first = level(1);
@@ -54,4 +54,15 @@ test('a hint reveals a letter on the board', async ({ page }) => {
   await page.getByRole('button', { name: 'Pista: te quedan 3' }).click();
   await expect(page.locator('.hinted')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Pista: te quedan 2' })).toBeVisible();
+});
+
+test('tapping the bonus counter lists the bonus words found', async ({ page }) => {
+  const bonus = first.bonus[0]!;
+  await page.goto('./');
+  await drawWord(page, bonus);
+  await page.getByRole('button', { name: /^Palabras extra: 1/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Palabras extra' });
+  await expect(dialog).toContainText(written(bonus));
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
 });
