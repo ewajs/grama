@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { boardRows } from './board';
+import { boardRows, byBoardOrder } from './board';
 import type { Level } from './level';
 import { NEW_SESSION } from './session';
 
@@ -22,9 +22,9 @@ describe('boardRows', () => {
     ).toBe(true);
   });
 
-  it('fills the rows of each length in the order words were found', () => {
-    const rows = boardRows(level, { ...NEW_SESSION, found: ['SOPA', 'SAL', 'PATO'], revealed: {} });
-    expect(rows.map((row) => row.word)).toEqual(['SAL', null, 'SOPA', 'PATO', null]);
+  it('puts each found word in its own row, alphabetical within a length', () => {
+    const rows = boardRows(level, { ...NEW_SESSION, found: ['SOPA', 'SOL'], revealed: {} });
+    expect(rows.map((row) => row.word)).toEqual([null, 'SOL', null, 'SOPA', null]);
   });
 
   it('ignores bonus words', () => {
@@ -33,17 +33,32 @@ describe('boardRows', () => {
     ).toEqual([null, null, null, null, null]);
   });
 
-  it('shows the letters hints revealed, after found words of the same length', () => {
+  it("shows the letters hints revealed, in the word's own row", () => {
     const rows = boardRows(level, {
       ...NEW_SESSION,
-      found: ['SAL'],
-      revealed: { SOL: 1, PATO: 2 },
+      found: ['SOL'],
+      revealed: { SAL: 1, SOPA: 2 },
     });
     expect(rows.slice(0, 4)).toEqual([
-      { length: 3, word: 'SAL', shown: 3 },
-      { length: 3, word: 'SOL', shown: 1 },
-      { length: 4, word: 'PATO', shown: 2 },
+      { length: 3, word: 'SAL', shown: 1 },
+      { length: 3, word: 'SOL', shown: 3 },
       { length: 4, word: null, shown: 0 },
+      { length: 4, word: 'SOPA', shown: 2 },
     ]);
+  });
+});
+
+describe('byBoardOrder', () => {
+  it('sorts by length, then alphabetically', () => {
+    expect(['TAX', 'CASA', 'CAT', 'CAN'].toSorted(byBoardOrder)).toEqual([
+      'CAN',
+      'CAT',
+      'TAX',
+      'CASA',
+    ]);
+  });
+
+  it('puts Ñ between N and O, as Spanish does', () => {
+    expect(['AOR', 'AÑO', 'ANO'].toSorted(byBoardOrder)).toEqual(['ANO', 'AÑO', 'AOR']);
   });
 });

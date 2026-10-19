@@ -6,8 +6,10 @@ change that alters a rule, so code and spec never drift.
 ## Core loop (MVP)
 
 1. A **level** shows 6+ letters arranged in a circle (the _wheel_) and a
-   **board**: one row of empty tiles per expected word, grouped and sorted by
-   length. The board _is_ the hint: it says "find 2 words of 3 letters, 3 of 4…".
+   **board**: one row of empty tiles per expected word, sorted by length and then
+   alphabetically. The board _is_ the hint: it says "find 2 words of 3 letters, 3 of
+   4…", and each word has its own row, so where a found word lands hints at its
+   neighbors.
 2. The player drags across the wheel to build a word. Each letter tile can be
    used once per word. Dragging back onto the previous letter removes the last
    one (undo while dragging).

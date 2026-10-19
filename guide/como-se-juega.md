@@ -29,8 +29,10 @@ A veces verlas en otro orden es todo lo que hace falta.
 
 Cada fila del tablero es una palabra que tenés que encontrar, y sus casilleros te dicen
 cuántas letras tiene. Las filas van de las palabras más cortas a las más largas, así que
-de un vistazo sabés, por ejemplo, que te faltan dos de 3 letras y una de 6. Siempre hay
-una palabra que usa **todas** las letras de la rueda.
+de un vistazo sabés, por ejemplo, que te faltan dos de 3 letras y una de 6. Entre las del
+mismo largo van en orden alfabético, y cada palabra tiene su fila: si encontrás SAL y cae
+en la segunda fila de 3, la que falta va antes en el diccionario. Siempre hay una
+palabra que usa **todas** las letras de la rueda.
 
 ## Qué puede pasar al soltar
 
