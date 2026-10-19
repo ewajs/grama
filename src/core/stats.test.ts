@@ -45,6 +45,9 @@ it('adds up the history', () => {
     extraNoHints: 1,
     dailies: 0,
     bestStreak: 0,
+    trialRuns: 0,
+    trialPoints: 0,
+    trialWheels: 0,
   });
 });
 
@@ -93,4 +96,13 @@ it('never goes down when a level is replayed', () => {
   for (const key of ['stars', 'threeStars', 'words', 'bonus', 'noHints'] as const) {
     expect(after[key], key).toBeGreaterThanOrEqual(before[key]);
   }
+});
+
+it('counts the Contrarreloj record', () => {
+  const trials = { runs: 4, best: { points: 610, cleared: 5, words: 22 }, mostCleared: 6 };
+  expect(statsOf(NEW_PROGRESS, trials)).toMatchObject({
+    trialRuns: 4,
+    trialPoints: 610,
+    trialWheels: 6,
+  });
 });

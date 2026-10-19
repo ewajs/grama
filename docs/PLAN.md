@@ -242,7 +242,8 @@ A timed mode, apart from the main game (D19).
       and taken by results and Pasar; points; `tick(run, elapsed)` (time passed in)
 - [x] Screen: timer, board, wheel, Pasar; pauses when the app is hidden; run summary
       with the best score
-- [ ] Home card, best score and history saved apart from progress; 3 achievements
+- [x] Home card, best score and record (runs, most wheels) saved apart from progress; 3
+      achievements
 - [ ] Guide page and GAME.md section
 
 **Verify:** a run feels tense but fair: a 6-letter wheel is clearable in time, Pasar

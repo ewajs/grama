@@ -6,6 +6,7 @@
 import { TIERS, type Tier } from './difficulty';
 import { streakOf } from './daily';
 import type { Progress } from './progress';
+import { NEW_TRIAL_RECORD, type TrialRecord } from './time-trial';
 
 /**
  * The player's totals. Except for `levels` and `dailies`, they count numbered levels and
@@ -34,14 +35,22 @@ export type Stats = {
   dailies: number;
   /** The longest daily streak (streak freezes included, see `streakOf`). */
   bestStreak: number;
+  /** Contrarreloj runs played. */
+  trialRuns: number;
+  /** The most points in one Contrarreloj run. */
+  trialPoints: number;
+  /** The most wheels finished in one Contrarreloj run. */
+  trialWheels: number;
 };
 
-/** The player's totals, from their completed levels and dailies and the hints they spent. */
-export function statsOf({
-  history,
-  dailies,
-  hintsSpent,
-}: Pick<Progress, 'history' | 'dailies' | 'hintsSpent'>): Stats {
+/**
+ * The player's totals, from their completed levels and dailies, the hints they spent and
+ * their Contrarreloj record.
+ */
+export function statsOf(
+  { history, dailies, hintsSpent }: Pick<Progress, 'history' | 'dailies' | 'hintsSpent'>,
+  trials: TrialRecord = NEW_TRIAL_RECORD,
+): Stats {
   const results = [...Object.values(history), ...Object.values(dailies)];
   const count = (keep: (result: (typeof results)[number]) => boolean) =>
     results.filter(keep).length;
@@ -61,5 +70,8 @@ export function statsOf({
     extraNoHints: count((result) => result.tier === 'extra' && result.hints === 0),
     dailies: Object.keys(dailies).length,
     bestStreak: streakOf(dailies, Object.keys(dailies).sort().at(-1) ?? '').best,
+    trialRuns: trials.runs,
+    trialPoints: trials.best?.points ?? 0,
+    trialWheels: trials.mostCleared,
   };
 }

@@ -69,8 +69,8 @@ shared with the main game; it never moves the current level.
 
 ### Achievements (`src/core/achievements.ts`)
 
-19 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
-bonus words, levels without hints, dailies and streaks). Dailies count like levels for
+22 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
+bonus words, levels without hints, dailies and streaks, Contrarreloj). Dailies count like levels for
 stars, words, hints and tiers, but not toward the number of levels completed. Stats only
 grow; "hints used" counts every hint ever spent. A toast announces each achievement as
 it's earned; the Logros screen lists them with progress and the player's stats.

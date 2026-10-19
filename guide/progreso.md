@@ -38,18 +38,21 @@ estadísticas.
 | Desafiado           | Completá un desafío del día                |
 | Arrancando          | Completá 10 niveles                        |
 | Racha               | Completá el desafío 3 días seguidos        |
+| Contra el reloj     | Jugá una partida de Contrarreloj           |
 | Tres estrellas      | Ganá 3 estrellas en un nivel               |
 | Cien palabras       | Encontrá 100 palabras del tablero          |
 | Sin miedo           | Completá un nivel extra difícil            |
 | Por mi cuenta       | Completá 10 niveles sin pistas             |
 | Curioso             | Encontrá 50 palabras extra                 |
 | Constante           | Completá 50 niveles                        |
+| A las corridas      | Hacé 500 puntos en un Contrarreloj         |
 | A pulmón            | Completá un nivel extra difícil sin pistas |
 | Estrellado          | Ganá 3 estrellas en 10 niveles             |
 | Cielo lleno         | Juntá 100 estrellas                        |
 | Semana redonda      | Completá el desafío 7 días seguidos        |
 | Duro de roer        | Completá 10 niveles extra difíciles        |
 | Cien de cien        | Completá 100 niveles                       |
+| Rueda libre         | Completá 10 ruedas en un Contrarreloj      |
 | Diccionario andante | Encontrá 1000 palabras del tablero         |
 | Explorador          | Encontrá 500 palabras extra                |
 | Imparable           | Completá el desafío 30 días seguidos       |
