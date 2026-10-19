@@ -3,7 +3,11 @@
  * `npm run guide:screenshots` after changing what they show; the images are committed.
  */
 import { test, type Page } from '@playwright/test';
-import { occurrence, occurrencesBefore } from '../src/core/cadence.ts';
+import { occurrence, occurrencesBefore, tierFor } from '../src/core/cadence.ts';
+import { dateKey } from '../src/core/daily.ts';
+import type { LevelRecord } from '../src/core/history.ts';
+import { NEW_PROGRESS, type Progress } from '../src/core/progress.ts';
+import { saveGame } from '../src/storage/save.ts';
 import { level } from '../tests/e2e/level.ts';
 import { drawWord } from '../tests/e2e/wheel.ts';
 
@@ -13,19 +17,16 @@ const OUT = 'guide/public/screenshots';
 function day(offset: number): string {
   const date = new Date();
   date.setDate(date.getDate() + offset);
-  const pad = (value: number) => String(value).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  return dateKey(date);
 }
 
-/** A player 24 levels in, with stars, a few dailies and a 4-day streak. */
-function veteran() {
-  const cycle = ['easy', 'medium', 'medium', 'hard', 'easy', 'medium', 'extra'];
-  const history: Record<number, unknown> = {};
+/** A player 24 levels in, with stars, a few dailies and a 4-day streak, saved as the app would. */
+function veteran(): string {
+  const history: Record<number, LevelRecord> = {};
   for (let number = 1; number < 25; number++) {
-    const tier = number < 15 && number % 7 === 0 ? 'hard' : cycle[(number - 1) % 7];
-    const stars = [3, 2, 3, 1, 3, 2][number % 6];
+    const stars = ([3, 2, 3, 1, 3, 2] as const)[number % 6] ?? 1;
     history[number] = {
-      tier,
+      tier: tierFor(number, 'normal'),
       difficulty: 'normal',
       occurrence: occurrence(number, 'normal'),
       stars,
@@ -34,42 +35,29 @@ function veteran() {
       targets: 7,
     };
   }
-  const daily = {
-    tier: 'easy',
-    difficulty: 'normal',
-    occurrence: 0,
-    stars: 3,
-    hints: 0,
-    bonus: 4,
-    targets: 8,
+  const daily: LevelRecord = { ...history[1]!, occurrence: 0, stars: 3, bonus: 4, targets: 8 };
+  const progress: Progress = {
+    ...NEW_PROGRESS,
+    levelNumber: 25,
+    score: 12840,
+    hints: 4,
+    hintsSpent: 9,
+    bonusTowardHint: 3,
+    occurrences: occurrencesBefore(25, 'normal'),
+    history,
+    dailies: { [day(-1)]: daily, [day(-2)]: daily, [day(-3)]: daily, [day(-4)]: daily },
   };
-  return {
-    version: 10,
-    progress: {
-      levelNumber: 25,
-      score: 12840,
-      hints: 4,
-      hintsSpent: 9,
-      bonusTowardHint: 3,
-      difficulty: 'normal',
-      occurrences: occurrencesBefore(25, 'normal'),
-      session: { found: [], revealed: {}, points: 0, hintsWon: 0 },
-      history,
-      daily: { date: '', session: { found: [], revealed: {}, points: 0, hintsWon: 0 } },
-      dailies: { [day(-1)]: daily, [day(-2)]: daily, [day(-3)]: daily, [day(-4)]: daily },
-    },
-  };
+  let saved = '';
+  saveGame(progress, { setItem: (_key, value) => (saved = value) });
+  return saved;
 }
 
 /** Opens the game with a save (or a fresh one) and the tutorial already seen. */
-async function open(page: Page, path = './', save?: object) {
-  await page.addInitScript(
-    (saved) => {
-      localStorage.setItem('grama.settings', '{"tutorialSeen":true}');
-      if (saved) localStorage.setItem('grama.save', saved);
-    },
-    save && JSON.stringify(save),
-  );
+async function open(page: Page, path = './', save?: string) {
+  await page.addInitScript((saved) => {
+    localStorage.setItem('grama.settings', '{"tutorialSeen":true}');
+    if (saved) localStorage.setItem('grama.save', saved);
+  }, save);
   await page.goto(path);
 }
 

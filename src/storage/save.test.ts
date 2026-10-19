@@ -38,6 +38,19 @@ describe('saving and loading', () => {
     expect(loadGame(memoryStorage({ 'grama.save': '{not json' }))).toBeNull();
   });
 
+  it('keeps the progress but starts the levels in play over when the levels changed', () => {
+    const storage = memoryStorage();
+    const playing = { ...state, daily: { date: '2026-10-19', session: state.session } };
+    saveGame(playing, storage);
+    const saved = JSON.parse(storage.getItem('grama.save') ?? '');
+    storage.setItem('grama.save', JSON.stringify({ ...saved, levels: saved.levels - 1 }));
+    expect(loadGame(storage)).toEqual({
+      ...playing,
+      session: NEW_SESSION,
+      daily: { date: '2026-10-19', session: NEW_SESSION },
+    });
+  });
+
   it('goes on quietly when storage is blocked', () => {
     const blocked = {
       getItem: () => {

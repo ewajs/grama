@@ -70,4 +70,7 @@ and {@link "content/words"!buildWordList | buildWordList} turns them into a
   (spellings, targets only from valid words, every curated word targetable, levels valid
   and in their tier).
 
-Any change to the lists reshuffles levels; that's accepted before 1.0 (D5).
+Any change to the lists reshuffles levels; that's accepted before 1.0 (D5), but never
+silent: the golden test in `words.test.ts` fingerprints levels 1–100 and 60 dailies and
+fails until you bump {@link "core/generate"!LEVELS_VERSION | LEVELS_VERSION} along with its hash.
+Saves from an older version keep the player's progress and start the levels in play over.
