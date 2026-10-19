@@ -13,6 +13,9 @@
   import Home from './ui/components/Home.svelte';
   import LevelMap from './ui/components/LevelMap.svelte';
   import StatsScreen from './ui/components/StatsScreen.svelte';
+  import TrialScreen from './ui/components/TrialScreen.svelte';
+  import type { WordList } from './content/words';
+  import type { RunResult } from './core/time-trial';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
 
   const settings = loadSettings();
@@ -21,11 +24,16 @@
   // One game for the whole visit, kept while moving between screens. It starts at once,
   // so the home screen shows while the words download; only playing a level needs them.
   const game = new Game(start, saveGame);
+  let words = $state<WordList | null>(null);
   let failed = $state(false);
   loadWords().then(
-    (words) => (game.words = words),
+    (loaded) => {
+      game.words = loaded;
+      words = loaded;
+    },
     () => (failed = true),
   );
+  let trialBest = $state<RunResult | null>(null);
   // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
   history.replaceState(null, '', location.pathname);
   // ?nivel= is for playtesting: straight into that level.
@@ -67,6 +75,22 @@
   {:else}
     <p class="status">{strings.loading}</p>
   {/if}
+{:else if navigation.screen === 'trial'}
+  {#if words}
+    <TrialScreen
+      {words}
+      {preferences}
+      best={trialBest}
+      onfinish={(result) => {
+        if (!trialBest || result.points > trialBest.points) trialBest = result;
+      }}
+      onback={() => navigation.back()}
+    />
+  {:else if failed}
+    <p class="status">{strings.loadError}</p>
+  {:else}
+    <p class="status">{strings.loading}</p>
+  {/if}
 {:else if navigation.screen === 'map'}
   <LevelMap
     {game}
@@ -87,6 +111,8 @@
     }}
     onmap={() => navigation.go('map')}
     onstats={() => navigation.go('stats')}
+    {trialBest}
+    ontrial={() => navigation.go('trial')}
     ondaily={() => {
       game.playDaily();
       navigation.go('game');
