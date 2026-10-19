@@ -64,7 +64,7 @@ Goal: wheel + board + rules = a complete level with fixture data.
 
 Goal: levels never run out, generated on the device (D11), good enough to playtest.
 
-- [ ] Choose word sources (common words + broad dictionary) and **verify licenses**;
+- [x] Choose word sources (common words + broad dictionary) and **verify licenses**;
       record the decision in DECISIONS.md. Must include Argentine usage (voseo forms like
       _tenés_, _sabés_; words like _che_, _pibe_) at least as valid bonus words
 - [ ] `scripts/prepare-words.ts`: normalize and filter the sources (length, proper nouns,
