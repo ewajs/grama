@@ -129,9 +129,11 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 3. `Game` works out the place on screen and its session, and calls
    {@link "core/progress"!playWord | playWord}.
 4. {@link "core/evaluate"!evaluate | evaluate} classifies the word; points get the tier's multiplier.
-5. `playWord` returns a new session and new progress: score, a step toward a hint for a
-   bonus word, and, if the level is complete, its record in the history (and a hint the
-   first time an extra-hard level is completed).
+5. `playWord` returns a new session and new progress. If the level still
+   {@link "core/progress"!pays | pays} (it isn't a replay): the score, a step toward a hint for a
+   bonus word, a hint for finishing an extra-hard level; the session keeps what it paid,
+   which Level Complete shows. Either way, a completed level gets its record in the
+   history.
 6. `Game` puts the session back where it belongs (current level, replay or daily) and
    replaces its `$state`.
 7. The change goes to `onchange`, which `App` wired to

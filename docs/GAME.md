@@ -44,8 +44,9 @@ Each completed level is recorded with its tier, hints used, bonus words found an
 otherwise. Replaying a level keeps the best result.
 
 The **map** shows every level reached, by tier, with its stars; tapping an earlier level
-replays it as it was generated. Replays share score, hints and history but never change
-the current level, and the extra-hard hint is only earned the first time.
+replays it as it was generated. A replay only counts for better stars: it pays no points,
+no progress toward hints and no extra-hard hint (the level already paid once), and never
+changes the current level.
 
 ### Daily challenge (`src/core/daily.ts`)
 

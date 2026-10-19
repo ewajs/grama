@@ -65,7 +65,7 @@ describe('dailyOccurrence', () => {
 
 describe('dailyFor', () => {
   it("keeps today's daily, and starts fresh on a new day", () => {
-    const today = { date: '2026-10-19', session: { found: ['SOL'], revealed: {} } };
+    const today = { date: '2026-10-19', session: { ...NEW_SESSION, found: ['SOL'], revealed: {} } };
     expect(dailyFor(today, '2026-10-19')).toBe(today);
     expect(dailyFor(today, '2026-10-20')).toEqual({ date: '2026-10-20', session: NEW_SESSION });
   });

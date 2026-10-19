@@ -64,6 +64,38 @@ describe('playWord', () => {
       replay = playWord(replay.progress, extra, current, replay.session, word);
     }
     expect(replay.progress.hints).toBe(once.hints);
+    expect(replay.session.hintsWon).toBe(0);
+  });
+
+  it('keeps what the level paid in its session', () => {
+    const extra = { ...level, tier: 'extra' as const };
+    const { progress, session } = play(extra.targets, extra);
+    expect(session.points).toBe(progress.score);
+    expect(session.hintsWon).toBe(EXTRA_HARD_HINTS);
+  });
+});
+
+describe('replaying a completed level', () => {
+  const done = play(level.targets).progress;
+  const replay = (words: readonly string[]) => {
+    let state = { progress: done, session: NEW_SESSION as Session };
+    for (const word of words) {
+      state = playWord(state.progress, level, current, state.session, word);
+    }
+    return state;
+  };
+
+  it('pays no points and no progress toward hints', () => {
+    const { progress, session } = replay(['OLA', 'LOS', 'LAS', 'TOS', 'ASO', ...level.targets]);
+    expect(progress.score).toBe(done.score);
+    expect(progress.hints).toBe(done.hints);
+    expect(progress.bonusTowardHint).toBe(done.bonusTowardHint);
+    expect(session.points).toBe(0);
+  });
+
+  it('still records better stars', () => {
+    const { progress } = replay(['OLA', 'LOS', 'LAS', ...level.targets]);
+    expect(progress.history[1]?.stars).toBe(3);
   });
 });
 
@@ -114,7 +146,10 @@ describe('nextLevel', () => {
   it('moves on with a fresh session, keeping the score and hints', () => {
     const { progress } = play(['SOL']);
     const used = useHint(progress, level, progress.session).progress;
-    const next = nextLevel({ ...used, session: { found: ['SOL'], revealed: { SAL: 1 } } });
+    const next = nextLevel({
+      ...used,
+      session: { ...NEW_SESSION, found: ['SOL'], revealed: { SAL: 1 } },
+    });
     expect(next).toMatchObject({ levelNumber: 2, score: 30, hints: STARTING_HINTS - 1 });
     expect(next.session).toBe(NEW_SESSION);
   });

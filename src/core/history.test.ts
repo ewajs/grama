@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { record, recordOf, starsFor, type History, type LevelRecord } from './history';
 import type { Level } from './level';
+import { NEW_SESSION } from './session';
 
 const level: Level = {
   letters: ['S', 'A', 'L', 'T', 'O', 'P'],
@@ -12,22 +13,39 @@ const all = ['PLATOS', 'SOL'];
 
 describe('starsFor', () => {
   it('gives three stars with no hints and three bonus words', () => {
-    expect(starsFor(level, { found: [...all, 'OLA', 'LOS', 'LAS'], revealed: {} })).toBe(3);
+    expect(
+      starsFor(level, { ...NEW_SESSION, found: [...all, 'OLA', 'LOS', 'LAS'], revealed: {} }),
+    ).toBe(3);
   });
 
   it('gives two stars with no hints and fewer bonus words, or with one hint', () => {
-    expect(starsFor(level, { found: all, revealed: {} })).toBe(2);
-    expect(starsFor(level, { found: [...all, 'OLA', 'LOS', 'LAS'], revealed: { SOL: 1 } })).toBe(2);
+    expect(starsFor(level, { ...NEW_SESSION, found: all, revealed: {} })).toBe(2);
+    expect(
+      starsFor(level, {
+        ...NEW_SESSION,
+        found: [...all, 'OLA', 'LOS', 'LAS'],
+        revealed: { SOL: 1 },
+      }),
+    ).toBe(2);
   });
 
   it('gives one star with more hints', () => {
-    expect(starsFor(level, { found: all, revealed: { SOL: 1, PLATOS: 1 } })).toBe(1);
+    expect(starsFor(level, { ...NEW_SESSION, found: all, revealed: { SOL: 1, PLATOS: 1 } })).toBe(
+      1,
+    );
   });
 });
 
 describe('recordOf', () => {
   it('sums up how the level went', () => {
-    expect(recordOf(level, { found: [...all, 'OLA'], revealed: { SOL: 1 } }, 'normal', 4)).toEqual({
+    expect(
+      recordOf(
+        level,
+        { ...NEW_SESSION, found: [...all, 'OLA'], revealed: { SOL: 1 } },
+        'normal',
+        4,
+      ),
+    ).toEqual({
       tier: 'hard',
       difficulty: 'normal',
       occurrence: 4,

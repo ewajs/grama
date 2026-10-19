@@ -1,22 +1,27 @@
 /**
- * One level in play: the words found and the letters revealed, and what follows from
- * them (complete? points? bonus words?). Main levels, replays and dailies all use it.
+ * One level in play: the words found and the letters revealed, what it has paid, and
+ * what follows from them (complete? bonus words?). Main levels, replays and dailies all
+ * use it.
  * @module
  */
 
 import { evaluate, type Submission } from './evaluate';
 import type { Level } from './level';
 
-/** One level in play: the words found on it and the letters hints revealed. */
+/** One level in play: the words found on it, the letters hints revealed, what it paid. */
 export type Session = {
   /** Words found, targets and bonus, in the order found. */
   found: readonly string[];
   /** Letters revealed by hints, by target. */
   revealed: Readonly<Record<string, number>>;
+  /** Points it has paid; a replay pays none (see `playWord`). */
+  points: number;
+  /** Hints its completion earned: an extra-hard level's, the first time. */
+  hintsWon: number;
 };
 
 /** A level not played yet. */
-export const NEW_SESSION: Session = { found: [], revealed: {} };
+export const NEW_SESSION: Session = { found: [], revealed: {}, points: 0, hintsWon: 0 };
 
 /**
  * Submits a word on a level.
@@ -37,16 +42,6 @@ export function submitWord(
 /** Whether every target of the level has been found. Bonus words don't count. */
 export function isComplete(level: Level, session: Session): boolean {
   return level.targets.every((target) => session.found.includes(target));
-}
-
-/** Points won on the level so far: the sum over every word found on it. */
-export function sessionPoints(level: Level, session: Session): number {
-  return session.found.reduce((sum, word) => {
-    const submission = evaluate(level, [], word);
-    return submission.kind === 'target' || submission.kind === 'bonus'
-      ? sum + submission.points
-      : sum;
-  }, 0);
 }
 
 /** Bonus words found on the level, in the order found. */
