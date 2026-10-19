@@ -28,7 +28,7 @@ export function levelShape(levelNumber: number): LevelShape {
 }
 
 /** Fewest targets a generated level may have; fewer would make a dull board. */
-export const MIN_TARGETS = 4;
+export const MIN_TARGETS = 5;
 
 /** How many of the most common words may be targets; rarer ones are only bonus words. */
 export const COMMON_WORDS = 5000;
