@@ -13,6 +13,7 @@ letter wheel with its controls.
   import { FEEDBACK_DURATION } from '../lib/motion';
   import { shuffled } from '../lib/shuffle';
   import Board from './Board.svelte';
+  import Header from './Header.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import WordPill from './WordPill.svelte';
@@ -44,10 +45,7 @@ letter wheel with its controls.
 </script>
 
 <main>
-  <header>
-    <span>{strings.level(game.levelNumber)}</span>
-    <span aria-label={strings.score}>★ {game.score}</span>
-  </header>
+  <Header level={game.levelNumber} score={game.score} />
 
   <div class="board">
     <Board rows={boardRows(game.level, game.found)} glow={repeated} />
@@ -81,14 +79,6 @@ letter wheel with its controls.
     max-width: 480px;
     margin: 0 auto;
     padding: var(--space-4) var(--space-4) var(--space-8);
-  }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-self: stretch;
-    font-size: var(--text-lg);
-    font-weight: var(--weight-medium);
   }
 
   .board {
