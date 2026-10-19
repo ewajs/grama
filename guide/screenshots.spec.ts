@@ -44,11 +44,12 @@ function veteran() {
     targets: 8,
   };
   return {
-    version: 9,
+    version: 10,
     progress: {
       levelNumber: 25,
       score: 12840,
       hints: 4,
+      hintsSpent: 9,
       bonusTowardHint: 3,
       difficulty: 'normal',
       occurrences: occurrencesBefore(25, 'normal'),

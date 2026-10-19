@@ -1,17 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { achievementProgress, ACHIEVEMENTS, unlocked } from './achievements';
+import { NEW_PROGRESS } from './progress';
 import { statsOf } from './stats';
 
-const fresh = statsOf({});
+const fresh = statsOf(NEW_PROGRESS);
 const after = statsOf({
-  1: {
-    tier: 'extra',
-    difficulty: 'normal',
-    occurrence: 0,
-    stars: 3,
-    hints: 0,
-    bonus: 3,
-    targets: 9,
+  ...NEW_PROGRESS,
+  history: {
+    1: {
+      tier: 'extra',
+      difficulty: 'normal',
+      occurrence: 0,
+      stars: 3,
+      hints: 0,
+      bonus: 3,
+      targets: 9,
+    },
   },
 });
 

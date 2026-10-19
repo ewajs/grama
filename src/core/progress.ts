@@ -26,6 +26,8 @@ export type Progress = {
   score: number;
   /** Hints available to spend, on any level. */
   hints: number;
+  /** Hints spent, ever. */
+  hintsSpent: number;
   /** Bonus words found toward the next hint (see `core/hints`). */
   bonusTowardHint: number;
   /** The player's difficulty when the current level began; it decides its tier. */
@@ -64,6 +66,7 @@ export const NEW_PROGRESS: Progress = {
   levelNumber: 1,
   score: 0,
   hints: STARTING_HINTS,
+  hintsSpent: 0,
   bonusTowardHint: 0,
   difficulty: 'normal',
   occurrences: {},
@@ -156,7 +159,7 @@ export function useHint(
 ): { progress: Progress; session: Session } {
   if (!canUseHint(progress, level, session)) return { progress, session };
   return {
-    progress: { ...progress, hints: progress.hints - 1 },
+    progress: { ...progress, hints: progress.hints - 1, hintsSpent: progress.hintsSpent + 1 },
     session: revealLetter(session, level),
   };
 }

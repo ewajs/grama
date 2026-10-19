@@ -73,10 +73,10 @@ describe('record', () => {
     expect(record(none, 4, result(2))).toEqual({ 4: result(2) });
   });
 
-  it('keeps the best result per level', () => {
-    const history = record(none, 4, result(2, 1));
-    expect(record(history, 4, result(1))).toBe(history);
-    expect(record(history, 4, result(3))[4]).toEqual(result(3));
-    expect(record(history, 4, result(2, 0))[4]).toEqual(result(2, 0));
+  it('keeps the best of every play per level', () => {
+    const history = record(none, 4, result(2, 1, 5));
+    expect(record(history, 4, result(1, 3))).toBe(history);
+    expect(record(history, 4, result(3, 0, 3))[4]).toEqual(result(3, 0, 5));
+    expect(record(history, 4, result(2, 1, 6))[4]).toEqual(result(2, 1, 6));
   });
 });

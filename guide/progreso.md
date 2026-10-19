@@ -12,7 +12,8 @@ Cada nivel completo te da de 1 a 3 estrellas:
 | ★★  | Con una pista como mucho                   |
 | ★   | Completándolo                              |
 
-Si volvés a jugar un nivel, queda tu mejor resultado.
+Si volvés a jugar un nivel, queda lo mejor de cada vez: la mayor cantidad de estrellas y de
+palabras extra, y la menor de pistas. Así tus estadísticas y tus logros nunca bajan.
 
 ## El mapa
 
@@ -52,5 +53,9 @@ estadísticas.
 | Diccionario andante | Encontrá 1000 palabras del tablero         |
 | Explorador          | Encontrá 500 palabras extra                |
 | Imparable           | Completá el desafío 30 días seguidos       |
+
+Los desafíos del día también cuentan para los logros de estrellas, palabras, pistas y
+dificultad (un domingo extra difícil vale para _Sin miedo_), aunque no para los que cuentan
+niveles completados.
 
 <img class="screen" src="/screenshots/logros.png" alt="La pantalla de logros y estadísticas">
