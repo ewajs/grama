@@ -44,11 +44,11 @@ const words = {
 function newGame() {
   const date = { now: '2026-10-19' };
   const game = new Game(
-    words,
     NEW_PROGRESS,
     () => {},
     () => date.now,
   );
+  game.words = words;
   return { game, date };
 }
 
@@ -58,6 +58,15 @@ function finish(game: Game) {
 }
 
 describe('Game', () => {
+  it('waits for its words before a level can be played', () => {
+    const game = new Game(NEW_PROGRESS);
+    expect(game.ready).toBe(false);
+    expect(game.currentLevel).toBe(1);
+    game.words = words;
+    expect(game.ready).toBe(true);
+    expect(game.level.letters).toHaveLength(6);
+  });
+
   it('plays a replay apart from the current level, which it never moves', () => {
     const { game } = newGame();
     finish(game);

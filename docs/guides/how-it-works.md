@@ -79,6 +79,10 @@ compute from it; anything the UI reads through a getter re-renders when the stat
 changes. Its methods (`submit`, `hint`, `next`, `replay`, `playDaily`…) call core and
 replace the state.
 
+`Game` starts without its words, so Home shows while they download (at low priority, so
+the page and its font come first); the game screen waits for
+{@link "app/game.svelte"!Game.ready | ready}.
+
 `Game` knows what's on screen through its _mode_: the player's current level, a replay
 of an earlier one (an in-memory session), or the daily challenge (its session saved in
 `progress.daily`). Every getter and method works on "the level on screen", whichever it

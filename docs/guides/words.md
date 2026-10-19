@@ -56,8 +56,12 @@ and {@link "content/words"!buildWordList | buildWordList} turns them into a
   ({@link "content/words"!CURATED_RANK | CURATED_RANK}) so all of them can be targets; the rest of the
   dictionary follows. A word's index is its rank, which the generator and the difficulty
   score use directly.
-- **`spellings`**: how each normalized word is written, for the screen (`TENES` →
-  `TENÉS`).
+- **`spellings`**: how a word is written when that's not how it compares, for the screen
+  (`TENES` → `TENÉS`); words without accents aren't in it.
+
+It all runs on the phone before the first level, so it's kept lean: each word is
+normalized once (and an already-plain word is returned as it is, sharing its string),
+taking about 70 ms on a laptop.
 
 ## Changing the words
 

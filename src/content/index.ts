@@ -10,7 +10,8 @@ import frequencyUrl from './es/frequency.txt?url';
 import { buildWordList, parseWordList, type WordList } from './words';
 
 async function fetchWordList(url: string): Promise<string[]> {
-  const response = await fetch(url);
+  // Low priority: the home screen (and its font) come first; only a level needs these.
+  const response = await fetch(url, { priority: 'low' });
   if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
   return parseWordList(await response.text());
 }
