@@ -7,7 +7,8 @@ pantalla de inicio.
 
 ## Cómo es
 
-- Siempre tiene **7 letras** y 8 palabras en el tablero.
+- Siempre tiene **7 letras** y hasta 8 palabras en el tablero. No repite un desafío
+  reciente ni uno de tus niveles.
 - Su dificultad depende del **día de la semana**, y sube hacia el domingo:
 
 | Lunes | Martes | Miércoles | Jueves | Viernes | Sábado  | Domingo           |

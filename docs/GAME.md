@@ -48,7 +48,7 @@ the current level, and the extra-hard hint is only earned the first time.
 
 ### Daily challenge (`src/core/daily.ts`)
 
-One level per date (the player's own), the same for everyone: 7 letters, 8 targets, and a
+One level per date (the player's own), the same for everyone: 7 letters, up to 8 targets, and a
 difficulty by weekday (Monday–Tuesday easy, Wednesday–Thursday medium, Friday–Saturday
 hard, Sunday extra hard). It's saved as it's played; completing it records the date and
 keeps a **streak** of consecutive days, alive until the day without one ends. The result
@@ -109,6 +109,8 @@ valid word they spell is a bonus word. A level is valid when:
 - every word has 3+ letters and can be spelled with the level's letters, each used once;
 - no word appears twice, across targets and bonus;
 - at least one target uses every letter.
+
+Generated levels also have at least 3 bonus words, so every level can earn ★★★.
 
 Size grows with the level number (`SIZES` in `src/core/generate.ts`): 6 letters at
 first, 7 from level 16 and 8 from level 41, with 6 to 9 targets and, from 8 letters on,

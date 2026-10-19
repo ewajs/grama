@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { TIERS } from './difficulty';
 import { generateLevel, levelShape } from './generate';
+import { THREE_STAR_BONUS } from './history';
 import { canSpell, levelProblems } from './level';
 
 // A small list, most common first; every word is within any tier's pool.
@@ -60,6 +61,12 @@ describe('generateLevel', () => {
       for (let number = 1; number <= 15; number++) {
         expect(levelProblems(generateLevel(words, number, tier))).toEqual([]);
       }
+    }
+  });
+
+  it('leaves enough bonus words for three stars', () => {
+    for (let number = 1; number <= 15; number++) {
+      expect(generateLevel(words, number).bonus.length).toBeGreaterThanOrEqual(THREE_STAR_BONUS);
     }
   });
 

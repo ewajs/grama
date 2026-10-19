@@ -68,7 +68,8 @@ share letters:
 5. **Within its block**, a level takes the first seed whose level lands in its tier. If
    none does, it tries up to {@link "core/generate"!FAR_TRIES | FAR_TRIES} seeds from the far side
    of the order (last used about half a cycle ago), then settles for the first workable
-   one.
+   one. A seed is only workable with enough targets and at least
+   {@link "core/history"!THREE_STAR_BONUS | THREE_STAR_BONUS} bonus words, so every level can earn ★★★.
 
 Over 600 levels every level lands in its tier, and the closest repeat is 88 levels
 apart. Generation takes a few milliseconds: each word's letters are precomputed as a
@@ -97,9 +98,13 @@ bitmask, so most words are rejected with one comparison before the full spelling
 
 ## The daily challenge
 
-{@link "core/daily"!generateDaily | generateDaily}: always {@link "core/daily"!DAILY_SHAPE | DAILY_SHAPE} (7 letters, 8
-targets), the tier from the weekday ({@link "core/daily"!DAILY_TIERS | DAILY_TIERS}), and seeds from
-blocks beyond those main levels reach.
+{@link "core/daily"!generateDaily | generateDaily}: always {@link "core/daily"!DAILY_SHAPE | DAILY_SHAPE} (7 letters, up to 8
+targets), the tier from the weekday ({@link "core/daily"!DAILY_TIERS | DAILY_TIERS}). Dailies count
+their own blocks per tier ({@link "core/daily"!dailyOccurrence | dailyOccurrence}) and take them from the
+_end_ of the tier's order backwards, while main levels start at the beginning: a daily
+doesn't repeat another for about seven months, nor a main level for longer. That's the
+word list's limit: easy and medium have only about 220 workable 7-letter seeds each, and
+each takes two dailies a week.
 
 ## Recalibrating
 

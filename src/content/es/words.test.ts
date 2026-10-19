@@ -4,6 +4,7 @@ import { occurrence, tierFor } from '../../core/cadence';
 import { dailyTier, generateDaily } from '../../core/daily';
 import { RECIPES, TIERS } from '../../core/difficulty';
 import { generateLevel, levelShape } from '../../core/generate';
+import { THREE_STAR_BONUS } from '../../core/history';
 import { levelProblems } from '../../core/level';
 import { spanish } from '../../core/spanish';
 import { buildWordList, parseWordList } from '../words';
@@ -93,14 +94,28 @@ describe('Spanish word lists', () => {
     expect(perLevel).toBeLessThan(150);
   });
 
-  it('make a valid 7-letter daily challenge of the right tier every day', () => {
-    for (let day = 19; day <= 31; day++) {
-      const date = `2026-10-${day}`;
+  it('make a valid daily challenge of the right tier every day, never a recent one', () => {
+    // Main 7-letter levels (16-40) at every difficulty: a daily must not be one of them.
+    const key = (letters: readonly string[]) => letters.toSorted().join('');
+    const main = new Set<string>();
+    for (const difficulty of ['relaxed', 'normal', 'challenging'] as const) {
+      for (let number = 16; number <= 40; number++) {
+        const tier = tierFor(number, difficulty);
+        main.add(key(generateLevel(words, number, tier, occurrence(number, difficulty)).letters));
+      }
+    }
+    const seen = new Set<string>();
+    // About seven months: how long each weekday tier lasts before a daily repeats (D19).
+    for (let number = 1; number <= 200; number++) {
+      const date = new Date(Date.UTC(2026, 9, 18 + number)).toISOString().slice(0, 10);
       const daily = generateDaily(words, date);
       expect(levelProblems(daily), date).toEqual([]);
       expect(daily.letters).toHaveLength(7);
       expect(daily.tier, date).toBe(dailyTier(date));
-      expect(generateDaily(words, date)).toEqual(daily);
+      expect(daily.bonus.length, date).toBeGreaterThanOrEqual(THREE_STAR_BONUS);
+      expect(main.has(key(daily.letters)), date).toBe(false);
+      expect(seen.has(key(daily.letters)), date).toBe(false);
+      seen.add(key(daily.letters));
     }
   });
 });

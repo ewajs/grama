@@ -6,6 +6,7 @@
  */
 
 import { classify, levelScore, RECIPES, TIERS, type Tier } from './difficulty';
+import { THREE_STAR_BONUS } from './history';
 import { canSpell, MIN_WORD_LENGTH, type Level } from './level';
 import { seededRandom, shuffled } from './random';
 
@@ -141,6 +142,10 @@ function buildLevel(
     ({ word, rank }) => rank < recipe.pool && word.length >= shape.shortestTarget && word !== seed,
   );
   if (candidates.length + 1 < MIN_TARGETS) return null;
+  // Every level must be able to earn three stars.
+  if (spelled.length - Math.min(candidates.length + 1, shape.targets) < THREE_STAR_BONUS) {
+    return null;
+  }
 
   // Stable sort: equally long words stay most common first.
   const ordered = recipe.longFirst
@@ -170,7 +175,8 @@ function buildLevel(
  * level lands in the tier; otherwise it takes the first workable one, whatever its tier.
  * @param words Normalized words, most common first, no repeats.
  * @param occurrence How many earlier levels share this one's tier and size (`occurrence`
- * in `core/cadence`): which block of seeds it gets.
+ * in `core/cadence`): which block of seeds it gets. Negative counts back from the end of
+ * the order (−1 is the last block), which the daily challenges use.
  * @param shape Its size; by default the one for its number ({@link levelShape}).
  */
 export function generateLevel(
@@ -183,7 +189,7 @@ export function generateLevel(
   const recipe = RECIPES[tier];
   const order = seedOrder(words, tier, shape.letters);
   const blocks = Math.max(1, Math.floor(order.length / SEED_BLOCK));
-  const start = (occurrence % blocks) * SEED_BLOCK;
+  const start = (((occurrence % blocks) + blocks) % blocks) * SEED_BLOCK;
   // Its own block first. Failing that, it looks for its tier on the far side of the order:
   // seeds last used about half a cycle ago, not by a neighbor.
   const far = (start + Math.floor(order.length / 2)) % Math.max(order.length, 1);
