@@ -7,6 +7,7 @@ The home screen: where the app opens. Continue the game from here; more is comin
 - `onplay()`: continue playing.
 - `onmap()`: open the level map.
 - `onstats()`: open the achievements and stats.
+- `ondictionary()`: open Tu diccionario.
 - `ondaily()`: play today's daily challenge.
 - `trialBest`: the best Contrarreloj run, if any.
 - `ontrial()`: play Contrarreloj.
@@ -24,11 +25,12 @@ The home screen: where the app opens. Continue the game from here; more is comin
     onplay: () => void;
     onmap: () => void;
     onstats: () => void;
+    ondictionary: () => void;
     ondaily: () => void;
     trialBest: RunResult | null;
     ontrial: () => void;
   };
-  let { game, onplay, onmap, onstats, ondaily, trialBest, ontrial }: Props = $props();
+  let { game, onplay, onmap, onstats, ondictionary, ondaily, trialBest, ontrial }: Props = $props();
 
   const today = $derived(game.today);
   const weekday = $derived(strings.weekday(today.date));
@@ -83,6 +85,11 @@ The home screen: where the app opens. Continue the game from here; more is comin
   <button class="card" onclick={onmap}>
     <span class="label">{strings.map}</span>
     <span class="detail">{strings.mapSummary(results.length, stars)}</span>
+  </button>
+
+  <button class="card" onclick={ondictionary}>
+    <span class="label">{strings.dictionary}</span>
+    <span class="detail">{strings.dictionaryCount(game.dictionary.length)}</span>
   </button>
 
   <button class="card" onclick={onstats}>

@@ -21,6 +21,14 @@ export const es = {
   tagline: 'Uní las letras y encontrá todas las palabras.',
   hintsLeft: 'Pistas',
   continuePlaying: 'Jugar',
+  dictionary: 'Tu diccionario',
+  dictionaryCount: (count: number) => (count === 1 ? '1 palabra' : `${count} palabras`),
+  dictionarySearch: 'Buscar',
+  dictionaryLetters: 'Letras',
+  dictionaryLetter: (letter: string) => `Palabras con ${letter}`,
+  dictionaryEmpty:
+    'Acá se juntan todas las palabras que encontrás: en los niveles, el desafío del día y el Contrarreloj.',
+  dictionaryNoMatch: (search: string) => `Ninguna palabra empieza con «${search}».`,
   map: 'Mapa',
   mapSummary: (levels: number, stars: number) =>
     `${levels === 1 ? '1 nivel' : `${levels} niveles`} · ${stars} ★`,
