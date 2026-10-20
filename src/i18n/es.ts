@@ -208,6 +208,21 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.18',
+      items: [
+        'Tu diccionario: todas las palabras que encontraste, en orden y con su significado.',
+        'Tres logros nuevos para tu diccionario.',
+      ],
+    },
+    {
+      version: '0.17',
+      items: [
+        'Temas nuevos: Argento, Yerba y Quebrada, cada uno claro u oscuro.',
+        'Con el teléfono acostado, el tablero y la rueda van uno al lado del otro.',
+        'Al completar un nivel, las estrellas caen de a una y te decimos qué faltó para las tres.',
+      ],
+    },
+    {
       version: '0.16',
       items: [
         'Contrarreloj: rueda tras rueda contra el reloj, con Pasar y tu mejor marca.',

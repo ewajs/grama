@@ -256,7 +256,7 @@ rescues a dead wheel, and the best score survives reloads.
 - [x] Wide layouts: board and wheel side by side in landscape, bigger on tablets
 - [x] Themes: Grama, Argento, Yerba and Quebrada, apart from the light/dark mode (D23)
 - [x] Real-device checklist written (`docs/guides/devices.md`)
-- [ ] Run the checklist on Android and iOS (owner, on real phones)
+- [x] Run the checklist on Android and iOS (owner, on real phones)
 
 **Verify:** fresh-install playthrough of levels 1–20 on a mid-range phone with no rough edges.
 
@@ -285,6 +285,14 @@ starting over.
 
 ## Changelog
 
+- **v0.18.0** (M17) — Tu diccionario: every word found (levels, dailies, Contrarreloj)
+  collected once and saved apart from the progress, with its own screen (alphabetical,
+  letters to jump to, search, definitions), new words counted after each level and run,
+  and three achievements.
+- **v0.17.0** (M16) — Polish: a calmer level-complete moment that fits any screen; board
+  and wheel side by side on wide screens, bigger on tablets; themes Grama, Argento, Yerba
+  and Quebrada, apart from the light/dark mode and checked for AA contrast; a real-device
+  checklist. CI runs e2e on PRs only, so merges deploy in about a minute.
 - **v0.16.0** (M15) — Contrarreloj: wheel after wheel against the clock (60 s, +3 s a
   word, +10 s a board, Pasar −10 s), new wheels every run, its own best mark and record
   saved apart, three achievements, a guide page.
