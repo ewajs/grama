@@ -205,6 +205,14 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.19',
+      items: [
+        'Al compartir el link de Grama, ahora se ve con su imagen.',
+        'Con la app instalada, mantené apretado el ícono para ir directo al desafío, al Contrarreloj o a tu diccionario.',
+        'En iPhone, la app abre con su pantalla de inicio, clara u oscura.',
+      ],
+    },
+    {
       version: '0.18',
       items: [
         'Tu diccionario: todas las palabras que encontraste, en orden y con su significado.',
