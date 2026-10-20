@@ -205,6 +205,13 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.20',
+      items: [
+        'Los niveles difíciles piden más palabras: hasta 10 en los extra difíciles.',
+        'El inicio, renovado: más claro y con íconos.',
+      ],
+    },
+    {
       version: '0.19',
       items: [
         'Al compartir el link de Grama, ahora se ve con su imagen.',
