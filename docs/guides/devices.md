@@ -10,10 +10,16 @@ whether the game was installed.
 
 ## Install and offline
 
-- [ ] **Android:** Menú › Instalar Grama. The icon lands on the home screen and opens
-      full screen, upright, with the status bar in the theme's color.
-- [ ] **iPhone:** Safari › Compartir › Agregar a inicio. The icon opens full screen,
-      clear of the notch and the home bar.
+- [ ] **Android:** Menú › Instalar Grama. The install dialog shows the description and
+      screenshots; the icon lands on the home screen and opens full screen, upright, with
+      the status bar in the theme's color.
+- [ ] **Android:** long-pressing the icon offers Desafío del día, Contrarreloj and Tu
+      diccionario, and each opens its place.
+- [ ] **iPhone:** Safari › Compartir › Agregar a inicio. The icon is named Grama and opens
+      full screen, clear of the notch and the home bar, after a launch screen with the
+      icon (dark when the phone is), never a blank one.
+- [ ] **A shared link** (the daily's Compartir, or the game's address) shows Grama's card
+      in WhatsApp or Telegram.
 - [ ] **Offline:** once the words have loaded, turn on airplane mode, close the game and
       open it from the icon. Home, a level, the daily and Contrarreloj all play.
 - [ ] **Update:** after a deploy, reopen the installed game: the update prompt shows, and

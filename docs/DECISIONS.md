@@ -8,6 +8,17 @@ delete it, the history is the point.
 
 ---
 
+## D25 · No push notifications: they need a server — 2026-10-20
+
+- **Decision:** no daily reminder notifications for now.
+- **Why:** a reminder at a set time needs Web Push, and Web Push needs a server to keep
+  each player's subscription and send at 11:00; the ways without one don't work (the
+  Notification Triggers trial was dropped; Periodic Background Sync is Chrome-only and
+  runs when the browser decides). A server breaks the promise that nothing leaves the
+  device, and iOS would show every reminder, played or not.
+- **Revisit:** if streaks need help, a small scheduled worker (e.g. Cloudflare) with an
+  opt-in and an updated privacy answer in the guide.
+
 ## D24 · Tu diccionario saved apart from the progress — 2026-10-19
 
 - **Decision:** the words found are saved under their own key (`grama.words`), like the
