@@ -1,7 +1,7 @@
 <!--
 @component
 The player's achievements, earned and still to earn, and their totals: levels by tier,
-stars, words and hints.
+stars, words, Tu diccionario and hints.
 
 - `game`: the player's game, for its stats.
 - `onback()`: back to the home screen.
@@ -28,6 +28,7 @@ stars, words and hints.
         'threeStars',
         'words',
         'bonus',
+        'dictionary',
         'hints',
         'trialRuns',
         'trialPoints',

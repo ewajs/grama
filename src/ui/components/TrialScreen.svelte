@@ -7,7 +7,8 @@ is open and the app is visible; when time is up, a summary offers another run.
 - `preferences`: sound and vibration.
 - `best`: the best run so far, if any, to show with the result.
 - `unlocked`: the achievements reached, so new ones are announced.
-- `onword(word)`: a word was found (normalized), for Tu diccionario.
+- `onword(word)`: a word was found (normalized), for Tu diccionario; says whether it was
+  new there.
 - `onfinish(result)`: a run ended; its result, to keep.
 - `onback()`: back to the home screen (a run in play is dropped).
 -->
@@ -36,7 +37,7 @@ is open and the app is visible; when time is up, a summary offers another run.
     preferences: Preferences;
     best: RunResult | null;
     unlocked: readonly AchievementId[];
-    onword: (word: string) => void;
+    onword: (word: string) => boolean;
     onfinish: (result: RunResult) => void;
     onback: () => void;
   };
@@ -54,6 +55,8 @@ is open and the app is visible; when time is up, a summary offers another run.
   let clearResult: ReturnType<typeof setTimeout> | undefined;
   /** The best run before this one ended, to compare with (`best` then includes this one). */
   let bestBefore = $state<RunResult | null>(null);
+  /** Words this run added to Tu diccionario. */
+  let newWords = $state(0);
   /** Seconds the last word added, shown by the clock for a moment. */
   let gained = $state<{ id: number; seconds: number } | null>(null);
 
@@ -104,7 +107,7 @@ is open and the app is visible; when time is up, a summary offers another run.
     const before = trial.wheelNumber;
     const submission = trial.submit(next);
     if (submission.kind === 'target' || submission.kind === 'bonus') {
-      onword(submission.word);
+      if (onword(submission.word)) newWords++;
       const cleared = trial.wheelNumber !== before;
       gained = {
         id: resultCount + 1,
@@ -183,13 +186,24 @@ is open and the app is visible; when time is up, a summary offers another run.
     <ul>
       <li>{strings.wheelsCleared(trial.result.cleared)}</li>
       <li>{strings.wordsFound(trial.result.words)}</li>
+      {#if newWords > 0}
+        <li>{strings.dictionaryNew(newWords)}</li>
+      {/if}
     </ul>
     {#if bestBefore === null || trial.result.points > bestBefore.points}
       <p class="best">{strings.newBest}</p>
     {:else}
       <p class="best">{strings.bestRun(bestBefore.points)}</p>
     {/if}
-    <button class="primary" onclick={() => trial.restart()}>{strings.playAgain}</button>
+    <button
+      class="primary"
+      onclick={() => {
+        newWords = 0;
+        trial.restart();
+      }}
+    >
+      {strings.playAgain}
+    </button>
     <button class="secondary" onclick={onback}>{strings.backHome}</button>
   </Dialog>
 {/if}

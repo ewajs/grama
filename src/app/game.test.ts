@@ -140,13 +140,26 @@ describe('Game', () => {
     expect(saved).toEqual(game.dictionary);
   });
 
-  it('takes Contrarreloj words, each once', () => {
+  it('takes Contrarreloj words, each once, telling which were new', () => {
     let saves = 0;
     const game = new Game(NEW_PROGRESS, { dictionary: ['SOL'], ondictionary: () => saves++ });
-    game.addToDictionary('SAL');
-    game.addToDictionary('SOL');
+    expect(game.addToDictionary('SAL')).toBe(true);
+    expect(game.addToDictionary('SOL')).toBe(false);
     expect(game.dictionary).toEqual(['SOL', 'SAL']);
     expect(saves).toBe(1);
+  });
+
+  it('tells which words were new to the dictionary on the level on screen', () => {
+    const { game } = newGame();
+    const [first, second] = game.level.targets;
+    game.addToDictionary(first!);
+    game.submit(first!);
+    game.submit(second!);
+    expect(game.newWords).toEqual([second]);
+    expect(game.stats.dictionary).toBe(2);
+    finish(game);
+    game.next('normal');
+    expect(game.newWords).toEqual([]);
   });
 
   it('starts with the words of the levels in play, saving only if that adds any', () => {

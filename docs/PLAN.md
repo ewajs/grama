@@ -266,7 +266,7 @@ rescues a dead wheel, and the best score survives reloads.
       saved apart from the progress (D24)
 - [x] Screen: a Home card, the words in alphabetical order with a letter index and
       search; tapping one shows its definition
-- [ ] New words marked as found, the count in Logros, achievements for its size; guide
+- [x] New words marked as found, the count in Logros, achievements for its size; guide
       page and screenshots
 
 **Verify:** words found anywhere show up in the dictionary, once, and survive a reload and

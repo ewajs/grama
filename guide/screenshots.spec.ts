@@ -52,19 +52,31 @@ function veteran(): string {
   return saved;
 }
 
-/** Opens the game with a save (or a fresh one) and the tutorial already seen. */
-async function open(page: Page, path = './', save?: string) {
-  await page.addInitScript((saved) => {
-    localStorage.setItem('grama.settings', '{"tutorialSeen":true}');
-    if (saved) localStorage.setItem('grama.save', saved);
-  }, save);
+/** The veteran's dictionary: the targets and a few bonus words of the levels played. */
+function veteranWords(): string {
+  const levels = Array.from({ length: 24 }, (_, index) => level(index + 1));
+  return JSON.stringify([
+    ...new Set(levels.flatMap((played) => [...played.targets, ...played.bonus.slice(0, 3)])),
+  ]);
+}
+
+/** Opens the game with a save (or a fresh one), maybe a dictionary, and the tutorial seen. */
+async function open(page: Page, path = './', save?: string, words?: string) {
+  await page.addInitScript(
+    ([saved, dictionary]) => {
+      localStorage.setItem('grama.settings', '{"tutorialSeen":true}');
+      if (saved) localStorage.setItem('grama.save', saved);
+      if (dictionary) localStorage.setItem('grama.words', dictionary);
+    },
+    [save, words] as const,
+  );
   await page.goto(path);
 }
 
 const shot = (page: Page, name: string) => page.screenshot({ path: `${OUT}/${name}.png` });
 
-test('home, map, achievements and the menu', async ({ page }) => {
-  await open(page, './', veteran());
+test('home, map, achievements, Tu diccionario and the menu', async ({ page }) => {
+  await open(page, './', veteran(), veteranWords());
   await page.getByRole('button', { name: /^Jugar/ }).waitFor();
   await page.waitForTimeout(400);
   await shot(page, 'inicio');
@@ -75,6 +87,10 @@ test('home, map, achievements and the menu', async ({ page }) => {
   await page.getByRole('button', { name: /^Logros/ }).click();
   await page.waitForTimeout(500);
   await shot(page, 'logros');
+  await page.goBack();
+  await page.getByRole('button', { name: /^Tu diccionario/ }).click();
+  await page.waitForTimeout(500);
+  await shot(page, 'diccionario');
   await page.goBack();
   await page.getByRole('button', { name: /^Desafío del día/ }).click();
   await page.locator('[data-letter]').first().waitFor();

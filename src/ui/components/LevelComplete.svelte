@@ -11,6 +11,7 @@ stars land one by one, then the points count up.
 - `points`: points won on it; none means a replay, which pays nothing.
 - `hints`: hints won by finishing it.
 - `bonus`: bonus words found on it; none isn't mentioned.
+- `newWords`: how many of its words were new to Tu diccionario; none isn't mentioned.
 - `nextLabel`: the button's label (the next level, or back to the map after a replay).
 - `share()`: when given, a share button (daily challenge); it says how it went.
 - `onnext()`: the player is done here.
@@ -37,6 +38,7 @@ stars land one by one, then the points count up.
     points: number;
     hints: number;
     bonus: number;
+    newWords: number;
     nextLabel: string;
     share?: () => Promise<'shared' | 'copied' | 'failed'>;
     onnext: () => void;
@@ -50,6 +52,7 @@ stars land one by one, then the points count up.
     points,
     hints,
     bonus,
+    newWords,
     nextLabel,
     share,
     onnext,
@@ -91,6 +94,9 @@ stars land one by one, then the points count up.
     {/if}
     {#if hints > 0}
       <li class="hint">{strings.hintsWon(hints)}</li>
+    {/if}
+    {#if newWords > 0}
+      <li class="new">{strings.dictionaryNew(newWords)}</li>
     {/if}
   </ul>
   <section class="recap">
@@ -190,6 +196,10 @@ stars land one by one, then the points count up.
   .bonus,
   .hint {
     color: var(--color-bonus-strong);
+  }
+
+  .new {
+    color: var(--color-accent-strong);
   }
 
   .tier {

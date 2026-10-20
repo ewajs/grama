@@ -250,6 +250,7 @@ letter wheel with its controls.
     points={game.levelPoints}
     hints={game.hintsWon}
     bonus={game.bonusFound}
+    newWords={game.newWords.length}
     onnext={nextLevel}
   />
 {/if}

@@ -29,6 +29,7 @@ export const es = {
   dictionaryEmpty:
     'Acá se juntan todas las palabras que encontrás: en los niveles, el desafío del día y el Contrarreloj.',
   dictionaryNoMatch: (search: string) => `Ninguna palabra empieza con «${search}».`,
+  dictionaryNew: (count: number) => `+${count} en tu diccionario`,
   map: 'Mapa',
   mapSummary: (levels: number, stars: number) =>
     `${levels === 1 ? '1 nivel' : `${levels} niveles`} · ${stars} ★`,
@@ -96,6 +97,9 @@ export const es = {
     noHints10: ['Por mi cuenta', 'Completá 10 niveles sin pistas.'],
     words100: ['Cien palabras', 'Encontrá 100 palabras del tablero.'],
     words1000: ['Diccionario andante', 'Encontrá 1000 palabras del tablero.'],
+    dictionary100: ['Coleccionista', 'Juntá 100 palabras en tu diccionario.'],
+    dictionary500: ['Ratón de biblioteca', 'Juntá 500 palabras en tu diccionario.'],
+    dictionary2000: ['Mataburros', 'Juntá 2000 palabras en tu diccionario.'],
     bonus50: ['Curioso', 'Encontrá 50 palabras extra.'],
     bonus500: ['Explorador', 'Encontrá 500 palabras extra.'],
     daily: ['Desafiado', 'Completá un desafío del día.'],
@@ -118,6 +122,7 @@ export const es = {
     trialRuns: 'Contrarreloj',
     trialPoints: 'Mejor contrarreloj',
     trialWheels: 'Más ruedas',
+    dictionary: 'En tu diccionario',
   },
   replaying: 'Repetición',
   playLevel: (level: number) => `Jugar el nivel ${level}`,

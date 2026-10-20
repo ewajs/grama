@@ -37,4 +37,8 @@ features:
     title: Contrarreloj
     details: Rueda tras rueda contra el reloj, a ver hasta dónde llegás.
     link: /contrarreloj
+  - icon: 📖
+    title: Tu diccionario
+    details: Todas las palabras que encontraste, en orden y con su significado.
+    link: /diccionario
 ---

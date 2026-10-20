@@ -84,12 +84,12 @@ are no hints. The run ends at zero, and its score is its points (as in levels).
 Every run gets a random seed, so its wheels are new. The clock stops while the app is
 hidden; leaving the screen drops the run. Runs never touch the main score, hints, stars
 or level: they keep their own record (runs played, best run, most wheels), saved apart
-(`storage/trials`), which feeds three achievements.
+(`storage/trials`), which feeds three achievements. Their words do go into Tu diccionario.
 
 ### Achievements (`src/core/achievements.ts`)
 
-22 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
-bonus words, levels without hints, dailies and streaks, Contrarreloj). Dailies count like levels for
+25 achievements, each a stat reaching a goal (levels, stars, extra-hard levels, words,
+bonus words, Tu diccionario, levels without hints, dailies and streaks, Contrarreloj). Dailies count like levels for
 stars, words, hints and tiers, but not toward the number of levels completed. Stats only
 grow; "hints used" counts every hint ever spent. A toast announces each achievement as
 it's earned; the Logros screen lists them with progress and the player's stats.
@@ -105,7 +105,9 @@ dictionary.
 Every word the player finds, target or bonus, on a level, a replay, a daily or a
 Contrarreloj run, goes into **Tu diccionario**, once. Its screen (from Home) lists them in
 alphabetical order (`Ñ` after `N`), grouped by letter, with a row of letters to jump to
-and a search by how a word starts; tapping one offers its definition. It's saved apart
+and a search by how a word starts; tapping one offers its definition. Finishing a level,
+or a Contrarreloj run, says how many words were new ("+3 en tu diccionario"); the Logros
+screen counts them, with three achievements (100, 500 and 2000 words). It's saved apart
 from the progress, so starting over keeps it.
 
 ### Hints (tunable in `src/core/hints.ts`)

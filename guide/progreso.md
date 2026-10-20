@@ -41,10 +41,12 @@ estadísticas.
 | Contra el reloj     | Jugá una partida de Contrarreloj           |
 | Tres estrellas      | Ganá 3 estrellas en un nivel               |
 | Cien palabras       | Encontrá 100 palabras del tablero          |
+| Coleccionista       | Juntá 100 palabras en tu diccionario       |
 | Sin miedo           | Completá un nivel extra difícil            |
 | Por mi cuenta       | Completá 10 niveles sin pistas             |
 | Curioso             | Encontrá 50 palabras extra                 |
 | Constante           | Completá 50 niveles                        |
+| Ratón de biblioteca | Juntá 500 palabras en tu diccionario       |
 | A las corridas      | Hacé 500 puntos en un Contrarreloj         |
 | A pulmón            | Completá un nivel extra difícil sin pistas |
 | Estrellado          | Ganá 3 estrellas en 10 niveles             |
@@ -55,6 +57,7 @@ estadísticas.
 | Rueda libre         | Completá 10 ruedas en un Contrarreloj      |
 | Diccionario andante | Encontrá 1000 palabras del tablero         |
 | Explorador          | Encontrá 500 palabras extra                |
+| Mataburros          | Juntá 2000 palabras en tu diccionario      |
 | Imparable           | Completá el desafío 30 días seguidos       |
 
 Los desafíos del día también cuentan para los logros de estrellas, palabras, pistas y
