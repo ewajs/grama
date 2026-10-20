@@ -1,11 +1,13 @@
 /**
- * Renders the app icon (public/icons/*.svg) to the PNG sizes installing the app needs, and
- * the share image link previews show (public/og.png). Run with `npm run icons` after
- * changing the artwork or the text on it; the PNGs are committed.
+ * Renders the app icon (public/icons/*.svg) to the PNG sizes installing the app needs, the
+ * share image link previews show (public/og.png) and the iPhone launch screens
+ * (public/splash/). Run with `npm run icons` after changing the artwork or the text on
+ * it; the PNGs are committed.
  */
 import { chromium, type Browser } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { es } from '../src/i18n/es.ts';
+import { IPHONE_SCREENS, launchScreenFile, SCHEMES } from './launch-screens.ts';
 
 const DIR = 'public/icons';
 
@@ -27,9 +29,16 @@ const font = `@font-face {
   src: url(data:font/woff2;base64,${base64('node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2')});
 }`;
 
-/** Screenshots `html` at `width`×`height` CSS pixels into `out`. */
-async function render(browser: Browser, html: string, out: string, width: number, height: number) {
-  const page = await browser.newPage({ viewport: { width, height } });
+/** Screenshots `html` at `width`×`height` CSS pixels (`ratio` device pixels each) into `out`. */
+async function render(
+  browser: Browser,
+  html: string,
+  out: string,
+  width: number,
+  height: number,
+  ratio = 1,
+) {
+  const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: ratio });
   await page.setContent(html);
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: out, omitBackground: true });
@@ -59,6 +68,22 @@ const preview = `<style>
   <ul><li>${es.dailyChallenge}</li><li>${es.trial}</li><li>${es.dictionary}</li></ul>
 </div>`;
 
+// The iPhone launch screen: Home's header (the icon and the name) on the page's
+// background, light or dark, so launching flows into Home.
+const COLORS = {
+  light: { background: '#f7f6fc', accent: '#5b5bd6' },
+  dark: { background: '#16152a', accent: '#8b8bf5' },
+};
+const launchScreen = (scheme: (typeof SCHEMES)[number]) => `<style>
+  ${font}
+  body { margin: 0; height: 100vh; display: grid; place-content: center; justify-items: center;
+    gap: 16px; font-family: Outfit; background: ${COLORS[scheme].background}; }
+  img { width: 96px; height: 96px; border-radius: 22%; }
+  h1 { margin: 0; font-size: 40px; color: ${COLORS[scheme].accent}; letter-spacing: 0.04em; }
+</style>
+<img src="${icon}" alt="">
+<h1>${es.appName}</h1>`;
+
 const browser = await chromium.launch();
 for (const { source, out, size } of ICONS) {
   const svg = `data:image/svg+xml;base64,${base64(`${DIR}/${source}`)}`;
@@ -66,4 +91,11 @@ for (const { source, out, size } of ICONS) {
   await render(browser, html, `${DIR}/${out}`, size, size);
 }
 await render(browser, preview, 'public/og.png', 1200, 630);
+mkdirSync('public/splash', { recursive: true });
+for (const screen of IPHONE_SCREENS) {
+  for (const scheme of SCHEMES) {
+    const out = `public/splash/${launchScreenFile(screen, scheme)}`;
+    await render(browser, launchScreen(scheme), out, screen.width, screen.height, screen.ratio);
+  }
+}
 await browser.close();

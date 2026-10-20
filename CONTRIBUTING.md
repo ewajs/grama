@@ -127,20 +127,20 @@ Two suites, each run where it pays off (D10):
 
 ## Commands
 
-| Command                     | Does                                                                     |
-| --------------------------- | ------------------------------------------------------------------------ |
-| `npm run dev`               | Dev server (`--host` to test on a phone on the same Wi-Fi)               |
-| `npm run check`             | Lint + typecheck + unit tests (the PR gate)                              |
-| `npm test`                  | Unit tests in watch mode                                                 |
-| `npm run budget`            | After a build: JavaScript within the performance budget (100 KB gz)      |
-| `npm run audit`             | Security advisories in what ships (dev tools left out, D18)              |
-| `npm run e2e`               | Playwright tests against a production build                              |
-| `npm run build`             | Production build to `dist/`                                              |
-| `npm run docs`              | Developer docs (guides + API reference) to `dist/docs/`                  |
-| `npm run words`             | Rebuild the word lists in `src/content/` from pinned sources (D12)       |
-| `npm run icons`             | Render the app icon to the PNGs installs need, and the link preview card |
-| `npm run guide`             | Build the player guide to `dist/guia/` (`guide:dev` to preview it live)  |
-| `npm run guide:screenshots` | Retake the guide's screenshots from the real game                        |
+| Command                     | Does                                                                        |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `npm run dev`               | Dev server (`--host` to test on a phone on the same Wi-Fi)                  |
+| `npm run check`             | Lint + typecheck + unit tests (the PR gate)                                 |
+| `npm test`                  | Unit tests in watch mode                                                    |
+| `npm run budget`            | After a build: JavaScript within the performance budget (100 KB gz)         |
+| `npm run audit`             | Security advisories in what ships (dev tools left out, D18)                 |
+| `npm run e2e`               | Playwright tests against a production build                                 |
+| `npm run build`             | Production build to `dist/`                                                 |
+| `npm run docs`              | Developer docs (guides + API reference) to `dist/docs/`                     |
+| `npm run words`             | Rebuild the word lists in `src/content/` from pinned sources (D12)          |
+| `npm run icons`             | Render the app icon's PNGs, the link preview card and iPhone launch screens |
+| `npm run guide`             | Build the player guide to `dist/guia/` (`guide:dev` to preview it live)     |
+| `npm run guide:screenshots` | Retake the guide's screenshots from the real game                           |
 
 First-time setup: `npm install`, plus `npx playwright install chromium webkit` to run e2e.
 

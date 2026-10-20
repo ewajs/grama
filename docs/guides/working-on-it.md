@@ -10,17 +10,17 @@ version.
 
 ## Commands
 
-| Command                     | Does                                                        |
-| --------------------------- | ----------------------------------------------------------- |
-| `npm run dev`               | The game, live (`--host` to open it from a phone)           |
-| `npm run check`             | Lint, types and unit tests: what CI requires                |
-| `npm run e2e`               | Browser tests against a production build (Chromium, WebKit) |
-| `npm run build`             | The game, to `dist/`                                        |
-| `npm run docs`              | These developer docs, to `dist/docs/`                       |
-| `npm run guide`             | The player guide, to `dist/guia/` (`guide:dev` to preview)  |
-| `npm run guide:screenshots` | Retake the guide's screenshots from the real game           |
-| `npm run words`             | Rebuild the word lists from their pinned sources            |
-| `npm run icons`             | Render the app icon and the link preview card to PNG        |
+| Command                     | Does                                                         |
+| --------------------------- | ------------------------------------------------------------ |
+| `npm run dev`               | The game, live (`--host` to open it from a phone)            |
+| `npm run check`             | Lint, types and unit tests: what CI requires                 |
+| `npm run e2e`               | Browser tests against a production build (Chromium, WebKit)  |
+| `npm run build`             | The game, to `dist/`                                         |
+| `npm run docs`              | These developer docs, to `dist/docs/`                        |
+| `npm run guide`             | The player guide, to `dist/guia/` (`guide:dev` to preview)   |
+| `npm run guide:screenshots` | Retake the guide's screenshots from the real game            |
+| `npm run words`             | Rebuild the word lists from their pinned sources             |
+| `npm run icons`             | Render the icon, link preview card and iPhone launch screens |
 
 ## How changes are made
 

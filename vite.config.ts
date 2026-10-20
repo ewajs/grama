@@ -3,6 +3,12 @@ import { readFileSync } from 'node:fs';
 import type { HtmlTagDescriptor, Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+import {
+  IPHONE_SCREENS,
+  launchScreenFile,
+  launchScreenMedia,
+  SCHEMES,
+} from './scripts/launch-screens';
 import { SHORTCUTS } from './src/app/start';
 import { es } from './src/i18n/es';
 
@@ -42,6 +48,31 @@ function linkPreviews(): Plugin {
   };
 }
 
+/**
+ * The installed app on iPhone: its name under the icon, and a launch screen per iPhone
+ * size (`npm run icons` renders them to public/splash/), instead of a blank one.
+ */
+function iphoneApp(): Plugin {
+  return {
+    name: 'grama:iphone-app',
+    transformIndexHtml: () => [
+      meta({ name: 'apple-mobile-web-app-capable', content: 'yes' }),
+      meta({ name: 'apple-mobile-web-app-title', content: es.appName }),
+      ...IPHONE_SCREENS.flatMap((screen) =>
+        SCHEMES.map((scheme): HtmlTagDescriptor => ({
+          tag: 'link',
+          attrs: {
+            rel: 'apple-touch-startup-image',
+            href: `${base}splash/${launchScreenFile(screen, scheme)}`,
+            media: launchScreenMedia(screen, scheme),
+          },
+          injectTo: 'head',
+        })),
+      ),
+    ],
+  };
+}
+
 export default defineConfig({
   base,
   define: {
@@ -53,6 +84,7 @@ export default defineConfig({
   plugins: [
     svelte(),
     linkPreviews(),
+    iphoneApp(),
     // Installable app that works offline: the service worker caches the app and the
     // word lists; a new version waits until the player accepts it (UpdatePrompt).
     VitePWA({
@@ -99,8 +131,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,txt}'],
-        // Only link previews fetch the share card: players never need it offline.
-        globIgnores: ['og.png'],
+        // Only link previews fetch the share card, and iOS fetches its launch screen once,
+        // when the app is added: players never need them offline.
+        globIgnores: ['og.png', 'splash/**'],
         // The dictionary is ~1.1 MB uncompressed.
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         // The guide and the developer docs are their own sites under the same path: the

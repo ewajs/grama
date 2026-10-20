@@ -272,6 +272,20 @@ rescues a dead wheel, and the best score survives reloads.
 **Verify:** words found anywhere show up in the dictionary, once, and survive a reload and
 starting over.
 
+### M18 — Feels like an app · `v0.19.0`
+
+- [x] Link previews: Open Graph tags and a share card (`public/og.png`)
+- [x] App shortcuts on the installed app's icon: Desafío del día, Contrarreloj, Tu
+      diccionario (`?ir=`)
+- [x] Richer install dialog: description, categories, phone and computer screenshots
+- [x] iPhone launch screens for every iPhone size, light and dark
+- [ ] Try them on real phones (owner): a shared link, the shortcuts, the install dialog,
+      the iPhone launch screen
+
+**Verify:** a link shared on WhatsApp shows the card; long-pressing the icon on Android
+opens each shortcut; installing on Android shows the screenshots; launching on iPhone
+shows Grama, not a blank screen.
+
 ## Backlog (post-MVP, unordered)
 
 - More hint types (reveal a whole word, a letter in every row)
