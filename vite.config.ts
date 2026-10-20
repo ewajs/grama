@@ -58,9 +58,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       manifest: {
-        name: 'Grama',
-        short_name: 'Grama',
-        description: 'Uní las letras y encontrá todas las palabras.',
+        id: base,
+        name: es.appName,
+        short_name: es.appName,
+        description: es.preview,
+        categories: ['games', 'education', 'entertainment'],
         lang: 'es-AR',
         start_url: base,
         scope: base,
@@ -73,6 +75,16 @@ export default defineConfig({
           name: { daily: es.dailyChallenge, trial: es.trial, dictionary: es.dictionary }[place],
           url: `${base}?ir=${name}`,
           icons: [{ src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+        })),
+        // The install dialog's screenshots: the guide's own (`npm run guide:screenshots`),
+        // served from /grama/guia/ next to the game.
+        screenshots: Object.entries(es.installScreenshots).map(([name, label]) => ({
+          src: `guia/screenshots/${name}.png`,
+          type: 'image/png',
+          ...(name === 'escritorio'
+            ? { sizes: '1280x800', form_factor: 'wide' }
+            : { sizes: '780x1688', form_factor: 'narrow' }),
+          label,
         })),
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },

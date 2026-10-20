@@ -22,6 +22,14 @@ export const es = {
   preview:
     'Un juego de palabras con voseo y palabras nuestras: niveles infinitos, desafío del día y Contrarreloj. Gratis y sin publicidad.',
   previewAlt: 'Grama: uní las letras y encontrá todas las palabras.',
+  /** What each screenshot in the install dialog shows (manifest, vite.config.ts). */
+  installScreenshots: {
+    inicio: 'El inicio: tu nivel, el desafío del día, el Contrarreloj y tu diccionario',
+    jugando: 'Un nivel: el tablero y la rueda de letras',
+    diccionario: 'Tu diccionario: todas las palabras que encontraste',
+    contrarreloj: 'Contrarreloj: rueda tras rueda contra el reloj',
+    escritorio: 'En la computadora, el tablero y la rueda lado a lado',
+  },
   hintsLeft: 'Pistas',
   continuePlaying: 'Jugar',
   dictionary: 'Tu diccionario',
