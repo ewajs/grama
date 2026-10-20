@@ -27,6 +27,12 @@
   box-shadow: 0 6px 24px rgb(29 27 46 / 0.18);
 }
 
+/* A computer's screen: wider, with less rounding. */
+.vp-doc img.screen.wide {
+  width: 100%;
+  border-radius: 10px;
+}
+
 .vp-doc .screens {
   display: flex;
   flex-wrap: wrap;

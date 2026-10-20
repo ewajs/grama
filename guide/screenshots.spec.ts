@@ -154,6 +154,30 @@ test('playing a level, from first words to the end', async ({ page }) => {
   await shot(page, 'nivel-completo');
 });
 
+test.describe('on a computer', () => {
+  // Also the install dialog's wide screenshot (manifest in vite.config.ts): 1280×800.
+  test.use({
+    viewport: { width: 1280, height: 800 },
+    deviceScaleFactor: 1,
+    isMobile: false,
+    hasTouch: false,
+  });
+
+  test('board and wheel side by side', async ({ page }) => {
+    const first = level(1);
+    await open(page);
+    await page.getByRole('button', { name: /^Jugar/ }).click();
+    await page.locator('[data-letter]').first().waitFor();
+    for (const word of first.targets.slice(0, 3)) {
+      await page.keyboard.type(word.toLowerCase());
+      await page.keyboard.press('Enter');
+    }
+    await page.keyboard.type(first.targets.at(-1)!.slice(0, 3).toLowerCase());
+    await page.waitForTimeout(1200);
+    await shot(page, 'escritorio');
+  });
+});
+
 test('a Contrarreloj run', async ({ page }) => {
   await page.addInitScript(() => (Math.random = () => 0.5));
   await open(page);

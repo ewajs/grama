@@ -22,6 +22,11 @@ entre letras para empezar de nuevo.
 Con un teclado, **escribí** la palabra y apretá **Enter**. **Borrar** saca la última letra
 y **Esc** la borra entera.
 
+En la computadora, o con el teléfono acostado, el tablero va a la izquierda y la rueda a la
+derecha.
+
+<img class="screen wide" src="/screenshots/escritorio.png" alt="Grama en una computadora: el tablero a la izquierda y la rueda a la derecha">
+
 El botón de las flechas cruzadas, abajo a la izquierda, **mezcla** las letras de la rueda.
 A veces verlas en otro orden es todo lo que hace falta.
 
