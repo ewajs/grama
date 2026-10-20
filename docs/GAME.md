@@ -97,7 +97,16 @@ it's earned; the Logros screen lists them with progress and the player's stats.
 ### Definitions
 
 Any found word can be looked up: tap its row on the board, a bonus word in the bonus
-list, or a word in the level-complete recap, for a link to the RAE dictionary.
+list, a word in the level-complete recap or in Tu diccionario, for a link to the RAE
+dictionary.
+
+### Tu diccionario (`src/core/dictionary.ts`, D24)
+
+Every word the player finds, target or bonus, on a level, a replay, a daily or a
+Contrarreloj run, goes into **Tu diccionario**, once. Its screen (from Home) lists them in
+alphabetical order (`Ñ` after `N`), grouped by letter, with a row of letters to jump to
+and a search by how a word starts; tapping one offers its definition. It's saved apart
+from the progress, so starting over keeps it.
 
 ### Hints (tunable in `src/core/hints.ts`)
 

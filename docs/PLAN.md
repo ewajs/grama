@@ -264,7 +264,7 @@ rescues a dead wheel, and the best score survives reloads.
 
 - [x] Core and saving: every word found (levels, dailies, Contrarreloj) collected once,
       saved apart from the progress (D24)
-- [ ] Screen: a Home card, the words in alphabetical order with a letter index and
+- [x] Screen: a Home card, the words in alphabetical order with a letter index and
       search; tapping one shows its definition
 - [ ] New words marked as found, the count in Logros, achievements for its size; guide
       page and screenshots

@@ -12,6 +12,7 @@
   import { loadTrials, saveTrials } from './storage/trials';
   import { loadSettings, saveSettings, type Theme } from './storage/settings';
   import GameScreen from './ui/components/GameScreen.svelte';
+  import DictionaryScreen from './ui/components/DictionaryScreen.svelte';
   import Home from './ui/components/Home.svelte';
   import LevelMap from './ui/components/LevelMap.svelte';
   import StatsScreen from './ui/components/StatsScreen.svelte';
@@ -116,6 +117,8 @@
   />
 {:else if navigation.screen === 'stats'}
   <StatsScreen {game} onback={() => navigation.back()} />
+{:else if navigation.screen === 'dictionary'}
+  <DictionaryScreen {game} onback={() => navigation.back()} />
 {:else}
   <Home
     {game}
@@ -125,6 +128,7 @@
     }}
     onmap={() => navigation.go('map')}
     onstats={() => navigation.go('stats')}
+    ondictionary={() => navigation.go('dictionary')}
     trialBest={game.trialBest}
     ontrial={() => navigation.go('trial')}
     ondaily={() => {
