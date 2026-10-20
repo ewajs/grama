@@ -5,23 +5,25 @@ group: Guides
 
 # Difficulty
 
-A level has a **size** (letters on the wheel, number of targets), which grows with
-progress, and a **tier** (easy, medium, hard, extra hard), which alternates in a rhythm.
-They're independent: the tier only changes _which words_ are the targets. The numbers
-here come from calibrating on generated levels (D16).
+A level has a **size** (letters on the wheel, most targets), which grows with progress,
+and a **tier** (easy, medium, hard, extra hard), which alternates in a rhythm. The tier
+decides _which words_ are the targets and, within the size, how many: harder tiers ask
+for more (D26). The numbers here come from calibrating on generated levels (D16).
 
 ## Size grows with progress
 
 {@link "core/generate"!SIZES | SIZES}, read by {@link "core/generate"!levelShape | levelShape}:
 
-| From level | Letters | Max targets | Shortest target |
-| ---------- | ------- | ----------- | --------------- |
-| 1          | 6       | 6           | 3               |
-| 6          | 6       | 7           | 3               |
-| 16         | 7       | 8           | 3               |
-| 41         | 8       | 9           | 4               |
+| From level | Letters | Max targets: easy · medium · hard · extra | Shortest target |
+| ---------- | ------- | ----------------------------------------- | --------------- |
+| 1          | 6       | 5 · 6 · 7 · 8                             | 3               |
+| 16         | 7       | 6 · 7 · 8 · 9                             | 3               |
+| 41         | 8       | 7 · 8 · 9 · 10                            | 4               |
 
-Every level has at least {@link "core/generate"!MIN_TARGETS | MIN_TARGETS} targets.
+Every level has at least {@link "core/generate"!MIN_TARGETS | MIN_TARGETS} targets; it gets fewer than
+its tier's most when its letters don't spell enough of the tier's words. Ten is about
+the most a phone's board shows with readable tiles: the board shrinks its tiles and, when
+that helps, splits into two columns ({@link "ui/lib/board-layout"!boardLayout | boardLayout}).
 
 ## Scoring a level
 
@@ -102,8 +104,8 @@ bitmask, so most words are rejected with one comparison before the full spelling
 
 ## The daily challenge
 
-{@link "core/daily"!generateDaily | generateDaily}: always {@link "core/daily"!DAILY_SHAPE | DAILY_SHAPE} (7 letters, up to 8
-targets), the tier from the weekday ({@link "core/daily"!DAILY_TIERS | DAILY_TIERS}). Dailies count
+{@link "core/daily"!generateDaily | generateDaily}: always {@link "core/daily"!DAILY_SIZE | DAILY_SIZE} (7 letters, up to 6
+targets on Monday's easy one and 9 on Sunday's extra hard), the tier from the weekday ({@link "core/daily"!DAILY_TIERS | DAILY_TIERS}). Dailies count
 their own blocks per tier ({@link "core/daily"!dailyOccurrence | dailyOccurrence}) and take them from the
 _end_ of the tier's order backwards, while main levels start at the beginning: a daily
 doesn't repeat another for about seven months, nor a main level for longer. That's the

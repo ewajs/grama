@@ -28,14 +28,14 @@ aparecer hasta por lo menos 80 niveles después, y casi siempre muchos más.
 
 ## Los niveles crecen
 
-| Niveles        | Letras en la rueda | Palabras en el tablero           |
-| -------------- | ------------------ | -------------------------------- |
-| 1 a 5          | 6                  | hasta 6                          |
-| 6 a 15         | 6                  | hasta 7                          |
-| 16 a 40        | 7                  | hasta 8                          |
-| 41 en adelante | 8                  | hasta 9, todas de 4 letras o más |
+| Niveles        | Letras en la rueda | Palabras en el tablero: fácil · media · difícil · extra difícil |
+| -------------- | ------------------ | --------------------------------------------------------------- |
+| 1 a 15         | 6                  | hasta 5 · 6 · 7 · 8                                             |
+| 16 a 40        | 7                  | hasta 6 · 7 · 8 · 9                                             |
+| 41 en adelante | 8                  | hasta 7 · 8 · 9 · 10, todas de 4 letras o más                   |
 
-Siempre hay al menos 5 palabras en el tablero.
+Cuanto más difícil el nivel, más palabras pide. Siempre hay al menos 5 en el tablero; si
+son muchas, las casillas se achican para que entren todas.
 
 ## Volver a un nivel
 

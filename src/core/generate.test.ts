@@ -40,13 +40,20 @@ const words = [
 
 describe('levelShape', () => {
   it('grows with progress', () => {
-    expect(levelShape(1)).toMatchObject({ letters: 6, targets: 6 });
-    expect(levelShape(5)).toMatchObject({ letters: 6, targets: 6 });
-    expect(levelShape(6)).toMatchObject({ letters: 6, targets: 7 });
-    expect(levelShape(16)).toMatchObject({ letters: 7, targets: 8 });
+    expect(levelShape(1)).toMatchObject({ letters: 6, shortestTarget: 3 });
+    expect(levelShape(15)).toMatchObject({ letters: 6 });
+    expect(levelShape(16)).toMatchObject({ letters: 7 });
     expect(levelShape(40)).toMatchObject({ letters: 7 });
-    expect(levelShape(41)).toMatchObject({ letters: 8, targets: 9, shortestTarget: 4 });
+    expect(levelShape(41)).toMatchObject({ letters: 8, shortestTarget: 4 });
     expect(levelShape(5000)).toMatchObject({ letters: 8 });
+  });
+
+  it('asks harder tiers for more targets, up to ten', () => {
+    const most = (levelNumber: number) =>
+      TIERS.map((tier) => levelShape(levelNumber, tier).targets);
+    expect(most(1)).toEqual([5, 6, 7, 8]);
+    expect(most(16)).toEqual([6, 7, 8, 9]);
+    expect(most(41)).toEqual([7, 8, 9, 10]);
   });
 });
 

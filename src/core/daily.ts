@@ -3,7 +3,7 @@
  * @module
  */
 
-import { generateLevel, type LevelShape } from './generate';
+import { generateLevel, shapeFor, type LevelSize } from './generate';
 import type { Tier } from './difficulty';
 import type { LevelRecord } from './history';
 import type { Level } from './level';
@@ -12,8 +12,12 @@ import { NEW_SESSION, type Session } from './session';
 /** The first daily challenge's date: number 1. */
 export const DAILY_EPOCH = '2026-10-19';
 
-/** A daily challenge's size: the same every day. */
-export const DAILY_SHAPE: LevelShape = { letters: 7, targets: 8, shortestTarget: 3 };
+/** A daily challenge's size: the same every day, with more targets on harder days. */
+export const DAILY_SIZE: LevelSize = {
+  letters: 7,
+  targets: { easy: 6, medium: 7, hard: 8, extra: 9 },
+  shortestTarget: 3,
+};
 
 /** Tiers by weekday, Monday first: easy at the start of the week, extra hard on Sunday. */
 export const DAILY_TIERS: readonly Tier[] = [
@@ -79,12 +83,13 @@ export function dailyOccurrence(key: string): number {
  * start, so a daily never repeats a main level or a recent daily.
  */
 export function generateDaily(words: readonly string[], key: string): Level {
+  const tier = dailyTier(key);
   return generateLevel(
     words,
     DAILY_LEVEL_BASE + dailyNumber(key),
-    dailyTier(key),
+    tier,
     -1 - dailyOccurrence(key),
-    DAILY_SHAPE,
+    shapeFor(DAILY_SIZE, tier),
   );
 }
 

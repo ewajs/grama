@@ -10,7 +10,7 @@ import { THREE_STAR_BONUS } from './history';
 import { canSpell, MIN_WORD_LENGTH, type Level } from './level';
 import { seededRandom, shuffled } from './random';
 
-/** How big a level is. Grows with progress; how hard it is comes from its tier. */
+/** How big a level is: what the generator builds. How hard it is comes from its tier. */
 export type LevelShape = {
   /** Letters on the wheel. */
   letters: number;
@@ -20,20 +20,34 @@ export type LevelShape = {
   shortestTarget: number;
 };
 
+/** A size of level, whatever its tier: harder tiers may ask for more targets (D26). */
+export type LevelSize = Omit<LevelShape, 'targets'> & {
+  /** Most targets on the board, by tier. */
+  targets: Readonly<Record<Tier, number>>;
+};
+
 /** Level sizes as the player progresses: each step applies from level `from` on. */
-export const SIZES: readonly (LevelShape & { from: number })[] = [
-  { from: 1, letters: 6, targets: 6, shortestTarget: 3 },
-  { from: 6, letters: 6, targets: 7, shortestTarget: 3 },
-  { from: 16, letters: 7, targets: 8, shortestTarget: 3 },
-  // More targets than this won't fit a small phone with readable tiles.
-  { from: 41, letters: 8, targets: 9, shortestTarget: 4 },
+export const SIZES: readonly (LevelSize & { from: number })[] = [
+  { from: 1, letters: 6, targets: { easy: 5, medium: 6, hard: 7, extra: 8 }, shortestTarget: 3 },
+  { from: 16, letters: 7, targets: { easy: 6, medium: 7, hard: 8, extra: 9 }, shortestTarget: 3 },
+  // Ten targets is about the most a phone's board shows with readable tiles (D26).
+  { from: 41, letters: 8, targets: { easy: 7, medium: 8, hard: 9, extra: 10 }, shortestTarget: 4 },
 ];
 
-/** The shape of level `levelNumber`, from {@link SIZES}. */
-export function levelShape(levelNumber: number): LevelShape {
+/** A size's shape for a tier: its letters, and that tier's most targets. */
+export function shapeFor(size: LevelSize, tier: Tier): LevelShape {
+  return {
+    letters: size.letters,
+    targets: size.targets[tier],
+    shortestTarget: size.shortestTarget,
+  };
+}
+
+/** The shape of level `levelNumber` at a tier, from {@link SIZES}. */
+export function levelShape(levelNumber: number, tier: Tier = 'medium'): LevelShape {
   const step = SIZES.findLast(({ from }) => from <= levelNumber) ?? SIZES[0];
   if (!step) throw new Error('No level sizes defined');
-  return step;
+  return shapeFor(step, tier);
 }
 
 /**
@@ -42,7 +56,7 @@ export function levelShape(levelNumber: number): LevelShape {
  * `content/es/words.test.ts` fails until you do. A save from before keeps the player's
  * progress but drops the levels in play, which would now be other levels.
  */
-export const LEVELS_VERSION = 1;
+export const LEVELS_VERSION = 2;
 
 /** Fewest targets a generated level may have; fewer would make a dull board. */
 export const MIN_TARGETS = 5;
@@ -185,14 +199,14 @@ function buildLevel(
  * @param occurrence How many earlier levels share this one's tier and size (`occurrence`
  * in `core/cadence`): which block of seeds it gets. Negative counts back from the end of
  * the order (−1 is the last block), which the daily challenges use.
- * @param shape Its size; by default the one for its number ({@link levelShape}).
+ * @param shape Its size; by default the one for its number and tier ({@link levelShape}).
  */
 export function generateLevel(
   words: readonly string[],
   levelNumber: number,
   tier: Tier = 'medium',
   occurrence = 0,
-  shape: LevelShape = levelShape(levelNumber),
+  shape: LevelShape = levelShape(levelNumber, tier),
 ): Level {
   const recipe = RECIPES[tier];
   const order = seedOrder(words, tier, shape.letters);
