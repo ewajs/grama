@@ -68,7 +68,8 @@ describe('Spanish word lists', () => {
     }
   });
 
-  it('never repeat a level within 50 levels', () => {
+  // 600 levels take ~4 s, past Vitest's 5 s default when the machine is busy.
+  it('never repeat a level within 50 levels', { timeout: 15_000 }, () => {
     const lastSeen = new Map<string, number>();
     for (let number = 1; number <= 600; number++) {
       const tier = tierFor(number, 'normal');
