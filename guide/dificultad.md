@@ -16,6 +16,8 @@ sino **qué palabras hay en el tablero**:
 
 - **Qué tan comunes son.** `CASA` es más fácil de ver que `TÁNDEM`.
 - **Qué tan largas son.** Las palabras largas cuestan más.
+- **Cuántas son.** Los niveles difíciles piden más palabras: en la rueda de 8 letras, un
+  fácil pide hasta 7 y un extra difícil hasta 10.
 
 Cada nivel recibe un puntaje según esas dos cosas, y ese puntaje lo pone en una de las
 cuatro dificultades: **fácil**, **media**, **difícil** o **extra difícil**. Para armar un

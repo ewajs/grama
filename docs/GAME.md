@@ -158,8 +158,12 @@ maximum) are the targets; every other valid word they spell is a bonus word. A l
 Generated levels also have at least 3 bonus words, so every level can earn ★★★.
 
 Size grows with the level number (`SIZES` in `src/core/generate.ts`): 6 letters at
-first, 7 from level 16 and 8 from level 41, with 6 to 9 targets and, from 8 letters on,
-no 3-letter targets.
+first, 7 from level 16 and 8 from level 41, with no 3-letter targets from 8 letters on.
+Harder tiers ask for more targets (D26): at most 5, 6, 7 and 8 (easy to extra hard) on
+6 letters, 6 to 9 on 7 letters (and the daily), 7 to 10 on 8 letters; a level gets fewer
+when its letters don't spell enough of its tier's words, never fewer than 5. The board
+shrinks its tiles, and splits into two columns when that helps, so up to 10 fit a phone.
+Contrarreloj keeps its small boards (5–6 targets).
 
 ### Difficulty
 

@@ -59,13 +59,26 @@ describe('Spanish word lists', () => {
     for (const number of [...numbers, 25, 40, 41, 60, 100, 500, 1000]) {
       for (const tier of TIERS) {
         const level = generateLevel(words, number, tier);
-        const shape = levelShape(number);
+        const shape = levelShape(number, tier);
         expect(levelProblems(level), `level ${number} ${tier}`).toEqual([]);
         expect(level.letters).toHaveLength(shape.letters);
         expect(level.targets.length).toBeLessThanOrEqual(shape.targets);
         expect(level.targets.every((word) => word.length >= shape.shortestTarget)).toBe(true);
       }
     }
+  });
+
+  it('ask harder tiers for more targets, on average', () => {
+    const average = (tier: (typeof TIERS)[number]) => {
+      let total = 0;
+      for (let number = 41; number < 71; number++) {
+        total += generateLevel(words, number, tier, number).targets.length;
+      }
+      return total / 30;
+    };
+    const averages = TIERS.map(average);
+    expect(averages, averages.join(' < ')).toEqual(averages.toSorted((a, b) => a - b));
+    expect(new Set(averages).size).toBe(TIERS.length);
   });
 
   // 600 levels take ~4 s, past Vitest's 5 s default when the machine is busy.
@@ -150,8 +163,8 @@ describe('Spanish word lists', () => {
     // A new hash means players would get other levels: if that's intended, bump
     // LEVELS_VERSION (saves then drop their levels in play) and update both numbers here.
     expect({ LEVELS_VERSION, hash: hash(JSON.stringify(levels)) }).toEqual({
-      LEVELS_VERSION: 1,
-      hash: 'dee65d0f',
+      LEVELS_VERSION: 2,
+      hash: '7e3cd055',
     });
   });
 });

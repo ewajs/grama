@@ -8,6 +8,18 @@ delete it, the history is the point.
 
 ---
 
+## D26 · Harder tiers ask for more targets — 2026-10-20
+
+- **Decision:** each size has a most-targets per tier (`SIZES`, `DAILY_SIZE`): on 8
+  letters 7 · 8 · 9 · 10 from easy to extra hard (one less per step on smaller wheels).
+  The difficulty score stays an average of rarity and length; the count adds effort on
+  top. Contrarreloj keeps its own small boards.
+- **Why:** hard levels should feel bigger, not only rarer. Ten is the readable limit on a
+  phone: measured on an iPhone 15 Pro's board (361×333 px), tiles go from ~31 px with 9
+  targets to 27 px with 10 and 22 px with 12. Two columns don't help with long words,
+  since the second column holds the longest and both must fit side by side.
+- **Revisit:** for 11–12 targets, shrink the wheel on crowded levels first.
+
 ## D25 · No push notifications: they need a server — 2026-10-20
 
 - **Decision:** no daily reminder notifications for now.
