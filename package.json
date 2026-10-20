@@ -1,7 +1,7 @@
 {
   "name": "grama",
   "private": true,
-  "version": "0.16.0",
+  "version": "0.18.0",
   "type": "module",
   "engines": {
     "node": ">=24"
