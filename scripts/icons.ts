@@ -6,7 +6,7 @@
  */
 import { chromium, type Browser } from '@playwright/test';
 import { mkdirSync, readFileSync } from 'node:fs';
-import { es } from '../src/i18n/es.ts';
+import { app } from '../src/i18n/app.ts';
 import { IPHONE_SCREENS, launchScreenFile, SCHEMES } from './launch-screens.ts';
 
 const DIR = 'public/icons';
@@ -63,9 +63,9 @@ const preview = `<style>
 </style>
 <img src="${icon}" alt="">
 <div>
-  <h1>${es.appName}</h1>
-  <p>${es.tagline}</p>
-  <ul><li>${es.dailyChallenge}</li><li>${es.trial}</li><li>${es.dictionary}</li></ul>
+  <h1>${app.appName}</h1>
+  <p>${app.tagline}</p>
+  <ul><li>${app.dailyChallenge}</li><li>${app.trial}</li><li>${app.dictionary}</li></ul>
 </div>`;
 
 // The iPhone launch screen: Home's header (the icon and the name) on the page's
@@ -82,7 +82,7 @@ const launchScreen = (scheme: (typeof SCHEMES)[number]) => `<style>
   h1 { margin: 0; font-size: 40px; color: ${COLORS[scheme].accent}; letter-spacing: 0.04em; }
 </style>
 <img src="${icon}" alt="">
-<h1>${es.appName}</h1>`;
+<h1>${app.appName}</h1>`;
 
 const browser = await chromium.launch();
 for (const { source, out, size } of ICONS) {

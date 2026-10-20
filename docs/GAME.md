@@ -216,7 +216,7 @@ a wider column with a bigger board and wheel. Mouse drag works the same, and so 
 typing. The installed app stays upright on Android; iPhones and browsers turn freely.
 
 The installed app has shortcuts on its icon (long-press, or right-click on a computer):
-Desafío del día, Contrarreloj and Tu diccionario (`?ir=`, `shortcutFromUrl`).
+Desafío del día, Contrarreloj and Tu diccionario (`?ir=`, `app/shortcuts`).
 
 ### Motion
 

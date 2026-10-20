@@ -6,6 +6,7 @@
 import type { AchievementId } from '../core/achievements';
 import type { Tier } from '../core/difficulty';
 import type { Place } from '../core/progress';
+import { app } from './app';
 
 const reportKinds = {
   missing: 'Falta una palabra',
@@ -17,22 +18,9 @@ const list = (words: readonly string[]) => (words.length > 0 ? words.join(', ') 
 
 /** Player-facing text in Rioplatense Spanish (voseo). */
 export const es = {
-  appName: 'Grama',
-  tagline: 'Uní las letras y encontrá todas las palabras.',
-  preview:
-    'Un juego de palabras con voseo y palabras nuestras: niveles infinitos, desafío del día y Contrarreloj. Gratis y sin publicidad.',
-  previewAlt: 'Grama: uní las letras y encontrá todas las palabras.',
-  /** What each screenshot in the install dialog shows (manifest, vite.config.ts). */
-  installScreenshots: {
-    inicio: 'El inicio: tu nivel, el desafío del día, el Contrarreloj y tu diccionario',
-    jugando: 'Un nivel: el tablero y la rueda de letras',
-    diccionario: 'Tu diccionario: todas las palabras que encontraste',
-    contrarreloj: 'Contrarreloj: rueda tras rueda contra el reloj',
-    escritorio: 'En la computadora, el tablero y la rueda lado a lado',
-  },
+  ...app,
   hintsLeft: 'Pistas',
   continuePlaying: 'Jugar',
-  dictionary: 'Tu diccionario',
   dictionaryCount: (count: number) => (count === 1 ? '1 palabra' : `${count} palabras`),
   dictionarySearch: 'Buscar',
   dictionaryLetters: 'Letras',
@@ -46,7 +34,6 @@ export const es = {
     `${levels === 1 ? '1 nivel' : `${levels} niveles`} · ${stars} ★`,
   backToMap: 'Volver al mapa',
   backHome: 'Volver al inicio',
-  trial: 'Contrarreloj',
   trialTagline: 'Rueda tras rueda contra el reloj',
   trialWheel: (number: number) => `Rueda ${number}`,
   timeLeft: 'Tiempo que queda',
@@ -63,7 +50,6 @@ export const es = {
   bestRun: (points: number) => `Tu mejor marca: ${points} puntos`,
   playAgain: 'Otra vez',
   bestShort: (points: number) => `Mejor: ${points}`,
-  dailyChallenge: 'Desafío del día',
   dailyTitle: (number: number) => `Desafío #${number}`,
   dailyCompleteDetail: (number: number) => `Completaste el desafío #${number}`,
   weekday: (date: string) =>
