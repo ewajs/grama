@@ -1,11 +1,45 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { readFileSync } from 'node:fs';
+import type { HtmlTagDescriptor, Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+import { es } from './src/i18n/es';
 
-// GitHub Pages serves the app from https://<user>.github.io/grama/
+// GitHub Pages serves the app from https://ewajs.github.io/grama/
 const base = '/grama/';
+const site = `https://ewajs.github.io${base}`;
 const background = '#f7f6fc'; // --color-bg-top, light theme
+
+/** Meta tags for the page's head. */
+function meta(attributes: Record<string, string>): HtmlTagDescriptor {
+  return { tag: 'meta', attrs: attributes, injectTo: 'head' };
+}
+
+/**
+ * What a shared link to the game shows in chats and social apps (Open Graph): the name, a
+ * description and the card `npm run icons` renders to public/og.png.
+ */
+function linkPreviews(): Plugin {
+  const properties = {
+    'og:type': 'website',
+    'og:site_name': es.appName,
+    'og:title': es.appName,
+    'og:description': es.preview,
+    'og:url': site,
+    'og:locale': 'es_AR',
+    'og:image': `${site}og.png`,
+    'og:image:width': '1200',
+    'og:image:height': '630',
+    'og:image:alt': es.previewAlt,
+  };
+  return {
+    name: 'grama:link-previews',
+    transformIndexHtml: () => [
+      ...Object.entries(properties).map(([property, content]) => meta({ property, content })),
+      meta({ name: 'twitter:card', content: 'summary_large_image' }),
+    ],
+  };
+}
 
 export default defineConfig({
   base,
@@ -17,6 +51,7 @@ export default defineConfig({
   },
   plugins: [
     svelte(),
+    linkPreviews(),
     // Installable app that works offline: the service worker caches the app and the
     // word lists; a new version waits until the player accepts it (UpdatePrompt).
     VitePWA({
@@ -45,6 +80,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,txt}'],
+        // Only link previews fetch the share card: players never need it offline.
+        globIgnores: ['og.png'],
         // The dictionary is ~1.1 MB uncompressed.
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         // The guide and the developer docs are their own sites under the same path: the
