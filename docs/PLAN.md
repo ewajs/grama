@@ -279,8 +279,6 @@ starting over.
       diccionario (`?ir=`)
 - [x] Richer install dialog: description, categories, phone and computer screenshots
 - [x] iPhone launch screens for every iPhone size, light and dark
-- [ ] Try them on real phones (owner): a shared link, the shortcuts, the install dialog,
-      the iPhone launch screen
 
 **Verify:** a link shared on WhatsApp shows the card; long-pressing the icon on Android
 opens each shortcut; installing on Android shows the screenshots; launching on iPhone
@@ -299,6 +297,10 @@ shows Grama, not a blank screen.
 
 ## Changelog
 
+- **v0.19.0** (M18) — Feels like an app: link previews with a share card, shortcuts on
+  the installed app's icon (Desafío del día, Contrarreloj, Tu diccionario), a richer
+  install dialog with screenshots, and iPhone launch screens in light and dark. No push
+  notifications: they'd need a server (D25).
 - **v0.18.0** (M17) — Tu diccionario: every word found (levels, dailies, Contrarreloj)
   collected once and saved apart from the progress, with its own screen (alphabetical,
   letters to jump to, search, definitions), new words counted after each level and run,
