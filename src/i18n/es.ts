@@ -19,6 +19,9 @@ const list = (words: readonly string[]) => (words.length > 0 ? words.join(', ') 
 export const es = {
   appName: 'Grama',
   tagline: 'Uní las letras y encontrá todas las palabras.',
+  preview:
+    'Un juego de palabras con voseo y palabras nuestras: niveles infinitos, desafío del día y Contrarreloj. Gratis y sin publicidad.',
+  previewAlt: 'Grama: uní las letras y encontrá todas las palabras.',
   hintsLeft: 'Pistas',
   continuePlaying: 'Jugar',
   dictionary: 'Tu diccionario',

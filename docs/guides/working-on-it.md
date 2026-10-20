@@ -20,7 +20,7 @@ version.
 | `npm run guide`             | The player guide, to `dist/guia/` (`guide:dev` to preview)  |
 | `npm run guide:screenshots` | Retake the guide's screenshots from the real game           |
 | `npm run words`             | Rebuild the word lists from their pinned sources            |
-| `npm run icons`             | Render the app icon to PNG                                  |
+| `npm run icons`             | Render the app icon and the link preview card to PNG        |
 
 ## How changes are made
 

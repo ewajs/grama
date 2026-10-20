@@ -1,9 +1,11 @@
 /**
- * Renders the app icon (public/icons/*.svg) to the PNG sizes installing the app needs.
- * Run with `npm run icons` after changing the artwork; the PNGs are committed.
+ * Renders the app icon (public/icons/*.svg) to the PNG sizes installing the app needs, and
+ * the share image link previews show (public/og.png). Run with `npm run icons` after
+ * changing the artwork or the text on it; the PNGs are committed.
  */
-import { chromium } from '@playwright/test';
+import { chromium, type Browser } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { es } from '../src/i18n/es.ts';
 
 const DIR = 'public/icons';
 
@@ -16,15 +18,52 @@ const ICONS = [
   { source: 'icon-maskable.svg', out: 'apple-touch-icon.png', size: 180 },
 ];
 
+const base64 = (path: string) => readFileSync(path).toString('base64');
+const icon = `data:image/svg+xml;base64,${base64(`${DIR}/icon.svg`)}`;
+// The game's font, so the images look like the game.
+const font = `@font-face {
+  font-family: 'Outfit';
+  font-weight: 100 900;
+  src: url(data:font/woff2;base64,${base64('node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2')});
+}`;
+
+/** Screenshots `html` at `width`×`height` CSS pixels into `out`. */
+async function render(browser: Browser, html: string, out: string, width: number, height: number) {
+  const page = await browser.newPage({ viewport: { width, height } });
+  await page.setContent(html);
+  await page.evaluate(() => document.fonts.ready);
+  await page.screenshot({ path: out, omitBackground: true });
+  await page.close();
+  console.log(out);
+}
+
+// The link preview card, 1200×630 as Open Graph asks: the icon, the name, the tagline and
+// the ways to play. Colors are Grama's light theme (src/ui/styles/tokens.css).
+const preview = `<style>
+  ${font}
+  body { margin: 0; width: 1200px; height: 630px; display: flex; align-items: center;
+    gap: 64px; padding: 0 96px; box-sizing: border-box; font-family: Outfit;
+    background: linear-gradient(#f7f6fc, #e9e7f6); color: #1d1b2e; }
+  img { width: 280px; height: 280px; border-radius: 22%;
+    box-shadow: 0 12px 40px rgb(29 27 46 / 0.18); }
+  h1 { margin: 0; font-size: 128px; line-height: 1; color: #5b5bd6; letter-spacing: 0.04em; }
+  p { margin: 20px 0 36px; font-size: 40px; line-height: 1.25; }
+  ul { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  li { padding: 10px 22px; border-radius: 999px; background: #fff; font-size: 26px;
+    font-weight: 500; box-shadow: inset 0 0 0 2px #dcd9ec; }
+</style>
+<img src="${icon}" alt="">
+<div>
+  <h1>${es.appName}</h1>
+  <p>${es.tagline}</p>
+  <ul><li>${es.dailyChallenge}</li><li>${es.trial}</li><li>${es.dictionary}</li></ul>
+</div>`;
+
 const browser = await chromium.launch();
 for (const { source, out, size } of ICONS) {
-  const page = await browser.newPage({ viewport: { width: size, height: size } });
-  const svg = readFileSync(`${DIR}/${source}`).toString('base64');
-  await page.setContent(
-    `<body style="margin:0"><img src="data:image/svg+xml;base64,${svg}" width="${size}" height="${size}"></body>`,
-  );
-  await page.screenshot({ path: `${DIR}/${out}`, omitBackground: true });
-  await page.close();
-  console.log(`${DIR}/${out}`);
+  const svg = `data:image/svg+xml;base64,${base64(`${DIR}/${source}`)}`;
+  const html = `<body style="margin:0"><img src="${svg}" width="${size}" height="${size}"></body>`;
+  await render(browser, html, `${DIR}/${out}`, size, size);
 }
+await render(browser, preview, 'public/og.png', 1200, 630);
 await browser.close();

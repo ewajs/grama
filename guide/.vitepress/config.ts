@@ -10,7 +10,14 @@ export default defineConfig({
   outDir: '../dist/guia',
   cleanUrls: true,
   lastUpdated: false,
-  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/grama/icons/icon.svg' }]],
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/grama/icons/icon.svg' }],
+    // Link previews use the game's card (public/og.png, see vite.config.ts).
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'Todo sobre Grama' }],
+    ['meta', { property: 'og:image', content: 'https://ewajs.github.io/grama/og.png' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+  ],
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'Todo sobre Grama',
