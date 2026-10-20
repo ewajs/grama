@@ -11,6 +11,10 @@ Sí. En el menú del juego aparece **Instalar Grama** cuando tu navegador lo per
 (Android, Chrome y Edge en la computadora). En iPhone: abrilo en Safari, tocá
 **Compartir** y elegí **Agregar a inicio**.
 
+Ya instalada, en Android y en la computadora, mantené apretado el ícono (o hacé clic
+derecho) para ir directo al **Desafío del día**, al **Contrarreloj** o a **Tu
+diccionario**.
+
 ## ¿Dónde se guarda mi progreso?
 
 En tu teléfono o computadora, y en ningún otro lado: no hay cuentas. Si borrás los datos

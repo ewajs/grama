@@ -215,6 +215,9 @@ the left and the wheel on the right, as big as the height allows; an upright tab
 a wider column with a bigger board and wheel. Mouse drag works the same, and so does
 typing. The installed app stays upright on Android; iPhones and browsers turn freely.
 
+The installed app has shortcuts on its icon (long-press, or right-click on a computer):
+Desafío del día, Contrarreloj and Tu diccionario (`?ir=`, `shortcutFromUrl`).
+
 ### Motion
 
 - Fast and purposeful: 120–250 ms for feedback, springy but never bouncy-slow.

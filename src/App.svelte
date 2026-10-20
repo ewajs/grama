@@ -4,7 +4,7 @@
   import { Installer } from './app/install.svelte';
   import { Navigation } from './app/navigation.svelte';
   import { Preferences } from './app/preferences.svelte';
-  import { levelFromUrl, startState } from './app/start';
+  import { levelFromUrl, shortcutFromUrl, startState } from './app/start';
   import { loadWords } from './content';
   import { strings } from './i18n';
   import { loadDictionary, saveDictionary } from './storage/dictionary';
@@ -42,10 +42,17 @@
     () => (failed = true),
   );
 
-  // Once applied, ?nivel= leaves the URL so a reload continues instead of jumping again.
+  // An app shortcut (?ir=) opens its place: the daily, Contrarreloj or Tu diccionario.
+  const shortcut = shortcutFromUrl(location.search);
+  if (shortcut === 'daily') game.playDaily();
+
+  // Once applied, ?nivel= and ?ir= leave the URL so a reload continues instead of jumping
+  // again.
   history.replaceState(null, '', location.pathname);
   // ?nivel= is for playtesting: straight into that level.
-  const navigation = new Navigation(levelInUrl === null ? 'home' : 'game');
+  const navigation = new Navigation(
+    levelInUrl !== null || shortcut === 'daily' ? 'game' : (shortcut ?? 'home'),
+  );
 
   const preferences = new Preferences(settings, saveSettings);
   const installer = new Installer();

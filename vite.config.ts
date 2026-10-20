@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import type { HtmlTagDescriptor, Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+import { SHORTCUTS } from './src/app/start';
 import { es } from './src/i18n/es';
 
 // GitHub Pages serves the app from https://ewajs.github.io/grama/
@@ -67,6 +68,12 @@ export default defineConfig({
         orientation: 'portrait',
         background_color: background,
         theme_color: background,
+        // Long-pressing the installed app's icon offers these (see `shortcutFromUrl`).
+        shortcuts: Object.entries(SHORTCUTS).map(([name, place]) => ({
+          name: { daily: es.dailyChallenge, trial: es.trial, dictionary: es.dictionary }[place],
+          url: `${base}?ir=${name}`,
+          icons: [{ src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+        })),
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
