@@ -27,6 +27,10 @@ describe('unlocked', () => {
   it('lists what the stats reach', () => {
     expect(unlocked(after)).toEqual(['firstLevel', 'threeStars', 'extra', 'extraNoHints']);
   });
+
+  it('counts Tu diccionario', () => {
+    expect(unlocked({ ...fresh, dictionary: 500 })).toEqual(['dictionary100', 'dictionary500']);
+  });
 });
 
 describe('achievementProgress', () => {

@@ -48,6 +48,7 @@ it('adds up the history', () => {
     trialRuns: 0,
     trialPoints: 0,
     trialWheels: 0,
+    dictionary: 0,
   });
 });
 
@@ -105,4 +106,8 @@ it('counts the Contrarreloj record', () => {
     trialPoints: 610,
     trialWheels: 6,
   });
+});
+
+it('counts the words in Tu diccionario', () => {
+  expect(statsOf(NEW_PROGRESS, undefined, ['SOL', 'SAL', 'PATO']).dictionary).toBe(3);
 });

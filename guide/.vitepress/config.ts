@@ -38,6 +38,7 @@ export default defineConfig({
           { text: 'Estrellas, mapa y logros', link: '/progreso' },
           { text: 'Desafío del día', link: '/desafio-del-dia' },
           { text: 'Contrarreloj', link: '/contrarreloj' },
+          { text: 'Tu diccionario', link: '/diccionario' },
         ],
       },
       {

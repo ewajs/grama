@@ -98,6 +98,8 @@ export class Game {
   #mode = $state<Mode>({ kind: 'current' });
   /** Words rejected on this level, most recent last; kept for reports, not saved. */
   #rejected = $state<string[]>([]);
+  /** Words new to the dictionary on this level, as found on this visit; not saved. */
+  #newWords = $state<string[]>([]);
   /** The level being played, generated once per level (or date). */
   readonly level: Level;
 
@@ -220,9 +222,9 @@ export class Game {
     return this.#progress.history;
   }
 
-  /** The player's totals, from the history, the daily challenges and the hints spent. */
+  /** The player's totals: history, dailies, hints spent, Contrarreloj and dictionary. */
   get stats(): Stats {
-    return statsOf(this.#progress, this.#trials);
+    return statsOf(this.#progress, this.#trials, this.#dictionary);
   }
 
   /** The best Contrarreloj run, if any. */
@@ -235,12 +237,21 @@ export class Game {
     return this.#dictionary;
   }
 
-  /** Adds a word found outside the levels (a Contrarreloj run) to the dictionary. */
-  addToDictionary(word: string): void {
+  /** Words found on the level on screen that were new to the dictionary (since it opened). */
+  get newWords(): readonly string[] {
+    return this.#newWords;
+  }
+
+  /**
+   * Adds a word to the dictionary, e.g. one found in a Contrarreloj run.
+   * @returns Whether it was new.
+   */
+  addToDictionary(word: string): boolean {
     const added = collect(this.#dictionary, [word]);
-    if (added === this.#dictionary) return;
+    if (added === this.#dictionary) return false;
     this.#dictionary = added;
     this.#ondictionary(added);
+    return true;
   }
 
   /** Keeps a finished Contrarreloj run in the record (never in the main progress). */
@@ -356,8 +367,9 @@ export class Game {
     }
     if (played.session !== session) this.#apply(played.progress, played.session);
     const { submission } = played;
-    if (submission.kind === 'target' || submission.kind === 'bonus') {
-      this.addToDictionary(submission.word);
+    const found = submission.kind === 'target' || submission.kind === 'bonus';
+    if (found && this.addToDictionary(submission.word)) {
+      this.#newWords = [...this.#newWords, submission.word];
     }
     return submission;
   }
@@ -371,7 +383,7 @@ export class Game {
 
   /** Back to the player's current level (from a replay or a daily). */
   playCurrent(): void {
-    if (this.#mode.kind !== 'current') this.#rejected = [];
+    if (this.#mode.kind !== 'current') this.#leaveLevel();
     this.#mode = { kind: 'current' };
   }
 
@@ -386,7 +398,7 @@ export class Game {
       difficulty: this.#progress.difficulty,
       occurrence: occurrence(levelNumber, this.#progress.difficulty),
     };
-    this.#rejected = [];
+    this.#leaveLevel();
     this.#mode = {
       kind: 'replay',
       place: { kind: 'level', levelNumber, difficulty, occurrence: block },
@@ -396,21 +408,27 @@ export class Game {
 
   /** Plays today's daily challenge, picking up where it was left. */
   playDaily(): void {
-    this.#rejected = [];
+    this.#leaveLevel();
     this.#mode = { kind: 'daily', date: this.#today };
   }
 
   /** Starts over from level 1, as a new game at the given difficulty. */
   reset(difficulty: Difficulty): void {
-    this.#rejected = [];
+    this.#leaveLevel();
     this.#mode = { kind: 'current' };
     this.#update({ ...NEW_PROGRESS, difficulty });
   }
 
   /** Moves on to the next level, at the player's current difficulty. */
   next(difficulty: Difficulty): void {
-    this.#rejected = [];
+    this.#leaveLevel();
     this.#update(nextLevel(this.#progress, difficulty));
+  }
+
+  // What's kept only while on one level goes when leaving it.
+  #leaveLevel(): void {
+    this.#rejected = [];
+    this.#newWords = [];
   }
 
   /** A link to report a problem with the level on screen on GitHub. */

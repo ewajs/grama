@@ -25,7 +25,8 @@ No hay pistas en Contrarreloj.
 ## Aparte del resto
 
 - Cada partida tiene ruedas nuevas, elegidas al azar: nunca se repite una partida.
-- No cambia tus puntos, tus pistas ni tu nivel. Guarda lo suyo: tu **mejor marca**, cuántas
+- No cambia tus puntos, tus pistas ni tu nivel (sus palabras sí van a
+  [tu diccionario](/diccionario)). Guarda lo suyo: tu **mejor marca**, cuántas
   partidas jugaste y el récord de ruedas, que ves en **Logros**.
 - Tiene tres logros propios: _Contra el reloj_, _A las corridas_ y _Rueda libre_.
 - Si salís de la app, el reloj se frena hasta que volvés. Si salís de la pantalla, la

@@ -30,6 +30,9 @@ export type AchievementId =
   | 'noHints10'
   | 'words100'
   | 'words1000'
+  | 'dictionary100'
+  | 'dictionary500'
+  | 'dictionary2000'
   | 'bonus50'
   | 'bonus500'
   | 'daily'
@@ -49,10 +52,12 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
   { id: 'trial', goal: 1, value: (stats) => stats.trialRuns },
   { id: 'threeStars', goal: 1, value: (stats) => stats.threeStars },
   { id: 'words100', goal: 100, value: (stats) => stats.words },
+  { id: 'dictionary100', goal: 100, value: (stats) => stats.dictionary },
   { id: 'extra', goal: 1, value: (stats) => stats.byTier.extra },
   { id: 'noHints10', goal: 10, value: (stats) => stats.noHints },
   { id: 'bonus50', goal: 50, value: (stats) => stats.bonus },
   { id: 'levels50', goal: 50, value: (stats) => stats.levels },
+  { id: 'dictionary500', goal: 500, value: (stats) => stats.dictionary },
   { id: 'trialPoints', goal: 500, value: (stats) => stats.trialPoints },
   { id: 'extraNoHints', goal: 1, value: (stats) => stats.extraNoHints },
   { id: 'threeStars10', goal: 10, value: (stats) => stats.threeStars },
@@ -63,6 +68,7 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
   { id: 'trialWheels', goal: 10, value: (stats) => stats.trialWheels },
   { id: 'words1000', goal: 1000, value: (stats) => stats.words },
   { id: 'bonus500', goal: 500, value: (stats) => stats.bonus },
+  { id: 'dictionary2000', goal: 2000, value: (stats) => stats.dictionary },
   { id: 'streak30', goal: 30, value: (stats) => stats.bestStreak },
 ];
 

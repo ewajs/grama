@@ -3,6 +3,7 @@
  * @module
  */
 
+import { NEW_DICTIONARY, type Dictionary } from './dictionary';
 import { TIERS, type Tier } from './difficulty';
 import { streakOf } from './daily';
 import type { Progress } from './progress';
@@ -41,15 +42,18 @@ export type Stats = {
   trialPoints: number;
   /** The most wheels finished in one Contrarreloj run. */
   trialWheels: number;
+  /** Words in Tu diccionario: every different word found, anywhere. */
+  dictionary: number;
 };
 
 /**
- * The player's totals, from their completed levels and dailies, the hints they spent and
- * their Contrarreloj record.
+ * The player's totals, from their completed levels and dailies, the hints they spent,
+ * their Contrarreloj record and Tu diccionario.
  */
 export function statsOf(
   { history, dailies, hintsSpent }: Pick<Progress, 'history' | 'dailies' | 'hintsSpent'>,
   trials: TrialRecord = NEW_TRIAL_RECORD,
+  dictionary: Dictionary = NEW_DICTIONARY,
 ): Stats {
   const results = [...Object.values(history), ...Object.values(dailies)];
   const count = (keep: (result: (typeof results)[number]) => boolean) =>
@@ -73,5 +77,6 @@ export function statsOf(
     trialRuns: trials.runs,
     trialPoints: trials.best?.points ?? 0,
     trialWheels: trials.mostCleared,
+    dictionary: dictionary.length,
   };
 }
