@@ -284,6 +284,14 @@ starting over.
 opens each shortcut; installing on Android shows the screenshots; launching on iPhone
 shows Grama, not a blank screen.
 
+### M19 — Bigger hard levels · `v0.20.0`
+
+- [x] A calmer Home with icons, sized for common phones
+- [x] Harder tiers ask for more targets, up to ten (D26)
+
+**Verify:** Home fits an iPhone from the X up without scrolling; extra-hard levels on 8
+letters often ask for 10 words, still readable.
+
 ## Backlog (post-MVP, unordered)
 
 - More hint types (reveal a whole word, a letter in every row)
@@ -297,6 +305,9 @@ shows Grama, not a blank screen.
 
 ## Changelog
 
+- **v0.20.0** (M19) — Bigger hard levels: harder tiers ask for more target words (on 8
+  letters, 7 easy up to 10 extra hard; dailies too), with levels in play starting over;
+  a calmer Home with icons, sized for common phones.
 - **v0.19.0** (M18) — Feels like an app: link previews with a share card, shortcuts on
   the installed app's icon (Desafío del día, Contrarreloj, Tu diccionario), a richer
   install dialog with screenshots, and iPhone launch screens in light and dark. No push
