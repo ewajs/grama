@@ -3,14 +3,16 @@ import { readFileSync } from 'node:fs';
 import type { HtmlTagDescriptor, Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+// Only modules without imports, with their extension: what Vite's coming native config
+// loader can read.
 import {
   IPHONE_SCREENS,
   launchScreenFile,
   launchScreenMedia,
   SCHEMES,
-} from './scripts/launch-screens';
-import { SHORTCUTS } from './src/app/start';
-import { es } from './src/i18n/es';
+} from './scripts/launch-screens.ts';
+import { SHORTCUTS } from './src/app/shortcuts.ts';
+import { app } from './src/i18n/app.ts';
 
 // GitHub Pages serves the app from https://ewajs.github.io/grama/
 const base = '/grama/';
@@ -29,15 +31,15 @@ function meta(attributes: Record<string, string>): HtmlTagDescriptor {
 function linkPreviews(): Plugin {
   const properties = {
     'og:type': 'website',
-    'og:site_name': es.appName,
-    'og:title': es.appName,
-    'og:description': es.preview,
+    'og:site_name': app.appName,
+    'og:title': app.appName,
+    'og:description': app.preview,
     'og:url': site,
     'og:locale': 'es_AR',
     'og:image': `${site}og.png`,
     'og:image:width': '1200',
     'og:image:height': '630',
-    'og:image:alt': es.previewAlt,
+    'og:image:alt': app.previewAlt,
   };
   return {
     name: 'grama:link-previews',
@@ -57,7 +59,7 @@ function iphoneApp(): Plugin {
     name: 'grama:iphone-app',
     transformIndexHtml: () => [
       meta({ name: 'apple-mobile-web-app-capable', content: 'yes' }),
-      meta({ name: 'apple-mobile-web-app-title', content: es.appName }),
+      meta({ name: 'apple-mobile-web-app-title', content: app.appName }),
       ...IPHONE_SCREENS.flatMap((screen) =>
         SCHEMES.map((scheme): HtmlTagDescriptor => ({
           tag: 'link',
@@ -91,9 +93,9 @@ export default defineConfig({
       registerType: 'prompt',
       manifest: {
         id: base,
-        name: es.appName,
-        short_name: es.appName,
-        description: es.preview,
+        name: app.appName,
+        short_name: app.appName,
+        description: app.preview,
         categories: ['games', 'education', 'entertainment'],
         lang: 'es-AR',
         start_url: base,
@@ -104,13 +106,13 @@ export default defineConfig({
         theme_color: background,
         // Long-pressing the installed app's icon offers these (see `shortcutFromUrl`).
         shortcuts: Object.entries(SHORTCUTS).map(([name, place]) => ({
-          name: { daily: es.dailyChallenge, trial: es.trial, dictionary: es.dictionary }[place],
+          name: { daily: app.dailyChallenge, trial: app.trial, dictionary: app.dictionary }[place],
           url: `${base}?ir=${name}`,
           icons: [{ src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
         })),
         // The install dialog's screenshots: the guide's own (`npm run guide:screenshots`),
         // served from /grama/guia/ next to the game.
-        screenshots: Object.entries(es.installScreenshots).map(([name, label]) => ({
+        screenshots: Object.entries(app.installScreenshots).map(([name, label]) => ({
           src: `guia/screenshots/${name}.png`,
           type: 'image/png',
           ...(name === 'escritorio'

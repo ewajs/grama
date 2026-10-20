@@ -4,7 +4,8 @@
   import { Installer } from './app/install.svelte';
   import { Navigation } from './app/navigation.svelte';
   import { Preferences } from './app/preferences.svelte';
-  import { levelFromUrl, shortcutFromUrl, startState } from './app/start';
+  import { shortcutFromUrl } from './app/shortcuts';
+  import { levelFromUrl, startState } from './app/start';
   import { loadWords } from './content';
   import { strings } from './i18n';
   import { loadDictionary, saveDictionary } from './storage/dictionary';

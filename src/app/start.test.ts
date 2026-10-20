@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { occurrence } from '../core/cadence';
 import { currentPlace, NEW_PROGRESS } from '../core/progress';
 import { NEW_SESSION } from '../core/session';
-import { levelFromUrl, shortcutFromUrl, startState } from './start';
+import { levelFromUrl, startState } from './start';
 
 describe('levelFromUrl', () => {
   it('reads ?nivel=', () => {
@@ -12,20 +12,6 @@ describe('levelFromUrl', () => {
   it('is null when missing or not a positive whole number', () => {
     for (const search of ['', '?nivel=', '?nivel=0', '?nivel=-3', '?nivel=2.5', '?nivel=abc']) {
       expect(levelFromUrl(search)).toBeNull();
-    }
-  });
-});
-
-describe('shortcutFromUrl', () => {
-  it('reads ?ir=', () => {
-    expect(shortcutFromUrl('?ir=desafio')).toBe('daily');
-    expect(shortcutFromUrl('?ir=contrarreloj')).toBe('trial');
-    expect(shortcutFromUrl('?ir=diccionario')).toBe('dictionary');
-  });
-
-  it('is null when missing or unknown', () => {
-    for (const search of ['', '?ir=', '?ir=mapa', '?nivel=3', '?ir=toString']) {
-      expect(shortcutFromUrl(search)).toBeNull();
     }
   });
 });
