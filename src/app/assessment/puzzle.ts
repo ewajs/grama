@@ -1,8 +1,10 @@
+import { TIERS } from '../../core/difficulty';
 import type { Level } from '../../core/level';
 import { levelProblems } from '../../core/level';
 import type { Place } from '../../core/progress';
 import type { Session } from '../../core/session';
 import { evidenceJson } from '../../storage/assessment-record';
+import { isObject, isCount, isDifficulty, isDate } from '../../storage/guards';
 import { describePuzzle, type PuzzleDescriptor, type GramaResult } from './grama';
 
 /** The current game state copied at a semantic interaction, never a Svelte proxy. */
@@ -30,16 +32,11 @@ export type PuzzlePayload = {
 /** The puzzle branch of the shared Grama result, without game reward multipliers. */
 export type PuzzleResult = Extract<GramaResult, { kind: 'puzzle' }>;
 
-const object = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-const count = (v: unknown): v is number =>
-  typeof v === 'number' && Number.isSafeInteger(v) && v >= 0;
 const word = (v: unknown): v is string => typeof v === 'string' && /^[A-ZÑ]{3,}$/.test(v);
 const words = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every(word) && new Set(v).size === v.length;
 const revealed = (v: unknown): v is Session['revealed'] =>
-  object(v) && Object.entries(v).every(([key, n]) => word(key) && count(n) && n < key.length);
-const tier = (v: unknown) => v === 'easy' || v === 'medium' || v === 'hard' || v === 'extra';
+  isObject(v) && Object.entries(v).every(([key, n]) => word(key) && isCount(n) && n < key.length);
 
 /** A place's stable identity; puzzle content and exposure have identities of their own. */
 export function placeKey(place: Place): string {
@@ -49,39 +46,33 @@ export function placeKey(place: Place): string {
 }
 
 function isPlace(v: unknown): v is Place {
-  if (!object(v)) return false;
+  if (!isObject(v)) return false;
   if (v.kind === 'level')
     return (
-      count(v.levelNumber) &&
+      isCount(v.levelNumber) &&
       v.levelNumber > 0 &&
-      count(v.occurrence) &&
-      (v.difficulty === 'normal' || v.difficulty === 'relaxed' || v.difficulty === 'challenging')
+      isCount(v.occurrence) &&
+      isDifficulty(v.difficulty)
     );
-  return (
-    v.kind === 'daily' &&
-    typeof v.date === 'string' &&
-    /^\d{4}-\d{2}-\d{2}$/.test(v.date) &&
-    Number.isFinite(Date.parse(v.date)) &&
-    new Date(v.date).toISOString().slice(0, 10) === v.date
-  );
+  return v.kind === 'daily' && isDate(v.date);
 }
 
 /** Validates an original puzzle outcome independently from the mutable game save. */
 export function isPuzzleResult(v: unknown): v is PuzzleResult {
-  return object(v) && v.kind === 'puzzle' && words(v.found) && revealed(v.revealed);
+  return isObject(v) && v.kind === 'puzzle' && words(v.found) && revealed(v.revealed);
 }
 
 /** Validates the game snapshot and reproduces its descriptor from stored ranks, not new data. */
 export function isPuzzlePayload(v: unknown): v is PuzzlePayload {
   if (
-    !object(v) ||
+    !isObject(v) ||
     v.version !== 1 ||
     !isPlace(v.place) ||
     typeof v.replay !== 'boolean' ||
     typeof v.presented !== 'boolean' ||
-    !object(v.level) ||
-    !object(v.session) ||
-    !object(v.descriptor)
+    !isObject(v.level) ||
+    !isObject(v.session) ||
+    !isObject(v.descriptor)
   )
     return false;
   const { level, session, descriptor } = v;
@@ -90,11 +81,11 @@ export function isPuzzlePayload(v: unknown): v is PuzzlePayload {
     !level.letters.every((l) => typeof l === 'string' && /^[A-ZÑ]$/.test(l)) ||
     !words(level.targets) ||
     !words(level.bonus) ||
-    !tier(level.tier) ||
+    !TIERS.some((tier) => tier === level.tier) ||
     !words(session.found) ||
     !revealed(session.revealed) ||
-    !count(session.points) ||
-    !count(session.hintsWon) ||
+    !isCount(session.points) ||
+    !isCount(session.hintsWon) ||
     !Array.isArray(descriptor.targets)
   )
     return false;
@@ -107,7 +98,7 @@ export function isPuzzlePayload(v: unknown): v is PuzzlePayload {
     return false;
   const ranks = new Map<string, number>();
   for (const target of descriptor.targets) {
-    if (!object(target) || !word(target.word) || (target.rank !== null && !count(target.rank)))
+    if (!isObject(target) || !word(target.word) || (target.rank !== null && !isCount(target.rank)))
       return false;
     if (target.rank !== null) ranks.set(target.word, target.rank);
   }
