@@ -324,13 +324,14 @@ remain uncertain.
 - [x] Idempotent finalization, sequence allocation and conflicting/stale-writer handling
 - [x] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
 - [x] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
-- [ ] Bounded retention, export/import, assessment deletion and player documentation
+- [ ] Bounded retention and assessment deletion controls/documentation — deferred while M23 proceeds
+- [ ] Full-profile backup and restore (game progress plus assessment history) — deferred by owner
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
 
 ### M23 — Validate skill models
 
-- [ ] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
+- [x] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
 - [ ] Comparable personal baselines and seeded simulation/evaluation tooling
 - [ ] Select and document an evidence model after plateau, improvement, decline, easy
       repetition, missing attempts and confidence tests; publish acceptance thresholds

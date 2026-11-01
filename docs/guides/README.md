@@ -12,6 +12,8 @@ These pages explain how it's built, for anyone reading or changing the code.
   them.
 - **[Difficulty](./difficulty.md)**: how levels are scored, classified, paced
   and kept from repeating.
+- **[Skill model candidates](./skill-model.md)**: rating math, period policy and the
+  evidence validation still required before displaying estimates.
 - **[Working on it](./working-on-it.md)**: commands, workflow and standards.
 - **[Real-device checklist](./devices.md)**: what to try on a real Android phone and
   iPhone before calling a milestone done.

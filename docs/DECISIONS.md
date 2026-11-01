@@ -8,6 +8,21 @@ delete it, the history is the point.
 
 ---
 
+## D33 · Validate skill models before displaying a rating — 2026-11-01
+
+- **Priority:** defer full-profile backup/restore and remaining M22 history controls at
+  the owner's request; proceed with M23 while keeping those tasks visibly unfinished.
+- **Candidate:** implement the published Glicko-2 update as a pure module, checked against
+  the official example and an independent volatility-root calculation. Keep evidence
+  conversion separate. The prior and RD cap are experimental policy, not Grama calibration.
+- **Periods:** take explicit batches and whole idle-period counts; never read a clock or
+  silently equate a period with a session/day. Mean stays unchanged during inactivity.
+  Eligibility exclusions do not imply an empty period, and correlated ghosts do not
+  manufacture independent observations. Numerical failure yields no estimate.
+- **Delivery:** [candidate policy](./guides/skill-model.md) describes the supported domain
+  and remaining validation. Baselines, seeded simulations, outcome calibration and model
+  selection precede app projections or visible ratings. No game/save changes in this step.
+
 ## D32 · Trial recording reuses the puzzle recorder — 2026-11-01
 
 - **Decision:** `GramaRecorder` shares its queue, bounded preparation, attempt creation,
