@@ -322,7 +322,7 @@ remain uncertain.
 
 - [x] Versioned IndexedDB schema, validated checkpoints, atomic exposure writes and browser tests
 - [x] Idempotent finalization, sequence allocation and conflicting/stale-writer handling
-- [ ] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
+- [x] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
 - [ ] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
 - [ ] Bounded retention, export/import, assessment deletion and player documentation
 

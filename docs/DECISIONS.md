@@ -8,7 +8,30 @@ delete it, the history is the point.
 
 ---
 
-## D30 · Revision-checked checkpoints and immutable outcomes — 2026-11-01
+## D31 · Record ordinary puzzles before estimating skill — 2026-11-01
+
+- **Decision:** wire numbered levels, dailies and map replays to durable assessment.
+  Keep original puzzle difficulty, accepted words, revealed letters and observed active
+  time. Game rewards, generation, stars and the existing save format are unchanged.
+- **Presentation:** commit exposure before rendering the board; acknowledge presentation
+  in the next checkpoint. Resume keeps identity, explicit reset starts another encounter,
+  and an already completed save does not manufacture another result. An unacknowledged
+  presentation or game save ahead of its checkpoint makes timing uncertain.
+- **Continuity:** pause for hidden pages, navigation and blocking dialogs through their
+  closing transitions. Five-second heartbeats count thinking without input; a gap over
+  fifteen seconds means observation stalled, so its unmeasured interval is uncertain.
+- **Failure:** serialize writes and stop a handle on conflicts or failed updates. Bound
+  preparation to two seconds, then continue ordinary play without recording that visit.
+  Failed preparation leaves a best-effort localStorage gap marker so later recovery
+  cannot claim complete exposure coverage. No marker can persist if both stores fail.
+- **History:** initialize legacy exposure as partial once; ordinary saves cannot promote
+  it. Reset retains exposure. Contrarreloj is not recorded yet, so opening it also marks
+  coverage incomplete until its own M22 integration. No visible rating or ability claim
+  is introduced; model validation and progress UI follow in M23/M24.
+- **Why:** reliable original observations must precede scoring. Duplicate completion,
+  remembered answers and missing intervals must not become unsupported skill evidence.
+
+## D30 · Revision-checked checkpoints and immutable outcomes — 2026-11-01 · _integration in D31_
 
 - **Decision:** assessment database and record version 2 add optimistic checkpoint
   revisions, encounter ownership, a transactional sequence counter and finalized records.
@@ -43,8 +66,8 @@ delete it, the history is the point.
   treat unreadable data as fresh history. Close on version change and clean up late
   connections after a blocked open has already returned.
 - **Delivery:** split M22 storage into checkpoint/schema work, then finalization,
-  sequence allocation and stale-writer protection. The first API is not yet connected
-  to play and does not arbitrate competing writes to the same attempt checkpoint.
+  sequence allocation and stale-writer protection. The first API was not connected
+  to play; D30 adds writer protection and D31 connects ordinary puzzles.
 - **Why:** growing observations need transactional storage; browser failures must not
   stop play. Native IndexedDB keeps dependencies small, with Chromium/WebKit tests
   guarding transaction behavior and rollback rather than relying on a fake database.
