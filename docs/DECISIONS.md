@@ -8,6 +8,25 @@ delete it, the history is the point.
 
 ---
 
+## D29 · Assessment checkpoints in their own IndexedDB database — 2026-11-01
+
+- **Decision:** `grama.assessment` schema 1 separates checkpoints, finalized attempts,
+  exposure encounters and metadata. Validate shared envelopes plus a game-supplied
+  payload guard on reads and writes; existing localStorage progress is independent.
+- **Atomicity:** save checkpoint and exposure ledger in one transaction. Classify
+  exposure inside that transaction so two simultaneous encounters cannot both claim
+  first exposure. Encounter content is immutable; a conflict aborts all writes.
+- **Failure:** return explicit unavailable, blocked, unsupported-version, invalid-data,
+  conflict or failed outcomes. Preserve newer databases; do not delete or silently
+  treat unreadable data as fresh history. Close on version change and clean up late
+  connections after a blocked open has already returned.
+- **Delivery:** split M22 storage into checkpoint/schema work, then finalization,
+  sequence allocation and stale-writer protection. The first API is not yet connected
+  to play and does not arbitrate competing writes to the same attempt checkpoint.
+- **Why:** growing observations need transactional storage; browser failures must not
+  stop play. Native IndexedDB keeps dependencies small, with Chromium/WebKit tests
+  guarding transaction behavior and rollback rather than relying on a fake database.
+
 ## D28 · Assessment difficulty snapshots and observable active time — 2026-11-01
 
 - **Decision:** snapshot versioned puzzle features (wheel/target counts, word lengths,
