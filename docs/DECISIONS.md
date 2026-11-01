@@ -8,7 +8,29 @@ delete it, the history is the point.
 
 ---
 
-## D29 · Assessment checkpoints in their own IndexedDB database — 2026-11-01
+## D30 · Revision-checked checkpoints and immutable outcomes — 2026-11-01
+
+- **Decision:** assessment database and record version 2 add optimistic checkpoint
+  revisions, encounter ownership, a transactional sequence counter and finalized records.
+  New attempts propose revision/sequence zero; first save assigns both. Updates must
+  supply the saved revision, preserve identity/exposure and cumulative time, and never
+  upgrade uncertain timing. Finalization commits the outcome and deletes its checkpoint
+  together. No checkpoint may reopen a finalized attempt.
+- **Retries:** identical JSON evidence (object key order ignored, array order retained)
+  returns the recorded outcome. Different final evidence conflicts; original records
+  are immutable. Payload and result guards are separate. Evidence must be finite JSON,
+  not arbitrary structured-clone objects such as Maps, Dates, functions or cycles.
+- **Ordering:** sequences order first durable creation, not completion or wall time.
+  A late completion can appear earlier in history; sequence paging is not a change feed.
+  Future projections must replay ordered history when an older attempt finishes.
+- **Versions:** schema 1 was never wired to gameplay. Old/new unsupported databases
+  are preserved and refused, with no migration or automatic deletion (D5). Existing
+  localStorage progress and generated levels are unaffected.
+- **Why:** retries and multiple tabs must not create extra skill evidence or overwrite
+  a completed performance. Encounter ownership prevents ID reuse from disguising replay.
+  Real-browser tests cover concurrent writers and rollback after outcome insertion.
+
+## D29 · Assessment checkpoints in their own IndexedDB database — 2026-11-01 · _amended by D30_
 
 - **Decision:** `grama.assessment` schema 1 separates checkpoints, finalized attempts,
   exposure encounters and metadata. Validate shared envelopes plus a game-supplied
