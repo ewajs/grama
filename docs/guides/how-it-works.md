@@ -280,33 +280,52 @@ A full checkpoint must reconcile clock, encounter IDs, exposure classification a
 session; a mismatch or pre-instrumentation partial save is uncertain. Existing saves
 contain no such observations. Wall-clock timestamps never supply missing active time.
 
-### Assessment checkpoint storage (M22, not yet connected)
+### Assessment storage (M22, not yet connected)
 
-`storage/assessment` opens `grama.assessment` at schema 1 and checks store key paths and
-indexes. `checkpoints` is keyed by attempt ID; `exposures` by encounter ID with a content
-key index. `attempts` (with a unique sequence index) and `meta` are prepared for the next
-storage cycle. No finalized-attempt writes or sequence allocation exist yet.
+`storage/assessment` opens `grama.assessment` at schema 2. Checkpoints and finalized
+attempts are keyed by `attempt.id`, each with a unique `attempt.sequence` index.
+Exposures are keyed by encounter ID with a content-key index and immutable attempt owner.
+Metadata holds the schema version and last allocated sequence. Unsupported older/newer
+schemas are preserved and refused; there is no migration or automatic reset. Existing
+localStorage game progress is independent.
 
-`openAssessment` takes a game-specific payload guard. `Checkpoint` wraps an active
-attempt, its timing checkpoint and that payload, with record version 1. The shared
-validator checks IDs, versions, sequence, finite nonnegative times, exposure classifications
-and clock/attempt consistency; the supplied guard checks the game state and challenge
-snapshots. Define that adapter guard before wiring a real Grama recorder. Loaded running
-clocks still require the normal `restore` transition before resuming.
+`openAssessment` takes separate payload and completed-result guards. Record version 2
+wraps an attempt, clock and JSON game snapshot with a revision. Shared validation checks
+IDs, versions, counters, finite times, exposure and timing consistency. The adapter guards
+validate game-specific state/challenge snapshots and results before recording is wired.
+Dates, Maps, functions, undefined values and cycles are not evidence payloads. Restoring
+a running checkpoint still requires the pure timing `restore` transition.
 
-`saveCheckpoint` clones and validates its input, then commits ledger and checkpoint
-atomically. Exposure classification happens against transaction-local history, including
-other wheels in the same write. Use the returned checkpoint's canonical classifications,
-not the proposed ones. Existing encounter classifications survive resume; a reused ID
-with different content aborts the transaction. Corrupt data returns invalid-data rather
-than missing history. An interrupted transaction cannot leave half an exposure update.
+A new checkpoint proposes revision/sequence zero. First save allocates a sequence and
+revision 1 atomically; later saves supply the last saved revision and receive its increment.
+Use the entire returned canonical checkpoint. Stale writers conflict, identity cannot
+change, time cannot decrease, prior exposure cannot disappear and uncertain timing cannot
+become reliable. A failed write rolls back sequence allocation and exposure changes too.
 
-All operations return explicit results; open can report unavailable/blocked/unsupported
-version, and record operations can report invalid data/conflict/failure. Unsupported
-newer databases are preserved. Call `close` on teardown; version changes close the
-connection automatically. Checkpoint writes to the same attempt still use last-write-wins:
-finalization, optimistic revisions, sequence allocation and competing-writer protection
-are the next PLAN task. Do not connect recording to gameplay until that task is complete.
+Exposure classification happens inside the transaction, including other wheels in the
+same write. Concurrent fresh encounters cannot both claim first exposure. Resuming an
+encounter retains its classification, while reusing its ID in a different attempt or
+with changed content conflicts. The ledger owner is database metadata, not a game field.
+
+To finish, submit a `Finalized` proposal with the expected checkpoint revision, a finished
+clock and completed/abandoned status. Completion carries a validated result; abandonment
+carries none. Finalization validates against the checkpoint, commits final snapshot and
+exposures, and removes the checkpoint in one transaction. Identical retries return the
+existing outcome even after the checkpoint has gone; different evidence conflicts.
+Object key order does not affect retry equality; array order does. A finished attempt
+cannot accept any checkpoint write. Exposure history survives both completion and abandonment.
+
+`loadAttempt` validates an immutable outcome by ID. `history(afterSequence)` returns at
+most 100 records in creation-sequence order, after the supplied sequence. It is pagination,
+not a change feed: an attempt created earlier can finish later, so consumers must refresh
+ordered history (and later recompute projections) when that happens. Never use wall-clock
+changes to reorder observations. Sequence counters are never allocated again on retry.
+
+Every operation returns explicit results for unavailable/blocked storage, unsupported
+schemas, invalid data, conflicts or transaction failures. Call `close` on teardown;
+version changes close connections automatically, including late blocked-open cleanup.
+The store arbitrates revisions; UI tab ownership/resume policy and game recording are
+subsequent PLAN tasks. No gameplay is wired to this database yet.
 
 Browser tests compile the actual module into an in-memory library bundle and serve it
 only through a Playwright route. They use native IndexedDB on the production app's

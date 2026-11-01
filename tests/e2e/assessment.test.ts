@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { build } from 'vite';
-import type { Checkpoint } from '../../src/storage/assessment-record';
+import type { Checkpoint, Finalized } from '../../src/storage/assessment-record';
 import type { AssessmentResult, AssessmentStore } from '../../src/storage/assessment';
 
 type Payload = { found: string[] };
@@ -8,7 +8,8 @@ declare global {
   interface Window {
     assessment: typeof import('../../src/storage/assessment');
     fixture: Checkpoint<Payload>;
-    openAssessment: () => Promise<AssessmentResult<AssessmentStore<Payload>>>;
+    complete: (checkpoint: Checkpoint<Payload>, result?: number) => Finalized<Payload, number>;
+    openAssessment: () => Promise<AssessmentResult<AssessmentStore<Payload, number>>>;
   }
 }
 
@@ -47,10 +48,18 @@ test.beforeEach(async ({ page }) => {
           'found' in value &&
           Array.isArray(value.found) &&
           value.found.every((word) => typeof word === 'string'),
+        (value: unknown): value is number =>
+          typeof value === 'number' && Number.isFinite(value) && value >= 0,
         { name: 'assessment-test' },
       );
+    window.complete = (checkpoint, result = 100) => ({
+      ...checkpoint,
+      clock: { ...checkpoint.clock, state: 'finished' },
+      attempt: { ...checkpoint.attempt, status: 'completed', endedAt: 2, result },
+    });
     window.fixture = {
-      version: 1,
+      version: 2,
+      revision: 0,
       attempt: {
         id: 'a',
         sequence: 0,
@@ -113,10 +122,18 @@ test('assessment transaction conflict rolls back earlier exposure writes', async
       exposures: await store.exposures('new-wheel'),
       checkpoint: await store.loadCheckpoint('b'),
     };
+    const next = structuredClone(window.fixture);
+    next.attempt.id = 'c';
+    next.attempt.exposures = [];
+    const allocated = await store.saveCheckpoint(next);
     store.close();
-    return result;
+    return {
+      ...result,
+      nextSequence: allocated.ok ? allocated.value.attempt.sequence : allocated.error,
+    };
   });
   expect(result).toEqual({
+    nextSequence: 2,
     saved: { ok: false, error: 'conflict' },
     exposures: { ok: true, value: [] },
     checkpoint: { ok: true, value: null },
@@ -161,6 +178,7 @@ test('assessment rejects malformed records and handles unavailable or closed sto
         void value;
         return false;
       },
+      (value: unknown): value is number => typeof value === 'number',
       {
         factory: () => {
           throw new Error('SecurityError');
@@ -180,7 +198,7 @@ test('assessment rejects malformed records and handles unavailable or closed sto
 test('assessment keeps newer schemas intact', async ({ page }) => {
   const result = await page.evaluate(async () => {
     await new Promise<void>((resolve, reject) => {
-      const request = indexedDB.open('assessment-test', 2);
+      const request = indexedDB.open('assessment-test', 3);
       request.onsuccess = () => {
         request.result.close();
         resolve();
@@ -238,6 +256,7 @@ test('assessment blocked opens return promptly and do not leave a late connectio
         void value;
         return false;
       },
+      (value: unknown): value is number => typeof value === 'number',
       {
         name: 'blocked-test',
         factory: () => ({ open: (name: string) => indexedDB.open(name, 2) }) as IDBFactory,
@@ -257,4 +276,213 @@ test('assessment blocked opens return promptly and do not leave a late connectio
     return { result, version };
   });
   expect(result).toEqual({ result: { ok: false, error: 'blocked' }, version: 1 });
+});
+
+test('assessment admits only one writer per checkpoint revision', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const a = await window.openAssessment(),
+      b = await window.openAssessment();
+    if (!a.ok || !b.ok) throw new Error('Open failed');
+    const initial = await a.value.saveCheckpoint(window.fixture);
+    if (!initial.ok) throw new Error(initial.error);
+    const left = structuredClone(initial.value),
+      right = structuredClone(initial.value);
+    left.payload.found.push('SAL');
+    right.payload.found.push('LOS');
+    const writes = await Promise.all([a.value.saveCheckpoint(left), b.value.saveCheckpoint(right)]);
+    const loaded = await a.value.loadCheckpoint('a');
+    a.value.close();
+    b.value.close();
+    return { writes, loaded };
+  });
+  expect(result.writes.filter((write) => write.ok)).toHaveLength(1);
+  expect(result.writes.filter((write) => !write.ok)).toEqual([{ ok: false, error: 'conflict' }]);
+  expect(result.loaded).toMatchObject({
+    ok: true,
+    value: { revision: 2, attempt: { sequence: 1 } },
+  });
+});
+
+test('assessment finalization is immutable and identical concurrent retries succeed', async ({
+  page,
+}) => {
+  const result = await page.evaluate(async () => {
+    const a = await window.openAssessment(),
+      b = await window.openAssessment();
+    if (!a.ok || !b.ok) throw new Error('Open failed');
+    const saved = await a.value.saveCheckpoint(window.fixture);
+    if (!saved.ok) throw new Error(saved.error);
+    const complete = window.complete(saved.value);
+    const finishes = await Promise.all([a.value.finalize(complete), b.value.finalize(complete)]);
+    const changed = await b.value.finalize(window.complete(saved.value, 200));
+    const stale = await b.value.saveCheckpoint(saved.value);
+    const result = {
+      finishes,
+      changed,
+      stale,
+      checkpoint: await a.value.loadCheckpoint('a'),
+      recorded: await a.value.loadAttempt('a'),
+      history: await a.value.history(),
+    };
+    a.value.close();
+    b.value.close();
+    return result;
+  });
+  expect(result.finishes[0]).toEqual(result.finishes[1]);
+  expect(result.finishes[0]).toMatchObject({
+    ok: true,
+    value: { revision: 2, attempt: { status: 'completed', result: 100, sequence: 1 } },
+  });
+  expect(result.changed).toEqual({ ok: false, error: 'conflict' });
+  expect(result.stale).toEqual({ ok: false, error: 'conflict' });
+  expect(result.checkpoint).toEqual({ ok: true, value: null });
+  expect(result.recorded).toEqual(result.finishes[0]);
+  expect(result.history.ok && result.history.value).toHaveLength(1);
+});
+
+test('assessment conflicting finalizations have one winner', async ({ page }) => {
+  const outcomes = await page.evaluate(async () => {
+    const a = await window.openAssessment(),
+      b = await window.openAssessment();
+    if (!a.ok || !b.ok) throw new Error('Open failed');
+    const saved = await a.value.saveCheckpoint(window.fixture);
+    if (!saved.ok) throw new Error(saved.error);
+    const writes = await Promise.all([
+      a.value.finalize(window.complete(saved.value, 1)),
+      b.value.finalize(window.complete(saved.value, 2)),
+    ]);
+    a.value.close();
+    b.value.close();
+    return writes.map((write) => (write.ok ? 'saved' : write.error)).sort();
+  });
+  expect(outcomes).toEqual(['conflict', 'saved']);
+});
+
+test('assessment allocates sequences once and reads history by creation sequence', async ({
+  page,
+}) => {
+  const result = await page.evaluate(async () => {
+    const opened = await window.openAssessment();
+    if (!opened.ok) throw new Error(opened.error);
+    const store = opened.value,
+      other = structuredClone(window.fixture);
+    other.attempt.id = 'b';
+    other.attempt.exposures = [{ key: 'other', encounterId: 'e1', kind: 'first' }];
+    const [a, b] = await Promise.all([
+      store.saveCheckpoint(window.fixture),
+      store.saveCheckpoint(other),
+    ]);
+    if (!a.ok || !b.ok) throw new Error('Save failed');
+    await store.finalize(window.complete(b.value));
+    await store.finalize(window.complete(a.value));
+    const result = {
+      sequences: [a.value.attempt.sequence, b.value.attempt.sequence],
+      history: await store.history(),
+      page: await store.history(1),
+    };
+    store.close();
+    return result;
+  });
+  expect(result.sequences).toEqual([1, 2]);
+  expect(result.history.ok && result.history.value.map((record) => record.attempt.id)).toEqual([
+    'a',
+    'b',
+  ]);
+  expect(result.page.ok && result.page.value.map((record) => record.attempt.id)).toEqual(['b']);
+});
+
+test('assessment rolls back a failure after inserting an outcome', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const opened = await window.openAssessment();
+    if (!opened.ok) throw new Error(opened.error);
+    const store = opened.value,
+      saved = await store.saveCheckpoint(window.fixture);
+    if (!saved.ok) throw new Error(saved.error);
+    const complete = window.complete(saved.value);
+    complete.attempt.exposures = [
+      ...complete.attempt.exposures,
+      { key: 'last-wheel', encounterId: 'last', kind: 'first' },
+    ];
+    const original = IDBObjectStore.prototype.delete;
+    let outcome;
+    try {
+      IDBObjectStore.prototype.delete = function (query) {
+        if (this.name === 'checkpoints')
+          throw new DOMException('Injected storage failure', 'AbortError');
+        return original.call(this, query);
+      };
+      outcome = await store.finalize(complete);
+    } finally {
+      IDBObjectStore.prototype.delete = original;
+    }
+    const result = {
+      outcome,
+      saved,
+      checkpoint: await store.loadCheckpoint('a'),
+      recorded: await store.loadAttempt('a'),
+      exposures: await store.exposures('last-wheel'),
+    };
+    store.close();
+    return result;
+  });
+  expect(result.outcome).toEqual({ ok: false, error: 'failed' });
+  expect(result.checkpoint).toEqual(result.saved);
+  expect(result.recorded).toEqual({ ok: true, value: null });
+  expect(result.exposures).toEqual({ ok: true, value: [] });
+});
+
+test('assessment preserves unsupported older databases', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('assessment-test', 1);
+      request.onsuccess = () => {
+        request.result.close();
+        resolve();
+      };
+      request.onerror = () => reject(request.error);
+    });
+    return window.openAssessment();
+  });
+  expect(result).toEqual({ ok: false, error: 'unsupported-version' });
+});
+
+test('assessment retains exposure when an attempt is abandoned', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const opened = await window.openAssessment();
+    if (!opened.ok) throw new Error(opened.error);
+    const store = opened.value,
+      saved = await store.saveCheckpoint(window.fixture);
+    if (!saved.ok) throw new Error(saved.error);
+    const abandoned: Finalized<Payload, number> = {
+      ...saved.value,
+      clock: { ...saved.value.clock, state: 'finished' },
+      attempt: { ...saved.value.attempt, status: 'abandoned', endedAt: 2 },
+    };
+    const result = {
+      saved: await store.finalize(abandoned),
+      exposures: await store.exposures('wheel'),
+    };
+    store.close();
+    return result;
+  });
+  expect(result.saved).toMatchObject({ ok: true, value: { attempt: { status: 'abandoned' } } });
+  expect(result.exposures).toEqual({
+    ok: true,
+    value: [{ encounterId: 'e0', key: 'wheel', kind: 'first' }],
+  });
+});
+
+test('assessment cannot reuse an encounter owned by another attempt', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const opened = await window.openAssessment();
+    if (!opened.ok) throw new Error(opened.error);
+    const store = opened.value;
+    await store.saveCheckpoint(window.fixture);
+    const other = structuredClone(window.fixture);
+    other.attempt.id = 'b';
+    const result = await store.saveCheckpoint(other);
+    store.close();
+    return result;
+  });
+  expect(result).toEqual({ ok: false, error: 'conflict' });
 });
