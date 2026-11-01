@@ -24,10 +24,23 @@ No hay pistas en Contrarreloj.
 
 ## Aparte del resto
 
-- Cada partida tiene ruedas nuevas, elegidas al azar: nunca se repite una partida.
+- Cada partida elige sus ruedas al azar; alguna rueda puede repetirse.
 - No cambia tus puntos, tus pistas ni tu nivel (sus palabras sí van a
   [tu diccionario](/diccionario)). Guarda lo suyo: tu **mejor marca**, cuántas
   partidas jugaste y el récord de ruedas, que ves en **Logros**.
 - Tiene tres logros propios: _Contra el reloj_, _A las corridas_ y _Rueda libre_.
 - Si salís de la app, el reloj se frena hasta que volvés. Si salís de la pantalla, la
   partida se pierde.
+
+## Registro local
+
+Grama guarda las ruedas que viste, las palabras encontradas, los tableros completos y
+las veces que pasaste. El registro queda solo en tu dispositivo y prepara la futura
+vista de progreso; todavía no hay una puntuación de habilidad.
+
+Antes de mostrar la rueda siguiente puede haber una breve espera para guardar su registro:
+el reloj se pausa durante esa espera. Si el registro falla, podés seguir jugando.
+
+Salir de la pantalla deja la partida como abandonada; llegar a cero la completa.
+Recargar la app no retoma una partida. Una partida con una rueda repetida queda como
+práctica para la futura puntuación de habilidad, sin cambiar tu mejor marca ni tus logros.

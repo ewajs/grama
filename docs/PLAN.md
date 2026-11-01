@@ -323,7 +323,7 @@ remain uncertain.
 - [x] Versioned IndexedDB schema, validated checkpoints, atomic exposure writes and browser tests
 - [x] Idempotent finalization, sequence allocation and conflicting/stale-writer handling
 - [x] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
-- [ ] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
+- [x] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
 - [ ] Bounded retention, export/import, assessment deletion and player documentation
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.

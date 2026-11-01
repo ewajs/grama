@@ -228,10 +228,9 @@ history is incomplete. Do not promote unknown history to fresh after a reload or
 exposure and uncertain timing. Admission is not a claim of measured skill: difficulty,
 outcome calibration and statistical independence are later model responsibilities.
 
-Numbered levels, dailies and map replays now use `app/assessment/recorder`. Trial recording
-is the next M22 task: it must record every wheel, including skipped ones, and finalize
-or abandon the run. Until then, entering Contrarreloj marks exposure coverage incomplete;
-unobserved wheels must not later look fresh. Existing Session/Progress and generated
+Numbered levels, dailies and map replays now use `app/assessment/recorder`. Contrarreloj now records one attempt per run with every
+wheel, including skipped ones. Both tracks share the same `Recording` handle, monotonic
+clock, write queue, preparation timeout and exposure ledger. Existing Session/Progress and generated
 levels do not change, and no skill rating is calculated or displayed yet.
 
 ### Puzzle recording at the browser edge
@@ -241,7 +240,7 @@ levels do not change, and no skill rating is calculated or displayed yet.
 reads it through `$derived`: a word/hint replaces Progress, but the unchanged derived
 string prevents the preparation effect from restarting on every interaction.
 
-`PuzzleRecorder.prepare` serializes work, finds the latest unfinished checkpoint for the
+`GramaRecorder.prepare` serializes work, finds the latest unfinished checkpoint for the
 same place and replay flag, and reconciles its content and session. A matching session
 resumes the encounter; a save ahead of its checkpoint retains identity with uncertain
 timing. A reset, backward session or changed content abandons the old encounter and
@@ -268,6 +267,33 @@ without input. More than fifteen seconds between running samples signals an unob
 suspension: keep known time and mark it uncertain. This detects stalled observation,
 not player inactivity. Page hide pauses; restoration uses a new monotonic visit ID.
 Queueing preserves the captured event order; redundant pending heartbeats are coalesced.
+
+### Trial recording
+
+`Trial.observation` copies the seed, remaining countdown, aggregate result and ordered
+wheel history. `playTrialWord` returns the played session even when it clears the board,
+so the adapter retains the final word before the next wheel replaces it. Each wheel
+keeps its original puzzle snapshot and cleared/skipped/current outcome; the last wheel
+remains current when time expires. Accepted words are recorded, not animation frames.
+
+`GramaRecorder.prepareTrial` creates a separate attempt for each run. Subsequent wheels
+append exposure in the same transaction as their snapshots. The board and countdown
+wait for this commit; the two-second fallback releases play if storage is unavailable.
+Preparation does not consume game time or observed active time. After a failed trial
+recording, play continues without collecting partial later wheels into another attempt.
+`watchActivity` supplies the same visibility/dialog boundaries to both screens.
+
+Time-up completes once, leaving the screen abandons the run, and “Otra vez” creates a
+fresh ID even if the random seed repeats. A reload never resumes a trial. If shutdown
+prevents its final write, its checkpoint remains unfinished and excluded; another tab
+does not guess whether that run is still live or finalize it. Separate tabs own separate
+run IDs, while exposure classification remains transactional across all modes. A run
+with any repeated wheel, including within the run, is excluded by `eligibilityOf`.
+
+The temporary marker for every trial opening has been removed. Historical gaps and
+legacy unknown coverage remain unknown; recording new trials cannot reconstruct old
+exposures. `payload` combines both adapters' guards, so mixed puzzle/trial records share
+the existing schema without wiping or changing the format of prior puzzle observations.
 
 ### Difficulty snapshots and timing checkpoints
 
@@ -320,7 +346,8 @@ Metadata holds the schema version, last allocated sequence and initial exposure 
 schemas are preserved and refused; there is no migration or automatic reset. Existing
 localStorage game progress is independent.
 
-`openAssessment` takes separate payload and completed-result guards. Record version 2
+`openAssessment` takes separate payload and completed-result guards; Grama supplies
+combined guards for puzzle and trial variants. Record version 2
 wraps an attempt, clock and JSON game snapshot with a revision. Shared validation checks
 IDs, versions, counters, finite times, exposure and timing consistency. The adapter guards
 validate game-specific state/challenge snapshots and results.
@@ -356,7 +383,7 @@ Every operation returns explicit results for unavailable/blocked storage, unsupp
 schemas, invalid data, conflicts or transaction failures. Call `close` on teardown;
 version changes close connections automatically, including late blocked-open cleanup.
 The store arbitrates revisions; numbered/daily recording stops a stale writer rather
-than merging competing session observations. `checkpoints()` validates all unfinished
+than merging competing session observations. Trial tabs use separate run IDs. `checkpoints()` validates all unfinished
 records for reconciliation; `initializeCoverage()` persists the initial classification
 once, independently from subsequent ordinary game saves.
 

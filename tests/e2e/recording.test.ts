@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import type { Checkpoint, Finalized } from '../../src/storage/assessment-record';
+import { assessmentRecords } from './records';
 import type { PuzzlePayload, PuzzleResult } from '../../src/app/assessment/puzzle';
 import { level, todaysDaily } from './level';
 import { drawWord } from './wheel';
@@ -9,34 +9,7 @@ import { NEW_SESSION } from '../../src/core/session';
 import { saveGame } from '../../src/storage/save';
 
 test.use({ storageState: { cookies: [], origins: [] } });
-type Records = {
-  checkpoints: Checkpoint<PuzzlePayload>[];
-  attempts: Finalized<PuzzlePayload, PuzzleResult>[];
-};
-
-async function records(page: Page): Promise<Records> {
-  return page.evaluate(
-    () =>
-      new Promise((resolve, reject) => {
-        const open = indexedDB.open('grama.assessment');
-        open.onerror = () => reject(open.error);
-        open.onsuccess = () => {
-          const db = open.result,
-            tx = db.transaction(['checkpoints', 'attempts']);
-          const checkpoints = tx.objectStore('checkpoints').getAll(),
-            attempts = tx.objectStore('attempts').getAll();
-          tx.oncomplete = () => {
-            db.close();
-            resolve({ checkpoints: checkpoints.result, attempts: attempts.result });
-          };
-          tx.onabort = () => {
-            db.close();
-            reject(tx.error);
-          };
-        };
-      }),
-  );
-}
+const records = (page: Page) => assessmentRecords<PuzzlePayload, PuzzleResult>(page);
 
 async function freshGame(page: Page) {
   await openGame(page);
@@ -331,7 +304,9 @@ test('recording recovery does not call missing exposure history fresh', async ({
     .toBe('unknown');
 });
 
-test('unrecorded trial wheels leave exposure coverage unknown', async ({ page }) => {
+test('recorded trial wheels preserve exposure coverage for later numbered levels', async ({
+  page,
+}) => {
   await freshGame(page);
   for (const word of level(1).targets) await drawWord(page, word);
   await page.getByRole('button', { name: 'Siguiente nivel' }).click();
@@ -339,7 +314,7 @@ test('unrecorded trial wheels leave exposure coverage unknown', async ({ page })
   await page.getByRole('button', { name: /^Contrarreloj/ }).click();
   await expect(page.locator('[data-letter]').first()).toBeVisible();
   await page.getByRole('button', { name: 'Volver al inicio' }).click();
-  // Level 2 was already exposed; a later, unseen level needs the coverage-gap classification.
+  // Complete coverage survives recorded trial play; unseen numbered content stays first.
   await enterGame(page);
   for (const word of level(2).targets) await drawWord(page, word);
   await page.getByRole('button', { name: 'Siguiente nivel' }).click();
@@ -350,5 +325,5 @@ test('unrecorded trial wheels leave exposure coverage unknown', async ({ page })
           (cp) => cp.payload.place.kind === 'level' && cp.payload.place.levelNumber === 3,
         )?.attempt.exposures[0]?.kind,
     )
-    .toBe('unknown');
+    .toBe('first');
 });

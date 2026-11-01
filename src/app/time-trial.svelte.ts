@@ -19,12 +19,15 @@ import {
   type RunResult,
 } from '../core/time-trial';
 import type { WordList } from '../content/words';
+import type { TrialObservation, TrialWheel } from './assessment/trial';
 
 /** A Contrarreloj run on screen. Getters read `$state`, so the screen follows along. */
 export class Trial {
   #words: WordList;
   #random: () => number;
   #run: Run;
+  #history: TrialWheel[] = [];
+  #generation = $state(0);
   /** The wheel on, generated once per wheel. */
   readonly level: Level;
 
@@ -73,6 +76,35 @@ export class Trial {
     return { points, cleared, words };
   }
 
+  /** Stable during words/countdown; changes for each wheel and explicit restart. */
+  get recordingKey(): string {
+    return `${this.#generation}:${this.#run.wheel}`;
+  }
+
+  /** Original wheels and accepted words, copied before another UI or storage operation. */
+  get observation(): TrialObservation {
+    const { seed, timeLeft } = this.#run;
+    return {
+      kind: 'trial',
+      seed,
+      timeLeft,
+      ...this.result,
+      wheels: [
+        ...this.#history,
+        { level: this.level, session: this.#run.session, outcome: 'current' as const },
+      ].map(({ level, session, outcome }) => ({
+        outcome,
+        level: {
+          ...level,
+          letters: [...level.letters],
+          targets: [...level.targets],
+          bonus: [...level.bonus],
+        },
+        session: { ...session, found: [...session.found], revealed: { ...session.revealed } },
+      })),
+    };
+  }
+
   /** The board's rows, with words as written (accents included). */
   get board(): BoardRow[] {
     return boardRows(this.level, this.#run.session).map((row) => ({
@@ -98,18 +130,25 @@ export class Trial {
 
   /** Submits a word spelled on the wheel and returns how it went. */
   submit(word: string): Submission {
+    const level = this.level;
     const played = playTrialWord(this.#run, this.level, word);
+    if (played.run.wheel !== this.#run.wheel)
+      this.#history.push({ level, session: played.session, outcome: 'cleared' });
     this.#run = played.run;
     return played.submission;
   }
 
   /** _Pasar_: a new wheel, for some time. */
   pass(): void {
+    if (this.canPass)
+      this.#history.push({ level: this.level, session: this.#run.session, outcome: 'skipped' });
     this.#run = pass(this.#run);
   }
 
   /** Starts a new run, with new wheels. */
   restart(): void {
+    this.#history = [];
+    this.#generation++;
     this.#run = newRun(this.#seed());
   }
 

@@ -1,6 +1,6 @@
 <!-- @component Root of the app: loads the words, then starts or resumes the game. -->
 <script lang="ts">
-  import { PuzzleRecorder } from './app/assessment/recorder';
+  import { GramaRecorder } from './app/assessment/recorder';
   import { Game } from './app/game.svelte';
   import { Installer } from './app/install.svelte';
   import { Navigation } from './app/navigation.svelte';
@@ -40,13 +40,13 @@
   });
   let words = $state<WordList | null>(null);
   let failed = $state(false);
-  let recorder = $state.raw<PuzzleRecorder | null>(null);
+  let recorder = $state.raw<GramaRecorder | null>(null);
   loadWords().then(
     (loaded) => {
       game.words = loaded;
       words = loaded;
       try {
-        recorder = new PuzzleRecorder(
+        recorder = new GramaRecorder(
           loaded,
           saved !== null || settings.tutorialSeen || trials.runs > 0 || dictionary.length > 0,
         );
@@ -72,11 +72,6 @@
 
   const preferences = new Preferences(settings, saveSettings);
   const installer = new Installer();
-
-  // Until the next M22 task records trial wheels, their missing exposures remain unknown.
-  $effect(() => {
-    if (navigation.screen === 'trial' && words) markAssessmentGap();
-  });
 
   // The browser bar's color for each theme and mode: its --color-bg-top in tokens.css.
   const BAR_COLOR: Record<Theme, { light: string; dark: string }> = {
@@ -121,6 +116,7 @@
 {:else if navigation.screen === 'trial'}
   {#if words}
     <TrialScreen
+      {recorder}
       {words}
       {preferences}
       best={game.trialBest}
