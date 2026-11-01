@@ -207,7 +207,7 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
    from.
 6. `docs/GAME.md` for the rules as a player sees them, `docs/DECISIONS.md` for why.
 
-## Assessment contract (M21; not wired into play yet)
+## Assessment contract (M21–M22)
 
 `core/assessment/attempt` defines original evidence independently of a game: attempt
 identity and local sequence, game/track/mode, rules/content versions, supplied timestamps,
@@ -220,23 +220,54 @@ normalized words. Exact identity retains targets; exposure groups all puzzles wi
 same letter multiset, even across modes, target changes and generator versions. Familiar
 words on a different wheel are ordinary learned skill, not recognized replay content.
 
-The recorder will call `exposureFor` before showing each puzzle and persist its returned
-classification. Encounter IDs must survive resume and be new on restart; each trial
+The storage transaction calls `exposureFor` before showing each puzzle and persists its
+returned classification. Encounter IDs must survive resume and be new on restart; each trial
 wheel gets its own encounter, even within one run. Coverage is partial when old exposure
 history is incomplete. Do not promote unknown history to fresh after a reload or reset.
 `eligibilityOf` excludes unfinished attempts, any repeated or unknown exposure, missing
 exposure and uncertain timing. Admission is not a claim of measured skill: difficulty,
 outcome calibration and statistical independence are later model responsibilities.
 
-Integration in M22: Game's current place starts/resumes a puzzle encounter when ready
-and visible, submissions/hints update a checkpoint, and first completion finalizes once.
-Opening an overlay or backgrounding pauses active timing; returning home keeps an
-unfinished numbered/daily attempt available to resume. Trial starts one run attempt,
-records each wheel presentation (including skipped ones), finalizes at time-up and records
-abandonment on leaving. An uncertain checkpoint or legacy partial session is marked
-uncertain. ID/clock reads, storage and reactive coordination belong in app/storage;
-these contract modules remain pure. Existing Session/Progress and generator output do
-not change. Assessment is not yet wired into gameplay.
+Numbered levels, dailies and map replays now use `app/assessment/recorder`. Trial recording
+is the next M22 task: it must record every wheel, including skipped ones, and finalize
+or abandon the run. Until then, entering Contrarreloj marks exposure coverage incomplete;
+unobserved wheels must not later look fresh. Existing Session/Progress and generated
+levels do not change, and no skill rating is calculated or displayed yet.
+
+### Puzzle recording at the browser edge
+
+`Game.observation` copies plain puzzle/session data at accepted submissions and hints.
+`Game.recordingKey` changes only for a different place, mode or explicit reset. GameScreen
+reads it through `$derived`: a word/hint replaces Progress, but the unchanged derived
+string prevents the preparation effect from restarting on every interaction.
+
+`PuzzleRecorder.prepare` serializes work, finds the latest unfinished checkpoint for the
+same place and replay flag, and reconciles its content and session. A matching session
+resumes the encounter; a save ahead of its checkpoint retains identity with uncertain
+timing. A reset, backward session or changed content abandons the old encounter and
+creates another. Map replays get new repeated encounters and are abandoned when left.
+An already completed save never fabricates a new performance.
+
+The first checkpoint commits exposure before the board renders, with `presented: false`.
+The first UI observation acknowledges presentation. A reload of an unacknowledged
+checkpoint is uncertain: storage may have completed after the UI timed out. Preparation
+waits at most two seconds, then disables recording for the visit and releases ordinary
+play. Conflicts and failed updates stop that recording handle; progress saving remains
+independent. If IndexedDB fails, a best-effort localStorage marker (`grama.assessment-gap`)
+keeps later unseen content unknown. If both stores are blocked, the marker cannot persist.
+
+A fresh profile initializes complete historical coverage once. An existing save, tutorial
+setting, trial result or personal dictionary initializes partial coverage instead. Later
+ordinary saves never downgrade the original coverage automatically, and reload/reset
+cannot promote partial coverage or clear the separate gap marker. Known repeated content
+still stays repeated. Unknown exposure is excluded from a future primary skill estimate.
+
+Timing combines document visibility, navigation, completion and blocking dialogs, including
+their closing transitions. A heartbeat every five seconds counts foreground thinking even
+without input. More than fifteen seconds between running samples signals an unobserved
+suspension: keep known time and mark it uncertain. This detects stalled observation,
+not player inactivity. Page hide pauses; restoration uses a new monotonic visit ID.
+Queueing preserves the captured event order; redundant pending heartbeats are coalesced.
 
 ### Difficulty snapshots and timing checkpoints
 
@@ -245,8 +276,8 @@ exposure identities, wheel size, target count, target words/lengths/ranks, the l
 original tier, and the existing `levelScore`. Supply a rank map built once from the
 loaded word-list order (zero-based). A missing or invalid rank stays null; an incomplete
 or empty target list has no aggregate score. Descriptor version defines the feature
-formula; the attempt's content version identifies the word data. Keep these snapshots
-with observations in M22 rather than recalculating history from a later dictionary.
+formula; the attempt's content version identifies the word data. These snapshots
+are stored with observations rather than recalculated from a later dictionary.
 For Contrarreloj, retain a descriptor for every presented wheel, including skipped ones.
 
 `core/assessment/timing` owns the pure clock transitions. Pass monotonic samples and a
@@ -271,8 +302,8 @@ survives. A paused checkpoint has no active gap, so it can resume in a new visit
 uncertainty. Uncertainty never clears on resume. Foreground thinking counts: the app
 must not infer distraction or suspend assessment solely from absent input. The reducer
 cannot detect silent operating-system suspension from two apparently valid samples;
-the app reports `interrupt` when continuity is not known. Storage failures and stale
-multi-tab ownership will likewise require explicit uncertainty handling in M22.
+the app reports `interrupt` when continuity is not known. A conflicting tab stops writing its
+recording handle; restoring a running checkpoint in another tab marks it uncertain.
 
 Before storing an attempt, validate imported/checkpoint data in the storage layer,
 copy `activeMs` and `timing` from its clock, and finalize at most once by attempt ID.
@@ -280,19 +311,19 @@ A full checkpoint must reconcile clock, encounter IDs, exposure classification a
 session; a mismatch or pre-instrumentation partial save is uncertain. Existing saves
 contain no such observations. Wall-clock timestamps never supply missing active time.
 
-### Assessment storage (M22, not yet connected)
+### Assessment storage (M22)
 
 `storage/assessment` opens `grama.assessment` at schema 2. Checkpoints and finalized
 attempts are keyed by `attempt.id`, each with a unique `attempt.sequence` index.
 Exposures are keyed by encounter ID with a content-key index and immutable attempt owner.
-Metadata holds the schema version and last allocated sequence. Unsupported older/newer
+Metadata holds the schema version, last allocated sequence and initial exposure coverage. Unsupported older/newer
 schemas are preserved and refused; there is no migration or automatic reset. Existing
 localStorage game progress is independent.
 
 `openAssessment` takes separate payload and completed-result guards. Record version 2
 wraps an attempt, clock and JSON game snapshot with a revision. Shared validation checks
 IDs, versions, counters, finite times, exposure and timing consistency. The adapter guards
-validate game-specific state/challenge snapshots and results before recording is wired.
+validate game-specific state/challenge snapshots and results.
 Dates, Maps, functions, undefined values and cycles are not evidence payloads. Restoring
 a running checkpoint still requires the pure timing `restore` transition.
 
@@ -324,8 +355,10 @@ changes to reorder observations. Sequence counters are never allocated again on 
 Every operation returns explicit results for unavailable/blocked storage, unsupported
 schemas, invalid data, conflicts or transaction failures. Call `close` on teardown;
 version changes close connections automatically, including late blocked-open cleanup.
-The store arbitrates revisions; UI tab ownership/resume policy and game recording are
-subsequent PLAN tasks. No gameplay is wired to this database yet.
+The store arbitrates revisions; numbered/daily recording stops a stale writer rather
+than merging competing session observations. `checkpoints()` validates all unfinished
+records for reconciliation; `initializeCoverage()` persists the initial classification
+once, independently from subsequent ordinary game saves.
 
 Browser tests compile the actual module into an in-memory library bundle and serve it
 only through a Playwright route. They use native IndexedDB on the production app's

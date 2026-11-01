@@ -1,5 +1,6 @@
 <!-- @component Root of the app: loads the words, then starts or resumes the game. -->
 <script lang="ts">
+  import { PuzzleRecorder } from './app/assessment/recorder';
   import { Game } from './app/game.svelte';
   import { Installer } from './app/install.svelte';
   import { Navigation } from './app/navigation.svelte';
@@ -9,6 +10,7 @@
   import { loadWords } from './content';
   import { strings } from './i18n';
   import { loadDictionary, saveDictionary } from './storage/dictionary';
+  import { markAssessmentGap } from './storage/assessment-coverage';
   import { loadGame, saveGame } from './storage/save';
   import { loadTrials, saveTrials } from './storage/trials';
   import { loadSettings, saveSettings, type Theme } from './storage/settings';
@@ -23,22 +25,35 @@
 
   const settings = loadSettings();
   const levelInUrl = levelFromUrl(location.search);
-  const start = startState(loadGame(), levelInUrl, settings.difficulty);
+  const saved = loadGame();
+  const trials = loadTrials();
+  const dictionary = loadDictionary();
+  const start = startState(saved, levelInUrl, settings.difficulty);
   // One game for the whole visit, kept while moving between screens. It starts at once,
   // so the home screen shows while the words download; only playing a level needs them.
   const game = new Game(start, {
     onchange: saveGame,
-    trials: loadTrials(),
+    trials,
     ontrials: saveTrials,
-    dictionary: loadDictionary(),
+    dictionary,
     ondictionary: saveDictionary,
   });
   let words = $state<WordList | null>(null);
   let failed = $state(false);
+  let recorder = $state.raw<PuzzleRecorder | null>(null);
   loadWords().then(
     (loaded) => {
       game.words = loaded;
       words = loaded;
+      try {
+        recorder = new PuzzleRecorder(
+          loaded,
+          saved !== null || settings.tutorialSeen || trials.runs > 0 || dictionary.length > 0,
+        );
+      } catch {
+        markAssessmentGap();
+        /* Assessment is optional when browser services are blocked. */
+      }
     },
     () => (failed = true),
   );
@@ -57,6 +72,11 @@
 
   const preferences = new Preferences(settings, saveSettings);
   const installer = new Installer();
+
+  // Until the next M22 task records trial wheels, their missing exposures remain unknown.
+  $effect(() => {
+    if (navigation.screen === 'trial' && words) markAssessmentGap();
+  });
 
   // The browser bar's color for each theme and mode: its --color-bg-top in tokens.css.
   const BAR_COLOR: Record<Theme, { light: string; dark: string }> = {
@@ -92,7 +112,7 @@
 
 {#if navigation.screen === 'game'}
   {#if game.ready}
-    <GameScreen {game} {preferences} {installer} onback={() => navigation.back()} />
+    <GameScreen {game} {preferences} {installer} {recorder} onback={() => navigation.back()} />
   {:else if failed}
     <p class="status">{strings.loadError}</p>
   {:else}

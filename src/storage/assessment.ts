@@ -53,7 +53,7 @@ function request<Value>(operation: IDBRequest<Value>): Promise<Value> {
   });
 }
 
-/** Versioned local assessment database; no game is wired to it yet. */
+/** Versioned local assessment database with game-supplied evidence guards. */
 export class AssessmentStore<Payload, Result> {
   #db: IDBDatabase;
   #isPayload: (value: unknown) => value is Payload;
@@ -114,6 +114,33 @@ export class AssessmentStore<Payload, Result> {
         value.attempt.sequence > 0
         ? { ok: true, value }
         : { ok: false, error: 'invalid-data' };
+    });
+  }
+
+  /** Validated unfinished attempts, used to reconcile saved game sessions after a reload. */
+  checkpoints(): Promise<AssessmentResult<Checkpoint<Payload>[]>> {
+    return this.#transaction('readonly', async (tx) => {
+      const values: unknown[] = await request(tx.objectStore('checkpoints').getAll());
+      return values.every(
+        (value): value is Checkpoint<Payload> =>
+          isCheckpoint(value, this.#isPayload) && value.revision > 0 && value.attempt.sequence > 0,
+      )
+        ? { ok: true, value: values }
+        : { ok: false, error: 'invalid-data' };
+    });
+  }
+
+  /** Initializes historical exposure coverage once; later game saves cannot promote it. */
+  initializeCoverage(
+    coverage: 'complete' | 'partial',
+  ): Promise<AssessmentResult<'complete' | 'partial'>> {
+    return this.#transaction('readwrite', async (tx) => {
+      const meta = tx.objectStore('meta');
+      const saved: unknown = await request(meta.get('exposure-coverage'));
+      if (saved === 'complete' || saved === 'partial') return { ok: true, value: saved };
+      if (saved !== undefined) return { ok: false, error: 'invalid-data' };
+      await request(meta.put(coverage, 'exposure-coverage'));
+      return { ok: true, value: coverage };
     });
   }
 

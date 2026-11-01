@@ -8,6 +8,7 @@ import { BONUS_WORDS_PER_HINT } from '../core/hints';
 import { LEVELS_VERSION } from '../core/generate';
 import type { Progress } from '../core/progress';
 import { NEW_SESSION } from '../core/session';
+import { isObject, isCount, isDifficulty, isDate } from './guards';
 
 const KEY = 'grama.save';
 
@@ -46,24 +47,6 @@ export function saveGame(progress: Progress, storage?: Pick<Storage, 'setItem'>)
   } catch {
     // Playing on without saving beats interrupting the player.
   }
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function isCount(value: unknown): value is number {
-  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
-}
-
-function isDifficulty(value: unknown): boolean {
-  return value === 'relaxed' || value === 'normal' || value === 'challenging';
-}
-
-function isDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const date = new Date(`${value}T00:00:00Z`);
-  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
 function isSession(value: unknown): boolean {

@@ -6,10 +6,16 @@ letter wheel with its controls.
 - `game`: the running game; the screen reads it and sends it the player's words.
 - `preferences`: the player's settings, changed from the menu.
 - `installer`: for the menu's install option.
+- `recorder`: optional local assessment; failures leave play available.
 - `onback()`: back to the home screen.
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
+  import {
+    RECORDING_INTERVAL,
+    type PuzzleRecorder,
+    type PuzzleRecording,
+  } from '../../app/assessment/recorder';
   import type { Game } from '../../app/game.svelte';
   import type { Installer } from '../../app/install.svelte';
   import type { Preferences } from '../../app/preferences.svelte';
@@ -41,9 +47,10 @@ letter wheel with its controls.
     game: Game;
     preferences: Preferences;
     installer: Installer;
+    recorder: PuzzleRecorder | null;
     onback: () => void;
   };
-  let { game, preferences, installer, onback }: Props = $props();
+  let { game, preferences, installer, recorder, onback }: Props = $props();
 
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
   // The tutorial opens by itself on first launch. `untrack` reads the setting once, on
@@ -58,7 +65,7 @@ letter wheel with its controls.
   let word = $state('');
   /** Whether that word was tapped or typed, and waits to be submitted. */
   let waiting = $state(false);
-  let wheel: LetterWheel;
+  let wheel = $state<LetterWheel>();
   /** The last submitted word's result, shown briefly. */
   let result = $state<{ id: number; submission: Submission } | null>(null);
   let resultCount = 0;
@@ -78,6 +85,73 @@ letter wheel with its controls.
     },
   );
 
+  const puzzleKey = $derived(game.recordingKey);
+  let preparedKey = $state('');
+  let recording = $state.raw<PuzzleRecording | null>(null);
+  let visible = $state(document.visibilityState === 'visible');
+  let covered = $state(false);
+  let forceNew = false;
+  const ready = $derived(preparedKey === puzzleKey);
+
+  // The key excludes words and hints. A new puzzle waits only for its initial exposure
+  // commit; recorder failure/timeout still resolves, so ordinary play remains available.
+  $effect(() => {
+    const key = puzzleKey;
+    let cancelled = false;
+    let own: PuzzleRecording | null = null;
+    untrack(() => {
+      const snapshot = game.observation,
+        restart = forceNew;
+      forceNew = false;
+      recording = null;
+      void Promise.resolve(recorder?.prepare(snapshot, restart) ?? null).then(
+        (handle) => {
+          if (cancelled) return;
+          own = handle;
+          recording = handle;
+          preparedKey = key;
+          if (snapshot.complete) handle?.update(snapshot);
+        },
+        () => {
+          if (!cancelled) preparedKey = key;
+        },
+      );
+    });
+    return () => {
+      cancelled = true;
+      own?.close();
+    };
+  });
+
+  $effect(() => {
+    recording?.active(ready && visible && !covered && panel === null && !game.complete);
+  });
+  // Native dialogs remain inert/modal during their out-transition, after panel is null.
+  $effect(() => {
+    const refresh = () => {
+      covered = document.querySelector('dialog[open]') !== null;
+    };
+    const observer = new MutationObserver(refresh);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['open'],
+    });
+    refresh();
+    return () => observer.disconnect();
+  });
+
+  $effect(() => {
+    const timer = setInterval(() => recording?.checkpoint(), RECORDING_INTERVAL);
+    return () => clearInterval(timer);
+  });
+
+  function visibility() {
+    visible = document.visibilityState === 'visible';
+    recording?.active(ready && visible && !covered && panel === null && !game.complete);
+  }
+
   function spell(next: string, waits: boolean) {
     if (next.length > word.length) {
       if (preferences.vibration) vibrate('letter');
@@ -90,7 +164,7 @@ letter wheel with its controls.
 
   /** Typing on a keyboard, while nothing covers the level. */
   function key(event: KeyboardEvent) {
-    if (panel !== null || game.complete) return;
+    if (!ready || !wheel || panel !== null || game.complete) return;
     if (wheelKey(event, wheel, word !== '')) event.preventDefault();
   }
 
@@ -123,6 +197,8 @@ letter wheel with its controls.
 
   function submit(next: string) {
     const submission = game.submit(next);
+    if (submission.kind === 'target' || submission.kind === 'bonus')
+      recording?.update(game.observation);
     if (submission.kind !== 'repeated') {
       if (preferences.vibration) vibrate(submission.kind);
       if (preferences.sound) play(submission.kind);
@@ -136,128 +212,155 @@ letter wheel with its controls.
   }
 </script>
 
-<svelte:window onkeydown={key} />
+<svelte:window
+  onkeydown={key}
+  onpagehide={() => {
+    visible = false;
+    recording?.active(false);
+  }}
+  onpageshow={visibility}
+/>
+<svelte:document onvisibilitychange={visibility} />
 
-<main class="play-screen">
-  <Header
-    title={game.daily
-      ? strings.dailyTitle(game.levelNumber)
-      : game.replaying
-        ? `${strings.level(game.levelNumber)} · ${strings.replaying}`
-        : strings.level(game.levelNumber)}
-    tier={game.tier}
-    score={game.score}
-    {onback}
-    onmenu={() => (panel = 'menu')}
-  />
-
-  <div class="board">
-    <Board
-      rows={game.board}
-      glow={repeated && game.written(repeated)}
-      ondefine={(word) => {
-        defining = word;
-        panel = 'definition';
-      }}
+{#if ready}
+  <main class="play-screen">
+    <Header
+      title={game.daily
+        ? strings.dailyTitle(game.levelNumber)
+        : game.replaying
+          ? `${strings.level(game.levelNumber)} · ${strings.replaying}`
+          : strings.level(game.levelNumber)}
+      tier={game.tier}
+      score={game.score}
+      {onback}
+      onmenu={() => (panel = 'menu')}
     />
-  </div>
 
-  <div class="play">
-    <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
+    <div class="board">
+      <Board
+        rows={game.board}
+        glow={repeated && game.written(repeated)}
+        ondefine={(word) => {
+          defining = word;
+          panel = 'definition';
+        }}
+      />
+    </div>
 
-    <div class="controls">
-      <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
-      <button
-        class="shuffle"
-        aria-label={strings.shuffle}
-        onclick={() => (tiles = shuffled(tiles, Math.random))}
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
-        </svg>
-      </button>
-      <div class="hint">
-        <HintButton count={game.hints} disabled={!game.canHint} onhint={() => game.hint()} />
-      </div>
-      <div class="bonus">
-        <BonusCounter
-          count={game.bonusFound}
-          progress={game.hintProgress}
-          untilHint={game.bonusUntilHint}
-          glow={repeated !== null && !game.level.targets.includes(repeated)}
-          onopen={() => (panel = 'bonus')}
-        />
+    <div class="play">
+      <WordPill {word} {waiting} onsubmit={() => wheel?.submit()} result={shown} />
+
+      <div class="controls">
+        <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
+        <button
+          class="shuffle"
+          aria-label={strings.shuffle}
+          onclick={() => (tiles = shuffled(tiles, Math.random))}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
+          </svg>
+        </button>
+        <div class="hint">
+          <HintButton
+            count={game.hints}
+            disabled={!game.canHint}
+            onhint={() => {
+              game.hint();
+              recording?.update(game.observation);
+            }}
+          />
+        </div>
+        <div class="bonus">
+          <BonusCounter
+            count={game.bonusFound}
+            progress={game.hintProgress}
+            untilHint={game.bonusUntilHint}
+            glow={repeated !== null && !game.level.targets.includes(repeated)}
+            onopen={() => (panel = 'bonus')}
+          />
+        </div>
       </div>
     </div>
-  </div>
-</main>
+  </main>
 
-{#if panel === 'menu'}
-  <Menu
-    {preferences}
-    {installer}
-    ontutorial={() => (panel = 'tutorial')}
-    onreport={() => (panel = 'report')}
-    onabout={() => (panel = 'about')}
-    onclose={close}
-  />
-{:else if panel === 'tutorial'}
-  <Tutorial
-    onclose={() => {
-      preferences.tutorialSeen = true;
-      close();
-    }}
-  />
-{:else if panel === 'report'}
-  <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={close} />
-{:else if panel === 'about'}
-  <AboutDialog onreset={() => (panel = 'reset')} onclose={close} />
-{:else if panel === 'reset'}
-  <ResetDialog
-    onconfirm={() => {
-      result = null;
-      game.reset(preferences.difficulty);
-      close();
-    }}
-    onclose={close}
-  />
-{:else if panel === 'definition'}
-  <DefinitionDialog word={defining} onclose={close} />
-{:else if panel === 'bonus'}
-  <BonusWords
-    words={game.bonusWords}
-    total={game.bonusTotal}
-    untilHint={game.bonusUntilHint}
-    onclose={close}
-  />
+  {#if panel === 'menu'}
+    <Menu
+      {preferences}
+      {installer}
+      ontutorial={() => (panel = 'tutorial')}
+      onreport={() => (panel = 'report')}
+      onabout={() => (panel = 'about')}
+      onclose={close}
+    />
+  {:else if panel === 'tutorial'}
+    <Tutorial
+      onclose={() => {
+        preferences.tutorialSeen = true;
+        close();
+      }}
+    />
+  {:else if panel === 'report'}
+    <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={close} />
+  {:else if panel === 'about'}
+    <AboutDialog onreset={() => (panel = 'reset')} onclose={close} />
+  {:else if panel === 'reset'}
+    <ResetDialog
+      onconfirm={() => {
+        result = null;
+        forceNew = true;
+        game.reset(preferences.difficulty);
+        close();
+      }}
+      onclose={close}
+    />
+  {:else if panel === 'definition'}
+    <DefinitionDialog word={defining} onclose={close} />
+  {:else if panel === 'bonus'}
+    <BonusWords
+      words={game.bonusWords}
+      total={game.bonusTotal}
+      untilHint={game.bonusUntilHint}
+      onclose={close}
+    />
+  {/if}
+
+  {#if game.complete}
+    <LevelComplete
+      detail={game.daily
+        ? strings.dailyCompleteDetail(game.levelNumber)
+        : strings.levelCompleteDetail(game.levelNumber)}
+      tier={game.tier}
+      stars={game.stars}
+      missing={game.missingStars}
+      words={game.targetWords}
+      nextLabel={game.daily
+        ? strings.backHome
+        : game.replaying
+          ? strings.backToMap
+          : strings.nextLevel}
+      share={game.daily ? shareDaily : undefined}
+      points={game.levelPoints}
+      hints={game.hintsWon}
+      bonus={game.bonusFound}
+      newWords={game.newWords.length}
+      onnext={nextLevel}
+    />
+  {/if}
+
+  <AchievementToast unlocked={game.achievements} />
+{:else}
+  <p class="loading">{strings.loading}</p>
 {/if}
-
-{#if game.complete}
-  <LevelComplete
-    detail={game.daily
-      ? strings.dailyCompleteDetail(game.levelNumber)
-      : strings.levelCompleteDetail(game.levelNumber)}
-    tier={game.tier}
-    stars={game.stars}
-    missing={game.missingStars}
-    words={game.targetWords}
-    nextLabel={game.daily
-      ? strings.backHome
-      : game.replaying
-        ? strings.backToMap
-        : strings.nextLevel}
-    share={game.daily ? shareDaily : undefined}
-    points={game.levelPoints}
-    hints={game.hintsWon}
-    bonus={game.bonusFound}
-    newWords={game.newWords.length}
-    onnext={nextLevel}
-  />
-{/if}
-
-<AchievementToast unlocked={game.achievements} />
 
 <style>
+  .loading {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
   .shuffle,
   .bonus {
     position: absolute;

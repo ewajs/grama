@@ -19,12 +19,14 @@ diccionario**.
 
 En tu teléfono o computadora, y en ningún otro lado: no hay cuentas. Si borrás los datos
 del navegador, o jugás desde otro dispositivo, empezás de cero. Desde el menú también
-podés **Empezar de cero** a propósito.
+podés **Empezar de cero** a propósito: reinicia los niveles, puntos y pistas, pero conserva
+Tu diccionario y el [registro local de partidas](/progreso#registro-local-de-partidas).
 
 ## ¿El juego manda mis datos a algún lado?
 
-No. No hay publicidad, ni estadísticas de uso, ni cuentas. Lo único que sale de tu
-dispositivo es lo que vos mandes al reportar un problema.
+No se envían tus partidas ni estadísticas de juego: no hay publicidad, analítica remota
+ni cuentas. El [registro de partidas](/progreso#registro-local-de-partidas) queda solo en
+tu dispositivo. Reportar un problema o compartir un resultado envía lo que vos elijas.
 
 ## ¿Puedo jugar sin sonido?
 

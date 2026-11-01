@@ -56,6 +56,19 @@ function finish(game: Game) {
 }
 
 describe('Game', () => {
+  it('copies plain assessment observations without restarting them on words or hints', () => {
+    const { game } = newGame();
+    const before = game.observation,
+      key = game.recordingKey;
+    expect(() => structuredClone(before)).not.toThrow();
+    game.submit(game.level.targets[0]!);
+    game.hint();
+    expect(game.recordingKey).toBe(key);
+    expect(before.session.found).toEqual([]);
+    expect(game.observation.session.found).toHaveLength(1);
+    game.reset('normal');
+    expect(game.recordingKey).not.toBe(key);
+  });
   it('waits for its words before a level can be played', () => {
     const game = new Game(NEW_PROGRESS);
     expect(game.ready).toBe(false);

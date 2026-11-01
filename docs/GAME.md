@@ -61,6 +61,21 @@ replays it as it was generated. A replay only counts for better stars: it pays n
 no progress toward hints and no extra-hard hint (the level already paid once), and never
 changes the current level.
 
+### Local play observations (M22)
+
+Numbered levels, dailies and replays keep a separate local observation of the puzzle,
+found words, hint letters and observed active duration. Thinking time counts; hidden
+pages, blocking dialogs and time away from the puzzle do not. Missing intervals remain
+uncertain. Leaving and resuming a numbered/daily puzzle keeps its encounter; restarting
+creates another. A first completion finalizes the observation once.
+
+Repeated wheels are practice evidence; incomplete old exposure history remains unknown.
+Neither is eligible for the future primary skill estimate. Resetting game progress keeps
+these observations and exposure history. They never change stars, points, hints or level
+generation. No skill rating is shown yet, and Contrarreloj observation is a later M22 task.
+If recording storage fails, ordinary play and its separate progress saving continue.
+All observations stay on the device, with no analytics upload or account.
+
 ### Daily challenge (`src/core/daily.ts`)
 
 One level per date (the player's own), the same for everyone: 7 letters, up to 9 targets, and a

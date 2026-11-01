@@ -38,6 +38,7 @@ import { NEW_TRIAL_RECORD, recordRun, type RunResult, type TrialRecord } from '.
 import type { WordList } from '../content/words';
 import { today } from './clock';
 import { reportUrl, type ReportKind } from './report';
+import type { PuzzleObservation } from './assessment/puzzle';
 
 /** A numbered level's place. */
 type LevelPlace = Extract<Place, { kind: 'level' }>;
@@ -98,6 +99,7 @@ export class Game {
   #mode = $state<Mode>({ kind: 'current' });
   /** Words rejected on this level, most recent last; kept for reports, not saved. */
   #rejected = $state<string[]>([]);
+  #recordingRestart = $state(0);
   /** Words new to the dictionary on this level, as found on this visit; not saved. */
   #newWords = $state<string[]>([]);
   /** The level being played, generated once per level (or date). */
@@ -164,6 +166,38 @@ export class Game {
     return mode.kind === 'replay'
       ? mode
       : { place: currentPlace(progress), session: progress.session };
+  }
+
+  /** Stable across words/hints; a reset requires a fresh assessment encounter. */
+  get recordingKey(): string {
+    return JSON.stringify([this.#mode.kind, this.#playing.place, this.#recordingRestart]);
+  }
+
+  /** A plain snapshot for the assessment edge, independent from saved Progress's shape. */
+  get observation(): PuzzleObservation {
+    const { place, session } = this.#playing;
+    const level = this.level;
+    return {
+      place: { ...place },
+      level: {
+        letters: [...level.letters],
+        targets: [...level.targets],
+        bonus: [...level.bonus],
+        tier: level.tier,
+      },
+      session: {
+        found: [...session.found],
+        revealed: { ...session.revealed },
+        points: session.points,
+        hintsWon: session.hintsWon,
+      },
+      replay: this.replaying,
+      complete: this.complete,
+      playedBefore:
+        place.kind === 'daily'
+          ? place.date in this.#progress.dailies
+          : place.levelNumber in this.#progress.history,
+    };
   }
 
   /** The player's current level's tier, whatever is on screen. */
@@ -415,6 +449,7 @@ export class Game {
 
   /** Starts over from level 1, as a new game at the given difficulty. */
   reset(difficulty: Difficulty): void {
+    this.#recordingRestart++;
     this.#leaveLevel();
     this.#mode = { kind: 'current' };
     this.#update({ ...NEW_PROGRESS, difficulty });

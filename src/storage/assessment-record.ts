@@ -1,5 +1,6 @@
 import type { Attempt, Exposure } from '../core/assessment/attempt';
 import type { Timing } from '../core/assessment/timing';
+import { isObject, isCount } from './guards';
 
 /** A complete resumable observation; the game supplies and validates its own payload. */
 export type Checkpoint<Payload> = {
@@ -20,12 +21,9 @@ export type Finalized<Payload, Result> = Omit<Checkpoint<Payload>, 'attempt' | '
 /** Ledger ownership prevents an encounter ID from being reused by another attempt. */
 export type StoredExposure = Exposure & { attemptId: string };
 
-const object = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
 const text = (value: unknown): value is string => typeof value === 'string' && value.length > 0;
 const duration = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0;
-const count = (value: unknown) => duration(value) && Number.isSafeInteger(value);
 
 /** Canonical JSON for evidence equality, rejecting unsupported values and cyclic payloads. */
 export function evidenceJson(value: unknown, parents = new Set<object>()): string | null {
@@ -60,7 +58,7 @@ export function evidenceJson(value: unknown, parents = new Set<object>()): strin
 /** Validates the shared exposure envelope before trusting browser data. */
 export function isExposure(value: unknown): value is Exposure {
   return (
-    object(value) &&
+    isObject(value) &&
     text(value.encounterId) &&
     text(value.key) &&
     (value.kind === 'first' || value.kind === 'repeat' || value.kind === 'unknown')
@@ -78,11 +76,11 @@ function isRecord<Payload>(
   isPayload: (value: unknown) => value is Payload,
 ): value is Checkpoint<Payload> | Finalized<Payload, unknown> {
   if (
-    !object(value) ||
+    !isObject(value) ||
     value.version !== 2 ||
-    !count(value.revision) ||
-    !object(value.attempt) ||
-    !object(value.clock)
+    !isCount(value.revision) ||
+    !isObject(value.attempt) ||
+    !isObject(value.clock)
   )
     return false;
   const { attempt, clock } = value;
@@ -90,7 +88,7 @@ function isRecord<Payload>(
     ['id', 'game', 'track', 'mode', 'rulesVersion', 'contentVersion'].every((key) =>
       text(attempt[key]),
     ) &&
-    count(attempt.sequence) &&
+    isCount(attempt.sequence) &&
     duration(attempt.startedAt) &&
     duration(attempt.activeMs) &&
     (attempt.timing === 'reliable' || attempt.timing === 'uncertain') &&
@@ -103,7 +101,7 @@ function isRecord<Payload>(
     (clock.state === 'paused' ||
       clock.state === 'finished' ||
       (clock.state === 'running' &&
-        object(clock.sample) &&
+        isObject(clock.sample) &&
         text(clock.sample.visit) &&
         duration(clock.sample.ms))) &&
     isPayload(value.payload) &&
