@@ -236,4 +236,46 @@ records each wheel presentation (including skipped ones), finalizes at time-up a
 abandonment on leaving. An uncertain checkpoint or legacy partial session is marked
 uncertain. ID/clock reads, storage and reactive coordination belong in app/storage;
 these contract modules remain pure. Existing Session/Progress and generator output do
-not change. No assessment data is recorded by this PR.
+not change. Assessment is not yet wired into gameplay.
+
+### Difficulty snapshots and timing checkpoints
+
+`describePuzzle` in `app/assessment/grama` returns descriptor version 1 with exact and
+exposure identities, wheel size, target count, target words/lengths/ranks, the level's
+original tier, and the existing `levelScore`. Supply a rank map built once from the
+loaded word-list order (zero-based). A missing or invalid rank stays null; an incomplete
+or empty target list has no aggregate score. Descriptor version defines the feature
+formula; the attempt's content version identifies the word data. Keep these snapshots
+with observations in M22 rather than recalculating history from a later dictionary.
+For Contrarreloj, retain a descriptor for every presented wheel, including skipped ones.
+
+`core/assessment/timing` owns the pure clock transitions. Pass monotonic samples and a
+fresh visit ID for each browser clock domain, with epoch timestamps kept separately
+for display. `NEW_TIMING` waits paused until content is ready, visible and interactive.
+The app must combine all pause reasons: closing a dialog while hidden must not resume.
+
+| App event                                                   | Timing transition                                       |
+| ----------------------------------------------------------- | ------------------------------------------------------- |
+| Ready and interactive, or returning to an unfinished puzzle | `resume`                                                |
+| Submission/hint/checkpoint while playing                    | `checkpoint`                                            |
+| Hidden, blocking dialog, or leaving a numbered/daily puzzle | `pause`                                                 |
+| Completion or leaving a trial                               | `finish` (attempt is completed or abandoned separately) |
+| Reading a persisted clock into a new app visit              | `restore` before `resume`                               |
+| Unexplained suspension or lost observation interval         | `interrupt`, then `resume` when interactive             |
+
+Every running transition accounts only for the interval since its last accepted sample.
+Duplicate samples add zero; paused checkpoints add nothing; finalization is terminal.
+Invalid/backward samples or a changed visit cannot produce elapsed time. A restored
+running clock loses only its unmeasured tail and becomes uncertain; accumulated time
+survives. A paused checkpoint has no active gap, so it can resume in a new visit without
+uncertainty. Uncertainty never clears on resume. Foreground thinking counts: the app
+must not infer distraction or suspend assessment solely from absent input. The reducer
+cannot detect silent operating-system suspension from two apparently valid samples;
+the app reports `interrupt` when continuity is not known. Storage failures and stale
+multi-tab ownership will likewise require explicit uncertainty handling in M22.
+
+Before storing an attempt, validate imported/checkpoint data in the storage layer,
+copy `activeMs` and `timing` from its clock, and finalize at most once by attempt ID.
+A full checkpoint must reconcile clock, encounter IDs, exposure classification and game
+session; a mismatch or pre-instrumentation partial save is uncertain. Existing saves
+contain no such observations. Wall-clock timestamps never supply missing active time.

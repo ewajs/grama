@@ -307,11 +307,14 @@ Goal: define personal skill evidence before recording play or displaying ratings
 
 - [x] Define the shared attempt contract, Grama payloads and content identity, replay
       eligibility and regression fixtures; document lifecycle integration points
-- [ ] Derive versioned Grama difficulty descriptors from existing word ranks; specify
+- [x] Derive versioned Grama difficulty descriptors from existing word ranks; specify
       timing/checkpoint quality and interruption rules before instrumentation
+- [ ] Release M20/M21 foundations with version, changelog, player news and tag
 
 **Verify:** equivalent puzzles stay recognized across shuffles, modes and content releases;
 resuming retains its encounter, restarting is practice, unknown exposure is excluded.
+Descriptors reproduce existing difficulty; paused time is excluded and missing intervals
+remain uncertain.
 
 ### M22 — Durable local history
 
