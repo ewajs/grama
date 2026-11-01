@@ -72,7 +72,9 @@ creates another. A first completion finalizes the observation once.
 Repeated wheels are practice evidence; incomplete old exposure history remains unknown.
 Neither is eligible for the future primary skill estimate. Resetting game progress keeps
 these observations and exposure history. They never change stars, points, hints or level
-generation. No skill rating is shown yet, and Contrarreloj observation is a later M22 task.
+generation. No skill rating is shown yet. Contrarreloj records one attempt per run with
+all presented wheels, found words, clears and skips; any repeated wheel excludes that run
+from the future primary skill estimate.
 If recording storage fails, ordinary play and its separate progress saving continue.
 All observations stay on the device, with no analytics upload or account.
 
@@ -103,6 +105,14 @@ Every run gets a random seed, so its wheels are new. The clock stops while the a
 hidden; leaving the screen drops the run. Runs never touch the main score, hints, stars
 or level: they keep their own record (runs played, best run, most wheels), saved apart
 (`storage/trials`), which feeds three achievements. Their words do go into Tu diccionario.
+
+The separate local observation records time-up once as completion, or leaving as
+abandonment. Reload does not resume a run; if its final write is lost it remains
+unfinished evidence, never a fabricated completion or loss. Before a new wheel appears,
+its exposure is saved with the snapshot. The countdown waits during this preparation,
+then ordinary play continues even if recording fails. Backgrounding and blocking dialogs
+pause both countdown and observed time. Random wheels can repeat; repetition remains
+practice evidence even when it occurs within the same run.
 
 ### Achievements (`src/core/achievements.ts`)
 

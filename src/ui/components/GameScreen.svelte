@@ -13,7 +13,7 @@ letter wheel with its controls.
   import { untrack } from 'svelte';
   import {
     RECORDING_INTERVAL,
-    type PuzzleRecorder,
+    type GramaRecorder,
     type PuzzleRecording,
   } from '../../app/assessment/recorder';
   import type { Game } from '../../app/game.svelte';
@@ -22,6 +22,7 @@ letter wheel with its controls.
   import { shareText } from '../../app/share';
   import { vibrate } from '../lib/haptics';
   import { wheelKey } from '../lib/keyboard';
+  import { watchActivity } from '../lib/activity';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
   import { strings } from '../../i18n';
@@ -47,7 +48,7 @@ letter wheel with its controls.
     game: Game;
     preferences: Preferences;
     installer: Installer;
-    recorder: PuzzleRecorder | null;
+    recorder: GramaRecorder | null;
     onback: () => void;
   };
   let { game, preferences, installer, recorder, onback }: Props = $props();
@@ -88,8 +89,7 @@ letter wheel with its controls.
   const puzzleKey = $derived(game.recordingKey);
   let preparedKey = $state('');
   let recording = $state.raw<PuzzleRecording | null>(null);
-  let visible = $state(document.visibilityState === 'visible');
-  let covered = $state(false);
+  let interactive = $state(false);
   let forceNew = false;
   const ready = $derived(preparedKey === puzzleKey);
 
@@ -124,33 +124,14 @@ letter wheel with its controls.
   });
 
   $effect(() => {
-    recording?.active(ready && visible && !covered && panel === null && !game.complete);
+    recording?.active(ready && interactive && panel === null && !game.complete);
   });
-  // Native dialogs remain inert/modal during their out-transition, after panel is null.
-  $effect(() => {
-    const refresh = () => {
-      covered = document.querySelector('dialog[open]') !== null;
-    };
-    const observer = new MutationObserver(refresh);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['open'],
-    });
-    refresh();
-    return () => observer.disconnect();
-  });
+  $effect(() => watchActivity((value) => (interactive = value)));
 
   $effect(() => {
     const timer = setInterval(() => recording?.checkpoint(), RECORDING_INTERVAL);
     return () => clearInterval(timer);
   });
-
-  function visibility() {
-    visible = document.visibilityState === 'visible';
-    recording?.active(ready && visible && !covered && panel === null && !game.complete);
-  }
 
   function spell(next: string, waits: boolean) {
     if (next.length > word.length) {
@@ -212,15 +193,7 @@ letter wheel with its controls.
   }
 </script>
 
-<svelte:window
-  onkeydown={key}
-  onpagehide={() => {
-    visible = false;
-    recording?.active(false);
-  }}
-  onpageshow={visibility}
-/>
-<svelte:document onvisibilitychange={visibility} />
+<svelte:window onkeydown={key} />
 
 {#if ready}
   <main class="play-screen">

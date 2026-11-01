@@ -98,15 +98,16 @@ export function tick(run: Run, elapsed: number): Run {
  * finishing the board adds more and brings the next wheel. Nothing counts once the run
  * is over.
  * @param level The wheel on (from {@link wheelOf}).
+ * @returns The updated run and played session, retained even when completion advances the wheel.
  */
 export function playTrialWord(
   run: Run,
   level: Level,
   word: string,
-): { submission: Submission; run: Run } {
+): { submission: Submission; run: Run; session: Session } {
   const { submission, session } = submitWord(run.session, level, word);
   if (isOver(run) || (submission.kind !== 'target' && submission.kind !== 'bonus')) {
-    return { submission, run };
+    return { submission, run, session: run.session };
   }
   const played: Run = {
     ...run,
@@ -115,9 +116,10 @@ export function playTrialWord(
     words: run.words + 1,
     timeLeft: run.timeLeft + TIME_FOR[submission.kind],
   };
-  if (!isComplete(level, session)) return { submission, run: played };
+  if (!isComplete(level, session)) return { submission, run: played, session };
   return {
     submission,
+    session,
     run: {
       ...played,
       wheel: run.wheel + 1,

@@ -8,7 +8,31 @@ delete it, the history is the point.
 
 ---
 
-## D31 · Record ordinary puzzles before estimating skill — 2026-11-01
+## D32 · Trial recording reuses the puzzle recorder — 2026-11-01
+
+- **Decision:** `GramaRecorder` shares its queue, bounded preparation, attempt creation,
+  exposure policy and `Recording` timing/finalization handle across both tracks. The
+  shared puzzle snapshot guard validates trial wheels too. Mixed payload/result guards
+  keep existing puzzle observations readable in schema 2; no save or generator changes.
+- **Evidence:** one attempt per seeded run, containing ordered original wheels, accepted
+  words, clears, skips, countdown and aggregate points. Return the played session from
+  the pure trial transition so clearing a board does not discard its final word.
+- **Presentation:** commit each wheel's exposure before showing it. Pause countdown and
+  observed time while preparation waits. The existing timeout/failure path keeps play
+  available and marks missing exposure history unknown. Both screens use the same
+  visibility/dialog observer, including closing transitions.
+- **Lifecycle:** time-up completes once; leaving abandons; replaying creates a new ID.
+  Reload does not resume a trial. An interrupted final write leaves unfinished evidence,
+  rather than another tab guessing that the run is abandoned or reconstructing a result.
+  Tabs use separate run IDs and the shared transactional exposure ledger.
+- **Replay:** any repeated wheel excludes the run from the future primary skill estimate.
+  Stop marking every trial opening as a coverage gap now that its wheels are observed;
+  retain all historical gap markers and legacy unknown coverage.
+- **Why:** this is the second actual recording adapter. Share the proven mechanism while
+  keeping each mode's snapshots and presentation boundaries explicit. Model selection,
+  visible ratings, retention and data controls remain separate milestone tasks.
+
+## D31 · Record ordinary puzzles before estimating skill — 2026-11-01 · _trial integration in D32_
 
 - **Decision:** wire numbered levels, dailies and map replays to durable assessment.
   Keep original puzzle difficulty, accepted words, revealed letters and observed active
@@ -25,8 +49,8 @@ delete it, the history is the point.
   Failed preparation leaves a best-effort localStorage gap marker so later recovery
   cannot claim complete exposure coverage. No marker can persist if both stores fail.
 - **History:** initialize legacy exposure as partial once; ordinary saves cannot promote
-  it. Reset retains exposure. Contrarreloj is not recorded yet, so opening it also marks
-  coverage incomplete until its own M22 integration. No visible rating or ability claim
+  it. Reset retains exposure. Contrarreloj initially marked coverage incomplete on entry; D32 replaces that
+  temporary rule with per-wheel recording. No visible rating or ability claim
   is introduced; model validation and progress UI follow in M23/M24.
 - **Why:** reliable original observations must precede scoring. Duplicate completion,
   remembered answers and missing intervals must not become unsupported skill evidence.

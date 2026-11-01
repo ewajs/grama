@@ -5,6 +5,7 @@ is open and the app is visible; when time is up, a summary offers another run.
 
 - `words`: the language's words, for the wheels.
 - `preferences`: sound and vibration.
+- `recorder`: optional local run observations; failures leave play available.
 - `best`: the best run so far, if any, to show with the result.
 - `unlocked`: the achievements reached, so new ones are announced.
 - `onword(word)`: a word was found (normalized), for Tu diccionario; says whether it was
@@ -16,6 +17,11 @@ is open and the app is visible; when time is up, a summary offers another run.
   import { untrack } from 'svelte';
   import type { Preferences } from '../../app/preferences.svelte';
   import { Trial } from '../../app/time-trial.svelte';
+  import {
+    RECORDING_INTERVAL,
+    type GramaRecorder,
+    type TrialRecording,
+  } from '../../app/assessment/recorder';
   import type { AchievementId } from '../../core/achievements';
   import type { Submission } from '../../core/evaluate';
   import { shuffled } from '../../core/random';
@@ -24,6 +30,7 @@ is open and the app is visible; when time is up, a summary offers another run.
   import { strings } from '../../i18n';
   import { vibrate } from '../lib/haptics';
   import { wheelKey } from '../lib/keyboard';
+  import { watchActivity } from '../lib/activity';
   import { FEEDBACK_DURATION } from '../lib/motion';
   import { play } from '../lib/sound';
   import AchievementToast from './AchievementToast.svelte';
@@ -34,6 +41,7 @@ is open and the app is visible; when time is up, a summary offers another run.
 
   type Props = {
     words: WordList;
+    recorder: GramaRecorder | null;
     preferences: Preferences;
     best: RunResult | null;
     unlocked: readonly AchievementId[];
@@ -41,15 +49,60 @@ is open and the app is visible; when time is up, a summary offers another run.
     onfinish: (result: RunResult) => void;
     onback: () => void;
   };
-  let { words, preferences, best, unlocked, onword, onfinish, onback }: Props = $props();
+  let { words, recorder, preferences, best, unlocked, onword, onfinish, onback }: Props = $props();
 
   // One trial per visit to the screen; "Otra vez" restarts it.
   // svelte-ignore state_referenced_locally
   const trial = new Trial(words);
-  let hidden = $state(false);
+  let interactive = $state(false);
+  let preparedKey = $state('');
+  const puzzleKey = $derived(trial.recordingKey);
+  const ready = $derived(preparedKey === puzzleKey);
+  let recording = $state.raw<TrialRecording | null>(null);
+  // A run owns one handle across wheel changes; failed recording stays off until restart.
+  let attempted = false;
+  $effect(() => {
+    const key = puzzleKey;
+    let cancelled = false;
+    untrack(() => {
+      const operation =
+        attempted && recording === null
+          ? Promise.resolve(null)
+          : (recorder?.prepareTrial(trial.observation, recording) ?? Promise.resolve(null));
+      attempted = true;
+      void operation.then(
+        (handle) => {
+          if (cancelled) {
+            handle?.close();
+            return;
+          }
+          recording = handle;
+          preparedKey = key;
+        },
+        () => {
+          if (!cancelled) preparedKey = key;
+        },
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  });
+  $effect(() => watchActivity((value) => (interactive = value)));
+  $effect(() => {
+    recording?.active(ready && interactive && !trial.over);
+  });
+  $effect(() => {
+    const timer = setInterval(() => recording?.checkpoint(trial.observation), RECORDING_INTERVAL);
+    return () => clearInterval(timer);
+  });
+  $effect(() => () => {
+    recording?.update(trial.observation);
+    recording?.close();
+  });
   let word = $state('');
   let waiting = $state(false);
-  let wheel: LetterWheel;
+  let wheel = $state<LetterWheel>();
   let result = $state<{ id: number; submission: Submission } | null>(null);
   let resultCount = 0;
   let clearResult: ReturnType<typeof setTimeout> | undefined;
@@ -73,7 +126,7 @@ is open and the app is visible; when time is up, a summary offers another run.
   // The clock: each frame takes the time since the last one. It stops while the app is
   // hidden (or the run is over), and starts afresh when it's back, so no time is lost.
   $effect(() => {
-    if (hidden || trial.over) return;
+    if (!ready || !interactive || trial.over) return;
     let last = performance.now();
     let frame = requestAnimationFrame(function step(now) {
       trial.elapse(now - last);
@@ -88,6 +141,7 @@ is open and the app is visible; when time is up, a summary offers another run.
     if (!trial.over) return;
     untrack(() => {
       bestBefore = best;
+      recording?.update(trial.observation);
       if (preferences.sound) play('complete');
       onfinish(trial.result);
     });
@@ -109,6 +163,8 @@ is open and the app is visible; when time is up, a summary offers another run.
     if (submission.kind === 'target' || submission.kind === 'bonus') {
       if (onword(submission.word)) newWords++;
       const cleared = trial.wheelNumber !== before;
+      if (cleared) recording?.active(false);
+      else recording?.update(trial.observation);
       gained = {
         id: resultCount + 1,
         seconds: (TIME_FOR[submission.kind] + (cleared ? TIME_FOR.clear : 0)) / 1000,
@@ -124,88 +180,101 @@ is open and the app is visible; when time is up, a summary offers another run.
   }
 
   function key(event: KeyboardEvent) {
-    if (trial.over) return;
+    if (!ready || !interactive || !wheel || trial.over) return;
     if (wheelKey(event, wheel, word !== '')) event.preventDefault();
   }
 </script>
 
 <svelte:window onkeydown={key} />
-<svelte:document onvisibilitychange={() => (hidden = document.visibilityState === 'hidden')} />
 
-<main class="play-screen">
-  <header>
-    <button class="back" aria-label={strings.back} onclick={onback}>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-    </button>
-    <div class="title">
-      <span>{strings.trial}</span>
-      <small>{strings.trialWheel(trial.wheelNumber)}</small>
+{#if ready}
+  <main class="play-screen">
+    <header>
+      <button class="back" aria-label={strings.back} onclick={onback}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </button>
+      <div class="title">
+        <span>{strings.trial}</span>
+        <small>{strings.trialWheel(trial.wheelNumber)}</small>
+      </div>
+      <div class="clock" class:low={seconds <= 10} role="timer" aria-label={strings.timeLeft}>
+        {strings.clock(seconds)}
+        {#if gained}
+          {#key gained.id}
+            <span class="gained">+{gained.seconds} s</span>
+          {/key}
+        {/if}
+      </div>
+      <div class="points" aria-label={strings.score}>{trial.points}</div>
+    </header>
+
+    <div class="board">
+      <Board rows={trial.board} />
     </div>
-    <div class="clock" class:low={seconds <= 10} role="timer" aria-label={strings.timeLeft}>
-      {strings.clock(seconds)}
-      {#if gained}
-        {#key gained.id}
-          <span class="gained">+{gained.seconds} s</span>
-        {/key}
+
+    <div class="play">
+      <WordPill {word} {waiting} onsubmit={() => wheel?.submit()} result={shown} />
+
+      <div class="controls">
+        <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
+        <button
+          class="round shuffle"
+          aria-label={strings.shuffle}
+          onclick={() => (tiles = shuffled(tiles, Math.random))}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
+          </svg>
+        </button>
+        <button
+          class="pass"
+          disabled={!trial.canPass}
+          onclick={() => {
+            recording?.active(false);
+            trial.pass();
+          }}
+        >
+          {strings.pass}
+          <small>{strings.passCost}</small>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <AchievementToast {unlocked} />
+
+  {#if trial.over}
+    <Dialog title={strings.timeUp}>
+      <p class="score">{strings.points(trial.points)}</p>
+      <ul>
+        <li>{strings.wheelsCleared(trial.result.cleared)}</li>
+        <li>{strings.wordsFound(trial.result.words)}</li>
+        {#if newWords > 0}
+          <li>{strings.dictionaryNew(newWords)}</li>
+        {/if}
+      </ul>
+      {#if bestBefore === null || trial.result.points > bestBefore.points}
+        <p class="best">{strings.newBest}</p>
+      {:else}
+        <p class="best">{strings.bestRun(bestBefore.points)}</p>
       {/if}
-    </div>
-    <div class="points" aria-label={strings.score}>{trial.points}</div>
-  </header>
-
-  <div class="board">
-    <Board rows={trial.board} />
-  </div>
-
-  <div class="play">
-    <WordPill {word} {waiting} onsubmit={() => wheel.submit()} result={shown} />
-
-    <div class="controls">
-      <LetterWheel bind:this={wheel} {tiles} onword={spell} onsubmit={submit} />
       <button
-        class="round shuffle"
-        aria-label={strings.shuffle}
-        onclick={() => (tiles = shuffled(tiles, Math.random))}
+        class="primary"
+        onclick={() => {
+          newWords = 0;
+          recording?.close();
+          recording = null;
+          attempted = false;
+          trial.restart();
+        }}
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />
-        </svg>
+        {strings.playAgain}
       </button>
-      <button class="pass" disabled={!trial.canPass} onclick={() => trial.pass()}>
-        {strings.pass}
-        <small>{strings.passCost}</small>
-      </button>
-    </div>
-  </div>
-</main>
-
-<AchievementToast {unlocked} />
-
-{#if trial.over}
-  <Dialog title={strings.timeUp}>
-    <p class="score">{strings.points(trial.points)}</p>
-    <ul>
-      <li>{strings.wheelsCleared(trial.result.cleared)}</li>
-      <li>{strings.wordsFound(trial.result.words)}</li>
-      {#if newWords > 0}
-        <li>{strings.dictionaryNew(newWords)}</li>
-      {/if}
-    </ul>
-    {#if bestBefore === null || trial.result.points > bestBefore.points}
-      <p class="best">{strings.newBest}</p>
-    {:else}
-      <p class="best">{strings.bestRun(bestBefore.points)}</p>
-    {/if}
-    <button
-      class="primary"
-      onclick={() => {
-        newWords = 0;
-        trial.restart();
-      }}
-    >
-      {strings.playAgain}
-    </button>
-    <button class="secondary" onclick={onback}>{strings.backHome}</button>
-  </Dialog>
+      <button class="secondary" onclick={onback}>{strings.backHome}</button>
+    </Dialog>
+  {/if}
+{:else}
+  <main class="play-screen"><p>{strings.loading}</p></main>
 {/if}
 
 <style>

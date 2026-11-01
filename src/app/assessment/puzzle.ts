@@ -62,18 +62,24 @@ export function isPuzzleResult(v: unknown): v is PuzzleResult {
   return isObject(v) && v.kind === 'puzzle' && words(v.found) && revealed(v.revealed);
 }
 
-/** Validates the game snapshot and reproduces its descriptor from stored ranks, not new data. */
+/** Validates the puzzle envelope plus the shared original puzzle snapshot. */
 export function isPuzzlePayload(v: unknown): v is PuzzlePayload {
-  if (
-    !isObject(v) ||
-    v.version !== 1 ||
-    !isPlace(v.place) ||
-    typeof v.replay !== 'boolean' ||
-    typeof v.presented !== 'boolean' ||
-    !isObject(v.level) ||
-    !isObject(v.session) ||
-    !isObject(v.descriptor)
-  )
+  return (
+    isObject(v) &&
+    v.version === 1 &&
+    isPlace(v.place) &&
+    typeof v.replay === 'boolean' &&
+    typeof v.presented === 'boolean' &&
+    isPuzzleSnapshot(v)
+  );
+}
+
+/** A puzzle's original content, difficulty and observed session, shared with trial wheels. */
+export type PuzzleSnapshot = Pick<PuzzlePayload, 'level' | 'session' | 'descriptor'>;
+
+/** Reproduces a snapshot's descriptor from stored ranks, independently of later dictionaries. */
+export function isPuzzleSnapshot(v: unknown): v is PuzzleSnapshot {
+  if (!isObject(v) || !isObject(v.level) || !isObject(v.session) || !isObject(v.descriptor))
     return false;
   const { level, session, descriptor } = v;
   if (

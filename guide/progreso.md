@@ -68,14 +68,17 @@ niveles completados.
 
 ## Registro local de partidas
 
-Los niveles y desafíos del día guardan, en tu dispositivo, las palabras que encontraste,
+Los niveles, desafíos del día y partidas de Contrarreloj guardan, en tu dispositivo,
+las palabras que encontraste,
 las letras reveladas con pistas y el tiempo de juego observado. El tiempo incluye pensar:
 se pausa cuando abrís un diálogo, salís del nivel o dejás la app en segundo plano. Si falta
 un tramo de tiempo, queda marcado como incierto.
 
 Este registro prepara una futura vista de tu progreso: todavía no hay una puntuación de
 habilidad. Volver a una rueda conocida queda como práctica, porque ya tenés ventaja al
-recordar las respuestas. Tus puntos, estrellas y logros siguen funcionando igual.
+recordar las respuestas. En Contrarreloj, alcanza con que se repita una rueda para que
+la partida quede como práctica para esa futura puntuación. Tus puntos, estrellas y logros
+siguen funcionando igual.
 
 **Empezar de cero** conserva este registro, igual que Tu diccionario. Borrar los datos
 del sitio en el navegador sí elimina todo. No se manda a un servidor ni se comparte con
