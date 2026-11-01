@@ -1,8 +1,53 @@
 import { expect, it } from 'vitest';
 import { eligibilityOf, exposureFor, type Attempt } from '../../core/assessment/attempt';
-import { puzzleIdentity, type GramaResult } from './grama';
+import { describePuzzle, puzzleIdentity, type GramaResult } from './grama';
+import { levelScore } from '../../core/difficulty';
 
 const puzzle = { letters: [...'PLATOS'], targets: ['PLATOS', 'SAL', 'SOL'] };
+
+it('describes target difficulty with the existing formula and keeps board size separate', () => {
+  const ranks = new Map([
+    ['PLATOS', 999],
+    ['SAL', 99],
+    ['SOL', 49],
+  ]);
+  const descriptor = describePuzzle({ ...puzzle, tier: 'easy' }, ranks);
+  expect(descriptor).toMatchObject({ version: 1, wheelSize: 6, targetCount: 3, tier: 'easy' });
+  expect(descriptor.score).toBeCloseTo(
+    levelScore(
+      puzzle.targets.map((word) => ({ length: word.length, rank: ranks.get(word)! })),
+      6,
+    ),
+  );
+  expect(descriptor.targets.find(({ word }) => word === 'PLATOS')).toEqual({
+    word: 'PLATOS',
+    length: 6,
+    rank: 999,
+  });
+  expect(
+    describePuzzle({ ...puzzle, tier: 'easy', targets: [...puzzle.targets].reverse() }, ranks),
+  ).toEqual(descriptor);
+});
+
+it.each([undefined, -1, Infinity, Number.NaN, 0.5])(
+  'retains unknown rank %s explicitly, without a fabricated score',
+  (rank) => {
+    const ranks = rank === undefined ? new Map<string, number>() : new Map([['SOL', rank]]);
+    const descriptor = describePuzzle(
+      { letters: [...'PLATOS'], targets: ['SOL'], tier: 'easy' },
+      ranks,
+    );
+    expect(descriptor.targets).toEqual([{ word: 'SOL', length: 3, rank: null }]);
+    expect(descriptor.score).toBeNull();
+  },
+);
+
+it('distinguishes rank zero from a missing word and avoids an empty-board NaN', () => {
+  expect(
+    describePuzzle({ ...puzzle, tier: 'easy', targets: ['SOL'] }, new Map([['SOL', 0]])).score,
+  ).toBe(0);
+  expect(describePuzzle({ ...puzzle, tier: 'easy', targets: [] }, new Map()).score).toBeNull();
+});
 
 it('keeps assistance in completed puzzle evidence and skipped wheels in trial evidence', () => {
   const attempt: Attempt<GramaResult> = {

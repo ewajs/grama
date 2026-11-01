@@ -8,6 +8,26 @@ delete it, the history is the point.
 
 ---
 
+## D28 · Assessment difficulty snapshots and observable active time — 2026-11-01
+
+- **Decision:** snapshot versioned puzzle features (wheel/target counts, word lengths,
+  zero-based ranks, existing difficulty score and tier). Missing/invalid ranks stay
+  null and suppress the aggregate score. Keep the tier supplied by the level, even
+  when a historical rank lookup is incomplete; it is not a calibrated rating.
+- **Time:** count visible, interactive play, including thinking without input. Pause
+  for hidden apps, blocking dialogs and leaving a puzzle screen. Use supplied monotonic
+  samples tagged with a clock-domain/visit ID; never subtract across visits.
+- **Recovery:** a saved paused checkpoint can resume reliably. A running checkpoint
+  restored after a reload, an unexplained suspension or an invalid/backward/domain-
+  changing sample preserves known time and marks timing uncertain permanently. Never
+  reconstruct active time from wall-clock differences. A finalized clock is immutable.
+- **Why:** completion and assistance alone do not describe solving effort. We need raw
+  difficulty and reliable duration before comparing performances, while avoiding
+  fabricated precision after interruptions. Browser event coordination and durable
+  checkpoints are M22 work; M21 only defines and tests the pure transitions.
+- **Revisit:** timing quality thresholds and rating calibration after real local
+  observations exist; no idle-time cutoff is inferred from missing input.
+
 ## D27 · Personal assessment: first exposure and original evidence — 2026-11-01
 
 - **Decision:** estimate ability per game/track and improvement against personal
