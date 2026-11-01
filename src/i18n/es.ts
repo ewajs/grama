@@ -205,6 +205,13 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.21',
+      items: [
+        'El desafío del día se actualiza al abrirlo después de medianoche, aunque no hayas cerrado la app.',
+        'Mejoramos el manejo del progreso guardado para evitar errores al abrir el juego.',
+      ],
+    },
+    {
       version: '0.20',
       items: [
         'Los niveles difíciles piden más palabras: hasta 10 en los extra difíciles.',

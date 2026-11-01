@@ -301,7 +301,7 @@ letters often ask for 10 words, still readable.
 **Verify:** regression tests reproduce the review findings; check, e2e, docs and guide
 builds pass without changing generated levels or the save format.
 
-### M21 — Assessment contract
+### M21 — Assessment contract · `v0.21.0`
 
 Goal: define personal skill evidence before recording play or displaying ratings (D27).
 
@@ -309,7 +309,9 @@ Goal: define personal skill evidence before recording play or displaying ratings
       eligibility and regression fixtures; document lifecycle integration points
 - [x] Derive versioned Grama difficulty descriptors from existing word ranks; specify
       timing/checkpoint quality and interruption rules before instrumentation
-- [ ] Release M20/M21 foundations with version, changelog, player news and tag
+- [x] Prepare the M20/M21 release: version, changelog and player news
+
+**After merge:** tag the merged release commit `v0.21.0`.
 
 **Verify:** equivalent puzzles stay recognized across shuffles, modes and content releases;
 resuming retains its encounter, restarting is practice, unknown exposure is excluded.
@@ -373,6 +375,11 @@ service-worker scope before deployment changes. No accounts or shared player dat
   before/after screenshots of UI changes
 
 ## Changelog
+
+- **v0.21.0** (M20/M21) — Reliability fixes for blocked storage, malformed saves and
+  opening the daily after midnight. Assessment foundations: first-exposure eligibility,
+  replay recognition, versioned difficulty descriptors and pure timing/checkpoint rules.
+  Assessment recording and player ratings are not enabled yet.
 
 - **v0.20.0** (M19) — Bigger hard levels: harder tiers ask for more target words (on 8
   letters, 7 easy up to 10 extra hard; dailies too), with levels in play starting over;
