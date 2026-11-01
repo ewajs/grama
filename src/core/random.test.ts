@@ -18,13 +18,13 @@ describe('shuffled', () => {
 
   it('leaves the input untouched', () => {
     const items = ['A', 'B', 'C'];
-    shuffled(items);
+    shuffled(items, sequence(0.5));
     expect(items).toEqual(['A', 'B', 'C']);
   });
 
   it('handles empty and single-item lists', () => {
-    expect(shuffled([])).toEqual([]);
-    expect(shuffled(['A'])).toEqual(['A']);
+    expect(shuffled([], sequence(0.5))).toEqual([]);
+    expect(shuffled(['A'], sequence(0.5))).toEqual(['A']);
   });
 });
 

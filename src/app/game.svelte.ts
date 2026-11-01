@@ -408,6 +408,7 @@ export class Game {
 
   /** Plays today's daily challenge, picking up where it was left. */
   playDaily(): void {
+    this.refreshDate();
     this.#leaveLevel();
     this.#mode = { kind: 'daily', date: this.#today };
   }

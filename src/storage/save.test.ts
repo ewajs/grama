@@ -64,3 +64,52 @@ describe('saving and loading', () => {
     expect(loadGame(blocked)).toBeNull();
   });
 });
+
+describe('save validation', () => {
+  const record = {
+    tier: 'easy',
+    difficulty: 'normal',
+    occurrence: 0,
+    stars: 2,
+    hints: 0,
+    bonus: 0,
+    targets: 5,
+  };
+  it('restores nested sessions, records and occurrence counts', () => {
+    const storage = memoryStorage();
+    const progress = {
+      ...state,
+      occurrences: { 'easy:6': 2 },
+      history: { 1: record },
+      daily: { date: '2026-10-19', session: state.session },
+      dailies: { '2026-10-19': record },
+    } as Progress;
+    saveGame(progress, storage);
+    expect(loadGame(storage)).toEqual(progress);
+  });
+
+  it.each([
+    { history: { 1: null } },
+    { history: { 1: { ...record, stars: 4 } } },
+    { history: { 1: { ...record, occurrence: -1 } } },
+    { dailies: { 'not-a-date': record } },
+    { dailies: { '2026-02-30': record } },
+    { dailies: { '2026-10-19': { ...record, tier: 'unknown' } } },
+    { occurrences: { 'easy:6': 'two' } },
+    { occurrences: [] },
+    { session: { ...NEW_SESSION, revealed: { CASA: -1 } } },
+    { session: { ...NEW_SESSION, hintsWon: undefined } },
+    { daily: { date: '2026-10-19', session: { found: [] } } },
+    { daily: { date: '2026-10-19', session: { ...NEW_SESSION, found: [null] } } },
+    { hints: -1 },
+    { bonusTowardHint: 10 },
+    { score: -1 },
+  ])('rejects malformed progress: %j', (changes) => {
+    const storage = memoryStorage();
+    saveGame(state, storage);
+    const saved = JSON.parse(storage.getItem('grama.save') ?? '');
+    saved.progress = { ...saved.progress, ...changes };
+    storage.setItem('grama.save', JSON.stringify(saved));
+    expect(loadGame(storage)).toBeNull();
+  });
+});

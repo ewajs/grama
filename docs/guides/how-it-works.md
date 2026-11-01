@@ -157,7 +157,7 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 1. {@link "core/cadence"!tierFor | tierFor}(21, `normal`) says **extra hard** (the seventh in its
    cycle); the player's progress counts one extra-hard 7-letter level before it
    ({@link "core/progress"!currentPlace | currentPlace}), so it gets the second block of seeds.
-2. {@link "core/generate"!levelShape | levelShape}(21): 7 letters, up to 8 targets.
+2. {@link "core/generate"!levelShape | levelShape}(21, `extra`): 7 letters, up to 9 targets.
 3. The extra-hard seed order holds 7-letter words ranked 8,000–20,000, one per set of
    letters, shuffled once (seeded, so always the same order).
 4. For each seed in its block: shuffle the letters (seeded by the level number), find every
@@ -170,7 +170,7 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 1. Home reads {@link "app/game.svelte"!Game.today | Game.today}. `Game` reads the date from its clock
    ({@link "app/clock"!today | today}, unless a test passes another) when it starts, and again
    with {@link "app/game.svelte"!Game.refreshDate | refreshDate} when the app comes back to the
-   foreground, since a PWA can sleep past midnight. From the date,
+   foreground or a daily is opened, since a visit can cross midnight. From the date,
    {@link "core/daily"!dailyNumber | dailyNumber} gives its number,
    {@link "core/daily"!dailyTier | dailyTier} its weekday tier and {@link "core/daily"!streakOf | streakOf} the streak.
 2. "Desafío del día" calls `game.playDaily()`: the mode becomes the daily, and

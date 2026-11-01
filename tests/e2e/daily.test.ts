@@ -58,3 +58,16 @@ test('seven days in a row earn a streak freeze, shown on the home screen', async
   await expect(daily).toContainText('🔥 7');
   await expect(daily.getByRole('img', { name: /Racha protegida/ })).toBeVisible();
 });
+
+test('opening the daily after foreground midnight uses the new date', async ({ page }) => {
+  await page.clock.install({ time: new Date(2026, 9, 19, 23, 59) });
+  await page.goto('./');
+  await page.getByRole('button', { name: /^Desafío del día/ }).click();
+  await expect(page.getByText('Desafío #1', { exact: true })).toBeVisible();
+  await page.clock.setSystemTime(new Date(2026, 9, 20, 0, 1));
+  // A daily already being played retains its date; opening another reads the clock.
+  await expect(page.getByText('Desafío #1', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Volver al inicio', exact: true }).click();
+  await page.getByRole('button', { name: /^Desafío del día/ }).click();
+  await expect(page.getByText('Desafío #2', { exact: true })).toBeVisible();
+});

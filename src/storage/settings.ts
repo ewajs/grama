@@ -47,10 +47,10 @@ const KEY = 'grama.settings';
  * new option never wipes the others.
  * @param storage Where settings live; `localStorage` unless a test passes another.
  */
-export function loadSettings(storage: Pick<Storage, 'getItem'> = localStorage): Settings {
+export function loadSettings(storage?: Pick<Storage, 'getItem'>): Settings {
   let saved: Record<string, unknown> = {};
   try {
-    const parsed: unknown = JSON.parse(storage.getItem(KEY) ?? '{}');
+    const parsed: unknown = JSON.parse((storage ?? localStorage).getItem(KEY) ?? '{}');
     if (typeof parsed === 'object' && parsed !== null) saved = parsed as Record<string, unknown>;
   } catch {
     // Unreadable or blocked: defaults it is.
@@ -73,9 +73,9 @@ export function loadSettings(storage: Pick<Storage, 'getItem'> = localStorage): 
  * Saves the settings. If storage is full or blocked they last until the page closes.
  * @param storage Where settings live; `localStorage` unless a test passes another.
  */
-export function saveSettings(settings: Settings, storage: Pick<Storage, 'setItem'> = localStorage) {
+export function saveSettings(settings: Settings, storage?: Pick<Storage, 'setItem'>) {
   try {
-    storage.setItem(KEY, JSON.stringify(settings));
+    (storage ?? localStorage).setItem(KEY, JSON.stringify(settings));
   } catch {
     // Not worth interrupting the player over.
   }

@@ -292,6 +292,15 @@ shows Grama, not a blank screen.
 **Verify:** Home fits an iPhone from the X up without scrolling; extra-hard levels on 8
 letters often ask for 10 words, still readable.
 
+### M20 — Review hardening
+
+- [x] Harden blocked storage and nested saves, refresh newly opened dailies after midnight,
+      exercise real level occurrences in difficulty tests, and keep shuffle randomness at
+      the UI edge; correct the daily target count in the guides
+
+**Verify:** regression tests reproduce the review findings; check, e2e, docs and guide
+builds pass without changing generated levels or the save format.
+
 ## Backlog (post-MVP, unordered)
 
 - More hint types (reveal a whole word, a letter in every row)
