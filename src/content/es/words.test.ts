@@ -100,7 +100,8 @@ describe('Spanish word lists', () => {
     const count = 210;
     for (let number = 1; number <= count; number++) {
       if (
-        generateLevel(words, number, tierFor(number, 'normal')).tier === tierFor(number, 'normal')
+        generateLevel(words, number, tierFor(number, 'normal'), occurrence(number, 'normal'))
+          .tier === tierFor(number, 'normal')
       )
         hits++;
     }

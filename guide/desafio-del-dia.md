@@ -7,7 +7,7 @@ pantalla de inicio.
 
 ## Cómo es
 
-- Siempre tiene **7 letras** y hasta 8 palabras en el tablero. No repite un desafío
+- Siempre tiene **7 letras** y hasta 9 palabras en el tablero. No repite un desafío
   reciente ni uno de tus niveles.
 - Su dificultad depende del **día de la semana**, y sube hacia el domingo:
 
@@ -18,7 +18,8 @@ pantalla de inicio.
 - Se guarda mientras lo jugás: podés dejarlo y seguir más tarde, el mismo día.
 - Los puntos y las pistas son los mismos que en tus niveles, pero el desafío no cambia tu
   nivel actual.
-- Cambia a medianoche, según la hora de tu teléfono.
+- Cambia a medianoche, según la hora de tu teléfono. Si ya lo estás jugando, podés
+  terminar ese desafío; al abrirlo de nuevo desde el inicio, jugás el del nuevo día.
 
 ## La racha
 

@@ -164,7 +164,7 @@ is open and the app is visible; when time is up, a summary offers another run.
       <button
         class="round shuffle"
         aria-label={strings.shuffle}
-        onclick={() => (tiles = shuffled(tiles))}
+        onclick={() => (tiles = shuffled(tiles, Math.random))}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3 7h3c4 0 6 10 10 10h5M3 17h3c4 0 6-10 10-10h5m-3-3 3 3-3 3m0 4 3 3-3 3" />

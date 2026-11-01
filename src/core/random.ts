@@ -22,9 +22,9 @@ export function seededRandom(seed: number): () => number {
 /**
  * A copy of `items` in a random order, always different from the original when there
  * are two or more items (so pressing "shuffle" visibly does something).
- * @param random Source of numbers in [0, 1); pass a seeded one for repeatable results.
+ * @param random Source of numbers in [0, 1), supplied by the caller; seeded for repeatable results.
  */
-export function shuffled<T>(items: readonly T[], random: () => number = Math.random): T[] {
+export function shuffled<T>(items: readonly T[], random: () => number): T[] {
   const result = items
     .map((item) => ({ item, key: random() }))
     .sort((a, b) => a.key - b.key)

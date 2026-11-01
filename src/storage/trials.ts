@@ -12,9 +12,9 @@ const KEY = 'grama.trials';
  * The saved record, or a new one when there is none or it can't be read.
  * @param storage Where it lives; `localStorage` unless a test passes another.
  */
-export function loadTrials(storage: Pick<Storage, 'getItem'> = localStorage): TrialRecord {
+export function loadTrials(storage?: Pick<Storage, 'getItem'>): TrialRecord {
   try {
-    const saved: unknown = JSON.parse(storage.getItem(KEY) ?? 'null');
+    const saved: unknown = JSON.parse((storage ?? localStorage).getItem(KEY) ?? 'null');
     return isRecord(saved) ? saved : NEW_TRIAL_RECORD;
   } catch {
     return NEW_TRIAL_RECORD;
@@ -25,9 +25,9 @@ export function loadTrials(storage: Pick<Storage, 'getItem'> = localStorage): Tr
  * Saves the record. If storage is full or blocked, it lasts until the page closes.
  * @param storage Where it lives; `localStorage` unless a test passes another.
  */
-export function saveTrials(record: TrialRecord, storage: Pick<Storage, 'setItem'> = localStorage) {
+export function saveTrials(record: TrialRecord, storage?: Pick<Storage, 'setItem'>) {
   try {
-    storage.setItem(KEY, JSON.stringify(record));
+    (storage ?? localStorage).setItem(KEY, JSON.stringify(record));
   } catch {
     // Not worth interrupting the player over.
   }

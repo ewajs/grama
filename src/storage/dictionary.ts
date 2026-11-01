@@ -12,9 +12,9 @@ const KEY = 'grama.words';
  * The saved dictionary, or an empty one when there is none or it can't be read.
  * @param storage Where it lives; `localStorage` unless a test passes another.
  */
-export function loadDictionary(storage: Pick<Storage, 'getItem'> = localStorage): Dictionary {
+export function loadDictionary(storage?: Pick<Storage, 'getItem'>): Dictionary {
   try {
-    const saved: unknown = JSON.parse(storage.getItem(KEY) ?? 'null');
+    const saved: unknown = JSON.parse((storage ?? localStorage).getItem(KEY) ?? 'null');
     return Array.isArray(saved) && saved.every((word) => typeof word === 'string')
       ? saved
       : NEW_DICTIONARY;
@@ -27,12 +27,9 @@ export function loadDictionary(storage: Pick<Storage, 'getItem'> = localStorage)
  * Saves the dictionary. If storage is full or blocked, it lasts until the page closes.
  * @param storage Where it lives; `localStorage` unless a test passes another.
  */
-export function saveDictionary(
-  dictionary: Dictionary,
-  storage: Pick<Storage, 'setItem'> = localStorage,
-) {
+export function saveDictionary(dictionary: Dictionary, storage?: Pick<Storage, 'setItem'>) {
   try {
-    storage.setItem(KEY, JSON.stringify(dictionary));
+    (storage ?? localStorage).setItem(KEY, JSON.stringify(dictionary));
   } catch {
     // Not worth interrupting the player over.
   }

@@ -102,6 +102,17 @@ describe('Game', () => {
     expect(game.today).toMatchObject({ date: '2026-10-21', number: 3, tier: 'medium' });
   });
 
+  it('opens today’s daily after midnight without a visibility change', () => {
+    const { game, date } = newGame();
+    game.playDaily();
+    date.now = '2026-10-20';
+    expect(game.dailyOnScreen?.date).toBe('2026-10-19');
+    game.playCurrent();
+    game.playDaily();
+    expect(game.dailyOnScreen?.date).toBe('2026-10-20');
+    expect(game.today.date).toBe('2026-10-20');
+  });
+
   it('keeps the daily on screen when the day changes', () => {
     const { game, date } = newGame();
     expect(game.dailyOnScreen).toBeNull();
