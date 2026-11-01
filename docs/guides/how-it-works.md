@@ -209,6 +209,8 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 
 ## Assessment contract (M21–M22)
 
+For the M23 estimator work, see [Skill model candidates](./skill-model.md).
+
 `core/assessment/attempt` defines original evidence independently of a game: attempt
 identity and local sequence, game/track/mode, rules/content versions, supplied timestamps,
 active duration and timing quality, exposures, and completion with a game-specific result.
