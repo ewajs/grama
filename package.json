@@ -17,6 +17,7 @@
     "test": "vitest",
     "e2e": "playwright test",
     "audit": "npm audit --omit=dev",
+    "assessment:evaluate": "node scripts/assessment/evaluate.ts",
     "budget": "node scripts/budget.ts",
     "docs": "typedoc",
     "words": "node scripts/prepare-words.ts",

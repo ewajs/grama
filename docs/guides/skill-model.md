@@ -51,8 +51,42 @@ comparisons require an evaluated extension; no conversion is silently applied he
 Ghost ratings derived from the same player's history also do not establish an absolute
 external scale. Keep personal baseline comparisons distinct from calibrated ability.
 
-Next: implement comparable personal baselines and seeded evaluation tooling, then choose
+Next: validate Grama cohort/outcome projections against recorded evidence, then choose
 an evidence model and period policy against published acceptance thresholds. Test plateau,
 improvement, decline, challenge mix, assistance, missing evidence and repeated easy play.
 Retain replay/unknown/timing exclusions already defined by `eligibilityOf`; unavailable
 or ceiling-limited evidence must remain explicit before a numeric progress view ships.
+
+## Personal baseline experiment
+
+`core/assessment/baseline` takes eligible samples in caller-supplied comparable cohorts.
+It retains the first ten distinct attempts as reference and the latest ten subsequent
+attempts as recent evidence. Each recent attempt gets one ordinal win/tie/loss average
+against reference. The summary waits for both windows; its sample count is ten recent
+attempts, not one hundred independent comparisons. IDs and sequence order are retained,
+exact duplicates collapse, conflicts fail, and separate cohorts never share a baseline.
+Late-arriving older evidence can change the reference on recomputation; provenance stays
+visible. This is a descriptive comparison, with no ability scale or confidence interval.
+
+Run `npm run assessment:evaluate` for reproducible JSON (128 seeds, 60 attempts each).
+Optional arguments select seed count and starting seed, so later acceptance tests can use
+a disjoint range. The report embeds protocol constants. Synthetic skill changes by ±200
+after the reference window; performance has logistic noise of scale 200. Each distinct
+attempt is one experimental Glicko period. These choices are not calibrated Grama policy.
+
+Exploratory seeds 0–127 give mean baseline comparisons 0.4941 for stable performance,
+0.6594 after improvement, and 0.3355 after decline. Separate easy/hard cohorts remain
+near 0.5 when only the challenge mix changes. Perfect easy outcomes tie at 0.5, while
+the fixed-challenge Glicko hypothesis gains 138.15 points after its reference period:
+censored completion cannot identify a ceiling or establish unchanged latent ability.
+
+Duplicating inputs leaves baseline windows/counts unchanged. The deliberately invalid
+negative control treats each result as twenty identical independent matches: first-period
+RD falls from 247.19 to 76.17, and all 128 runs later hit the numerical failure guard.
+Failures are counted and the final mean is withheld, rather than averaging surviving
+runs or substituting unchanged ratings. This is not an evaluation of every ghost design.
+Inactivity keeps the mean unchanged; ninety supplied idle periods add uncertainty.
+
+These are exploratory checks, not acceptance thresholds or real-world validation. Grama
+cohort/outcome projection and model selection remain the next tasks; existing eligibility
+rules must gate that projection before any player-facing estimate is connected.

@@ -8,6 +8,18 @@ delete it, the history is the point.
 
 ---
 
+## D34 · Compare against a fixed personal reference — 2026-11-01
+
+- **Candidate:** first-ten versus latest-ten distinct comparable attempts, using ordinal
+  wins/ties/losses with one recent score per attempt. Sparse cohorts have no summary.
+  Retain identity/sequence provenance, reject conflicting duplicates, and never pool
+  cohorts or describe pair counts as independent samples or confidence.
+- **Evaluation:** deterministic synthetic scenarios compare this baseline and the Glicko
+  candidate. Count numerical failures in the twenty-copy negative control; do not turn
+  them into unchanged estimates. Seed ranges and assumptions are explicit in the output.
+- **Scope:** this step supplies the comparison and evaluation tools. Grama cohort/outcome
+  calibration is a separate PLAN task before model selection. See the [experiment](./guides/skill-model.md#personal-baseline-experiment).
+
 ## D33 · Validate skill models before displaying a rating — 2026-11-01
 
 - **Priority:** defer full-profile backup/restore and remaining M22 history controls at
