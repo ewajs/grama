@@ -8,6 +8,28 @@ delete it, the history is the point.
 
 ---
 
+## D27 · Personal assessment: first exposure and original evidence — 2026-11-01
+
+- **Decision:** estimate ability per game/track and improvement against personal
+  baselines, using only local observations. Glicko-2 is a candidate model, not the game
+  adapter contract. No overall rating or population ranking in this phase.
+- **Replay:** known repeated content has zero weight in the main skill estimate.
+  Exposure begins when content is shown, including abandoned attempts. A resumed
+  encounter keeps its identity; a restart gets a new one. Unknown old exposure stays
+  explicit and is initially excluded. Game reset must not erase assessment exposure.
+- **Grama:** exact puzzle identity is sorted normalized letters and sorted targets;
+  exposure identity is the letter multiset alone, across all modes and content versions.
+  Remembered words help even when target selection changes. A trial with any repeated
+  wheel is initially excluded, including repetition within a run.
+- **Why:** independent fresh performances support assessment; replay performance also
+  reflects memory of answers. Comparing one run with many ghosts does not create many
+  independent observations. Preserve original observations for later model evaluation.
+- **Costs accepted:** conservative exclusion, especially for existing players with
+  incomplete history; fewer eligible trial runs. Eligibility admits evidence for a
+  future model, not an automatic rating change. Unfinished attempts are not losses.
+- **Delivery:** M21–M26 in PLAN.md. Define contracts first, then local recording, model
+  validation, progress UI, recommendations, and extraction with a second game.
+
 ## D26 · Harder tiers ask for more targets — 2026-10-20
 
 - **Decision:** each size has a most-targets per tier (`SIZES`, `DAILY_SIZE`): on 8

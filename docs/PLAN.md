@@ -301,6 +301,63 @@ letters often ask for 10 words, still readable.
 **Verify:** regression tests reproduce the review findings; check, e2e, docs and guide
 builds pass without changing generated levels or the save format.
 
+### M21 — Assessment contract
+
+Goal: define personal skill evidence before recording play or displaying ratings (D27).
+
+- [x] Define the shared attempt contract, Grama payloads and content identity, replay
+      eligibility and regression fixtures; document lifecycle integration points
+- [ ] Derive versioned Grama difficulty descriptors from existing word ranks; specify
+      timing/checkpoint quality and interruption rules before instrumentation
+
+**Verify:** equivalent puzzles stay recognized across shuffles, modes and content releases;
+resuming retains its encounter, restarting is practice, unknown exposure is excluded.
+
+### M22 — Durable local history
+
+- [ ] Versioned IndexedDB store: exposure, attempts, checkpoints and idempotent completion
+- [ ] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
+- [ ] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
+- [ ] Bounded retention, export/import, assessment deletion and player documentation
+
+**Verify:** one attempt is recorded once; storage failures never interrupt play.
+
+### M23 — Validate skill models
+
+- [ ] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
+- [ ] Comparable personal baselines and seeded simulation/evaluation tooling
+- [ ] Select and document an evidence model after plateau, improvement, decline, easy
+      repetition, missing attempts and confidence tests; publish acceptance thresholds
+
+**Verify:** repeated easy success and duplicate evidence cannot imply unsupported skill;
+prefer descriptive progress where observations cannot support a numeric estimate.
+
+### M24 — Personal progress
+
+- [ ] Reactive projections and a Home entry with word-solving and Contrarreloj tracks
+- [ ] Confidence, sample counts, baseline comparisons and versioned history visualization
+- [ ] Accessible export/deletion controls, explanatory text and player guide
+
+**Verify:** sparse, uncertain, imported and recalculated history are explained truthfully.
+
+### M25 — Challenge recommendations
+
+- [ ] Pure difficulty/variety selection policy with injected randomness
+- [ ] Opt-in practice/assessment using Grama's existing board and wheel
+- [ ] A consistent short benchmark protocol if ordinary play cannot locate skill reliably
+
+**Verify:** relaxing play remains available; numbered levels and the daily retain their
+existing generation and progression.
+
+### M26 — Second game and platform
+
+- [ ] Select and implement a small second game with its own assessment adapter
+- [ ] Extract proven assessment/profile workspace packages and adapter conformance tests
+- [ ] Shared local profile, game picker and offline platform shell; preserve Grama saves
+
+**Verify:** the second game requires no Grama concepts in shared scoring; decide URL and
+service-worker scope before deployment changes. No accounts or shared player data.
+
 ## Backlog (post-MVP, unordered)
 
 - More hint types (reveal a whole word, a letter in every row)
