@@ -206,3 +206,34 @@ The UI's own helpers are plain TypeScript in `src/ui/lib`:
 5. `src/core/generate.ts` with the [Difficulty guide](./difficulty.md): where levels come
    from.
 6. `docs/GAME.md` for the rules as a player sees them, `docs/DECISIONS.md` for why.
+
+## Assessment contract (M21; not wired into play yet)
+
+`core/assessment/attempt` defines original evidence independently of a game: attempt
+identity and local sequence, game/track/mode, rules/content versions, supplied timestamps,
+active duration and timing quality, exposures, and completion with a game-specific result.
+Active attempts include pauses and reloads; abandoned attempts are retained without
+being treated as losses. Assistance remains in the outcome for a future model.
+
+`app/assessment/grama` supplies puzzle identity and result payloads. Inputs use Level's
+normalized words. Exact identity retains targets; exposure groups all puzzles with the
+same letter multiset, even across modes, target changes and generator versions. Familiar
+words on a different wheel are ordinary learned skill, not recognized replay content.
+
+The recorder will call `exposureFor` before showing each puzzle and persist its returned
+classification. Encounter IDs must survive resume and be new on restart; each trial
+wheel gets its own encounter, even within one run. Coverage is partial when old exposure
+history is incomplete. Do not promote unknown history to fresh after a reload or reset.
+`eligibilityOf` excludes unfinished attempts, any repeated or unknown exposure, missing
+exposure and uncertain timing. Admission is not a claim of measured skill: difficulty,
+outcome calibration and statistical independence are later model responsibilities.
+
+Integration in M22: Game's current place starts/resumes a puzzle encounter when ready
+and visible, submissions/hints update a checkpoint, and first completion finalizes once.
+Opening an overlay or backgrounding pauses active timing; returning home keeps an
+unfinished numbered/daily attempt available to resume. Trial starts one run attempt,
+records each wheel presentation (including skipped ones), finalizes at time-up and records
+abandonment on leaving. An uncertain checkpoint or legacy partial session is marked
+uncertain. ID/clock reads, storage and reactive coordination belong in app/storage;
+these contract modules remain pure. Existing Session/Progress and generator output do
+not change. No assessment data is recorded by this PR.
