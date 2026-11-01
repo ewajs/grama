@@ -279,3 +279,35 @@ copy `activeMs` and `timing` from its clock, and finalize at most once by attemp
 A full checkpoint must reconcile clock, encounter IDs, exposure classification and game
 session; a mismatch or pre-instrumentation partial save is uncertain. Existing saves
 contain no such observations. Wall-clock timestamps never supply missing active time.
+
+### Assessment checkpoint storage (M22, not yet connected)
+
+`storage/assessment` opens `grama.assessment` at schema 1 and checks store key paths and
+indexes. `checkpoints` is keyed by attempt ID; `exposures` by encounter ID with a content
+key index. `attempts` (with a unique sequence index) and `meta` are prepared for the next
+storage cycle. No finalized-attempt writes or sequence allocation exist yet.
+
+`openAssessment` takes a game-specific payload guard. `Checkpoint` wraps an active
+attempt, its timing checkpoint and that payload, with record version 1. The shared
+validator checks IDs, versions, sequence, finite nonnegative times, exposure classifications
+and clock/attempt consistency; the supplied guard checks the game state and challenge
+snapshots. Define that adapter guard before wiring a real Grama recorder. Loaded running
+clocks still require the normal `restore` transition before resuming.
+
+`saveCheckpoint` clones and validates its input, then commits ledger and checkpoint
+atomically. Exposure classification happens against transaction-local history, including
+other wheels in the same write. Use the returned checkpoint's canonical classifications,
+not the proposed ones. Existing encounter classifications survive resume; a reused ID
+with different content aborts the transaction. Corrupt data returns invalid-data rather
+than missing history. An interrupted transaction cannot leave half an exposure update.
+
+All operations return explicit results; open can report unavailable/blocked/unsupported
+version, and record operations can report invalid data/conflict/failure. Unsupported
+newer databases are preserved. Call `close` on teardown; version changes close the
+connection automatically. Checkpoint writes to the same attempt still use last-write-wins:
+finalization, optimistic revisions, sequence allocation and competing-writer protection
+are the next PLAN task. Do not connect recording to gameplay until that task is complete.
+
+Browser tests compile the actual module into an in-memory library bundle and serve it
+only through a Playwright route. They use native IndexedDB on the production app's
+origin in Chromium and WebKit, without adding a test hook or extra entry to the game.
