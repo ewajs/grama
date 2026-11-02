@@ -324,29 +324,42 @@ remain uncertain.
 - [x] Idempotent finalization, sequence allocation and conflicting/stale-writer handling
 - [x] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
 - [x] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
-- [ ] Bounded retention and assessment deletion controls/documentation — deferred while M23 proceeds
+- [ ] Bounded retention and assessment deletion controls/documentation — deferred while the M24 replacement ships
 - [ ] Full-profile backup and restore (game progress plus assessment history) — deferred by owner
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
 
-### M23 — Validate skill models
+### M23 — Skill-model experiments (further research deferred by D37)
 
 - [x] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
 - [x] Comparable baseline comparisons and seeded candidate evaluation tooling
 - [x] Validate Grama cohort/outcome projections against recorded evidence
-- [ ] After beta feedback: select and document an evidence model after plateau, improvement, decline, easy
-      repetition, missing attempts and confidence tests; publish acceptance thresholds
+- [ ] Optional later research: evaluate calibrated skill models and publish acceptance
+      thresholds if a calibrated rating becomes useful; not a gate for M24 (D37)
 
 **Verify:** repeated easy success and duplicate evidence cannot imply unsupported skill;
 prefer descriptive progress where observations cannot support a numeric estimate.
 
-### M24 — Personal progress
+### M24 — Useful personal progress (D37)
 
 - [x] Beta progress screen: Home entry, recent real outcomes, sample counts and available personal comparisons
-- [ ] Refine history visualization and uncertainty explanations from beta feedback
-- [ ] Accessible export/deletion controls, explanatory text and player guide
+- [x] Record the decision and replacement delivery plan (`docs/PROGRESS-PLAN.md`)
+- [x] Cycle 1: provisional difficulty-adjusted puzzle performance, immediate scoring,
+      recent-five smoothing and simple trend; separate timed-mode results; documented
+      formula/constants and focused tests
+- [ ] Cycle 2: replace cohort beta UI with current score, trend, accessible history and
+      concise explanation; update game/developer/player docs and browser tests
+- [ ] Cycle 3: optional local history download for easy investigation, without a GitHub
+      requirement or prescribed beta workload
+- [ ] Follow-up: accessible assessment deletion controls and bounded-retention documentation
 
-**Verify:** sparse, uncertain, imported and recalculated history are explained truthfully.
+**Delivery:** implement the reasonable initial model now; refine later. Friends play
+normally. Model research and large feedback datasets are not prerequisites. See
+[`PROGRESS-PLAN.md`](./PROGRESS-PLAN.md) for scope and documents to update.
+
+**Verify:** one usable puzzle completion yields a score; sparse history is useful;
+missing timing does not discard usable results; practice cannot inflate the estimate;
+no cohort quotas or recording diagnostics appear in the normal player flow.
 
 ### M25 — Challenge recommendations
 

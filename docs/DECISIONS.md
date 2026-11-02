@@ -8,6 +8,38 @@ delete it, the history is the point.
 
 ---
 
+## D37 · Ship understandable progress with a provisional metric — 2026-11-02
+
+- **Decision:** replace the cohort-comparison beta with a useful personal performance
+  metric. Choose and document reasonable initial constants in the implementation;
+  refine them later from ordinary play. Formal model selection and large beta datasets
+  are not prerequisites. This supersedes D36's feedback-first delivery order and
+  D33–D35's model-selection/cohort requirements for the player-facing progress feature.
+- **Puzzles:** combine numbered levels and dailies into one difficulty-adjusted score.
+  Difficulty and independent solving are primary; reliable active time has a bounded,
+  secondary influence. Bonus counts do not partition players' history. Show a result
+  after the first eligible completion, smooth recent results, and show a trend after
+  a few results. The score is provisional game performance, not a calibrated cognitive
+  ability, population percentile or percentage improvement.
+- **Imperfect evidence:** missing timing omits the time adjustment rather than discarding
+  an otherwise usable completion. Known repeats remain practice and do not raise the
+  estimate. Historical unknown exposure may contribute with its limitation documented;
+  do not rewrite its original classification. Incomplete attempts are not losses.
+- **Contrarreloj:** show recent points and personal bests separately; do not invent a
+  cross-mode skill scale or gate ordinary score history on fresh-wheel eligibility.
+- **Presentation:** current score, a simple recent trend and a small history chart.
+  No cohort quotas, comparison percentages, exposure diagnostics or manual refresh as
+  the normal flow. Explain the factors briefly in player language. Hide empty modes.
+- **Evidence:** retain original records, identities, timing quality and exposure data.
+  Version the derived metric and recompute from history; do not change the recorder's
+  facts, game rewards, generation or ordinary saves to fit the model.
+- **Feedback:** friends play normally and can send a screenshot when the result feels
+  wrong. An optional local history download supports investigation; no GitHub account,
+  prescribed number of games or research protocol is required to test the feature.
+- **Scope:** deliver M24's replacement next. Retention/deletion and backup remain visible
+  follow-ups. Recommendations and a second-game platform wait. See the
+  [delivery plan](./PROGRESS-PLAN.md) for cycles, checks and documentation updates.
+
 ## D36 · Put personal progress in front of beta players — 2026-11-01
 
 - **Priority:** at the owner's request, start the M24 UI before formal M23 model-selection

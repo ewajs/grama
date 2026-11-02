@@ -339,6 +339,20 @@ A full checkpoint must reconcile clock, encounter IDs, exposure classification a
 session; a mismatch or pre-instrumentation partial save is uncertain. Existing saves
 contain no such observations. Wall-clock timestamps never supply missing active time.
 
+### Personal performance projection (M24 cycle 1)
+
+`app/assessment/performance.performanceHistory` validates original finalized history,
+deduplicates attempt IDs and orders by saved sequence. It feeds numbered/daily puzzle
+features into the pure `core/assessment/performance` score and recent-window summary.
+The returned versioned view includes chronological puzzle results (practice or missing
+difficulty has no score), current performance, trend and separate trial history/best.
+It writes nothing and needs no clock, random source or current dictionary. Missing timing
+omits only the bounded time adjustment; unknown exposure stays recorded as unknown.
+See the [formula and worked examples](./skill-model.md#performance-version-1).
+
+The current `ProgressScreen` still uses the experimental cohort projection; cycle 2
+will connect this replacement. Recorder and research eligibility rules stay independent.
+
 ### Assessment storage (M22)
 
 `storage/assessment` opens `grama.assessment` at schema 2. Checkpoints and finalized

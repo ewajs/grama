@@ -1,7 +1,78 @@
-# Skill model candidates
+# Personal performance and skill model experiments
 
-Status: M23 validation continues alongside the M24 beta. Personal comparisons and recent
-observations are now visible in Tu progreso; absolute skill ratings remain undisplayed. Backup/restore and the remaining M22 data controls are deferred.
+Status: D37 replaces research-first delivery with a provisional performance metric.
+Cycle 1 implements the calculation and history projection; the existing cohort beta
+screen is unchanged until cycle 2. Glicko and baseline comparisons below are research
+experiments, not prerequisites for the replacement. Backup/restore and remaining M22
+data controls are deferred.
+
+## Performance version 1
+
+`core/assessment/performance` is a pure calculation with all policy constants in
+`PERFORMANCE`. `app/assessment/performance.performanceHistory` projects original records
+without changing saves, research eligibility, exposure classifications or game rewards.
+Recompute from history when the metric changes; bump `PERFORMANCE.version` whenever
+the formula, admission, smoothing or trend policy changes. No derived score is persisted.
+
+For a completed puzzle, let `d` be its stored difficulty score clamped to 0–5, `L` the
+sum of target word lengths, and `H` the number of hint letters revealed:
+
+```text
+referenceMs = L × 4000 × 2^(d − 2.75)
+timeAdjustment = 3 × clamp(log2(referenceMs / activeMs), −1, 1)
+score = clamp(20 + 15 × d − 50 × H/L + timeAdjustment, 0, 100)
+```
+
+Missing, zero or uncertain duration gives a zero time adjustment. The assumed neutral
+pace is four seconds per target letter at difficulty 2.75, doubling with each extra
+difficulty point. This is a tunable game assumption, not an empirically established par
+time. Twice as fast earns +3; twice as slow loses 3; larger differences have no further
+effect. A half-point increase in difficulty adds 7.5, more than the entire six-point
+speed swing. Hint costs scale with board size; one revealed letter out of twenty costs
+2.5 points. Bonus words and accumulated game points give no separate performance bonus.
+
+Worked examples with twenty target letters:
+
+| Difficulty | Revealed letters | Active time          | Performance |
+| ---------- | ---------------- | -------------------- | ----------- |
+| 2.5 (easy) | 0                | unavailable          | 57.5        |
+| 3.5 (hard) | 0                | unavailable          | 72.5        |
+| 2.75       | 0                | unavailable or 80 s  | 61.25       |
+| 3.75       | 0                | unavailable or 160 s | 76.25       |
+| 2.75       | 4                | unavailable or 80 s  | 51.25       |
+| 2.75       | 0                | 40 s or faster       | 64.25       |
+| 2.75       | 0                | 160 s or slower      | 58.25       |
+
+The current score is the mean of the latest five scored completions, using the available
+ones immediately. After six scored completions, compare the latest three with the prior
+three: a difference of at least +3 means up, at most −3 means down, otherwise steady.
+Use saved sequence order, not wall-clock dates; retain unrounded values until display.
+This describes recent game performance, not confidence, population rank, percentage
+improvement or measured cognitive ability. No numeric estimate exists for empty history.
+
+### Admission and limitations
+
+- Combine numbered and daily puzzles across content versions using their original
+  descriptors, without cohort quotas. Require a supported protocol, presented complete
+  puzzle and matching result/exposure identity. Invalid or abandoned evidence adds no loss.
+- Known repeats and explicit replays remain in completed history with a null score.
+  Missing difficulty also retains history with no score; no current dictionary or tier
+  fallback invents missing features. Unknown exposure is admitted as provisional evidence
+  while its original flag is preserved. No past sessions are reconstructed.
+- Validate originals, collapse identical attempt IDs and sort once by sequence. Conflicting
+  IDs or sequences throw rather than silently choosing a result by input order. The
+  projection is O(n log n) time and O(n) memory, with no pairwise/cohort comparisons.
+- Contrarreloj has separate chronological points and a best over the completed recorded
+  history, including repeated wheels and uncertain time. This best may differ from the
+  older all-time game record. Trial results never enter puzzle smoothing or trend.
+- Difficulty is a word-list heuristic. The score can move with challenge choice; a flat
+  series of easy completions stays flat, rather than accumulating rating indefinitely.
+  Hints can help play while reducing this independence-based score. Faster solving can
+  offset a small hint penalty, but the speed advantage is capped. Bonus-word hunting
+  takes time without increasing this score; its worst time effect remains −3. These are
+  deliberate initial tradeoffs to revisit, not reasons to require a large beta dataset.
+
+The functions are ready for cycle 2; this cycle does not change what players see.
 
 ## Glicko-2 candidate
 
@@ -51,7 +122,7 @@ comparisons require an evaluated extension; no conversion is silently applied he
 Ghost ratings derived from the same player's history also do not establish an absolute
 external scale. Keep personal baseline comparisons distinct from calibrated ability.
 
-Next: choose an evidence model and period policy against published acceptance thresholds. Test plateau,
+If calibrated rating research resumes: choose an evidence model and period policy against published acceptance thresholds. Test plateau,
 improvement, decline, challenge mix, assistance, missing evidence and repeated easy play.
 Retain replay/unknown/timing exclusions already defined by `eligibilityOf`; unavailable
 or ceiling-limited evidence must remain explicit before a numeric progress view ships.
@@ -87,7 +158,7 @@ runs or substituting unchanged ratings. This is not an evaluation of every ghost
 Inactivity keeps the mean unchanged; ninety supplied idle periods add uncertainty.
 
 These are exploratory checks, not acceptance thresholds or real-world validation. Model
-selection remains the next task; the projection below applies the existing eligibility
+selection is deferred by D37; the research projection below applies the existing eligibility
 rules before comparing stored observations.
 
 ## Grama evidence projection
