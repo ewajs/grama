@@ -332,7 +332,8 @@ remain uncertain.
 ### M23 — Validate skill models
 
 - [x] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
-- [ ] Comparable personal baselines and seeded simulation/evaluation tooling
+- [x] Comparable baseline comparisons and seeded candidate evaluation tooling
+- [ ] Validate Grama cohort/outcome projections against recorded evidence
 - [ ] Select and document an evidence model after plateau, improvement, decline, easy
       repetition, missing attempts and confidence tests; publish acceptance thresholds
 
