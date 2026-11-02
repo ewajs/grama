@@ -3,6 +3,9 @@ import type { Session } from '../../core/session';
 import type { RunResult } from '../../core/time-trial';
 import { levelScore, type Tier } from '../../core/difficulty';
 
+/** Assessment protocol versions; bump when scoring, assistance or trial ramp semantics change. */
+export const GRAMA_RULES = { puzzle: 'puzzle:1', trial: 'trial:1' } as const;
+
 /** Versioned raw difficulty features; a missing rank leaves the aggregate score unknown. */
 export type PuzzleDescriptor = {
   version: 1;
