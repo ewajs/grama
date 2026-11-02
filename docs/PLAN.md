@@ -333,7 +333,7 @@ remain uncertain.
 
 - [x] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
 - [x] Comparable baseline comparisons and seeded candidate evaluation tooling
-- [ ] Validate Grama cohort/outcome projections against recorded evidence
+- [x] Validate Grama cohort/outcome projections against recorded evidence
 - [ ] Select and document an evidence model after plateau, improvement, decline, easy
       repetition, missing attempts and confidence tests; publish acceptance thresholds
 

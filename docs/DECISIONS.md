@@ -8,6 +8,17 @@ delete it, the history is the point.
 
 ---
 
+## D35 · Project comparable Grama observations — 2026-11-01
+
+- **Candidate:** reuse the stored-record guards and eligibility policy, then verify
+  completion/result, protocol and wheel-exposure consistency. Keep IDs and sequences.
+- **Groups:** separate modes and scoring/content versions. Compare solve time at matched
+  tier, wheel size, target count, quarter-point difficulty band, hint letters and bonus
+  count; compare trial points under the same protocol. Share protocol version constants
+  with the recorder. No reward mapping, par time or extra rating engine is introduced.
+- **Limits:** fixtures establish decoding and group boundaries, not empirical puzzle
+  calibration. Sparse cohorts remain unavailable. See the [projection policy](./guides/skill-model.md#grama-evidence-projection).
+
 ## D34 · Compare against a fixed personal reference — 2026-11-01
 
 - **Candidate:** first-ten versus latest-ten distinct comparable attempts, using ordinal

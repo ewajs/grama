@@ -5,7 +5,7 @@ import type { WordList } from '../../content/words';
 import { openAssessment, type AssessmentStore } from '../../storage/assessment';
 import { hasAssessmentGap, markAssessmentGap } from '../../storage/assessment-coverage';
 import { evidenceJson, type Checkpoint, type Finalized } from '../../storage/assessment-record';
-import { describePuzzle } from './grama';
+import { describePuzzle, GRAMA_RULES } from './grama';
 import {
   extendsSession,
   isPuzzlePayload,
@@ -27,7 +27,6 @@ export type PuzzleRecording = Recording<PuzzleObservation>;
 /** Recording handle for a single Contrarreloj run. */
 export type TrialRecording = Recording<TrialObservation>;
 const PREPARE_WAIT = 2_000;
-const RULES_VERSION = 'puzzle:1';
 type Store = AssessmentStore<GramaPayload, GramaResult>;
 type Saved = Checkpoint<PuzzlePayload>;
 
@@ -194,7 +193,7 @@ export class GramaRecorder {
         game: 'grama',
         track: puzzle ? 'word-solving' : 'time-trial',
         mode: puzzle ? payload.place.kind : 'trial',
-        rulesVersion: puzzle ? RULES_VERSION : 'trial:1',
+        rulesVersion: puzzle ? GRAMA_RULES.puzzle : GRAMA_RULES.trial,
         contentVersion: String(LEVELS_VERSION),
         startedAt: Date.now(),
         activeMs: 0,

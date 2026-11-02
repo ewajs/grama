@@ -51,8 +51,7 @@ comparisons require an evaluated extension; no conversion is silently applied he
 Ghost ratings derived from the same player's history also do not establish an absolute
 external scale. Keep personal baseline comparisons distinct from calibrated ability.
 
-Next: validate Grama cohort/outcome projections against recorded evidence, then choose
-an evidence model and period policy against published acceptance thresholds. Test plateau,
+Next: choose an evidence model and period policy against published acceptance thresholds. Test plateau,
 improvement, decline, challenge mix, assistance, missing evidence and repeated easy play.
 Retain replay/unknown/timing exclusions already defined by `eligibilityOf`; unavailable
 or ceiling-limited evidence must remain explicit before a numeric progress view ships.
@@ -87,6 +86,26 @@ Failures are counted and the final mean is withheld, rather than averaging survi
 runs or substituting unchanged ratings. This is not an evaluation of every ghost design.
 Inactivity keeps the mean unchanged; ninety supplied idle periods add uncertainty.
 
-These are exploratory checks, not acceptance thresholds or real-world validation. Grama
-cohort/outcome projection and model selection remain the next tasks; existing eligibility
-rules must gate that projection before any player-facing estimate is connected.
+These are exploratory checks, not acceptance thresholds or real-world validation. Model
+selection remains the next task; the projection below applies the existing eligibility
+rules before comparing stored observations.
+
+## Grama evidence projection
+
+`app/assessment/baseline.baselineSample` reuses the existing record/payload validators and
+`eligibilityOf`. It accepts only completed, acknowledged, positive-duration observations
+with matching result, track, mode, protocol and exposure keys. Unsupported, incomplete,
+replayed, unknown-exposure or uncertain-timing records produce no baseline sample.
+
+The experimental `grama-baseline:1` cohort key includes scoring/content/payload versions.
+Numbered levels and dailies stay separate. Word solving compares active duration (lower
+is better), matching tier, wheel size, target count, quarter-point difficulty band, hint
+letters and bonus-word count. Changing the number of bonus words does not feed the
+same speed comparison. Trial observations compare ordinary points within one unchanged protocol;
+random wheel difficulty remains a noise source. Shared `GRAMA_RULES` versions identify
+protocol changes without changing rewards or existing saved observations.
+
+Saved-record-shaped fixtures exercise projection and the existing baseline together,
+including unique fresh wheels and duplicate IDs. They verify data consistency and group
+boundaries, not empirical equivalence of every puzzle in a band. These cohorts remain
+provisional; sparse groups have no comparison and no absolute ability rating is inferred.
