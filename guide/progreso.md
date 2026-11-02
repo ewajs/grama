@@ -74,8 +74,8 @@ las letras reveladas con pistas y el tiempo de juego observado. El tiempo incluy
 se pausa cuando abrís un diálogo, salís del nivel o dejás la app en segundo plano. Si falta
 un tramo de tiempo, queda marcado como incierto.
 
-Este registro prepara una futura vista de tu progreso: todavía no hay una puntuación de
-habilidad. Volver a una rueda conocida queda como práctica, porque ya tenés ventaja al
+Desde el inicio, **Tu progreso · Beta** muestra tus partidas recientes: tiempos y pistas
+en los niveles, y puntos en Contrarreloj. Todavía no hay una puntuación absoluta de habilidad. Volver a una rueda conocida queda como práctica, porque ya tenés ventaja al
 recordar las respuestas. En Contrarreloj, alcanza con que se repita una rueda para que
 la partida quede como práctica para esa futura puntuación. Tus puntos, estrellas y logros
 siguen funcionando igual.
@@ -83,3 +83,20 @@ siguen funcionando igual.
 **Empezar de cero** conserva este registro, igual que Tu diccionario. Borrar los datos
 del sitio en el navegador sí elimina todo. No se manda a un servidor ni se comparte con
 otros jugadores.
+
+## Tu progreso · Beta
+
+La vista está en prueba: contanos desde su enlace de comentarios qué se entiende y qué
+te resulta confuso. El formulario se abre en GitHub; tus partidas no se adjuntan solas.
+
+Cuando hay suficientes partidas comparables, enfrentamos las 10 primeras con las 10
+recientes. El porcentaje indica a favor de cuáles sale la comparación, con los empates
+contando la mitad. No significa que tu habilidad haya mejorado ese porcentaje.
+
+Si todavía no alcanza, ves cuántas partidas tiene cada grupo. Las ruedas conocidas,
+los tiempos incompletos y el historial anterior desconocido quedan afuera por defecto,
+aunque sus resultados recientes se puedan consultar. Para probar con un historial viejo,
+activá **Probar con historial previo incompleto**: puede incluir ruedas vistas antes de
+empezar el registro y queda señalado en la comparación beta. Las repeticiones conocidas
+y los tiempos incompletos siguen afuera. **Actualizar** vuelve
+a leer tus partidas; salir y volver también actualiza la vista.

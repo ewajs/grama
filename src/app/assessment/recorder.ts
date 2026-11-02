@@ -16,7 +16,7 @@ import {
 } from './puzzle';
 
 import { Recording } from './recording';
-import { isGramaPayload, isGramaResult, type GramaPayload } from './payload';
+import { isGramaPayload, isGramaResult, type GramaPayload, type GramaRecord } from './payload';
 import type { GramaResult } from './grama';
 import { describeTrial, trialResult, type TrialObservation } from './trial';
 import type { Exposure } from '../../core/assessment/attempt';
@@ -65,6 +65,39 @@ export class GramaRecorder {
     });
     this.#tail = result;
     return result;
+  }
+
+  /** Refreshes history after queued local writes; a read failure never changes recording policy. */
+  async history(): Promise<GramaRecord[] | null> {
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const read = this.#queue(async () => {
+      const store = await this.#store;
+      if (!store || cancelled) return null;
+      const records: GramaRecord[] = [];
+      let after = 0;
+      for (;;) {
+        const page = await store.history(after);
+        if (!page.ok || cancelled) return null;
+        const last = page.value.at(-1);
+        if (!last) return records;
+        records.push(...page.value);
+        after = last.attempt.sequence;
+      }
+    });
+    try {
+      return await Promise.race([
+        read,
+        new Promise<null>((resolve) => {
+          timer = setTimeout(() => {
+            cancelled = true;
+            resolve(null);
+          }, PREPARE_WAIT);
+        }),
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
   }
 
   /** Commits exposure before presentation; unavailable/slow storage falls back to ordinary play. */

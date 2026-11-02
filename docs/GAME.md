@@ -78,6 +78,20 @@ from the future primary skill estimate.
 If recording storage fails, ordinary play and its separate progress saving continue.
 All observations stay on the device, with no analytics upload or account.
 
+### Tu progreso (beta)
+
+Home's **Tu progreso** opens recent recorded outcomes, with observed solve times and hint
+use for puzzles, and points/cleared wheels for trials. Original incomplete or replayed
+results can be inspected without treating them as losses or fresh skill evidence.
+
+Personal comparisons group eligible observations using the M23 adapter: ten initial
+attempts versus ten recent attempts per comparable group. Ties contribute half; the
+percentage describes these comparisons, not a magnitude of improvement or an absolute
+ability rating. Sparse groups show their count instead. Unknown prior exposure is excluded by default. A beta-only opt-in lets existing players
+try descriptive comparisons with that history, clearly labeled; its saved classification
+stays unknown. Known repeats and uncertain timing stay excluded. Players can refresh the view and open a GitHub feedback
+form; their history stays local and is not attached automatically.
+
 ### Daily challenge (`src/core/daily.ts`)
 
 One level per date (the player's own), the same for everyone: 7 letters, up to 9 targets, and a

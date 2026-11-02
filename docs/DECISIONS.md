@@ -8,6 +8,21 @@ delete it, the history is the point.
 
 ---
 
+## D36 · Put personal progress in front of beta players — 2026-11-01
+
+- **Priority:** at the owner's request, start the M24 UI before formal M23 model-selection
+  gates. Existing synthetic and regression checks remain; real play and feedback now guide
+  which comparisons are useful. Glicko remains an experimental, undisplayed candidate.
+- **Beta:** Home opens Tu progreso, showing recent original outcomes, times/hints or trial
+  points, comparison windows and sample counts. Strict eligibility stays the default.
+  A beta-only opt-in permits unknown prior exposure in descriptive comparisons, with a
+  separate model key and visible labels; saved classifications stay unchanged. Known
+  repeats and uncertain timing remain excluded in both modes.
+- **Reading:** wait behind local queued writes and page through validated history. Refresh
+  rereads from sequence zero so late outcomes can be included; this is a refreshable view,
+  not an atomic cross-tab snapshot or a permanent cached estimate. Read errors leave play
+  available. Feedback opens GitHub with questions only, without attaching personal history.
+
 ## D35 · Project comparable Grama observations — 2026-11-01
 
 - **Candidate:** reuse the stored-record guards and eligibility policy, then verify

@@ -19,6 +19,7 @@
   import Home from './ui/components/Home.svelte';
   import LevelMap from './ui/components/LevelMap.svelte';
   import StatsScreen from './ui/components/StatsScreen.svelte';
+  import ProgressScreen from './ui/components/ProgressScreen.svelte';
   import TrialScreen from './ui/components/TrialScreen.svelte';
   import type { WordList } from './content/words';
   import UpdatePrompt from './ui/components/UpdatePrompt.svelte';
@@ -139,6 +140,12 @@
     }}
     onback={() => navigation.back()}
   />
+{:else if navigation.screen === 'progress'}
+  {#if words}
+    <ProgressScreen {recorder} onback={() => navigation.back()} />
+  {:else}
+    <p class="status">{failed ? strings.loadError : strings.loading}</p>
+  {/if}
 {:else if navigation.screen === 'stats'}
   <StatsScreen {game} onback={() => navigation.back()} />
 {:else if navigation.screen === 'dictionary'}
@@ -152,6 +159,7 @@
     }}
     onmap={() => navigation.go('map')}
     onstats={() => navigation.go('stats')}
+    onprogress={() => navigation.go('progress')}
     ondictionary={() => navigation.go('dictionary')}
     trialBest={game.trialBest}
     ontrial={() => navigation.go('trial')}
