@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 import { describeTrial, trialResult } from '../../src/app/assessment/trial';
 import { GRAMA_RULES, puzzleIdentity } from '../../src/app/assessment/grama';
 import type { GramaRecord } from '../../src/app/assessment/payload';
+import { NEW_PROGRESS } from '../../src/core/progress';
+import { saveGame } from '../../src/storage/save';
 import { NEW_SESSION } from '../../src/core/session';
 import { evaluate } from '../../src/core/evaluate';
 import { LEVELS_VERSION } from '../../src/core/generate';
@@ -89,9 +91,7 @@ test('beta progress opens from Home, handles an empty profile and browser back',
   await expect(page.getByRole('button', { name: /^Jugar/ })).toBeVisible();
 });
 
-test('beta progress shows a real recorded level even when prior exposure is unknown', async ({
-  page,
-}) => {
+test('beta progress includes new play for an existing player', async ({ page }) => {
   await page.addInitScript(() =>
     localStorage.setItem('grama.settings', JSON.stringify({ tutorialSeen: true })),
   );
@@ -105,12 +105,11 @@ test('beta progress shows a real recorded level even when prior exposure is unkn
   const recent = page.getByRole('region', { name: 'Partidas recientes' });
   await expect(recent).toContainText('Nivel 1');
   await expect(recent).toContainText('1 pista');
-  await expect(recent).toContainText('Historial previo incompleto');
-  await page.getByRole('checkbox', { name: 'Probar con historial previo incompleto' }).check();
+  await expect(recent).toContainText('Comparable');
   await expect(page.getByRole('region', { name: 'Resolución de palabras' })).toContainText(
-    '1 de 20 partidas comparables',
+    '1 de 20',
   );
-  await expect(recent).toContainText('Historial previo incompleto · incluido en beta');
+  await expect(page.getByRole('checkbox')).toHaveCount(0);
 });
 
 test('beta progress pages full history, shows comparison counts and refreshes', async ({
@@ -181,4 +180,29 @@ test('beta progress storage failure keeps navigation and ordinary play available
   await expect(page.getByRole('dialog')).toBeHidden();
   await drawWord(page, level(1).targets[0]!);
   await expect(page.getByLabel('Puntos')).not.toHaveText('0');
+});
+
+test('existing game progress is preserved without manufacturing past assessment history', async ({
+  page,
+}) => {
+  let saved = '';
+  saveGame(
+    { ...NEW_PROGRESS, levelNumber: 24, score: 900 },
+    {
+      setItem: (_key, value) => {
+        saved = value;
+      },
+    },
+  );
+  await page.addInitScript((value) => localStorage.setItem('grama.save', value), saved);
+  await page.goto('./');
+  await expect(page.getByRole('button', { name: /^Jugar.*Nivel 24/ })).toBeVisible();
+  await page.getByRole('button', { name: /^Tu progreso/ }).click();
+  await expect(
+    page.getByText('Completá un nivel o una partida de Contrarreloj para ver tus resultados acá.'),
+  ).toBeVisible();
+  await expect(page.getByRole('checkbox')).toHaveCount(0);
+  expect(await page.evaluate(() => localStorage.getItem('grama.save'))).toBe(saved);
+  await page.getByRole('button', { name: 'Volver al inicio', exact: true }).click();
+  await expect(page.getByRole('button', { name: /^Jugar.*Nivel 24/ })).toBeVisible();
 });

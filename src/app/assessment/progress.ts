@@ -3,10 +3,10 @@ import { baselineSample } from './baseline';
 import type { GramaRecord } from './payload';
 
 /** Builds beta comparisons and recent original results without changing eligibility or saved data. */
-export function progressOverview(records: readonly GramaRecord[], includeUnknown = false) {
+export function progressOverview(records: readonly GramaRecord[]) {
   const byId = new Map(records.map((record) => [record.attempt.id, record]));
   const samples = records.flatMap((record) => {
-    const sample = baselineSample(record, includeUnknown ? 'beta' : 'strict');
+    const sample = baselineSample(record);
     return sample ? [sample] : [];
   });
   return {
@@ -16,17 +16,7 @@ export function progressOverview(records: readonly GramaRecord[], includeUnknown
       .flatMap((report) => {
         const id = report.recentIds.at(-1) ?? report.referenceIds.at(-1);
         const record = byId.get(id ?? '');
-        return record
-          ? [
-              {
-                report,
-                record,
-                includesUnknown: [...report.referenceIds, ...report.recentIds].some((id) =>
-                  byId.get(id)?.attempt.exposures.some((exposure) => exposure.kind === 'unknown'),
-                ),
-              },
-            ]
-          : [];
+        return record ? [{ report, record }] : [];
       })
       .sort((a, b) => b.record.attempt.sequence - a.record.attempt.sequence),
   };

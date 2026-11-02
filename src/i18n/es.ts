@@ -89,7 +89,7 @@ export const es = {
   progressNoComparable:
     'Todavía no hay partidas comparables en este modo. Podés ver tus resultados recientes más abajo.',
   progressHistoryNote:
-    'Las ruedas conocidas y los tiempos incompletos quedan afuera. El historial previo desconocido solo se incluye si activás la opción beta.',
+    'Las ruedas conocidas, los tiempos incompletos y el historial previo desconocido quedan afuera de las comparaciones.',
   progressCollecting: (count: number, needed: number) =>
     `${count} de ${needed} partidas comparables en este grupo`,
   progressComparison: (score: number) => `${Math.round(score * 100)}% a favor de las recientes`,
@@ -105,10 +105,6 @@ export const es = {
   progressPartialTime: 'Tiempo parcial',
   progressDate: (time: number) =>
     new Date(time).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }),
-  progressIncludeUnknown: 'Probar con historial previo incompleto',
-  progressUnknownHelp:
-    'Puede incluir ruedas que viste antes de empezar este registro. Esta opción solo cambia la comparación beta.',
-  progressUnknownIncluded: 'Historial previo incompleto · incluido en beta',
   progressComparable: 'Comparable',
   progressOther: 'Fuera de comparación',
   progressExcluded: {

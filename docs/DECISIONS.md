@@ -13,11 +13,13 @@ delete it, the history is the point.
 - **Priority:** at the owner's request, start the M24 UI before formal M23 model-selection
   gates. Existing synthetic and regression checks remain; real play and feedback now guide
   which comparisons are useful. Glicko remains an experimental, undisplayed candidate.
-- **Beta:** Home opens Tu progreso, showing recent original outcomes, times/hints or trial
-  points, comparison windows and sample counts. Strict eligibility stays the default.
-  A beta-only opt-in permits unknown prior exposure in descriptive comparisons, with a
-  separate model key and visible labels; saved classifications stay unchanged. Known
-  repeats and uncertain timing remain excluded in both modes.
+- **Beta:** every player on the existing deployment has access. Home opens Tu progreso,
+  showing recent original outcomes, times/hints or trial points, comparison windows and
+  sample counts. There is one eligibility policy, without enrollment or a legacy mode.
+- **Forward only:** past game saves are not reconstructed into observations. Exposure
+  tracking starts with recorded play for everyone, replacing the legacy-profile coverage
+  distinction. Existing observations retain their classifications; known repeats and
+  incomplete timing remain excluded. Ordinary game progress is preserved.
 - **Reading:** wait behind local queued writes and page through validated history. Refresh
   rereads from sequence zero so late outcomes can be included; this is a refreshable view,
   not an atomic cross-tab snapshot or a permanent cached estimate. Read errors leave play

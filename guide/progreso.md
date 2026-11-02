@@ -94,9 +94,8 @@ recientes. El porcentaje indica a favor de cuáles sale la comparación, con los
 contando la mitad. No significa que tu habilidad haya mejorado ese porcentaje.
 
 Si todavía no alcanza, ves cuántas partidas tiene cada grupo. Las ruedas conocidas,
-los tiempos incompletos y el historial anterior desconocido quedan afuera por defecto,
-aunque sus resultados recientes se puedan consultar. Para probar con un historial viejo,
-activá **Probar con historial previo incompleto**: puede incluir ruedas vistas antes de
-empezar el registro y queda señalado en la comparación beta. Las repeticiones conocidas
-y los tiempos incompletos siguen afuera. **Actualizar** vuelve
-a leer tus partidas; salir y volver también actualiza la vista.
+los tiempos incompletos y los registros con exposición desconocida quedan afuera de las
+comparaciones, aunque sus resultados recientes se puedan consultar. El registro empieza
+con las partidas observadas: no reconstruimos las anteriores a partir de tus puntos o
+niveles guardados. Tu progreso de juego se conserva. No hace falta activar la beta.
+**Actualizar** vuelve a leer tus partidas; salir y volver también actualiza la vista.

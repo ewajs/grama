@@ -318,32 +318,3 @@ it('uses trial points within one protocol and rejects mismatched results, wheels
   ])
     expect(baselineSample(value)).toBeNull();
 });
-
-it('permits unknown history only in explicit beta mode, preserving its classification', () => {
-  const record = puzzle();
-  const unknown = {
-    ...record,
-    attempt: {
-      ...record.attempt,
-      exposures: record.attempt.exposures.map((exposure) => ({ ...exposure, kind: 'unknown' })),
-    },
-  };
-  expect(baselineSample(unknown)).toBeNull();
-  expect(baselineSample(unknown, 'beta')).not.toBeNull();
-  expect(baselineSample(record, 'beta')!.cohort).not.toBe(baselineSample(record)!.cohort);
-  expect(unknown.attempt.exposures[0]!.kind).toBe('unknown');
-  const uncertain = {
-    ...unknown,
-    clock: { ...unknown.clock, timing: 'uncertain' },
-    attempt: { ...unknown.attempt, timing: 'uncertain' },
-  };
-  const repeat = {
-    ...unknown,
-    attempt: {
-      ...unknown.attempt,
-      exposures: unknown.attempt.exposures.map((exposure) => ({ ...exposure, kind: 'repeat' })),
-    },
-  };
-  expect(baselineSample(uncertain, 'beta')).toBeNull();
-  expect(baselineSample(repeat, 'beta')).toBeNull();
-});

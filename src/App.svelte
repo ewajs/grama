@@ -47,10 +47,7 @@
       game.words = loaded;
       words = loaded;
       try {
-        recorder = new GramaRecorder(
-          loaded,
-          saved !== null || settings.tutorialSeen || trials.runs > 0 || dictionary.length > 0,
-        );
+        recorder = new GramaRecorder(loaded);
       } catch {
         markAssessmentGap();
         /* Assessment is optional when browser services are blocked. */

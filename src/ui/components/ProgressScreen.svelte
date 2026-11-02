@@ -14,8 +14,7 @@
   let records = $state.raw<GramaRecord[]>([]);
   let phase = $state<'loading' | 'ready' | 'failed'>('loading');
   let refresh = $state(0);
-  let includeUnknown = $state(false);
-  const overview = $derived(progressOverview(records, includeUnknown));
+  const overview = $derived(progressOverview(records));
   const tracks = [
     { id: 'word-solving', title: strings.progressSolving },
     { id: 'time-trial', title: strings.trial },
@@ -44,12 +43,6 @@
   }
   function status(record: GramaRecord): string {
     const eligibility = eligibilityOf(record.attempt);
-    if (
-      overview.comparableIds.has(record.attempt.id) &&
-      !eligibility.eligible &&
-      eligibility.reason === 'unknown-exposure'
-    )
-      return strings.progressUnknownIncluded;
     return overview.comparableIds.has(record.attempt.id)
       ? strings.progressComparable
       : eligibility.eligible
@@ -71,15 +64,6 @@
   {:else if records.length === 0}
     <p>{strings.progressEmpty}</p>
   {:else}
-    {#if records.some( (record) => record.attempt.exposures.some((exposure) => exposure.kind === 'unknown') )}
-      <label class="legacy"
-        ><input
-          type="checkbox"
-          bind:checked={includeUnknown}
-        />{strings.progressIncludeUnknown}</label
-      >
-      <p class="muted">{strings.progressUnknownHelp}</p>
-    {/if}
     {#each tracks as track (track.id)}
       {@const groups = overview.groups
         .filter((group) => group.record.attempt.track === track.id)
@@ -95,10 +79,9 @@
           )}
         </p>
         {#if groups.length === 0}<p>{strings.progressNoComparable}</p>{/if}
-        {#each groups as { report, record, includesUnknown } (report.cohort)}
+        {#each groups as { report, record } (report.cohort)}
           <article>
             <h3>{title(record)}</h3>
-            {#if includesUnknown}<p class="muted">{strings.progressUnknownIncluded}</p>{/if}
             {#if isPuzzlePayload(record.payload)}
               <p class="muted">
                 {strings.tiers[record.payload.level.tier]} · {strings.progressShape(
@@ -158,17 +141,6 @@
     margin: 0 auto;
     padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4)
       max(var(--space-6), env(safe-area-inset-bottom));
-  }
-  .legacy {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: 44px;
-  }
-  input {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--color-accent);
   }
   .intro,
   .muted,

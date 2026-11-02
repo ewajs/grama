@@ -115,15 +115,14 @@ provisional; sparse groups have no comparison and no absolute ability rating is 
 The owner prioritized player testing over another pre-UI acceptance phase. `ProgressScreen`
 loads history through the existing recorder queue and `progressOverview` applies the
 existing adapter/baseline functions. Recent original outcomes stay visible even when
-legacy exposure or sparse cohorts prevent comparisons. A manual refresh rereads all pages;
+unknown exposure or sparse cohorts prevent comparisons. A manual refresh rereads all pages;
 connections and record validation remain owned by the existing assessment store.
 
 The beta uses the existing Grama deployment and adds a Home entry and a GitHub feedback
 link. No history is uploaded. Model-selection gates remain open; beta feedback about
 clarity, missing comparisons and perceived usefulness informs that next decision.
 
-Existing profiles can opt into descriptive beta comparisons with unknown prior exposure;
-otherwise their incomplete pre-recording coverage may prevent any comparisons. This
-explicit mode uses `grama-baseline-beta:1`, retains the original exposure flags and labels
-included history. The strict adapter remains the default. Repeated content, incomplete
-attempts and uncertain timing are excluded even when unknown history is opted in.
+Everyone on the current deployment has access. Exposure tracking starts with recorded
+play, regardless of prior game saves. There is one eligibility policy, with no opt-in,
+legacy comparison model or reconstruction of past sessions. Existing observations and
+ordinary game progress remain untouched.

@@ -37,24 +37,14 @@ export class GramaRecorder {
   #ranks: ReadonlyMap<string, number>;
   #visit = crypto.randomUUID();
   #disabled = false;
-  #coverage: 'complete' | 'partial' = 'partial';
 
-  /** Opens assessment in parallel with Home; legacy history is never assumed complete. */
-  constructor(words: WordList, legacy: boolean) {
+  /** Opens assessment in parallel with Home; exposure tracking starts with recorded play. */
+  constructor(words: WordList) {
     this.#ranks = new Map(
       words.words.slice(0, RECIPES.extra.pool).map((word, rank) => [word, rank]),
     );
     this.#store = openAssessment(isGramaPayload, isGramaResult)
-      .then(async (opened) => {
-        if (!opened.ok) return null;
-        const coverage = await opened.value.initializeCoverage(legacy ? 'partial' : 'complete');
-        if (!coverage.ok) {
-          opened.value.close();
-          return null;
-        }
-        this.#coverage = coverage.value;
-        return opened.value;
-      })
+      .then((opened) => (opened.ok ? opened.value : null))
       .catch(() => null);
   }
 
@@ -241,7 +231,7 @@ export class GramaRecorder {
     return {
       encounterId: crypto.randomUUID(),
       key,
-      kind: this.#coverage === 'partial' || hasAssessmentGap() ? 'unknown' : 'first',
+      kind: hasAssessmentGap() ? 'unknown' : 'first',
     };
   }
 
@@ -263,7 +253,6 @@ export class GramaRecorder {
         const store = await this.#store;
         if (cancelled()) return null;
         if (!store) return unavailable();
-        // Coverage becomes known when the store opens, before constructing the first exposure.
         const initial = this.#start({ ...payload, presented: false }, this.#exposure(exposure.key));
         const written = await store.saveCheckpoint(initial);
         if (cancelled()) return null;

@@ -130,20 +130,6 @@ export class AssessmentStore<Payload, Result> {
     });
   }
 
-  /** Initializes historical exposure coverage once; later game saves cannot promote it. */
-  initializeCoverage(
-    coverage: 'complete' | 'partial',
-  ): Promise<AssessmentResult<'complete' | 'partial'>> {
-    return this.#transaction('readwrite', async (tx) => {
-      const meta = tx.objectStore('meta');
-      const saved: unknown = await request(meta.get('exposure-coverage'));
-      if (saved === 'complete' || saved === 'partial') return { ok: true, value: saved };
-      if (saved !== undefined) return { ok: false, error: 'invalid-data' };
-      await request(meta.put(coverage, 'exposure-coverage'));
-      return { ok: true, value: coverage };
-    });
-  }
-
   /** Looks up all known encounters of content, across modes and app visits. */
   exposures(key: string): Promise<AssessmentResult<Exposure[]>> {
     return this.#transaction('readonly', async (tx) => {

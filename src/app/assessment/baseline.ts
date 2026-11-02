@@ -9,26 +9,20 @@ import { trialResult } from './trial';
 
 const DIFFICULTY_BAND = 0.25;
 
-/** Projects strict eligible evidence by default; beta explicitly permits unknown exposure, never repeats or uncertain time. */
-export function baselineSample(
-  record: unknown,
-  mode: 'strict' | 'beta' = 'strict',
-): BaselineSample | null {
+/** Converts consistent, eligible stored evidence into a versioned experimental baseline sample. */
+export function baselineSample(record: unknown): BaselineSample | null {
   if (
     !isFinalized(record, isGramaPayload, isGramaResult) ||
     record.attempt.status !== 'completed' ||
-    record.attempt.timing !== 'reliable' ||
+    !eligibilityOf(record.attempt).eligible ||
     !record.payload.presented ||
     record.attempt.activeMs <= 0
   )
     return null;
   const { payload, attempt } = record;
-  const eligibility = eligibilityOf(attempt);
-  if (!eligibility.eligible && !(mode === 'beta' && eligibility.reason === 'unknown-exposure'))
-    return null;
   if (attempt.game !== 'grama') return null;
   const context = {
-    model: mode === 'beta' ? 'grama-baseline-beta:1' : 'grama-baseline:1',
+    model: 'grama-baseline:1',
     track: attempt.track,
     mode: attempt.mode,
     rules: attempt.rulesVersion,
