@@ -16,7 +16,7 @@ import {
 } from './puzzle';
 
 import { Recording } from './recording';
-import { isGramaPayload, isGramaResult, type GramaPayload } from './payload';
+import { isGramaPayload, isGramaResult, type GramaPayload, type GramaRecord } from './payload';
 import type { GramaResult } from './grama';
 import { describeTrial, trialResult, type TrialObservation } from './trial';
 import type { Exposure } from '../../core/assessment/attempt';
@@ -37,24 +37,14 @@ export class GramaRecorder {
   #ranks: ReadonlyMap<string, number>;
   #visit = crypto.randomUUID();
   #disabled = false;
-  #coverage: 'complete' | 'partial' = 'partial';
 
-  /** Opens assessment in parallel with Home; legacy history is never assumed complete. */
-  constructor(words: WordList, legacy: boolean) {
+  /** Opens assessment in parallel with Home; exposure tracking starts with recorded play. */
+  constructor(words: WordList) {
     this.#ranks = new Map(
       words.words.slice(0, RECIPES.extra.pool).map((word, rank) => [word, rank]),
     );
     this.#store = openAssessment(isGramaPayload, isGramaResult)
-      .then(async (opened) => {
-        if (!opened.ok) return null;
-        const coverage = await opened.value.initializeCoverage(legacy ? 'partial' : 'complete');
-        if (!coverage.ok) {
-          opened.value.close();
-          return null;
-        }
-        this.#coverage = coverage.value;
-        return opened.value;
-      })
+      .then((opened) => (opened.ok ? opened.value : null))
       .catch(() => null);
   }
 
@@ -65,6 +55,39 @@ export class GramaRecorder {
     });
     this.#tail = result;
     return result;
+  }
+
+  /** Refreshes history after queued local writes; a read failure never changes recording policy. */
+  async history(): Promise<GramaRecord[] | null> {
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const read = this.#queue(async () => {
+      const store = await this.#store;
+      if (!store || cancelled) return null;
+      const records: GramaRecord[] = [];
+      let after = 0;
+      for (;;) {
+        const page = await store.history(after);
+        if (!page.ok || cancelled) return null;
+        const last = page.value.at(-1);
+        if (!last) return records;
+        records.push(...page.value);
+        after = last.attempt.sequence;
+      }
+    });
+    try {
+      return await Promise.race([
+        read,
+        new Promise<null>((resolve) => {
+          timer = setTimeout(() => {
+            cancelled = true;
+            resolve(null);
+          }, PREPARE_WAIT);
+        }),
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
   }
 
   /** Commits exposure before presentation; unavailable/slow storage falls back to ordinary play. */
@@ -208,7 +231,7 @@ export class GramaRecorder {
     return {
       encounterId: crypto.randomUUID(),
       key,
-      kind: this.#coverage === 'partial' || hasAssessmentGap() ? 'unknown' : 'first',
+      kind: hasAssessmentGap() ? 'unknown' : 'first',
     };
   }
 
@@ -230,7 +253,6 @@ export class GramaRecorder {
         const store = await this.#store;
         if (cancelled()) return null;
         if (!store) return unavailable();
-        // Coverage becomes known when the store opens, before constructing the first exposure.
         const initial = this.#start({ ...payload, presented: false }, this.#exposure(exposure.key));
         const written = await store.saveCheckpoint(initial);
         if (cancelled()) return null;

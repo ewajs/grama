@@ -334,7 +334,7 @@ remain uncertain.
 - [x] Candidate Glicko-2 math with reference tests and explicit period/uncertainty policy
 - [x] Comparable baseline comparisons and seeded candidate evaluation tooling
 - [x] Validate Grama cohort/outcome projections against recorded evidence
-- [ ] Select and document an evidence model after plateau, improvement, decline, easy
+- [ ] After beta feedback: select and document an evidence model after plateau, improvement, decline, easy
       repetition, missing attempts and confidence tests; publish acceptance thresholds
 
 **Verify:** repeated easy success and duplicate evidence cannot imply unsupported skill;
@@ -342,8 +342,8 @@ prefer descriptive progress where observations cannot support a numeric estimate
 
 ### M24 — Personal progress
 
-- [ ] Reactive projections and a Home entry with word-solving and Contrarreloj tracks
-- [ ] Confidence, sample counts, baseline comparisons and versioned history visualization
+- [x] Beta progress screen: Home entry, recent real outcomes, sample counts and available personal comparisons
+- [ ] Refine history visualization and uncertainty explanations from beta feedback
 - [ ] Accessible export/deletion controls, explanatory text and player guide
 
 **Verify:** sparse, uncertain, imported and recalculated history are explained truthfully.

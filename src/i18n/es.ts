@@ -76,6 +76,47 @@ export const es = {
       daily.url,
     ].join('\n'),
   achievements: 'Logros',
+  progressTitle: 'Tu progreso',
+  progressBeta: 'Beta',
+  progressIntro:
+    'Estamos probando esta vista. Las comparaciones son orientativas y tus partidas quedan en este dispositivo.',
+  progressSolving: 'Resolución de palabras',
+  progressRecorded: (count: number) =>
+    count === 1 ? '1 partida completa registrada' : `${count} partidas completas registradas`,
+  progressEmpty: 'Completá un nivel o una partida de Contrarreloj para ver tus resultados acá.',
+  progressUnavailable: 'No pudimos leer tus partidas. Podés seguir jugando y volver a intentar.',
+  progressRefresh: 'Actualizar',
+  progressNoComparable:
+    'Todavía no hay partidas comparables en este modo. Podés ver tus resultados recientes más abajo.',
+  progressHistoryNote:
+    'Las ruedas conocidas, los tiempos incompletos y el historial previo desconocido quedan afuera de las comparaciones.',
+  progressCollecting: (count: number, needed: number) =>
+    `${count} de ${needed} partidas comparables en este grupo`,
+  progressComparison: (score: number) => `${Math.round(score * 100)}% a favor de las recientes`,
+  progressWindows: (reference: number, recent: number) =>
+    `${reference} iniciales · ${recent} recientes`,
+  progressMeaning:
+    'Comparamos partidas de características similares. 50% indica un resultado equilibrado; los empates cuentan la mitad.',
+  progressRecent: 'Partidas recientes',
+  progressShape: (letters: number, targets: number) => `${letters} letras · ${targets} palabras`,
+  progressHints: (count: number) => (count === 1 ? '1 pista' : `${count} pistas`),
+  progressBonus: (count: number) => (count === 1 ? '1 extra' : `${count} extras`),
+  progressTime: 'Tiempo',
+  progressPartialTime: 'Tiempo parcial',
+  progressDate: (time: number) =>
+    new Date(time).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }),
+  progressComparable: 'Comparable',
+  progressOther: 'Fuera de comparación',
+  progressExcluded: {
+    unfinished: 'Sin terminar',
+    'repeated-content': 'Rueda conocida',
+    'unknown-exposure': 'Historial previo incompleto',
+    'uncertain-timing': 'Tiempo incompleto',
+  },
+  progressFeedback: 'Contanos qué te resultó útil o confuso (GitHub)',
+  progressFeedbackTitle: 'Tu progreso (beta): comentarios',
+  progressFeedbackPrompt:
+    '¿Se entiende la comparación?\n\n¿Coincide con cómo sentís que estás jugando?\n\n¿Qué te resultó útil o confuso?\n',
   statsTitle: 'Estadísticas',
   achievementsCount: (done: number, total: number) => `${done} de ${total}`,
   achievementUnlocked: 'Logro desbloqueado',

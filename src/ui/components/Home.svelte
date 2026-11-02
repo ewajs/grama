@@ -8,6 +8,7 @@ Tu diccionario, achievements). It fits common phones without scrolling.
 - `onplay()`: continue playing.
 - `onmap()`: open the level map.
 - `onstats()`: open the achievements and stats.
+- `onprogress()`: open personal progress (beta).
 - `ondictionary()`: open Tu diccionario.
 - `ondaily()`: play today's daily challenge.
 - `trialBest`: the best Contrarreloj run, if any.
@@ -27,12 +28,23 @@ Tu diccionario, achievements). It fits common phones without scrolling.
     onplay: () => void;
     onmap: () => void;
     onstats: () => void;
+    onprogress: () => void;
     ondictionary: () => void;
     ondaily: () => void;
     trialBest: RunResult | null;
     ontrial: () => void;
   };
-  let { game, onplay, onmap, onstats, ondictionary, ondaily, trialBest, ontrial }: Props = $props();
+  let {
+    game,
+    onplay,
+    onmap,
+    onstats,
+    onprogress,
+    ondictionary,
+    ondaily,
+    trialBest,
+    ontrial,
+  }: Props = $props();
 
   const today = $derived(game.today);
   const weekday = $derived(strings.weekday(today.date));
@@ -112,13 +124,20 @@ Tu diccionario, achievements). It fits common phones without scrolling.
       <span class="detail">{strings.dictionaryCount(game.dictionary.length)}</span>
     </button>
 
-    <button class="card" onclick={onstats}>
-      <span class="icon"><Icon name="trophy" /></span>
-      <span class="label">{strings.achievements}</span>
-      <span class="detail">
-        {strings.achievementsCount(game.achievements.length, ACHIEVEMENTS.length)}
-      </span>
-    </button>
+    <div class="progress-actions">
+      <button class="card" onclick={onstats}>
+        <span class="icon"><Icon name="trophy" /></span>
+        <span class="label"
+          >{strings.achievements}<small
+            >{strings.achievementsCount(game.achievements.length, ACHIEVEMENTS.length)}</small
+          ></span
+        >
+      </button>
+      <button class="card" onclick={onprogress}>
+        <span class="icon"><Icon name="star" /></span>
+        <span class="label">{strings.progressTitle}<small>{strings.progressBeta}</small></span>
+      </button>
+    </div>
   </section>
 </main>
 
@@ -211,6 +230,19 @@ Tu diccionario, achievements). It fits common phones without scrolling.
 
   .progress {
     gap: var(--space-2);
+  }
+
+  .progress-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+  .progress-actions .card {
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+  .progress-actions .icon {
+    width: 28px;
   }
 
   .play {

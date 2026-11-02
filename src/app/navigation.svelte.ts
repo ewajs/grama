@@ -4,7 +4,7 @@
  */
 
 /** The app's screens. */
-export type Screen = 'home' | 'game' | 'map' | 'stats' | 'trial' | 'dictionary';
+export type Screen = 'home' | 'game' | 'map' | 'stats' | 'trial' | 'dictionary' | 'progress';
 
 /**
  * Which screen shows. Moving to a screen adds a browser history entry, so the back
@@ -19,7 +19,7 @@ export class Navigation {
     if (start !== 'home') this.go(start);
     window.addEventListener('popstate', (event) => {
       const screen: unknown = event.state?.screen;
-      const screens: unknown[] = ['game', 'map', 'stats', 'trial', 'dictionary'];
+      const screens: unknown[] = ['game', 'map', 'stats', 'trial', 'dictionary', 'progress'];
       this.#screen = screens.includes(screen) ? (screen as Screen) : 'home';
     });
   }

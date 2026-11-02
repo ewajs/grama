@@ -224,8 +224,9 @@ words on a different wheel are ordinary learned skill, not recognized replay con
 
 The storage transaction calls `exposureFor` before showing each puzzle and persists its
 returned classification. Encounter IDs must survive resume and be new on restart; each trial
-wheel gets its own encounter, even within one run. Coverage is partial when old exposure
-history is incomplete. Do not promote unknown history to fresh after a reload or reset.
+wheel gets its own encounter, even within one run. First exposure means first in the
+recording ledger, not a claim about play before recording existed. Saved unknown exposures
+retain their classification after a reload or reset.
 `eligibilityOf` excludes unfinished attempts, any repeated or unknown exposure, missing
 exposure and uncertain timing. Admission is not a claim of measured skill: difficulty,
 outcome calibration and statistical independence are later model responsibilities.
@@ -257,11 +258,11 @@ play. Conflicts and failed updates stop that recording handle; progress saving r
 independent. If IndexedDB fails, a best-effort localStorage marker (`grama.assessment-gap`)
 keeps later unseen content unknown. If both stores are blocked, the marker cannot persist.
 
-A fresh profile initializes complete historical coverage once. An existing save, tutorial
-setting, trial result or personal dictionary initializes partial coverage instead. Later
-ordinary saves never downgrade the original coverage automatically, and reload/reset
-cannot promote partial coverage or clear the separate gap marker. Known repeated content
-still stays repeated. Unknown exposure is excluded from a future primary skill estimate.
+Exposure tracking starts with recorded play for all profiles. Old game saves, tutorial
+settings, trial results and dictionary entries do not create a separate recording policy.
+Past plays are not reconstructed; existing observation classifications remain untouched.
+Known game replays and repeated content in the ledger remain excluded, as do unknown
+exposures caused by partial sessions or recording gaps.
 
 Timing combines document visibility, navigation, completion and blocking dialogs, including
 their closing transitions. A heartbeat every five seconds counts foreground thinking even
@@ -292,9 +293,8 @@ does not guess whether that run is still live or finalize it. Separate tabs own 
 run IDs, while exposure classification remains transactional across all modes. A run
 with any repeated wheel, including within the run, is excluded by `eligibilityOf`.
 
-The temporary marker for every trial opening has been removed. Historical gaps and
-legacy unknown coverage remain unknown; recording new trials cannot reconstruct old
-exposures. `payload` combines both adapters' guards, so mixed puzzle/trial records share
+The temporary marker for every trial opening has been removed. Recorded unknown exposures
+remain unknown; recording new trials cannot reconstruct old exposures. `payload` combines both adapters' guards, so mixed puzzle/trial records share
 the existing schema without wiping or changing the format of prior puzzle observations.
 
 ### Difficulty snapshots and timing checkpoints
@@ -344,7 +344,7 @@ contain no such observations. Wall-clock timestamps never supply missing active 
 `storage/assessment` opens `grama.assessment` at schema 2. Checkpoints and finalized
 attempts are keyed by `attempt.id`, each with a unique `attempt.sequence` index.
 Exposures are keyed by encounter ID with a content-key index and immutable attempt owner.
-Metadata holds the schema version, last allocated sequence and initial exposure coverage. Unsupported older/newer
+Metadata holds the schema version and last allocated sequence. Unsupported older/newer
 schemas are preserved and refused; there is no migration or automatic reset. Existing
 localStorage game progress is independent.
 
@@ -386,8 +386,7 @@ schemas, invalid data, conflicts or transaction failures. Call `close` on teardo
 version changes close connections automatically, including late blocked-open cleanup.
 The store arbitrates revisions; numbered/daily recording stops a stale writer rather
 than merging competing session observations. Trial tabs use separate run IDs. `checkpoints()` validates all unfinished
-records for reconciliation; `initializeCoverage()` persists the initial classification
-once, independently from subsequent ordinary game saves.
+records for reconciliation.
 
 Browser tests compile the actual module into an in-memory library bundle and serve it
 only through a Playwright route. They use native IndexedDB on the production app's

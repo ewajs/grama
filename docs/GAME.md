@@ -69,14 +69,29 @@ pages, blocking dialogs and time away from the puzzle do not. Missing intervals 
 uncertain. Leaving and resuming a numbered/daily puzzle keeps its encounter; restarting
 creates another. A first completion finalizes the observation once.
 
-Repeated wheels are practice evidence; incomplete old exposure history remains unknown.
-Neither is eligible for the future primary skill estimate. Resetting game progress keeps
+Exposure tracking starts with recorded play for everyone; past game saves are not
+converted into observations. Known repeated wheels are practice evidence and are excluded
+from comparisons. Already stored unknown exposures remain excluded. Resetting game progress keeps
 these observations and exposure history. They never change stars, points, hints or level
 generation. No skill rating is shown yet. Contrarreloj records one attempt per run with
 all presented wheels, found words, clears and skips; any repeated wheel excludes that run
 from the future primary skill estimate.
 If recording storage fails, ordinary play and its separate progress saving continue.
 All observations stay on the device, with no analytics upload or account.
+
+### Tu progreso (beta)
+
+Home's **Tu progreso** opens recent recorded outcomes, with observed solve times and hint
+use for puzzles, and points/cleared wheels for trials. Original incomplete or replayed
+results can be inspected without treating them as losses or fresh skill evidence.
+
+Personal comparisons group eligible observations using the M23 adapter: ten initial
+attempts versus ten recent attempts per comparable group. Ties contribute half; the
+percentage describes these comparisons, not a magnitude of improvement or an absolute
+ability rating. Sparse groups show their count instead. There is no beta enrollment or
+alternate comparison policy: known repeats, unknown exposure and uncertain timing are
+excluded. Players can refresh the view and open a GitHub feedback form; their history
+stays local and is not attached automatically.
 
 ### Daily challenge (`src/core/daily.ts`)
 

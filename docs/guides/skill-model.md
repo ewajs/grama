@@ -1,7 +1,7 @@
 # Skill model candidates
 
-Status: M23 validation work. Recording is live; estimates are not calculated during play
-or displayed yet. Backup/restore and the remaining M22 data controls are deferred.
+Status: M23 validation continues alongside the M24 beta. Personal comparisons and recent
+observations are now visible in Tu progreso; absolute skill ratings remain undisplayed. Backup/restore and the remaining M22 data controls are deferred.
 
 ## Glicko-2 candidate
 
@@ -109,3 +109,20 @@ Saved-record-shaped fixtures exercise projection and the existing baseline toget
 including unique fresh wheels and duplicate IDs. They verify data consistency and group
 boundaries, not empirical equivalence of every puzzle in a band. These cohorts remain
 provisional; sparse groups have no comparison and no absolute ability rating is inferred.
+
+## Beta feedback loop
+
+The owner prioritized player testing over another pre-UI acceptance phase. `ProgressScreen`
+loads history through the existing recorder queue and `progressOverview` applies the
+existing adapter/baseline functions. Recent original outcomes stay visible even when
+unknown exposure or sparse cohorts prevent comparisons. A manual refresh rereads all pages;
+connections and record validation remain owned by the existing assessment store.
+
+The beta uses the existing Grama deployment and adds a Home entry and a GitHub feedback
+link. No history is uploaded. Model-selection gates remain open; beta feedback about
+clarity, missing comparisons and perceived usefulness informs that next decision.
+
+Everyone on the current deployment has access. Exposure tracking starts with recorded
+play, regardless of prior game saves. There is one eligibility policy, with no opt-in,
+legacy comparison model or reconstruction of past sessions. Existing observations and
+ordinary game progress remain untouched.
