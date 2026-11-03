@@ -340,12 +340,12 @@ remain uncertain.
 **Verify:** repeated easy success and duplicate evidence cannot imply unsupported skill;
 prefer descriptive progress where observations cannot support a numeric estimate.
 
-### M24 — Useful personal progress (D37)
+### M24 — Useful personal progress (D38, amending D37)
 
 - [x] Beta progress screen: Home entry, recent real outcomes, sample counts and available personal comparisons
 - [x] Record the decision and replacement delivery plan (`docs/PROGRESS-PLAN.md`)
-- [x] Cycle 1: provisional difficulty-adjusted puzzle performance, immediate scoring,
-      recent-five smoothing and simple trend; separate timed-mode results; documented
+- [x] Cycle 1: existing Glicko-2 with a difficulty-based benchmark, fractional hint/extra/time
+      outcomes, immediate unbounded rating and simple trend; separate timed-mode results; documented
       formula/constants and focused tests
 - [ ] Cycle 2: replace cohort beta UI with current score, trend, accessible history and
       concise explanation; update game/developer/player docs and browser tests
@@ -357,7 +357,7 @@ prefer descriptive progress where observations cannot support a numeric estimate
 normally. Model research and large feedback datasets are not prerequisites. See
 [`PROGRESS-PLAN.md`](./PROGRESS-PLAN.md) for scope and documents to update.
 
-**Verify:** one usable puzzle completion yields a score; sparse history is useful;
+**Verify:** one usable puzzle completion yields a rating; sparse history is useful;
 missing timing does not discard usable results; practice cannot inflate the estimate;
 no cohort quotas or recording diagnostics appear in the normal player flow.
 

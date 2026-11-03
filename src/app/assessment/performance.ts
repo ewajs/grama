@@ -1,9 +1,15 @@
 import {
   PERFORMANCE,
-  performanceScore,
+  performanceMatch,
   summarizePerformance,
 } from '../../core/assessment/performance';
-import { hintsUsed, isComplete } from '../../core/session';
+import {
+  NEW_RATING,
+  ratePeriod,
+  type Rating,
+  type RatingResult,
+} from '../../core/assessment/glicko2';
+import { bonusWords, hintsUsed, isComplete } from '../../core/session';
 import { evidenceJson, isFinalized } from '../../storage/assessment-record';
 import { GRAMA_RULES } from './grama';
 import { isGramaPayload, isGramaResult, type GramaRecord } from './payload';
@@ -27,9 +33,10 @@ export function performanceHistory(records: readonly unknown[]) {
     unique.set(id, record);
     sequences.set(sequence, id);
   }
-  const puzzles: { record: GramaRecord; score: number | null }[] = [],
+  const puzzles: { record: GramaRecord; match: RatingResult | null; rating: Rating | null }[] = [],
     trials: GramaRecord[] = [],
-    scores: number[] = [];
+    ratings: Rating[] = [];
+  let player: Readonly<Rating> = NEW_RATING;
   let trialBest: number | null = null;
   for (const record of [...unique.values()].sort(
     (a, b) => a.attempt.sequence - b.attempt.sequence,
@@ -54,21 +61,26 @@ export function performanceHistory(records: readonly unknown[]) {
         continue;
       const practice =
         payload.replay || attempt.exposures.some((exposure) => exposure.kind === 'repeat');
-      const score =
+      const match =
         practice || payload.descriptor.score === null
           ? null
-          : performanceScore({
+          : performanceMatch({
               difficulty: payload.descriptor.score,
               targetLetters: payload.descriptor.targets.reduce(
                 (sum, target) => sum + target.length,
                 0,
               ),
               revealedLetters: hintsUsed(payload.session),
+              bonusWords: bonusWords(payload.level, payload.session).length,
               activeMs:
                 attempt.timing === 'reliable' && attempt.activeMs > 0 ? attempt.activeMs : null,
             });
-      puzzles.push({ record, score });
-      if (score !== null) scores.push(score);
+      const rating = match === null ? null : ratePeriod(player, [match]);
+      puzzles.push({ record, match, rating });
+      if (rating !== null) {
+        player = rating;
+        ratings.push(rating);
+      }
     } else {
       if (
         attempt.track !== 'time-trial' ||
@@ -89,7 +101,7 @@ export function performanceHistory(records: readonly unknown[]) {
   return {
     version: PERFORMANCE.version,
     puzzles,
-    ...summarizePerformance(scores),
+    ...summarizePerformance(ratings),
     trials,
     trialBest,
   };

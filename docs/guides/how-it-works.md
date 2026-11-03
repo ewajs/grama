@@ -343,12 +343,13 @@ contain no such observations. Wall-clock timestamps never supply missing active 
 
 `app/assessment/performance.performanceHistory` validates original finalized history,
 deduplicates attempt IDs and orders by saved sequence. It feeds numbered/daily puzzle
-features into the pure `core/assessment/performance` score and recent-window summary.
+features into `core/assessment/performance` benchmark matches, updates the existing
+Glicko-2 engine once per rated puzzle, and summarizes the current rating/trend.
 The returned versioned view includes chronological puzzle results (practice or missing
-difficulty has no score), current performance, trend and separate trial history/best.
+difficulty has no update), Glicko rating snapshots, current rating, trend and separate trial history/best.
 It writes nothing and needs no clock, random source or current dictionary. Missing timing
 omits only the bounded time adjustment; unknown exposure stays recorded as unknown.
-See the [formula and worked examples](./skill-model.md#performance-version-1).
+See the [formula and worked examples](./skill-model.md#performance-version-2).
 
 The current `ProgressScreen` still uses the experimental cohort projection; cycle 2
 will connect this replacement. Recorder and research eligibility rules stay independent.

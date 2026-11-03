@@ -1,32 +1,39 @@
-/** Provisional performance policy; changing any scoring or summary rule bumps its version. */
+import { NEW_RATING, type Rating, type RatingResult } from './glicko2';
+
+/** Versioned benchmark assumptions; changing scoring, admission or trend bumps the version. */
 export const PERFORMANCE = {
-  version: 1,
-  base: 20,
-  difficultyWeight: 15,
-  maxDifficulty: 5,
-  hintPenalty: 50,
-  timeLimit: 3,
+  version: 2,
+  referenceDifficulty: 3,
+  difficultyWeight: 400,
+  opponentDeviation: 150,
+  completion: 0.65,
+  hintPenalty: 0.15,
+  assistedFraction: 0.2,
+  bonusLimit: 0.05,
+  bonusHalf: 3,
+  timeLimit: 0.05,
   secondsPerLetter: 4,
-  referenceDifficulty: 2.75,
-  recentWindow: 5,
+  paceDifficulty: 2.75,
   trendWindow: 3,
-  trendThreshold: 3,
+  trendThreshold: 15,
 } as const;
 
-/** Original puzzle features; null duration means the time adjustment is unavailable. */
+/** Original completed-puzzle features; null duration gives a neutral speed adjustment. */
 export type PerformanceInput = {
   difficulty: number;
   targetLetters: number;
   revealedLetters: number;
+  bonusWords: number;
   activeMs: number | null;
 };
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
-const mean = (values: readonly number[]) => values.reduce((sum, n) => sum + n, 0) / values.length;
+const mean = (values: readonly Rating[]) =>
+  values.reduce((sum, value) => sum + value.rating, 0) / values.length;
 
-/** Difficulty and independence dominate a 0–100 score; time contributes at most ±3 points. */
-export function performanceScore(input: PerformanceInput): number {
-  const { difficulty, targetLetters, revealedLetters, activeMs } = input;
+/** Builds one fractional Glicko result: difficulty sets the opponent, other factors adjust the outcome. */
+export function performanceMatch(input: PerformanceInput): RatingResult {
+  const { difficulty, targetLetters, revealedLetters, bonusWords, activeMs } = input;
   if (
     !Number.isFinite(difficulty) ||
     !Number.isSafeInteger(targetLetters) ||
@@ -34,32 +41,45 @@ export function performanceScore(input: PerformanceInput): number {
     !Number.isSafeInteger(revealedLetters) ||
     revealedLetters < 0 ||
     revealedLetters > targetLetters ||
+    !Number.isSafeInteger(bonusWords) ||
+    bonusWords < 0 ||
     (activeMs !== null && (!Number.isFinite(activeMs) || activeMs <= 0))
   )
     throw new RangeError('Invalid performance input');
   const p = PERFORMANCE,
-    d = clamp(difficulty, 0, p.maxDifficulty),
-    referenceMs = targetLetters * p.secondsPerLetter * 1000 * 2 ** (d - p.referenceDifficulty),
-    time = activeMs === null ? 0 : p.timeLimit * clamp(Math.log2(referenceMs / activeMs), -1, 1);
-  return clamp(
-    p.base + p.difficultyWeight * d - p.hintPenalty * (revealedLetters / targetLetters) + time,
-    0,
-    100,
-  );
+    rating = NEW_RATING.rating + p.difficultyWeight * (difficulty - p.referenceDifficulty),
+    hints = p.hintPenalty * Math.min(1, revealedLetters / targetLetters / p.assistedFraction),
+    bonus = p.bonusLimit * (bonusWords / (bonusWords + p.bonusHalf)),
+    // Work in log space to avoid exponentiating difficulty for the assumed pace.
+    time =
+      activeMs === null
+        ? 0
+        : p.timeLimit *
+          clamp(
+            Math.log2((targetLetters * p.secondsPerLetter * 1000) / activeMs) +
+              difficulty -
+              p.paceDifficulty,
+            -1,
+            1,
+          );
+  if (!Number.isFinite(rating))
+    throw new RangeError('Performance opponent exceeds numerical range');
+  return {
+    opponent: { rating, deviation: p.opponentDeviation },
+    score: p.completion - hints + bonus + time,
+  };
 }
 
-/** Summarizes chronological scored completions, without rounding or waiting for a full window. */
-export function summarizePerformance(scores: readonly number[]): {
-  current: number | null;
+/** Current Glicko state plus a small trend over two disjoint three-update windows. */
+export function summarizePerformance(ratings: readonly Rating[]): {
+  current: Rating | null;
   trend: 'up' | 'steady' | 'down' | null;
 } {
-  if (scores.some((score) => !Number.isFinite(score) || score < 0 || score > 100))
-    throw new RangeError('Invalid performance score');
   const p = PERFORMANCE,
-    current = scores.length ? mean(scores.slice(-p.recentWindow)) : null;
-  if (scores.length < p.trendWindow * 2) return { current, trend: null };
+    current = ratings.at(-1) ?? null;
+  if (ratings.length < p.trendWindow * 2) return { current, trend: null };
   const difference =
-    mean(scores.slice(-p.trendWindow)) - mean(scores.slice(-p.trendWindow * 2, -p.trendWindow));
+    mean(ratings.slice(-p.trendWindow)) - mean(ratings.slice(-p.trendWindow * 2, -p.trendWindow));
   return {
     current,
     trend:

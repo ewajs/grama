@@ -3,10 +3,10 @@
 /** Mean, rating deviation and volatility on the original Glicko rating scale. */
 export type Rating = { rating: number; deviation: number; volatility: number };
 
-/** An independent result within one period, against a pre-period opponent snapshot. */
+/** One result against a pre-period opponent; fractional scores are a game-model extension. */
 export type RatingResult = {
   opponent: Pick<Rating, 'rating' | 'deviation'>;
-  score: 0 | 0.5 | 1;
+  score: number;
 };
 
 /** Unrated prior; its scale does not yet represent calibrated Grama ability. */
@@ -56,10 +56,10 @@ export function inflateRating(player: Readonly<Rating>, periods: number): Rating
 }
 
 /**
- * Updates once for a batch of independent win/draw/loss results using pre-period ratings.
+ * Updates once for a batch of results in [0, 1] using pre-period ratings.
  * Empty input advances exactly one idle period. Invalid or numerically unresolved input
- * throws instead of returning a corrupt estimate. Fractional performance needs a separate
- * validated outcome model. See https://www.glicko.net/glicko/glicko2.pdf (2022).
+ * throws instead of returning a corrupt estimate. Fractional results use the same equations; their
+ * game-specific interpretation belongs to the adapter. See https://www.glicko.net/glicko/glicko2.pdf (2022).
  */
 export function ratePeriod(
   player: Readonly<Rating>,
@@ -76,8 +76,8 @@ export function ratePeriod(
     residual = 0;
   for (const { opponent, score } of results) {
     checkRating(opponent.rating, opponent.deviation);
-    if (score !== 0 && score !== 0.5 && score !== 1)
-      throw new RangeError('A Glicko-2 result must be a loss, draw or win');
+    if (!Number.isFinite(score) || score < 0 || score > 1)
+      throw new RangeError('A Glicko-2 result must be finite and in [0, 1]');
     const g = 1 / Math.sqrt(1 + (3 * (opponent.deviation / SCALE) ** 2) / Math.PI ** 2);
     const logOdds = g * (mu - (opponent.rating - NEW_RATING.rating) / SCALE);
     const tail = Math.exp(-Math.abs(logOdds));

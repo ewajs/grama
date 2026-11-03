@@ -8,6 +8,27 @@ delete it, the history is the point.
 
 ---
 
+## D38 · Reuse Glicko-2 with sensible benchmark defaults — 2026-11-03
+
+- **Decision:** retain the existing Glicko-2 investigation and reference-tested engine.
+  Replace the unpublished bounded score in PR #110 with an unbounded player rating.
+  This supersedes D37's scoring/smoothing choice, retaining immediate useful feedback,
+  original evidence, simple presentation and ordinary-play testing.
+- **Model:** puzzle difficulty determines a benchmark opponent's rating. Hints give a
+  modest board-normalized penalty, extras a small diminishing bonus, and reliable speed
+  a small adjustment against an assumed workload/difficulty pace. Missing time is neutral.
+  See the exact version-2 constants and worked examples in `docs/guides/skill-model.md`.
+- **Engine:** prior 1500 / RD 350 / volatility 0.06, tau 0.5; one rated puzzle per period,
+  opponent RD 150. Extend result inputs to finite [0,1] using the same update equations;
+  distinguish the fractional game model from the published binary reference. The match
+  result is bounded; the player rating is not. No calendar inactivity policy is invented.
+- **History/UI:** retain attempt identities and research eligibility, exclude known
+  repeats from rating updates, admit unknown exposure provisionally, and recompute from
+  originals. Show the latest Glicko rating and a simple trend in cycle 2. Contrarreloj
+  remains separate. No extra metric, ghost engine or recent-five score average.
+- **Delivery:** revise the existing cycle-1 PR; document/test reasonable initial defaults
+  rather than requiring a new research or large-beta phase. No player-screen change yet.
+
 ## D37 · Ship understandable progress with a provisional metric — 2026-11-02
 
 - **Decision:** replace the cohort-comparison beta with a useful personal performance

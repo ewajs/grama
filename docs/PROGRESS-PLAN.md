@@ -1,6 +1,6 @@
 # Personal progress: replacement plan
 
-Decision: [D37](./DECISIONS.md). Cycle 1 is implemented; cycles 2–3 remain planned.
+Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycle 1 is implemented; cycles 2–3 remain planned.
 The existing beta screen remains unchanged until cycle 2 ships.
 
 ## Outcome
@@ -12,14 +12,15 @@ games or interpreting recording diagnostics. Friends test by playing normally.
 ## Cycle 1 — Implement the provisional metric
 
 Implemented in `core/assessment/performance` and `app/assessment/performance`.
-The [metric guide](./guides/skill-model.md#performance-version-1) records the exact
+The [metric guide](./guides/skill-model.md#performance-version-2) records the exact
 formula, assumptions and worked examples.
 
 Deliver a pure, versioned calculation plus the Grama history adapter in one PR.
 
 - Use the stored difficulty descriptor to put numbered levels and dailies on one scale;
   normalize hint assistance by target letters so different board sizes remain usable.
-- Pick an explicit score range, difficulty mapping, hint penalty and time adjustment in
+- Reuse Glicko-2 with an unbounded rating, difficulty-based opponent, modest hint penalty,
+  diminishing extra-word bonus and small optional speed adjustment in
   this cycle. Difficulty and independence dominate; cap the influence of time in both
   directions. Document worked easy/hard, hinted/unhinted and fast/slow examples in the PR
   and skill-model guide. These are product assumptions, not fitted population norms.
@@ -30,14 +31,15 @@ Deliver a pure, versioned calculation plus the Grama history adapter in one PR.
 - Deduplicate by attempt identity and order by saved sequence. Recompute from original
   records without changing storage schema, eligibilityOf or the old observations.
   Use a dedicated performance projection rather than loosening research eligibility.
-- Start with the mean of the latest five scored completions (use those available from
-  the first). After six scored completions, compare the latest three with the previous
-  three. Define a small neutral band in the implementation and use up/steady/down wording;
+- Start with the existing Glicko prior and update once per rated puzzle, from the first.
+  After six updates, compare the latest three rating snapshots with the previous three,
+  using a 15-point neutral band and up/steady/down wording;
   no confidence interval, percentage improvement or absolute ability claim.
 - Keep Contrarreloj as raw recent points and recorded personal bests, separate from the
   puzzle metric. Include practice runs in ordinary score history.
 - Test ordering, duplicate handling, replay exclusion, unknown exposure, missing timing,
-  hints, bounded time influence, harder independent solves, sparse history and smoothing.
+  hints, extras, bounded time influence, harder independent solves, sparse history,
+  fractional Glicko behavior and stable repeated performance.
   Inspect the worked examples for incentives such as rushing or avoiding useful hints.
 
 This is implementation work, not a new model-research or approval milestone. The
@@ -45,9 +47,9 @@ formula and constants are concrete and reviewable in the PR; they can change lat
 
 ## Cycle 2 — Replace the beta screen
 
-- Show the current puzzle score immediately, the trend when available, and an accessible
+- Show the current Glicko rating immediately, the trend when available, and an accessible
   small recent-score chart with a text equivalent and recent results.
-- Explain that difficulty, hints and time affect performance in a short expandable help
+- Explain that difficulty, hints, extra words and time affect performance in a short expandable help
   section. Early history says simply that the score will settle as the player plays.
 - Remove cohort cards, 1-of-20 quotas, ordinal comparison percentages, research exclusion
   labels and the GitHub feedback requirement. Keep recording details out of normal play.

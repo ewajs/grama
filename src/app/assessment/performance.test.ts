@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { NEW_RATING, ratePeriod } from '../../core/assessment/glicko2';
 import { NEW_SESSION } from '../../core/session';
 import { describePuzzle, GRAMA_RULES } from './grama';
 import { performanceHistory } from './performance';
@@ -91,11 +92,11 @@ it('combines levels and dailies across content versions, orders by sequence and 
     };
   const history = performanceHistory([daily, first, structuredClone(first)]);
   expect(history.puzzles.map(({ record }) => record.attempt.id)).toEqual(['puzzle-1', 'puzzle-2']);
-  const scores = history.puzzles.map(({ score }) => score!);
-  expect(scores[1]).toBeGreaterThan(scores[0]!);
+  const matches = history.puzzles.map(({ match }) => match!);
+  expect(matches[1]!.score).toBeGreaterThan(matches[0]!.score);
   expect(history).toMatchObject({
-    version: 1,
-    current: (scores[0]! + scores[1]!) / 2,
+    version: 2,
+    current: ratePeriod(ratePeriod(NEW_RATING, [matches[0]!]), [matches[1]!]),
     trend: null,
   });
   expect(performanceHistory([first, daily])).toEqual(history);
@@ -110,8 +111,8 @@ it('keeps practice and missing difficulty in history without changing score or t
   repeated.attempt.exposures[0]!.kind = 'repeat';
   missing.payload.descriptor = describePuzzle(missing.payload.level, new Map());
   const history = performanceHistory([first, replay, repeated, missing]);
-  expect(history.puzzles.map(({ score }) => score)).toEqual([history.current, null, null, null]);
-  expect(history.current).toBe(performanceHistory([first]).current);
+  expect(history.puzzles.map(({ rating }) => rating)).toEqual([history.current, null, null, null]);
+  expect(history.current).toEqual(performanceHistory([first]).current);
 });
 
 it('uses unknown exposure and falls back to difficulty/assistance when timing is unavailable', () => {
@@ -122,19 +123,24 @@ it('uses unknown exposure and falls back to difficulty/assistance when timing is
   uncertain.clock.timing = uncertain.attempt.timing = 'uncertain';
   zero.clock.activeMs = zero.attempt.activeMs = 0;
   const history = performanceHistory([unknown, uncertain, zero]);
-  expect(history.puzzles[0]?.score).toBe(performanceHistory([puzzle()]).current);
-  expect(history.puzzles[1]?.score).not.toBeNull();
-  expect(history.puzzles[1]?.score).toBe(history.puzzles[2]?.score);
+  expect(history.puzzles[0]?.rating).toEqual(performanceHistory([puzzle()]).current);
+  expect(history.puzzles[1]?.match).not.toBeNull();
+  expect(history.puzzles[1]?.match).toEqual(history.puzzles[2]?.match);
   expect(unknown.attempt.exposures[0]?.kind).toBe('unknown');
 });
 
-it('does not reward bonus-word hunting or game points independently', () => {
+it('gives extra words a small bonus, independently of game reward points', () => {
   const original = puzzle(),
     bonus = puzzle();
   bonus.payload.session.found = [...bonus.payload.session.found, 'OLA'];
   bonus.attempt.result.found = bonus.payload.session.found;
   bonus.payload.session.points = 9999;
-  expect(performanceHistory([bonus]).current).toBe(performanceHistory([original]).current);
+  expect(performanceHistory([bonus]).current!.rating).toBeGreaterThan(
+    performanceHistory([original]).current!.rating,
+  );
+  const before = performanceHistory([bonus]).current;
+  bonus.payload.session.points = 0;
+  expect(performanceHistory([bonus]).current).toEqual(before);
 });
 
 it('excludes abandoned, inconsistent, unpresented and unsupported evidence without counting losses', () => {

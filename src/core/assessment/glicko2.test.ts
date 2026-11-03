@@ -96,7 +96,25 @@ describe('Glicko-2 candidate', () => {
     expect(() => inflateRating({ ...player, ...change }, 1)).toThrow(RangeError);
   });
 
-  it.each([0.25, -1, 2, NaN])('rejects unvalidated fractional or invalid outcomes: %s', (score) => {
+  it('extends fractional results continuously while preserving symmetry', () => {
+    const update = (score: number) => ratePeriod(player, [{ opponent: equalOpponent, score }]);
+    expect(update(0.25).rating).toBeGreaterThan(update(0).rating);
+    expect(update(0.25).rating).toBeLessThan(update(0.5).rating);
+    expect(update(0.25).rating + update(0.75).rating).toBeCloseTo(3000, 10);
+    const batch = ratePeriod(player, [
+      { opponent: equalOpponent, score: 0.2 },
+      { opponent: equalOpponent, score: 0.8 },
+    ]);
+    const draws = ratePeriod(player, [
+      { opponent: equalOpponent, score: 0.5 },
+      { opponent: equalOpponent, score: 0.5 },
+    ]);
+    expect(batch.rating).toBeCloseTo(draws.rating, 10);
+    expect(batch.deviation).toBeCloseTo(draws.deviation, 10);
+    expect(batch.volatility).toBeCloseTo(draws.volatility, 10);
+  });
+
+  it.each([-1, 2, NaN, Infinity])('rejects invalid outcomes: %s', (score) => {
     const result = { opponent: equalOpponent, score } as RatingResult;
     expect(() => ratePeriod(player, [result])).toThrow(RangeError);
   });
