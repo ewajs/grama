@@ -79,7 +79,11 @@ un máximo fijo. Los [ejemplos numéricos](/calculo-del-nivel#un-ejemplo-complet
 
 <img class="screen" src="/screenshots/progreso.png" alt="Nivel de juego, tendencia y evolución de las últimas partidas">
 
-El número grande es tu valoración después del último tablero que contó. El gráfico
+La tarjeta **Tu progreso** del inicio muestra tu valoración actual. El resumen de un
+tablero recién completado también muestra el nuevo valor y su cambio con signo; la
+primera vez lo presenta como tu primer nivel de juego.
+
+El número grande de la pantalla Tu progreso es tu valoración después del último tablero que contó. El gráfico
 muestra hasta diez actualizaciones, en orden de juego. Después de seis actualizaciones,
 la tendencia compara el promedio de las últimas tres valoraciones con el de las tres
 anteriores: al menos **15 puntos** de diferencia dice **En alza** o **En baja**; en el

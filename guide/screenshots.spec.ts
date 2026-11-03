@@ -74,7 +74,8 @@ async function open(page: Page, path = './', save?: string, words?: string) {
   await page.goto(path);
 }
 
-const shot = (page: Page, name: string) => page.screenshot({ path: `${OUT}/${name}.png` });
+const shot = (page: Page, name: string) =>
+  page.screenshot({ path: `${OUT}/${name}.png`, animations: 'disabled' });
 
 test('home, map, achievements, Tu diccionario and the menu', async ({ page }) => {
   await open(page, './', veteran(), veteranWords());
@@ -192,13 +193,29 @@ test('a Contrarreloj run', async ({ page }) => {
 test('personal progress and updated Home', async ({ page }) => {
   await open(page, './', veteran(), veteranWords());
   await page.getByRole('button', { name: /^Tu progreso/ }).waitFor();
-  await shot(page, 'inicio');
   await page.getByRole('button', { name: /^Tu progreso/ }).click();
   await page
     .getByText('Completá un nivel o una partida de Contrarreloj para ver tus resultados acá.')
     .waitFor();
   await installHistory(page, puzzleHistory().slice(0, 6));
   await page.goBack();
+  await page
+    .getByRole('button', { name: /^Tu progreso/ })
+    .locator('strong')
+    .waitFor();
+  await shot(page, 'inicio');
+  await page.screenshot({
+    path: '/tmp/grama-polish/home-light.png',
+    animations: 'disabled',
+    scale: 'css',
+  });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.screenshot({
+    path: '/tmp/grama-polish/home-dark.png',
+    animations: 'disabled',
+    scale: 'css',
+  });
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.getByRole('button', { name: /^Tu progreso/ }).click();
   await page.getByRole('img').waitFor();
   await shot(page, 'progreso');

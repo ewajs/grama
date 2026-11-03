@@ -57,11 +57,11 @@ export class GramaRecorder {
     return result;
   }
 
-  /** Refreshes history after queued local writes; a read failure never changes recording policy. */
-  async history(): Promise<GramaRecord[] | null> {
+  /** Reads history; only Home opts out of waiting for queued writes so optional stats cannot delay play. */
+  async history(afterWrites = true): Promise<GramaRecord[] | null> {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    const read = this.#queue(async () => {
+    const load = async () => {
       const store = await this.#store;
       if (!store || cancelled) return null;
       const records: GramaRecord[] = [];
@@ -74,7 +74,8 @@ export class GramaRecorder {
         records.push(...page.value);
         after = last.attempt.sequence;
       }
-    });
+    };
+    const read = afterWrites ? this.#queue(load) : load().catch(() => null);
     try {
       return await Promise.race([
         read,

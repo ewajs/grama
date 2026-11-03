@@ -87,6 +87,11 @@ otros jugadores.
 Para entender la valoración, leé [Tu nivel de juego](/tu-nivel). Si querés ir más a fondo,
 [El cálculo, paso a paso](/calculo-del-nivel) explica las ecuaciones e incluye un laboratorio interactivo.
 
+En el inicio, la tarjeta **Tu progreso** muestra tu nivel de juego y abre su historial.
+Al terminar un tablero que cuenta, el resumen muestra dónde quedó tu nivel y cuánto
+subió o bajó. La primera vez dice **Tu primer nivel de juego**; las prácticas no cambian
+la valoración. Si todavía se está guardando o el registro falló, podés continuar igual.
+
 Tu **nivel de juego** aparece desde el primer nivel o desafío nuevo que completás.
 Resolver un tablero difícil pesa más; las pistas restan un poco, y las palabras extra
 junto con la rapidez suman un poco. Si no se pudo medir bien el tiempo, cuenta el resto

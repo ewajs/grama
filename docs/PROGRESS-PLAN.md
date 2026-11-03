@@ -113,3 +113,56 @@ the developer docs/player guide, and check the production JavaScript budget. CI 
 green before merge. One cycle per PR; stop for review under the existing working rules.
 After deployment verify on a real phone, including a profile with existing observations.
 Do not change game saves, level content versions, stars, rewards or generation.
+
+## Home and completion polish
+
+Implemented in the Home/completion polish PR; screenshots cover light/dark, rating changes and mode-specific actions.
+
+Keep Jugar as the single dominant Home action. Reuse the current visual language,
+spacing, typography and colors. No rating chart or additional stat pills on Home.
+
+### Layout and behavior
+
+- Use the existing logo row for a labeled Guide link on the left and a 44px menu control
+  on the right. Keep the logo centered; avoid an extra toolbar/footer row. The guide
+  remains available from the menu and rating help as well.
+- Reuse the menu/settings/tutorial/about flows from Home and gameplay. Close returns to
+  the current screen, with correct labels and focus. Home menu access must not wait for
+  word-list loading or create a puzzle exposure; reports must use appropriate available
+  context rather than pretending a level is on screen.
+- Rebalance the existing progress area into three rows: a full-width Tu progreso card
+  with its current Nivel de juego; compact Map/Logros cards together; Tu diccionario.
+  Preserve useful summaries when they fit. A profile without a rating gets a friendly
+  first-completion prompt, not a displayed earned 1500. Storage failure must not block Home.
+- Add one compact rating line to Level Complete, below rewards and above the word recap:
+  “Nivel de juego 1.658 · +14”. Use calm styling and an explicit sign; a fall is not an
+  error. Round the before/after values consistently so the visible change reconciles.
+  The first rating says “Tu primer nivel de juego …” without implying a prior earned rating.
+- Show the update for that exact finalized attempt, using the existing history projection
+  and attempt identity. Retain full internal precision. No new formula, persisted rating,
+  artificial zero change, history reconstruction or repeated polling. Completion/navigation
+  stays responsive while saving; unavailable or unrated evidence omits the numeric update.
+- Normal completion keeps Next as primary and adds Inicio as secondary. Returning Home
+  advances the completed main level once, preserves rewards and does not present/consume
+  the next wheel. Replays keep Back to Map plus Home; dailies retain Share/Home without
+  duplicate Home buttons. Contrarreloj keeps its separate score.
+
+### Wiring, documentation and verification
+
+Share a small in-memory rating summary between Home/progress/completion where useful.
+Refresh on entry and after finalized play, not on every word or animation frame. The
+completion delta comes from the matching attempt's before/after Glicko states, rather
+than subtracting two potentially unrelated global summaries (including across tabs).
+
+Update GAME.md, affected developer architecture guidance, player Home/progress/how-to-play
+pages and screenshots, plus Rioplatense UI strings. Record any non-obvious integration
+choice in DECISIONS.md. Keep all saves, generation, recording eligibility and rating rules.
+
+Focused checks: Home menu settings/help/focus and closing; guide destination; rating after
+first/new play and graceful storage failure; positive/negative changes and no replay
+update; Next/Home/Map/daily actions preserve progress without reopening the completion
+modal or exposing a hidden next board. Check 375×667, 390×844, 844×390 and desktop, light
+and dark, reduced motion and keyboard targets. Preserve reading room; allow ordinary
+scrolling on short screens instead of shrinking text or touch targets to force a fit.
+Run the normal code checks, affected browser flows, both doc builds and size budget.
+Open one review PR and stop before merge under the existing working cycle.

@@ -91,6 +91,16 @@ is.
 > [!TIP]
 > **Why `level` returns the same object.** `level` is a `$derived` that regenerates only when the level number, difficulty or date changes, and otherwise returns the _same_ object. Svelte only updates what depends on a derived when its value changes, so the wheel keeps a shuffled order while the player finds words. (Regenerating on every word was a real bug.)
 
+`MenuDialogs` reuses the settings/tutorial/about/reset flow on Home and gameplay.
+`App` keeps only a small current-rating summary, refreshing on Home entry and after
+finalized play. Optional Home history reads bypass the write queue to avoid delaying
+puzzle preparation; completion/progress/export reads still wait for queued writes.
+`Recording.update` resolves its queued write; `GameScreen` requests the saved attempt's
+rating by immutable ID and only renders it while the same completed puzzle is still open.
+`ratingUpdate` compares the matching snapshot with the preceding rated snapshot, using
+rounded values for the visible delta. Home navigation advances once without showing the
+next board. Recording, rating formulas and stored save formats stay independent.
+
 Around `Game`:
 
 | Module                                      | Its job                                   |

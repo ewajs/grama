@@ -2,7 +2,7 @@ import { expect, it } from 'vitest';
 import { NEW_RATING, ratePeriod } from '../../core/assessment/glicko2';
 import { NEW_SESSION } from '../../core/session';
 import { describePuzzle, GRAMA_RULES } from './grama';
-import { performanceHistory } from './performance';
+import { performanceHistory, ratingUpdate } from './performance';
 import { describeTrial, trialResult } from './trial';
 
 function puzzle(sequence = 1, hints = 0) {
@@ -201,4 +201,19 @@ it('keeps timed-mode points and best separate, including repeated wheels and unc
       { ...run, attempt: { ...run.attempt, result: { ...run.attempt.result, skipped: 1 } } },
     ]).trials,
   ).toEqual([]);
+});
+
+it('associates changes with the exact attempt and the displayed rounded values', () => {
+  const history = performanceHistory([puzzle(1), puzzle(2)]);
+  expect(ratingUpdate(history, 'puzzle-1')).toEqual({
+    rating: history.puzzles[0]!.rating!.rating,
+    change: null,
+  });
+  history.puzzles[0]!.rating!.rating = 1500.49;
+  history.puzzles[1]!.rating!.rating = 1508.51;
+  expect(ratingUpdate(history, 'puzzle-2')).toEqual({ rating: 1508.51, change: 9 });
+  expect(ratingUpdate(history, 'missing')).toBeNull();
+  const replay = puzzle(3);
+  replay.payload.replay = true;
+  expect(ratingUpdate(performanceHistory([puzzle(1), replay]), 'puzzle-3')).toBeNull();
 });

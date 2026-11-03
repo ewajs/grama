@@ -45,6 +45,11 @@ export class Recording<Observation> {
     this.#abandon = abandon;
   }
 
+  /** Immutable identity used to associate a completion with its own rating update. */
+  get id(): string {
+    return this.#saved.attempt.id;
+  }
+
   /** Combines visibility and overlay state at the UI boundary. */
   active(value: boolean): void {
     if (this.#closed || value === this.#active) return;
@@ -52,13 +57,14 @@ export class Recording<Observation> {
     this.#event(value ? 'resume' : 'pause');
   }
 
-  /** Records accepted play; the first adapter result finalizes the attempt. */
-  update(snapshot: Observation): void {
-    if (this.#closed) return;
+  /** Records accepted play; resolves with write success, including finalization on completion. */
+  update(snapshot: Observation): Promise<boolean | null> {
+    if (this.#closed) return Promise.resolve(false);
     this.#latest = snapshot;
     const complete = this.#evidence(snapshot).result !== null;
-    void this.#event(complete ? 'finish' : 'checkpoint');
+    const settled = this.#event(complete ? 'finish' : 'checkpoint');
     if (complete) this.#closed = true;
+    return settled;
   }
 
   /** Heartbeat measures visible thinking time; a stalled observer marks an unmeasured gap. */

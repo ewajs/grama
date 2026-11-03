@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { ISSUES_URL, reportUrl, type ReportContext } from './report';
+import { ISSUES_URL, appReportUrl, reportUrl, type ReportContext } from './report';
 
 const context: ReportContext = {
   place: { kind: 'level', levelNumber: 37, difficulty: 'challenging', occurrence: 4 },
@@ -34,4 +34,11 @@ it('names a daily challenge by its date', () => {
   );
   expect(url.searchParams.get('title')).toContain('desafío del 2026-10-19');
   expect(url.searchParams.get('body')).toContain('Desafío del día: 2026-10-19');
+});
+
+it('reports from Home without a made-up puzzle context', () => {
+  const url = new URL(appReportUrl('0.22.0', 'abc1234'));
+  expect(url.searchParams.get('body')).toContain('0.22.0 · abc1234');
+  expect(url.searchParams.get('body')).toContain('inicio');
+  expect(url.searchParams.get('body')).not.toContain('Letras:');
 });

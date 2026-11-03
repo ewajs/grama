@@ -5,6 +5,8 @@
 
 /** Each icon's path, by name. */
 export const ICONS = {
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  chart: 'M4 4v16h16M7 15l4-4 4 2 5-7',
   calendar:
     'M8 3v4M16 3v4M4 10h16M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z',
   stopwatch: 'M10 2h4M12 14l3-3M12 22a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z',

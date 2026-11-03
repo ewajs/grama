@@ -31,7 +31,8 @@ change that alters a rule, so code and spec never drift.
    | `repeated` | Already found (target or bonus)            | 0      | Fades grey; its row or the counter glows   |
 
 5. When every target is found the level is **complete**: a short celebration,
-   a summary (points, bonus words found) and a "Next level" action.
+   a summary (points, bonus words found), a saved rating update when available, and
+   Next level / Home actions.
 6. Levels never run out: level N is generated on the device from the word list, and
    is the same for everyone who played at the same difficulty (D11, D16). Changing the
    difficulty never brings back a level already played. The score keeps growing across
@@ -75,6 +76,28 @@ They never change stars, points, hints or level generation. Contrarreloj records
 attempt per run with all presented wheels, found words, clears and skips.
 If recording storage fails, ordinary play and its separate progress saving continue.
 All observations stay on the device, with no analytics upload or account.
+
+### Home, menu and completion
+
+Home has a labeled Guide link and menu control in the existing logo row. Both work before
+word lists finish loading; the menu shares gameplay's settings/tutorial/about/reset flows.
+Closing it restores the originating screen/focus. Home reports carry app/build context;
+level reports still carry the actual level. The progress area keeps three rows: current
+rating on Tu progreso, Map/Logros together, and Tu diccionario. No prior 1500 is shown as
+an earned rating. Missing/failed history leaves the ordinary progress entry available.
+
+After a newly rated completion, the dialog shows that finalized attempt's rating and signed
+change; the first says “Tu primer nivel de juego” without an earned previous rating.
+The visible delta subtracts the two rounded displayed values; internal precision is retained.
+Practice, missing evidence or failed writes never fabricate a numeric update. Saving and
+rating reads never block Next/Home. The change is associated by attempt ID, not by comparing
+two unrelated global summaries.
+
+Numbered levels offer Next (primary) and Home (secondary). Home advances the completed
+main level once without presenting the next wheel, so Jugar resumes the next unfinished
+level. Replays retain Back to Map plus Home; daily completion has Share and one Home
+action. Contrarreloj remains separate. Short screens scroll naturally; touch targets and
+text are not squeezed to force every item into a viewport.
 
 ### Tu progreso
 

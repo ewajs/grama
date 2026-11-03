@@ -8,6 +8,25 @@ delete it, the history is the point.
 
 ---
 
+## D40 · Put settings, help and saved ratings on the main path — 2026-11-03
+
+- **UI:** Guide/Menu share Home's logo row. Rebalance the existing progress area to show
+  rating without extra stat rows. Completion gets a compact rating line and explicit
+  Home action; retain daily Share and replay Map choices.
+- **Integration:** `MenuDialogs` shares existing menu/tutorial/about/reset/report flows;
+  Home uses a generic app/build report instead of inventing a level. Home works while
+  word loading or assessment storage is unavailable.
+- **Rating:** `Recording.update` exposes its existing queued write result and immutable
+  attempt ID. Only a successful completion requests its update from the original-history
+  projection. The app keeps an optional in-memory Home summary and guards overlapping
+  reads. Optional Home reads stay outside the write queue so they cannot delay puzzle
+  preparation; completion/progress/export retain queued reads. No polling, new score formula, persisted rating, or save/content change.
+- **Presentation:** first rating has no claimed previous earned value; later signed
+  changes reconcile rounded displayed values. Known practice or failed recording omits
+  the numeric line. A rating decrease uses calm styling, not error feedback.
+- **Navigation:** Home advances a completed main level once before leaving, without
+  presenting the next board. Native dialog scrolling preserves readable short layouts.
+
 ## D39 · Teach the shipped rating in the player guide — 2026-11-03
 
 - **Decision:** add a plain-language Spanish overview and an optional full mathematical

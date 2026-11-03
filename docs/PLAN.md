@@ -365,7 +365,21 @@ no cohort quotas or recording diagnostics appear in the normal player flow.
 
 - [x] Player-facing Glicko-2 guide, rendered equations, worked example and interactive learning lab
 - [x] Reconcile current documentation; prepare release version, changelog and player news
-- [ ] After the release PR merges with green CI, tag that merged commit `v0.22.0` and verify deployment
+- [x] Tag the merged release commit `v0.22.0` and verify deployment (80cf7a9)
+
+### Home and completion polish
+
+Goal: make settings, the guide and the existing rating visible in normal play, without
+adding a dashboard or changing the scoring model.
+
+- [x] Shared menu access from Home, with a visible Guide link in the existing logo row
+- [x] Rebalance existing progress cards: current rating on Tu progreso, compact Map/Logros,
+      dictionary retained; no additional row of badges/cards
+- [x] Show the saved attempt's updated rating and signed change in the level-complete dialog
+- [x] Add an explicit Home action alongside Next/Map, keeping daily Share/Home behavior clear
+- [x] Update player/developer docs and screenshots; focused layout, navigation and recording tests
+
+Scope and acceptance checks: [`PROGRESS-PLAN.md`](./PROGRESS-PLAN.md#home-and-completion-polish).
 
 ### M25 — Challenge recommendations
 

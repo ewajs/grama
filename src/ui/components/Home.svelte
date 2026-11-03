@@ -5,6 +5,8 @@ The home screen, where the app opens: the player's points and hints, the ways to
 Tu diccionario, achievements). It fits common phones without scrolling.
 
 - `game`: the player's game, for the current level and totals.
+- `preferences`, `installer`: shared menu dependencies.
+- `rating`, `ratingReady`: optional current rating and whether history was read successfully.
 - `onplay()`: continue playing.
 - `onmap()`: open the level map.
 - `onstats()`: open the achievements and stats.
@@ -15,6 +17,9 @@ Tu diccionario, achievements). It fits common phones without scrolling.
 - `ontrial()`: play Contrarreloj.
 -->
 <script lang="ts">
+  import type { Installer } from '../../app/install.svelte';
+  import type { Preferences } from '../../app/preferences.svelte';
+  import MenuDialogs from './MenuDialogs.svelte';
   import type { Game } from '../../app/game.svelte';
   import { ACHIEVEMENTS } from '../../core/achievements';
   import type { RunResult } from '../../core/time-trial';
@@ -25,6 +30,10 @@ Tu diccionario, achievements). It fits common phones without scrolling.
 
   type Props = {
     game: Game;
+    preferences: Preferences;
+    installer: Installer;
+    rating: number | null;
+    ratingReady: boolean;
     onplay: () => void;
     onmap: () => void;
     onstats: () => void;
@@ -36,6 +45,10 @@ Tu diccionario, achievements). It fits common phones without scrolling.
   };
   let {
     game,
+    preferences,
+    installer,
+    rating,
+    ratingReady,
     onplay,
     onmap,
     onstats,
@@ -46,6 +59,8 @@ Tu diccionario, achievements). It fits common phones without scrolling.
     ontrial,
   }: Props = $props();
 
+  let menuOpen = $state(false);
+
   const today = $derived(game.today);
   const weekday = $derived(strings.weekday(today.date));
 
@@ -55,7 +70,19 @@ Tu diccionario, achievements). It fits common phones without scrolling.
 
 <main in:fly={{ y: 12, duration: DURATION.slow }}>
   <header>
-    <img src="{import.meta.env.BASE_URL}icons/icon.svg" alt="" width="64" height="64" />
+    <div class="tools">
+      <a
+        class="guide"
+        href="{import.meta.env.BASE_URL}guia/"
+        target="_blank"
+        rel="noopener"
+        aria-label={strings.homeGuideLabel}><Icon name="book" size={18} />{strings.homeGuide}</a
+      >
+      <img src="{import.meta.env.BASE_URL}icons/icon.svg" alt="" width="64" height="64" />
+      <button class="menu" aria-label={strings.openMenu} onclick={() => (menuOpen = true)}
+        ><Icon name="menu" /></button
+      >
+    </div>
     <h1>{strings.appName}</h1>
     <p>{strings.tagline}</p>
     <!-- The same star and bulb as in a level; the words are there for screen readers. -->
@@ -112,19 +139,28 @@ Tu diccionario, achievements). It fits common phones without scrolling.
   </section>
 
   <section class="progress">
-    <button class="card" onclick={onmap}>
-      <span class="icon"><Icon name="map" /></span>
-      <span class="label">{strings.map}</span>
-      <span class="detail">{strings.mapSummary(results.length, stars)}</span>
+    <button class="card rating-card" onclick={onprogress}>
+      <span class="icon"><Icon name="chart" /></span>
+      <span class="label"
+        >{strings.progressTitle}<small
+          >{rating !== null
+            ? strings.progressRating
+            : ratingReady
+              ? strings.ratingDiscover
+              : strings.progressRating}</small
+        ></span
+      >
+      {#if rating !== null}<strong class="rating" aria-label={strings.progressRatingValue(rating)}
+          >{Math.round(rating).toLocaleString('es-AR')}</strong
+        >{/if}
     </button>
-
-    <button class="card" onclick={ondictionary}>
-      <span class="icon"><Icon name="book" /></span>
-      <span class="label">{strings.dictionary}</span>
-      <span class="detail">{strings.dictionaryCount(game.dictionary.length)}</span>
-    </button>
-
     <div class="progress-actions">
+      <button class="card" onclick={onmap}>
+        <span class="icon"><Icon name="map" /></span>
+        <span class="label"
+          >{strings.map}<small>{strings.mapSummary(results.length, stars)}</small></span
+        >
+      </button>
       <button class="card" onclick={onstats}>
         <span class="icon"><Icon name="trophy" /></span>
         <span class="label"
@@ -133,20 +169,70 @@ Tu diccionario, achievements). It fits common phones without scrolling.
           ></span
         >
       </button>
-      <button class="card" onclick={onprogress}>
-        <span class="icon"><Icon name="star" /></span>
-        <span class="label">{strings.progressTitle}<small>{strings.progressRating}</small></span>
-      </button>
     </div>
+    <button class="card" onclick={ondictionary}>
+      <span class="icon"><Icon name="book" /></span>
+      <span class="label">{strings.dictionary}</span>
+      <span class="detail">{strings.dictionaryCount(game.dictionary.length)}</span>
+    </button>
   </section>
 </main>
+{#if menuOpen}
+  <MenuDialogs
+    {preferences}
+    {installer}
+    closeLabel={strings.backHome}
+    onclose={() => (menuOpen = false)}
+    onreset={() => game.reset(preferences.difficulty)}
+  />
+{/if}
 
 <style>
+  .tools {
+    display: grid;
+    grid-template-columns: 1fr 64px 1fr;
+    align-items: center;
+    width: 100%;
+  }
+  .guide,
+  .menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    min-height: 44px;
+    color: var(--color-accent-strong);
+  }
+  .guide {
+    justify-self: start;
+    text-decoration: none;
+    font-size: var(--text-sm);
+  }
+  .menu {
+    justify-self: end;
+    width: 44px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-full);
+    background: none;
+    cursor: pointer;
+  }
+  .guide:focus-visible,
+  .menu:focus-visible {
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 2px;
+  }
+  .rating {
+    color: var(--color-accent-strong);
+    font-size: var(--text-xl);
+    font-variant-numeric: tabular-nums;
+  }
+
   main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: var(--space-6);
+    gap: var(--space-4);
     min-height: 100dvh;
     max-width: 420px;
     margin: 0 auto;

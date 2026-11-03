@@ -7,7 +7,9 @@ letter wheel with its controls.
 - `preferences`: the player's settings, changed from the menu.
 - `installer`: for the menu's install option.
 - `recorder`: optional local assessment; failures leave play available.
-- `onback()`: back to the home screen.
+- `onback()`: return to the previous screen.
+- `onhome()`: go explicitly to Home after completion.
+- `onrated(id)`: read the exact finalized attempt’s rating update.
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
@@ -31,17 +33,14 @@ letter wheel with its controls.
   import Board from './Board.svelte';
   import Header from './Header.svelte';
   import HintButton from './HintButton.svelte';
-  import AboutDialog from './AboutDialog.svelte';
   import AchievementToast from './AchievementToast.svelte';
   import BonusCounter from './BonusCounter.svelte';
   import BonusWords from './BonusWords.svelte';
   import DefinitionDialog from './DefinitionDialog.svelte';
   import LetterWheel from './LetterWheel.svelte';
   import LevelComplete from './LevelComplete.svelte';
-  import Menu from './Menu.svelte';
-  import ReportDialog from './ReportDialog.svelte';
-  import ResetDialog from './ResetDialog.svelte';
-  import Tutorial from './tutorial/Tutorial.svelte';
+  import MenuDialogs from './MenuDialogs.svelte';
+  import type { RatingUpdate } from '../../app/assessment/performance';
   import WordPill from './WordPill.svelte';
 
   type Props = {
@@ -50,15 +49,17 @@ letter wheel with its controls.
     installer: Installer;
     recorder: GramaRecorder | null;
     onback: () => void;
+    onhome: () => void;
+    onrated: (id: string) => Promise<RatingUpdate | null>;
   };
-  let { game, preferences, installer, recorder, onback }: Props = $props();
+  let { game, preferences, installer, recorder, onback, onhome, onrated }: Props = $props();
 
   /** The dialog open over the game, if any (the level-complete one shows on its own). */
   // The tutorial opens by itself on first launch. `untrack` reads the setting once, on
   // purpose: marking it seen later shouldn't change which panel is open.
-  let panel = $state<
-    'menu' | 'tutorial' | 'report' | 'reset' | 'about' | 'bonus' | 'definition' | null
-  >(untrack(() => (preferences.tutorialSeen ? null : 'tutorial')));
+  let panel = $state<'menu' | 'tutorial' | 'bonus' | 'definition' | null>(
+    untrack(() => (preferences.tutorialSeen ? null : 'tutorial')),
+  );
   const close = () => (panel = null);
   /** The word whose definition is offered, when that panel is open. */
   let defining = $state('');
@@ -91,6 +92,7 @@ letter wheel with its controls.
   let recording = $state.raw<PuzzleRecording | null>(null);
   let interactive = $state(false);
   let forceNew = false;
+  let completionRating = $state<RatingUpdate | null>(null);
   const ready = $derived(preparedKey === puzzleKey);
 
   // The key excludes words and hints. A new puzzle waits only for its initial exposure
@@ -104,6 +106,7 @@ letter wheel with its controls.
         restart = forceNew;
       forceNew = false;
       recording = null;
+      completionRating = null;
       void Promise.resolve(recorder?.prepare(snapshot, restart) ?? null).then(
         (handle) => {
           if (cancelled) return;
@@ -149,9 +152,18 @@ letter wheel with its controls.
     if (wheelKey(event, wheel, word !== '')) event.preventDefault();
   }
 
+  function home() {
+    result = null;
+    if (game.replaying || game.daily) game.playCurrent();
+    else game.next(preferences.difficulty);
+    onhome();
+  }
+
   function nextLevel() {
     result = null;
-    if (game.replaying || game.daily) {
+    if (game.daily) {
+      home();
+    } else if (game.replaying) {
       game.playCurrent();
       onback();
     } else {
@@ -178,8 +190,17 @@ letter wheel with its controls.
 
   function submit(next: string) {
     const submission = game.submit(next);
-    if (submission.kind === 'target' || submission.kind === 'bonus')
-      recording?.update(game.observation);
+    if (submission.kind === 'target' || submission.kind === 'bonus') {
+      const handle = recording,
+        key = puzzleKey;
+      const settled = handle?.update(game.observation);
+      if (game.complete && handle && settled)
+        void settled.then(async (saved) => {
+          if (!saved) return;
+          const update = await onrated(handle.id);
+          if (game.recordingKey === key && game.complete) completionRating = update;
+        });
+    }
     if (submission.kind !== 'repeated') {
       if (preferences.vibration) vibrate(submission.kind);
       if (preferences.sound) play(submission.kind);
@@ -257,35 +278,18 @@ letter wheel with its controls.
     </div>
   </main>
 
-  {#if panel === 'menu'}
-    <Menu
+  {#if panel === 'menu' || panel === 'tutorial'}
+    <MenuDialogs
       {preferences}
       {installer}
-      ontutorial={() => (panel = 'tutorial')}
-      onreport={() => (panel = 'report')}
-      onabout={() => (panel = 'about')}
+      initial={panel}
+      report={(kind) => game.reportUrl(kind)}
       onclose={close}
-    />
-  {:else if panel === 'tutorial'}
-    <Tutorial
-      onclose={() => {
-        preferences.tutorialSeen = true;
-        close();
-      }}
-    />
-  {:else if panel === 'report'}
-    <ReportDialog link={(kind) => game.reportUrl(kind)} onclose={close} />
-  {:else if panel === 'about'}
-    <AboutDialog onreset={() => (panel = 'reset')} onclose={close} />
-  {:else if panel === 'reset'}
-    <ResetDialog
-      onconfirm={() => {
+      onreset={() => {
         result = null;
         forceNew = true;
         game.reset(preferences.difficulty);
-        close();
       }}
-      onclose={close}
     />
   {:else if panel === 'definition'}
     <DefinitionDialog word={defining} onclose={close} />
@@ -317,6 +321,8 @@ letter wheel with its controls.
       hints={game.hintsWon}
       bonus={game.bonusFound}
       newWords={game.newWords.length}
+      ratingUpdate={completionRating}
+      onhome={game.daily ? undefined : home}
       onnext={nextLevel}
     />
   {/if}

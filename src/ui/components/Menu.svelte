@@ -5,7 +5,8 @@ The menu: settings, help and the rest of the game's options, plus credits.
 - `preferences`: the player's settings; changes here apply and save right away.
 - `installer`: whether and how the app can be installed here.
 - `ontutorial()`, `onreport()`, `onabout()`: the player picked one of those options.
-- `onclose()`: done.
+- `onclose()`: done. `closeLabel` names the current screen.
+- `reportLink`: generic Home report when no level-specific handler is provided.
 -->
 <script lang="ts">
   import type { Installer } from '../../app/install.svelte';
@@ -23,11 +24,22 @@ The menu: settings, help and the rest of the game's options, plus credits.
     preferences: Preferences;
     installer: Installer;
     ontutorial: () => void;
-    onreport: () => void;
+    onreport?: () => void;
+    reportLink: string;
+    closeLabel?: string;
     onabout: () => void;
     onclose: () => void;
   };
-  let { preferences, installer, ontutorial, onreport, onabout, onclose }: Props = $props();
+  let {
+    preferences,
+    installer,
+    ontutorial,
+    onreport,
+    onabout,
+    onclose,
+    reportLink,
+    closeLabel = strings.backToGame,
+  }: Props = $props();
 
   const difficulties: { value: Difficulty; label: string }[] = (
     ['relaxed', 'normal', 'challenging'] as const
@@ -66,11 +78,12 @@ The menu: settings, help and the rest of the game's options, plus credits.
   {/if}
 
   <button class="secondary" onclick={ontutorial}>{strings.howToPlay}</button>
-  <button class="primary" onclick={onclose}>{strings.backToGame}</button>
+  <button class="primary" onclick={onclose}>{closeLabel}</button>
 
   <nav>
     <a href="{import.meta.env.BASE_URL}guia/" target="_blank" rel="noopener">{strings.guide}</a>
-    <button onclick={onreport}>{strings.report}</button>
+    {#if onreport}<button onclick={onreport}>{strings.report}</button>
+    {:else}<a href={reportLink} target="_blank" rel="noopener">{strings.report}</a>{/if}
     <button onclick={onabout}>{strings.about}</button>
   </nav>
 </Dialog>

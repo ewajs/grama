@@ -116,8 +116,8 @@ The top bar: the level number and the score, which counts up when points are won
   .menu {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     margin-right: calc(-1 * var(--space-2));
     padding: 0;
     border: none;
