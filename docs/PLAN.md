@@ -347,7 +347,7 @@ prefer descriptive progress where observations cannot support a numeric estimate
 - [x] Cycle 1: existing Glicko-2 with a difficulty-based benchmark, fractional hint/extra/time
       outcomes, immediate unbounded rating and simple trend; separate timed-mode results; documented
       formula/constants and focused tests
-- [ ] Cycle 2: replace cohort beta UI with current score, trend, accessible history and
+- [x] Cycle 2: replace cohort beta UI with current score, trend, accessible history and
       concise explanation; update game/developer/player docs and browser tests
 - [ ] Cycle 3: optional local history download for easy investigation, without a GitHub
       requirement or prescribed beta workload

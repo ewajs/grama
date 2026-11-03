@@ -77,46 +77,37 @@ export const es = {
     ].join('\n'),
   achievements: 'Logros',
   progressTitle: 'Tu progreso',
-  progressBeta: 'Beta',
-  progressIntro:
-    'Estamos probando esta vista. Las comparaciones son orientativas y tus partidas quedan en este dispositivo.',
   progressSolving: 'Resolución de palabras',
-  progressRecorded: (count: number) =>
-    count === 1 ? '1 partida completa registrada' : `${count} partidas completas registradas`,
-  progressEmpty: 'Completá un nivel o una partida de Contrarreloj para ver tus resultados acá.',
-  progressUnavailable: 'No pudimos leer tus partidas. Podés seguir jugando y volver a intentar.',
-  progressRefresh: 'Actualizar',
-  progressNoComparable:
-    'Todavía no hay partidas comparables en este modo. Podés ver tus resultados recientes más abajo.',
+  progressRating: 'Tu nivel de juego',
+  progressRatingValue: (rating: number) =>
+    `Nivel de juego: ${Math.round(rating).toLocaleString('es-AR')}`,
+  progressEarly: 'Tu nivel se va ajustando a medida que jugás.',
+  progressTrend: { up: 'En alza', steady: 'Estable', down: 'En baja' },
+  progressHelp: 'Cómo se calcula',
+  progressExplanation:
+    'Resolver niveles difíciles pesa más. Las pistas restan un poco; las palabras extra y la rapidez suman un poco. Tu nivel puede subir o bajar según cómo te vaya.',
+  progressTimingNote:
+    'Si no pudimos medir bien el tiempo, usamos el resto del resultado. Repetir una rueda queda como práctica y no cambia tu nivel.',
+  progressScaleNote:
+    'Es una estimación de cómo jugás, sin un máximo fijo. Arranca desde 1500 como referencia y se ajusta con tus partidas. No son puntos acumulados ni un porcentaje.',
   progressHistoryNote:
-    'Las ruedas conocidas, los tiempos incompletos y el historial previo desconocido quedan afuera de las comparaciones.',
-  progressCollecting: (count: number, needed: number) =>
-    `${count} de ${needed} partidas comparables en este grupo`,
-  progressComparison: (score: number) => `${Math.round(score * 100)}% a favor de las recientes`,
-  progressWindows: (reference: number, recent: number) =>
-    `${reference} iniciales · ${recent} recientes`,
-  progressMeaning:
-    'Comparamos partidas de características similares. 50% indica un resultado equilibrado; los empates cuentan la mitad.',
+    'Tus partidas quedan en este dispositivo. Los resultados anteriores al registro no se reconstruyen.',
+  progressEmpty: 'Completá un nivel o una partida de Contrarreloj para ver tus resultados acá.',
+  progressNoRating: 'Completá una rueda nueva para conocer tu nivel de juego.',
+  progressUnavailable: 'No pudimos cargar tu progreso. Podés seguir jugando y volver a intentar.',
+  progressRetry: 'Volver a intentar',
   progressRecent: 'Partidas recientes',
-  progressShape: (letters: number, targets: number) => `${letters} letras · ${targets} palabras`,
+  progressChart: 'Evolución de tu nivel de juego',
+  progressChartValue: (label: string, rating: number) =>
+    `${label}: ${Math.round(rating).toLocaleString('es-AR')}`,
   progressHints: (count: number) => (count === 1 ? '1 pista' : `${count} pistas`),
   progressBonus: (count: number) => (count === 1 ? '1 extra' : `${count} extras`),
-  progressTime: 'Tiempo',
-  progressPartialTime: 'Tiempo parcial',
+  progressPractice: 'Práctica',
+  progressUnrated: 'Sin puntaje',
+  progressTrialBest: 'Mejor puntaje registrado',
+  progressTrialNote: 'Contrarreloj tiene su propio puntaje y no cambia tu nivel de juego.',
   progressDate: (time: number) =>
     new Date(time).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }),
-  progressComparable: 'Comparable',
-  progressOther: 'Fuera de comparación',
-  progressExcluded: {
-    unfinished: 'Sin terminar',
-    'repeated-content': 'Rueda conocida',
-    'unknown-exposure': 'Historial previo incompleto',
-    'uncertain-timing': 'Tiempo incompleto',
-  },
-  progressFeedback: 'Contanos qué te resultó útil o confuso (GitHub)',
-  progressFeedbackTitle: 'Tu progreso (beta): comentarios',
-  progressFeedbackPrompt:
-    '¿Se entiende la comparación?\n\n¿Coincide con cómo sentís que estás jugando?\n\n¿Qué te resultó útil o confuso?\n',
   statsTitle: 'Estadísticas',
   achievementsCount: (done: number, total: number) => `${done} de ${total}`,
   achievementUnlocked: 'Logro desbloqueado',

@@ -35,12 +35,14 @@ No hay pistas en Contrarreloj.
 ## Registro local
 
 Grama guarda las ruedas que viste, las palabras encontradas, los tableros completos y
-las veces que pasaste. El registro queda solo en tu dispositivo y prepara la futura
-vista de progreso; todavía no hay una puntuación de habilidad.
+las veces que pasaste. El registro queda solo en tu dispositivo. En **Tu progreso**
+ves tus últimas partidas completas y el mejor puntaje registrado de Contrarreloj,
+separados del nivel de juego de los tableros.
 
 Antes de mostrar la rueda siguiente puede haber una breve espera para guardar su registro:
 el reloj se pausa durante esa espera. Si el registro falla, podés seguir jugando.
 
 Salir de la pantalla deja la partida como abandonada; llegar a cero la completa.
-Recargar la app no retoma una partida. Una partida con una rueda repetida queda como
-práctica para la futura puntuación de habilidad, sin cambiar tu mejor marca ni tus logros.
+Recargar la app no retoma una partida. Los resultados completos aparecen en Tu progreso
+aunque hayas visto alguna rueda antes. No cambian el nivel de juego de los tableros
+ni las reglas de tu mejor marca o tus logros.

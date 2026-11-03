@@ -87,7 +87,7 @@ delete it, the history is the point.
   count; compare trial points under the same protocol. Share protocol version constants
   with the recorder. No reward mapping, par time or extra rating engine is introduced.
 - **Limits:** fixtures establish decoding and group boundaries, not empirical puzzle
-  calibration. Sparse cohorts remain unavailable. See the [projection policy](./guides/skill-model.md#grama-evidence-projection).
+  calibration. Sparse cohorts remain unavailable. Superseded by D38; see the [current projection](./guides/skill-model.md#performance-version-2).
 
 ## D34 · Compare against a fixed personal reference — 2026-11-01
 

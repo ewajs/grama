@@ -1,7 +1,7 @@
 # Personal progress: replacement plan
 
-Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycle 1 is implemented; cycles 2–3 remain planned.
-The existing beta screen remains unchanged until cycle 2 ships.
+Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycles 1–2 are implemented; cycle 3 remains planned.
+The player screen now uses the Glicko rating and recent history.
 
 ## Outcome
 
@@ -46,6 +46,8 @@ This is implementation work, not a new model-research or approval milestone. The
 formula and constants are concrete and reviewable in the PR; they can change later.
 
 ## Cycle 2 — Replace the beta screen
+
+Implemented in `ProgressScreen` and `RatingChart`, with player docs and browser checks.
 
 - Show the current Glicko rating immediately, the trend when available, and an accessible
   small recent-score chart with a text equivalent and recent results.

@@ -70,28 +70,39 @@ uncertain. Leaving and resuming a numbered/daily puzzle keeps its encounter; res
 creates another. A first completion finalizes the observation once.
 
 Exposure tracking starts with recorded play for everyone; past game saves are not
-converted into observations. Known repeated wheels are practice evidence and are excluded
-from comparisons. Already stored unknown exposures remain excluded. Resetting game progress keeps
-these observations and exposure history. They never change stars, points, hints or level
-generation. No skill rating is shown yet. Contrarreloj records one attempt per run with
-all presented wheels, found words, clears and skips; any repeated wheel excludes that run
-from the future primary skill estimate.
+converted into observations. Resetting game progress keeps observations and exposure history.
+They never change stars, points, hints or level generation. Contrarreloj records one
+attempt per run with all presented wheels, found words, clears and skips.
 If recording storage fails, ordinary play and its separate progress saving continue.
 All observations stay on the device, with no analytics upload or account.
 
-### Tu progreso (beta)
+### Tu progreso
 
-Home's **Tu progreso** opens recent recorded outcomes, with observed solve times and hint
-use for puzzles, and points/cleared wheels for trials. Original incomplete or replayed
-results can be inspected without treating them as losses or fresh skill evidence.
+Home's **Tu progreso** shows **Tu nivel de juego** after the first rated puzzle, with
+recent rating history and a simple up/steady/down trend after six updates. Numbered
+levels and daily puzzles share the existing Glicko-2 rating (D38). Difficulty determines
+the benchmark opponent; hints reduce the fractional result modestly, extra words add a
+small diminishing bonus, and reliable solve speed has a small influence. The initial
+1500 is a prior, not an earned score or a fixed ceiling. Ratings can rise or fall; they
+are personal game-performance estimates, not cumulative points or population percentiles.
+See the [versioned formula](./guides/skill-model.md#performance-version-2).
 
-Personal comparisons group eligible observations using the M23 adapter: ten initial
-attempts versus ten recent attempts per comparable group. Ties contribute half; the
-percentage describes these comparisons, not a magnitude of improvement or an absolute
-ability rating. Sparse groups show their count instead. There is no beta enrollment or
-alternate comparison policy: known repeats, unknown exposure and uncertain timing are
-excluded. Players can refresh the view and open a GitHub feedback form; their history
-stays local and is not attached automatically.
+The chart and recent results show the last ten rated/completed puzzles respectively.
+Every chart value has a spoken text equivalent. Known repeated wheels remain visible
+as practice without rating updates. Missing difficulty has no score; unknown prior
+exposure is admitted provisionally. Uncertain/zero timing omits the speed adjustment
+and its time display, while the rest of a usable completion still counts. Abandoned
+attempts are not displayed as completed results or losses. Original records remain intact.
+
+Contrarreloj appears only after a recorded completed run, with its best recorded score
+and latest five results, including practice runs. Its best is over the recorded history
+and may differ from the older all-time record. Trial scores never update the puzzle rating.
+
+History reloads on screen entry, behind queued local writes. Read/calculation failures
+show a retry action and leave navigation/play available. The normal view has no manual
+refresh, cohort quotas, research diagnostics or GitHub feedback requirement. A collapsed
+**Cómo se calcula** explains the factors and provisional scale. Friends play normally
+and can send a screenshot when a result feels wrong; no prescribed workload is needed.
 
 ### Daily challenge (`src/core/daily.ts`)
 
