@@ -324,7 +324,7 @@ remain uncertain.
 - [x] Idempotent finalization, sequence allocation and conflicting/stale-writer handling
 - [x] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
 - [x] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
-- [ ] Bounded retention and assessment deletion controls/documentation — deferred while the M24 replacement ships
+- [ ] Bounded retention and assessment deletion controls/documentation — deferred follow-up
 - [ ] Full-profile backup and restore (game progress plus assessment history) — deferred by owner
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
@@ -361,6 +361,12 @@ normally. Model research and large feedback datasets are not prerequisites. See
 missing timing does not discard usable results; practice cannot inflate the estimate;
 no cohort quotas or recording diagnostics appear in the normal player flow.
 
+### Documentation and release · `v0.22.0`
+
+- [x] Player-facing Glicko-2 guide, rendered equations, worked example and interactive learning lab
+- [x] Reconcile current documentation; prepare release version, changelog and player news
+- [ ] After the release PR merges with green CI, tag that merged commit `v0.22.0` and verify deployment
+
 ### M25 — Challenge recommendations
 
 - [ ] Pure difficulty/variety selection policy with injected randomness
@@ -391,6 +397,12 @@ service-worker scope before deployment changes. No accounts or shared player dat
   before/after screenshots of UI changes
 
 ## Changelog
+
+- **v0.22.0** — Personal progress: an unbounded Glicko-2 game rating, recent trend and
+  accessible chart from ordinary puzzle play; separate Contrarreloj score history.
+  Durable original local observations and optional diagnostic history download.
+  New player learning guide with rendered equations and an interactive benchmark example.
+  Retention/deletion and full-profile backup remain deferred; no game-save/content reset.
 
 - **v0.21.0** (M20/M21) — Reliability fixes for blocked storage, malformed saves and
   opening the daily after midnight. Assessment foundations: first-exposure eligibility,

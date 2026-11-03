@@ -71,6 +71,9 @@ test('progress loads ratings, accessible history and practice without quotas, an
   );
   await page.getByText('Cómo se calcula', { exact: true }).click();
   await expect(page.getByText(/Resolver niveles difíciles pesa más/)).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Entendé tu nivel de juego: guía y ejemplos' }),
+  ).toHaveAttribute('href', '/grama/guia/tu-nivel');
   for (const size of [
     { width: 375, height: 667 },
     { width: 844, height: 390 },

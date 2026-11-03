@@ -9,6 +9,7 @@ export default defineConfig({
   // Built into the game's own output, so it deploys with it.
   outDir: '../dist/guia',
   cleanUrls: true,
+  markdown: { math: true },
   lastUpdated: false,
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/grama/icons/icon.svg' }],
@@ -43,6 +44,8 @@ export default defineConfig({
         text: 'Tu progreso',
         items: [
           { text: 'Estrellas, mapa y logros', link: '/progreso' },
+          { text: 'Tu nivel de juego', link: '/tu-nivel' },
+          { text: 'El cálculo, paso a paso', link: '/calculo-del-nivel' },
           { text: 'Desafío del día', link: '/desafio-del-dia' },
           { text: 'Contrarreloj', link: '/contrarreloj' },
           { text: 'Tu diccionario', link: '/diccionario' },

@@ -19,7 +19,7 @@ sino **qué palabras hay en el tablero**:
 - **Cuántas son.** Los niveles difíciles piden más palabras: en la rueda de 8 letras, un
   fácil pide hasta 7 y un extra difícil hasta 10.
 
-Cada nivel recibe un puntaje según esas dos cosas, y ese puntaje lo pone en una de las
+La rareza y longitud, ajustadas al tamaño de rueda, dan un puntaje promedio que lo pone en una de las
 cuatro dificultades: **fácil**, **media**, **difícil** o **extra difícil**. Para armar un
 nivel de cierta dificultad, el juego elige sus palabras de un grupo más o menos amplio
 del diccionario, y verifica que el resultado tenga la dificultad buscada.
@@ -56,3 +56,9 @@ próximo nivel.
 | **Desafiante** | Cada nivel es un escalón más difícil                            |
 
 El [desafío del día](/desafio-del-dia) tiene su propia dificultad, igual para todos.
+
+## Dificultad y nivel de juego
+
+La valoración de **Tu progreso** usa ese puntaje del tablero como rival de referencia.
+No usa tu número de nivel ni tus puntos acumulados. Leé [Tu nivel de juego](/tu-nivel)
+y la [fórmula de dificultad](/calculo-del-nivel#de-donde-sale-la-dificultad).

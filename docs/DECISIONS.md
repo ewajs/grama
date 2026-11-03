@@ -8,6 +8,19 @@ delete it, the history is the point.
 
 ---
 
+## D39 · Teach the shipped rating in the player guide — 2026-11-03
+
+- **Decision:** add a plain-language Spanish overview and an optional full mathematical
+  walkthrough, linked from the app and VitePress sidebar. Distinguish published Glicko-2
+  mathematics from Grama's provisional benchmark/fractional-outcome assumptions.
+- **Rendering:** VitePress's build-time MathJax support (`markdown-it-mathjax3`) renders
+  equations to self-contained SVG/MathML. No remote math service or game-bundle dependency.
+- **Learning:** a small Vue guide component reuses the actual pure match/rating functions.
+  Sliders show factor effects, uncertainty and expected versus actual outcome, with a
+  spoken/text equivalent. This is an isolated hypothetical update, not saved player data.
+- **Release:** v0.22.0 packages recording, rating/history UI, diagnostic export and docs.
+  Preserve original saves/content; deferred history controls and backup remain unfinished.
+
 ## D38 · Reuse Glicko-2 with sensible benchmark defaults — 2026-11-03
 
 - **Decision:** retain the existing Glicko-2 investigation and reference-tested engine.

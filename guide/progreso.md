@@ -84,6 +84,9 @@ otros jugadores.
 
 ## Tu progreso
 
+Para entender la valoración, leé [Tu nivel de juego](/tu-nivel). Si querés ir más a fondo,
+[El cálculo, paso a paso](/calculo-del-nivel) explica las ecuaciones e incluye un laboratorio interactivo.
+
 Tu **nivel de juego** aparece desde el primer nivel o desafío nuevo que completás.
 Resolver un tablero difícil pesa más; las pistas restan un poco, y las palabras extra
 junto con la rapidez suman un poco. Si no se pudo medir bien el tiempo, cuenta el resto

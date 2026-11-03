@@ -44,6 +44,7 @@ jobs:
       - run: npm run e2e
       # The build e2e just tested, checked against the performance budget.
       - run: npm run budget
+      - run: npm run guide:check
       - if: failure()
         uses: actions/upload-artifact@v7
         with:

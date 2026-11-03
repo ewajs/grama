@@ -139,6 +139,7 @@ Two suites, each run where it pays off (D10):
 | `npm run docs`              | Developer docs (guides + API reference) to `dist/docs/`                     |
 | `npm run words`             | Rebuild the word lists in `src/content/` from pinned sources (D12)          |
 | `npm run icons`             | Render the app icon's PNGs, the link preview card and iPhone launch screens |
+| `npm run guide:check`       | Check rendered equations and the interactive player guide in Chromium       |
 | `npm run guide`             | Build the player guide to `dist/guia/` (`guide:dev` to preview it live)     |
 | `npm run guide:screenshots` | Retake the guide's screenshots from the real game                           |
 

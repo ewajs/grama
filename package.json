@@ -1,7 +1,7 @@
 {
   "name": "grama",
   "private": true,
-  "version": "0.21.0",
+  "version": "0.22.0",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -24,7 +24,8 @@
     "icons": "node scripts/icons.ts",
     "guide": "vitepress build guide",
     "guide:dev": "vitepress dev guide",
-    "guide:screenshots": "playwright test --config guide/playwright.config.ts"
+    "guide:screenshots": "playwright test --config guide/playwright.config.ts",
+    "guide:check": "playwright test --config guide/learning.config.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -39,6 +40,7 @@
     "eslint-plugin-svelte": "^3.23.1",
     "fflate": "^0.8.3",
     "globals": "^17.13.0",
+    "markdown-it-mathjax3": "^4.3.2",
     "prettier": "^3.9.10",
     "prettier-plugin-svelte": "^4.1.1",
     "svelte": "^5.57.2",

@@ -88,7 +88,7 @@ small bonus. Those are documented initial tradeoffs. The metric estimates person
 performance, not a calibrated cognitive ability or population percentile. Friends need
 no prescribed test workload. The player screen now shows the rating, chart and recent results.
 
-## Glicko-2 candidate
+## Glicko-2 engine
 
 `core/assessment/glicko2` implements [Glickman's 2022 reference](https://www.glicko.net/glicko/glicko2.pdf).
 `ratePeriod` consumes pre-period opponent snapshots and independent results (including the fractional game extension),
@@ -199,3 +199,13 @@ initiates download; it never uploads anything. Active checkpoints, settings, dic
 and ordinary game saves are outside this diagnostic format. It is not backup/restore or
 an atomic cross-tab database snapshot. Model changes can be investigated by recomputing
 from the exported original records with the corresponding source/build.
+
+## Player learning guide
+
+The Spanish VitePress pages [Tu nivel de juego](https://ewajs.github.io/grama/guia/tu-nivel)
+and [El cálculo, paso a paso](https://ewajs.github.io/grama/guia/calculo-del-nivel) explain
+rating/RD/volatility, benchmark assumptions, every update equation and a reproducible
+worked example. `RatingLab.vue` imports the actual core functions for its hypothetical
+single-update calculator; its graph illustrates the expected-result equation. It never
+reads or writes player history. VitePress renders math at build time with MathJax,
+including SVG and assistive MathML; no remote rendering service is needed.

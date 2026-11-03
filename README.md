@@ -3,6 +3,7 @@
 A calm, fast word game: connect the letters on the wheel to find every word in the level.
 Installable as a PWA, playable on phone and desktop. **Play: https://ewajs.github.io/grama/**
 
+- How your rating works: [Tu nivel de juego](https://ewajs.github.io/grama/guia/tu-nivel)
 - For players: [Todo sobre Grama](https://ewajs.github.io/grama/guia/)
 - Game rules and UX: [`docs/GAME.md`](docs/GAME.md)
 - Roadmap and progress: [`docs/PLAN.md`](docs/PLAN.md)
