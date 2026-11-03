@@ -84,6 +84,7 @@ export const es = {
   progressEarly: 'Tu nivel se va ajustando a medida que jugás.',
   progressTrend: { up: 'En alza', steady: 'Estable', down: 'En baja' },
   progressHelp: 'Cómo se calcula',
+  progressGuide: 'Entendé tu nivel de juego: guía y ejemplos',
   progressExplanation:
     'Resolver niveles difíciles pesa más. Las pistas restan un poco; las palabras extra y la rapidez suman un poco. Tu nivel puede subir o bajar según cómo te vaya.',
   progressTimingNote:
@@ -245,6 +246,14 @@ export const es = {
   },
   whatsNew: 'Novedades',
   news: [
+    {
+      version: '0.22',
+      items: [
+        'Tu progreso muestra tu nivel de juego, su evolución y tus resultados recientes desde la primera rueda nueva que completás.',
+        'Podés descargar tu historial para ayudarnos a revisar un resultado; no se envía automáticamente.',
+        'La guía explica Glicko-2 y el cálculo de tu nivel, con ecuaciones y un ejemplo interactivo.',
+      ],
+    },
     {
       version: '0.21',
       items: [

@@ -1,4 +1,4 @@
-/** Published Glicko-2 candidate math; no game-specific evidence conversion or clock reads. @module */
+/** Glicko-2 math with an explicit fractional-result extension; no game-specific evidence conversion or clock reads. @module */
 
 /** Mean, rating deviation and volatility on the original Glicko rating scale. */
 export type Rating = { rating: number; deviation: number; volatility: number };

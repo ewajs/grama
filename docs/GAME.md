@@ -85,6 +85,7 @@ the benchmark opponent; hints reduce the fractional result modestly, extra words
 small diminishing bonus, and reliable solve speed has a small influence. The initial
 1500 is a prior, not an earned score or a fixed ceiling. Ratings can rise or fall; they
 are personal game-performance estimates, not cumulative points or population percentiles.
+The app links to the Spanish player guide and interactive explanation under **Cómo se calcula**.
 See the [versioned formula](./guides/skill-model.md#performance-version-2).
 
 The chart and recent results show the last ten rated/completed puzzles respectively.

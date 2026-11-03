@@ -98,6 +98,7 @@
           <p>{strings.progressExplanation}</p>
           <p>{strings.progressTimingNote}</p>
           <p>{strings.progressScaleNote}</p>
+          <a href={`${import.meta.env.BASE_URL}guia/tu-nivel`}>{strings.progressGuide}</a>
         </details>
         <section aria-label={strings.progressRecent}>
           <h2>{strings.progressRecent}</h2>

@@ -44,3 +44,11 @@
   width: min(100%, 240px);
   margin: 0;
 }
+
+/* Rendered formulas stay readable without widening a phone's whole page. */
+.vp-doc mjx-container[display='true'] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}

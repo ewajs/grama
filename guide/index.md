@@ -17,13 +17,17 @@ hero:
       link: https://ewajs.github.io/grama/
 
 features:
+  - icon: 📈
+    title: Tu nivel de juego
+    details: Entendé Glicko-2 y explorá cómo influyen la dificultad, las pistas, los extras y el tiempo.
+    link: /tu-nivel
   - icon: 🔤
     title: Palabras de verdad
     details: Un diccionario argentino, con voseo y palabras como pibe, bondi o laburo.
     link: /palabras
   - icon: ♾️
     title: Niveles infinitos
-    details: Cada nivel se arma solo, y el nivel 37 es el mismo para todo el mundo.
+    details: Cada nivel se arma solo, con resultados reproducibles si jugás con la misma dificultad.
     link: /niveles
   - icon: 🎚️
     title: Dificultad con ritmo

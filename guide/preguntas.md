@@ -33,7 +33,7 @@ Reportar un problema o compartir un resultado envía lo que vos elijas.
 
 Es una estimación de cómo te está yendo, no un total de puntos. Tiene en cuenta la
 dificultad, las pistas, los extras y el tiempo cuando se pudo medir. Tu puntaje acumulado,
-estrellas y logros siguen por separado. Leé más en [Tu progreso](/progreso#tu-progreso).
+estrellas y logros siguen por separado. Leé más en [Tu nivel de juego](/tu-nivel) o probá el [ejemplo interactivo](/calculo-del-nivel#proba-el-calculo).
 
 ## ¿Puedo jugar sin sonido?
 
