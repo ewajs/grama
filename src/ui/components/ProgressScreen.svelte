@@ -2,6 +2,7 @@
 <script lang="ts">
   import type { GramaRecorder } from '../../app/assessment/recorder';
   import type { GramaRecord } from '../../app/assessment/payload';
+  import { downloadHistory } from '../../app/assessment/export';
   import { performanceHistory } from '../../app/assessment/performance';
   import { bonusWords, hintsUsed } from '../../core/session';
   import { strings } from '../../i18n';
@@ -12,6 +13,18 @@
   let overview = $state<ReturnType<typeof performanceHistory> | null>(null);
   let phase = $state<'loading' | 'ready' | 'failed'>('loading');
   let retry = $state(0);
+  let exporting = $state<'idle' | 'preparing' | 'ready' | 'failed'>('idle');
+  async function exportHistory() {
+    const source = recorder;
+    if (!source || exporting === 'preparing') return;
+    exporting = 'preparing';
+    const ok = await downloadHistory(() => source.history(), {
+      version: __VERSION__,
+      build: __BUILD__,
+      at: Date.now(),
+    });
+    exporting = ok ? 'ready' : 'failed';
+  }
   const chart = $derived(
     overview?.puzzles
       .flatMap((entry) =>
@@ -151,6 +164,21 @@
     {/if}
     <p class="muted local">{strings.progressHistoryNote}</p>
   {/if}
+  <details>
+    <summary>{strings.progressFeedback}</summary>
+    <p>{strings.progressFeedbackPrompt}</p>
+    <p id="history-export-description" class="muted">{strings.progressExportDescription}</p>
+    <button
+      class="secondary"
+      disabled={exporting === 'preparing' || !recorder}
+      aria-describedby="history-export-description"
+      onclick={exportHistory}
+    >
+      {exporting === 'preparing' ? strings.progressExportPreparing : strings.progressExport}
+    </button>
+    {#if exporting === 'failed'}<p role="alert">{strings.progressExportFailed}</p>
+    {:else if exporting === 'ready'}<p role="status">{strings.progressExportReady}</p>{/if}
+  </details>
 </main>
 
 <style>

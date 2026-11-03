@@ -1,6 +1,6 @@
 # Personal progress: replacement plan
 
-Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycles 1–2 are implemented; cycle 3 remains planned.
+Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycles 1–3 are implemented; retention/deletion and full backup remain follow-ups.
 The player screen now uses the Glicko rating and recent history.
 
 ## Outcome
@@ -69,6 +69,8 @@ Cycle 2 delivers the user-visible feature. Do not hold it for cycle 3, extensive
 feedback, a Glicko decision or the deferred backup project.
 
 ## Cycle 3 — Make voluntary feedback easy
+
+Implemented as a local JSON download in `app/assessment/export` and `ProgressScreen`.
 
 - Add an accessible, user-triggered local history download with original observations,
   export/metric versions and enough context to reproduce calculations. Clearly state

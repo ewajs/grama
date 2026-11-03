@@ -349,7 +349,7 @@ prefer descriptive progress where observations cannot support a numeric estimate
       formula/constants and focused tests
 - [x] Cycle 2: replace cohort beta UI with current score, trend, accessible history and
       concise explanation; update game/developer/player docs and browser tests
-- [ ] Cycle 3: optional local history download for easy investigation, without a GitHub
+- [x] Cycle 3: optional local history download for easy investigation, without a GitHub
       requirement or prescribed beta workload
 - [ ] Follow-up: accessible assessment deletion controls and bounded-retention documentation
 

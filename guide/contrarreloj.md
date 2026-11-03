@@ -46,3 +46,7 @@ Salir de la pantalla deja la partida como abandonada; llegar a cero la completa.
 Recargar la app no retoma una partida. Los resultados completos aparecen en Tu progreso
 aunque hayas visto alguna rueda antes. No cambian el nivel de juego de los tableros
 ni las reglas de tu mejor marca o tus logros.
+
+Si hace falta revisar un resultado, **Tu progreso → Compartir comentarios → Descargar
+historial** incluye también tus partidas completas y abandonadas de Contrarreloj. Se
+crea un archivo local; vos elegís si lo compartís.
