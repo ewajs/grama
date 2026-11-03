@@ -9,6 +9,7 @@ import type { LevelRecord } from '../src/core/history.ts';
 import { NEW_PROGRESS, type Progress } from '../src/core/progress.ts';
 import { saveGame } from '../src/storage/save.ts';
 import { level, trialWheel } from '../tests/e2e/level.ts';
+import { installHistory, puzzleHistory } from '../tests/e2e/progress-history.ts';
 import { drawWord } from '../tests/e2e/wheel.ts';
 
 const OUT = 'guide/public/screenshots';
@@ -186,4 +187,19 @@ test('a Contrarreloj run', async ({ page }) => {
   for (const word of wheel.targets.slice(0, 2)) await drawWord(page, word);
   await page.waitForTimeout(1200);
   await shot(page, 'contrarreloj');
+});
+
+test('personal progress and updated Home', async ({ page }) => {
+  await open(page, './', veteran(), veteranWords());
+  await page.getByRole('button', { name: /^Tu progreso/ }).waitFor();
+  await shot(page, 'inicio');
+  await page.getByRole('button', { name: /^Tu progreso/ }).click();
+  await page
+    .getByText('Completá un nivel o una partida de Contrarreloj para ver tus resultados acá.')
+    .waitFor();
+  await installHistory(page, puzzleHistory().slice(0, 6));
+  await page.goBack();
+  await page.getByRole('button', { name: /^Tu progreso/ }).click();
+  await page.getByRole('img').waitFor();
+  await shot(page, 'progreso');
 });

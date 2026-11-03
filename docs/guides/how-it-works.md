@@ -119,6 +119,9 @@ Svelte components render what `Game` exposes and call its methods. TypeDoc can't
 | `Dialog` and its users                         | Menu, tutorial, level complete, about, report, …         |
 | `AchievementToast`, `Confetti`, `UpdatePrompt` | Things that pop up                                       |
 
+`ProgressScreen` shows personal rating, trend and recent results; `RatingChart` draws
+its small SVG history with a spoken equivalent for every value.
+
 The UI's own helpers are plain TypeScript in `src/ui/lib`:
 {@link "ui/lib/wheel"!letterAt | letterAt} and {@link "ui/lib/wheel"!extendPath | extendPath} (the gesture),
 {@link "ui/lib/board-layout"!boardLayout | boardLayout} (tile size), {@link "ui/lib/fly"!sendLetter | sendLetter} and
@@ -351,8 +354,10 @@ It writes nothing and needs no clock, random source or current dictionary. Missi
 omits only the bounded time adjustment; unknown exposure stays recorded as unknown.
 See the [formula and worked examples](./skill-model.md#performance-version-2).
 
-The current `ProgressScreen` still uses the experimental cohort projection; cycle 2
-will connect this replacement. Recorder and research eligibility rules stay independent.
+`ProgressScreen` loads the projection on entry and renders the rating, trend and recent
+results. `RatingChart` renders a small SVG with spoken values. Read/calculation failures
+show retry without blocking navigation. Empty modes and research diagnostics stay hidden.
+Recorder and research eligibility rules stay independent.
 
 ### Assessment storage (M22)
 

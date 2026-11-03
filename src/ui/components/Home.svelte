@@ -8,7 +8,7 @@ Tu diccionario, achievements). It fits common phones without scrolling.
 - `onplay()`: continue playing.
 - `onmap()`: open the level map.
 - `onstats()`: open the achievements and stats.
-- `onprogress()`: open personal progress (beta).
+- `onprogress()`: open personal progress.
 - `ondictionary()`: open Tu diccionario.
 - `ondaily()`: play today's daily challenge.
 - `trialBest`: the best Contrarreloj run, if any.
@@ -135,7 +135,7 @@ Tu diccionario, achievements). It fits common phones without scrolling.
       </button>
       <button class="card" onclick={onprogress}>
         <span class="icon"><Icon name="star" /></span>
-        <span class="label">{strings.progressTitle}<small>{strings.progressBeta}</small></span>
+        <span class="label">{strings.progressTitle}<small>{strings.progressRating}</small></span>
       </button>
     </div>
   </section>

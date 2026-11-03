@@ -1,8 +1,7 @@
 # Personal performance and skill model experiments
 
 Status: D38 selects the existing Glicko-2 engine with a provisional benchmark adapter.
-Cycle 1 supplies the calculation/history projection; cycle 2 will replace the cohort
-beta screen. Formal calibration, backup/restore and remaining M22 controls are deferred.
+The progress screen uses the versioned calculation/history projection. Formal calibration, backup/restore and remaining M22 controls are deferred.
 
 ## Performance version 2
 
@@ -87,7 +86,7 @@ probabilities nor independent matches against multiple ghosts.
 Speed can partly offset a small hint penalty; extra-word hunting takes time but earns a
 small bonus. Those are documented initial tradeoffs. The metric estimates personal game
 performance, not a calibrated cognitive ability or population percentile. Friends need
-no prescribed test workload. The current player screen remains unchanged until cycle 2.
+no prescribed test workload. The player screen now shows the rating, chart and recent results.
 
 ## Glicko-2 candidate
 
@@ -176,39 +175,18 @@ These are exploratory checks, not acceptance thresholds or real-world validation
 selection is deferred by D37; the research projection below applies the existing eligibility
 rules before comparing stored observations.
 
-## Grama evidence projection
+## Player progress view
 
-`app/assessment/baseline.baselineSample` reuses the existing record/payload validators and
-`eligibilityOf`. It accepts only completed, acknowledged, positive-duration observations
-with matching result, track, mode, protocol and exposure keys. Unsupported, incomplete,
-replayed, unknown-exposure or uncertain-timing records produce no baseline sample.
+`ProgressScreen` loads all validated history through the recorder queue on entry and
+calls `performanceHistory` once per successful load. It renders current Glicko state,
+a trend, the latest ten rated puzzles in `RatingChart`, the latest ten completed puzzles,
+and separate trial history/best. The chart includes a spoken label for every value;
+its scale uses 50-point ticks with padding so tiny changes do not fill the chart.
+Read or calculation errors produce a retry action without disrupting play.
 
-The experimental `grama-baseline:1` cohort key includes scoring/content/payload versions.
-Numbered levels and dailies stay separate. Word solving compares active duration (lower
-is better), matching tier, wheel size, target count, quarter-point difficulty band, hint
-letters and bonus-word count. Changing the number of bonus words does not feed the
-same speed comparison. Trial observations compare ordinary points within one unchanged protocol;
-random wheel difficulty remains a noise source. Shared `GRAMA_RULES` versions identify
-protocol changes without changing rewards or existing saved observations.
-
-Saved-record-shaped fixtures exercise projection and the existing baseline together,
-including unique fresh wheels and duplicate IDs. They verify data consistency and group
-boundaries, not empirical equivalence of every puzzle in a band. These cohorts remain
-provisional; sparse groups have no comparison and no absolute ability rating is inferred.
-
-## Beta feedback loop
-
-The owner prioritized player testing over another pre-UI acceptance phase. `ProgressScreen`
-loads history through the existing recorder queue and `progressOverview` applies the
-existing adapter/baseline functions. Recent original outcomes stay visible even when
-unknown exposure or sparse cohorts prevent comparisons. A manual refresh rereads all pages;
-connections and record validation remain owned by the existing assessment store.
-
-The beta uses the existing Grama deployment and adds a Home entry and a GitHub feedback
-link. No history is uploaded. Model-selection gates remain open; beta feedback about
-clarity, missing comparisons and perceived usefulness informs that next decision.
-
-Everyone on the current deployment has access. Exposure tracking starts with recorded
-play, regardless of prior game saves. There is one eligibility policy, with no opt-in,
-legacy comparison model or reconstruction of past sessions. Existing observations and
-ordinary game progress remain untouched.
+The retired cohort UI/projection and Grama cohort adapter have been removed. Pure
+baseline comparisons remain isolated in the offline evaluation experiment above.
+There are no cohort quotas, normal-flow refresh button or GitHub feedback form.
+Known practice remains visible without rating updates; uncertain time is omitted from
+the rows while the rest of the completion can count. Observations are never uploaded.
+The optional diagnostic history download remains cycle 3.

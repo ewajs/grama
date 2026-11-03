@@ -74,28 +74,42 @@ las letras reveladas con pistas y el tiempo de juego observado. El tiempo incluy
 se pausa cuando abrís un diálogo, salís del nivel o dejás la app en segundo plano. Si falta
 un tramo de tiempo, queda marcado como incierto.
 
-Desde el inicio, **Tu progreso · Beta** muestra tus partidas recientes: tiempos y pistas
-en los niveles, y puntos en Contrarreloj. Todavía no hay una puntuación absoluta de habilidad. Volver a una rueda conocida queda como práctica, porque ya tenés ventaja al
-recordar las respuestas. En Contrarreloj, alcanza con que se repita una rueda para que
-la partida quede como práctica para esa futura puntuación. Tus puntos, estrellas y logros
-siguen funcionando igual.
+Desde el inicio, **Tu progreso** muestra tu nivel de juego y tus resultados recientes.
+Volver a una rueda conocida queda como práctica y no cambia ese nivel. Tus puntos,
+estrellas y logros siguen funcionando igual.
 
 **Empezar de cero** conserva este registro, igual que Tu diccionario. Borrar los datos
 del sitio en el navegador sí elimina todo. No se manda a un servidor ni se comparte con
 otros jugadores.
 
-## Tu progreso · Beta
+## Tu progreso
 
-La vista está en prueba: contanos desde su enlace de comentarios qué se entiende y qué
-te resulta confuso. El formulario se abre en GitHub; tus partidas no se adjuntan solas.
+Tu **nivel de juego** aparece desde el primer nivel o desafío nuevo que completás.
+Resolver un tablero difícil pesa más; las pistas restan un poco, y las palabras extra
+junto con la rapidez suman un poco. Si no se pudo medir bien el tiempo, cuenta el resto
+del resultado. No necesitás jugar una cantidad fija de partidas parecidas.
 
-Cuando hay suficientes partidas comparables, enfrentamos las 10 primeras con las 10
-recientes. El porcentaje indica a favor de cuáles sale la comparación, con los empates
-contando la mitad. No significa que tu habilidad haya mejorado ese porcentaje.
+Es una estimación que puede subir o bajar, sin un máximo fijo. El cálculo parte de 1500
+como referencia y se ajusta con tus resultados: no son puntos acumulados ni un porcentaje
+de mejora. Al principio se mueve más; con nuevas partidas se va asentando. Resolver una
+rueda fácil puede bajar la estimación si ya estabas jugando a un nivel más alto.
 
-Si todavía no alcanza, ves cuántas partidas tiene cada grupo. Las ruedas conocidas,
-los tiempos incompletos y los registros con exposición desconocida quedan afuera de las
-comparaciones, aunque sus resultados recientes se puedan consultar. El registro empieza
-con las partidas observadas: no reconstruimos las anteriores a partir de tus puntos o
-niveles guardados. Tu progreso de juego se conserva. No hace falta activar la beta.
-**Actualizar** vuelve a leer tus partidas; salir y volver también actualiza la vista.
+Después de seis resultados, ves si la tendencia reciente está **En alza**, **Estable** o
+**En baja**. El gráfico muestra hasta diez resultados; abajo podés ver cada partida,
+su dificultad, pistas, extras y el nivel de juego que te dejó. Repetir una rueda figura
+como **Práctica**. Si un resultado no tiene información suficiente para calcular el
+puntaje, igual queda en la lista como **Sin puntaje**.
+
+<img class="screen" src="/screenshots/progreso.png" alt="Tu progreso: nivel de juego, tendencia y gráfico de resultados recientes">
+
+Contrarreloj tiene su propia sección, con tus cinco últimas partidas y el **mejor
+puntaje registrado**. No cambia el nivel de juego de los tableros. Esa mejor marca usa
+solo las partidas del registro; puede diferir de una marca anterior que ya tenías guardada.
+Los modos que todavía no jugaste no aparecen.
+
+**Cómo se calcula** abre una explicación breve. Cada vez que entrás se cargan tus
+resultados actuales. El registro empieza con las partidas observadas: no reconstruimos
+las anteriores a partir de tus puntos o niveles guardados. Tu progreso de juego se conserva.
+
+Jugá como siempre. Si un resultado te parece raro, mandanos una captura; no necesitás
+una cuenta en GitHub ni completar un número de partidas para probarlo.

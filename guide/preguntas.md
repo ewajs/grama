@@ -28,6 +28,12 @@ No se envían tus partidas ni estadísticas de juego: no hay publicidad, analít
 ni cuentas. El [registro de partidas](/progreso#registro-local-de-partidas) queda solo en
 tu dispositivo. Reportar un problema o compartir un resultado envía lo que vos elijas.
 
+## ¿Por qué puede bajar mi nivel de juego?
+
+Es una estimación de cómo te está yendo, no un total de puntos. Tiene en cuenta la
+dificultad, las pistas, los extras y el tiempo cuando se pudo medir. Tu puntaje acumulado,
+estrellas y logros siguen por separado. Leé más en [Tu progreso](/progreso#tu-progreso).
+
 ## ¿Puedo jugar sin sonido?
 
 Sí: en el menú, apagá **Sonido** (y **Vibración**, si tu teléfono vibra). En el iPhone, con
