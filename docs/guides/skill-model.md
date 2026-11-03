@@ -1,12 +1,98 @@
-# Skill model candidates
+# Personal performance and skill model experiments
 
-Status: M23 validation continues alongside the M24 beta. Personal comparisons and recent
-observations are now visible in Tu progreso; absolute skill ratings remain undisplayed. Backup/restore and the remaining M22 data controls are deferred.
+Status: D38 selects the existing Glicko-2 engine with a provisional benchmark adapter.
+Cycle 1 supplies the calculation/history projection; cycle 2 will replace the cohort
+beta screen. Formal calibration, backup/restore and remaining M22 controls are deferred.
+
+## Performance version 2
+
+`core/assessment/performance` converts a completed puzzle into one fractional Glicko
+result. `app/assessment/performance.performanceHistory` validates, deduplicates and sorts
+original history, then calls the existing `ratePeriod` once per rated puzzle. The prior
+is 1500 / RD 350 / volatility 0.06, with tau 0.5. There is no ceiling or floor on the
+player rating. Glicko smooths the updates; no additional recent-five average is applied.
+Version 2 replaces the unpublished bounded version 1; no derived score was persisted.
+
+All game-model constants live in `PERFORMANCE`. For stored difficulty `d`, total target
+letters `L`, revealed hint letters `H`, bonus words found `B`, and reliable active time:
+
+```text
+opponent.rating = 1500 + 400 × (d − 3)
+opponent.deviation = 150
+hintPenalty = 0.15 × min(1, H / (0.2 × L))
+bonusAdjustment = 0.05 × B / (B + 3)
+referenceMs = L × 4000 × 2^(d − 2.75)
+timeAdjustment = 0.05 × clamp(log2(referenceMs / activeMs), −1, 1)
+result = 0.65 − hintPenalty + bonusAdjustment + timeAdjustment
+```
+
+Missing, zero or uncertain timing gives a neutral time adjustment. The calculation uses
+log space for the assumed pace. Four seconds per target letter at difficulty 2.75 is a
+starting assumption, not an established par time. Twice as fast contributes +0.05, twice
+as slow −0.05; larger differences have no further influence. Hints cost proportionally
+to board size, up to −0.15 when 20% of target letters have been revealed. Three extras
+contribute +0.025; further extras have diminishing returns toward +0.05. Ordinary game
+reward points never enter the formula.
+
+These defaults deliberately make difficulty primary: one difficulty point moves the
+opponent by 400 rating points. The fractional result stays between 0.45 and 0.75; that
+bounded match outcome does not bound the player's Glicko rating. The completion baseline
+of 0.65 rewards an independent solve more than a draw. A sustained equivalent performance
+settles near an implied benchmark level rather than awarding accumulating points forever.
+A strong player can lose rating on an easy solve that supplies weaker evidence than their
+current estimate. This is performance estimation, not an XP counter or a completion reward.
+
+Worked examples with twenty target letters, starting with no extras:
+
+| Difficulty | Hints | Time                | Opponent rating | Fractional result |
+| ---------- | ----- | ------------------- | --------------- | ----------------- |
+| 2.5 (easy) | 0     | unavailable         | 1300            | 0.65              |
+| 3.5 (hard) | 0     | unavailable         | 1700            | 0.65              |
+| 2.75       | 0     | unavailable or 80 s | 1400            | 0.65              |
+| 2.75       | 1     | unavailable or 80 s | 1400            | 0.6125            |
+| 2.75       | 4     | unavailable or 80 s | 1400            | 0.50              |
+| 2.75       | 0     | 40 s or faster      | 1400            | 0.70              |
+| 2.75       | 0     | 160 s or slower     | 1400            | 0.60              |
+
+At difficulty 2.75, three extras and neutral timing give 0.675. Difficulty and opponent
+RD are heuristic, not population calibration. Fractional outcomes are an explicit
+extension of the published binary/draw model: the same equations accept finite results
+in [0,1], retaining the reference-tested discrete behavior. They are neither win
+probabilities nor independent matches against multiple ghosts.
+
+### History, uncertainty and trend
+
+- Combine numbered/daily puzzles across content versions using their original descriptors.
+  Require a supported protocol, presented complete puzzle and matching result/exposure
+  identity. Collapse identical IDs; reject conflicting IDs/sequences. Sort once by saved
+  sequence and rate once per admitted completion. Numerical failures propagate as errors;
+  never substitute an unchanged estimate or average only surviving results.
+- Known repeats/replays and missing difficulty remain in completed history with no match
+  or rating update. Unknown exposure is admitted provisionally without rewriting the flag.
+  Abandoned attempts are not losses; past sessions are not reconstructed.
+- Return a rating snapshot for every rated puzzle and the latest as current, immediately
+  after the first completion. After six updates, compare the mean of the latest three
+  ratings with the previous three: ±15 rating points is up/down, otherwise steady. This
+  is a descriptive trend, not a confidence claim or percentage improvement.
+- Carry Glicko deviation/volatility internally. One completion is one active period;
+  filtered evidence is not an idle period. No calendar inactivity inflation is applied
+  in version 2, so there is no invented session-to-day conversion or rating decay.
+- Contrarreloj retains chronological raw points and its recorded-history best separately,
+  including practice runs and uncertain timing. This best can differ from the older
+  all-time game record. Trial results do not update the puzzle rating.
+- Recompute from original records when policy changes and bump `PERFORMANCE.version`.
+  No schema, exposure, generator or game-save changes. Projection is O(n log n) time,
+  O(n) memory, with bounded work per update and no pairwise comparison groups.
+
+Speed can partly offset a small hint penalty; extra-word hunting takes time but earns a
+small bonus. Those are documented initial tradeoffs. The metric estimates personal game
+performance, not a calibrated cognitive ability or population percentile. Friends need
+no prescribed test workload. The current player screen remains unchanged until cycle 2.
 
 ## Glicko-2 candidate
 
 `core/assessment/glicko2` implements [Glickman's 2022 reference](https://www.glicko.net/glicko/glicko2.pdf).
-`ratePeriod` consumes pre-period opponent snapshots and independent win/draw/loss results,
+`ratePeriod` consumes pre-period opponent snapshots and independent results (including the fractional game extension),
 then returns an unrounded mean, deviation and volatility. Game payloads and rewards do
 not enter this module. The official example is checked alongside an independently
 bisected volatility root, symmetry, uncertainty, inactivity and numerical boundaries.
@@ -22,7 +108,7 @@ NaN, silently drop a result or substitute an unchanged rating on numerical failu
 
 - A period is supplied by the caller. The module makes no session/day or wall-clock
   assumption. The reference recommends batches averaging at least 10–15 results;
-  one Grama session per period remains a hypothesis for evaluation.
+  version 2 deliberately uses one rated puzzle per period for responsive updates.
 - One active update includes its own volatility diffusion. Empty results advance one
   idle period; `inflateRating` advances an explicit whole number of idle periods.
   Neither inactivity operation changes mean or volatility. Do not inflate the same
@@ -46,12 +132,12 @@ Hint-free completion can saturate on easy boards; Glicko-2 alone does not preven
 easy wins from implying unsupported ability. Solve-time comparisons need a justified
 reference distribution rather than an invented par time or arbitrary hint/time blend.
 
-The candidate accepts only 0, 0.5 and 1 outcomes. Fractional performance and weighted ghost
-comparisons require an evaluated extension; no conversion is silently applied here.
+The engine accepts finite fractional results in [0,1] for the explicit version-2 adapter.
+This extension does not authorize treating correlated ghost comparisons as independent evidence.
 Ghost ratings derived from the same player's history also do not establish an absolute
 external scale. Keep personal baseline comparisons distinct from calibrated ability.
 
-Next: choose an evidence model and period policy against published acceptance thresholds. Test plateau,
+If calibrated rating research resumes: choose an evidence model and period policy against published acceptance thresholds. Test plateau,
 improvement, decline, challenge mix, assistance, missing evidence and repeated easy play.
 Retain replay/unknown/timing exclusions already defined by `eligibilityOf`; unavailable
 or ceiling-limited evidence must remain explicit before a numeric progress view ships.
@@ -87,7 +173,7 @@ runs or substituting unchanged ratings. This is not an evaluation of every ghost
 Inactivity keeps the mean unchanged; ninety supplied idle periods add uncertainty.
 
 These are exploratory checks, not acceptance thresholds or real-world validation. Model
-selection remains the next task; the projection below applies the existing eligibility
+selection is deferred by D37; the research projection below applies the existing eligibility
 rules before comparing stored observations.
 
 ## Grama evidence projection

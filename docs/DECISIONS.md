@@ -8,6 +8,59 @@ delete it, the history is the point.
 
 ---
 
+## D38 · Reuse Glicko-2 with sensible benchmark defaults — 2026-11-03
+
+- **Decision:** retain the existing Glicko-2 investigation and reference-tested engine.
+  Replace the unpublished bounded score in PR #110 with an unbounded player rating.
+  This supersedes D37's scoring/smoothing choice, retaining immediate useful feedback,
+  original evidence, simple presentation and ordinary-play testing.
+- **Model:** puzzle difficulty determines a benchmark opponent's rating. Hints give a
+  modest board-normalized penalty, extras a small diminishing bonus, and reliable speed
+  a small adjustment against an assumed workload/difficulty pace. Missing time is neutral.
+  See the exact version-2 constants and worked examples in `docs/guides/skill-model.md`.
+- **Engine:** prior 1500 / RD 350 / volatility 0.06, tau 0.5; one rated puzzle per period,
+  opponent RD 150. Extend result inputs to finite [0,1] using the same update equations;
+  distinguish the fractional game model from the published binary reference. The match
+  result is bounded; the player rating is not. No calendar inactivity policy is invented.
+- **History/UI:** retain attempt identities and research eligibility, exclude known
+  repeats from rating updates, admit unknown exposure provisionally, and recompute from
+  originals. Show the latest Glicko rating and a simple trend in cycle 2. Contrarreloj
+  remains separate. No extra metric, ghost engine or recent-five score average.
+- **Delivery:** revise the existing cycle-1 PR; document/test reasonable initial defaults
+  rather than requiring a new research or large-beta phase. No player-screen change yet.
+
+## D37 · Ship understandable progress with a provisional metric — 2026-11-02
+
+- **Decision:** replace the cohort-comparison beta with a useful personal performance
+  metric. Choose and document reasonable initial constants in the implementation;
+  refine them later from ordinary play. Formal model selection and large beta datasets
+  are not prerequisites. This supersedes D36's feedback-first delivery order and
+  D33–D35's model-selection/cohort requirements for the player-facing progress feature.
+- **Puzzles:** combine numbered levels and dailies into one difficulty-adjusted score.
+  Difficulty and independent solving are primary; reliable active time has a bounded,
+  secondary influence. Bonus counts do not partition players' history. Show a result
+  after the first eligible completion, smooth recent results, and show a trend after
+  a few results. The score is provisional game performance, not a calibrated cognitive
+  ability, population percentile or percentage improvement.
+- **Imperfect evidence:** missing timing omits the time adjustment rather than discarding
+  an otherwise usable completion. Known repeats remain practice and do not raise the
+  estimate. Historical unknown exposure may contribute with its limitation documented;
+  do not rewrite its original classification. Incomplete attempts are not losses.
+- **Contrarreloj:** show recent points and personal bests separately; do not invent a
+  cross-mode skill scale or gate ordinary score history on fresh-wheel eligibility.
+- **Presentation:** current score, a simple recent trend and a small history chart.
+  No cohort quotas, comparison percentages, exposure diagnostics or manual refresh as
+  the normal flow. Explain the factors briefly in player language. Hide empty modes.
+- **Evidence:** retain original records, identities, timing quality and exposure data.
+  Version the derived metric and recompute from history; do not change the recorder's
+  facts, game rewards, generation or ordinary saves to fit the model.
+- **Feedback:** friends play normally and can send a screenshot when the result feels
+  wrong. An optional local history download supports investigation; no GitHub account,
+  prescribed number of games or research protocol is required to test the feature.
+- **Scope:** deliver M24's replacement next. Retention/deletion and backup remain visible
+  follow-ups. Recommendations and a second-game platform wait. See the
+  [delivery plan](./PROGRESS-PLAN.md) for cycles, checks and documentation updates.
+
 ## D36 · Put personal progress in front of beta players — 2026-11-01
 
 - **Priority:** at the owner's request, start the M24 UI before formal M23 model-selection

@@ -16,7 +16,8 @@
     "docs/guides/devices.md",
     "docs/GAME.md",
     "docs/DECISIONS.md",
-    "docs/PLAN.md"
+    "docs/PLAN.md",
+    "docs/PROGRESS-PLAN.md"
   ],
   "navigation": {
     "includeFolders": true,
