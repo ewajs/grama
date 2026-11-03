@@ -111,7 +111,11 @@ stars land one by one, then the points count up.
       <span>{ratingUpdate.change === null ? strings.ratingFirst : strings.progressRating}</span>
       <strong>{Math.round(ratingUpdate.rating).toLocaleString('es-AR')}</strong>
       {#if ratingUpdate.change !== null}
-        <span class="delta" aria-label={strings.ratingChange(ratingUpdate.change)}
+        <span
+          class="delta"
+          class:increase={ratingUpdate.change > 0}
+          class:decrease={ratingUpdate.change < 0}
+          aria-label={strings.ratingChange(ratingUpdate.change)}
           >{strings.ratingDelta(ratingUpdate.change)}</span
         >
       {/if}
@@ -150,7 +154,7 @@ stars land one by one, then the points count up.
   .rating-result {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
     justify-content: center;
     gap: var(--space-2);
     padding: var(--space-2);
@@ -166,6 +170,12 @@ stars land one by one, then the points count up.
   .delta {
     color: var(--color-text);
     font-weight: var(--weight-bold);
+  }
+  .delta.increase {
+    color: var(--color-rating-up-strong);
+  }
+  .delta.decrease {
+    color: var(--color-rating-down-strong);
   }
 
   p {

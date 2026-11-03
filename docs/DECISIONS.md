@@ -23,7 +23,8 @@ delete it, the history is the point.
   preparation; completion/progress/export retain queued reads. No polling, new score formula, persisted rating, or save/content change.
 - **Presentation:** first rating has no claimed previous earned value; later signed
   changes reconcile rounded displayed values. Known practice or failed recording omits
-  the numeric line. A rating decrease uses calm styling, not error feedback.
+  the numeric line. Vertically center the rating row; signed changes use green for
+  increases, red for decreases and ordinary text for zero, with readable colors in every theme.
 - **Navigation:** Home advances a completed main level once before leaving, without
   presenting the next board. Native dialog scrolling preserves readable short layouts.
 

@@ -140,6 +140,9 @@ test('completion presents a decrease calmly, while replays have no rating line',
   const modal = await finish(page, 1);
   await expect(modal.getByLabel(/^Bajaste .* puntos de nivel de juego$/)).toBeVisible();
   await shot(page, 'win-decrease-light');
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await shot(page, 'win-decrease-dark');
+  await page.emulateMedia({ colorScheme: 'light' });
   await modal.getByRole('button', { name: 'Volver al inicio' }).click();
   await page.getByRole('button', { name: /^Mapa/ }).click();
   await page.getByRole('button', { name: 'Jugar el nivel 1' }).click();

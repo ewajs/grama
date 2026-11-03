@@ -89,6 +89,8 @@ an earned rating. Missing/failed history leaves the ordinary progress entry avai
 After a newly rated completion, the dialog shows that finalized attempt's rating and signed
 change; the first says “Tu primer nivel de juego” without an earned previous rating.
 The visible delta subtracts the two rounded displayed values; internal precision is retained.
+The label, rating and delta are vertically centered. Increases are green, decreases red,
+and zero uses the theme's ordinary text color (dark in light mode, light in dark mode).
 Practice, missing evidence or failed writes never fabricate a numeric update. Saving and
 rating reads never block Next/Home. The change is associated by attempt ID, not by comparing
 two unrelated global summaries.

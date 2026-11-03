@@ -135,8 +135,9 @@ spacing, typography and colors. No rating chart or additional stat pills on Home
   Preserve useful summaries when they fit. A profile without a rating gets a friendly
   first-completion prompt, not a displayed earned 1500. Storage failure must not block Home.
 - Add one compact rating line to Level Complete, below rewards and above the word recap:
-  “Nivel de juego 1.658 · +14”. Use calm styling and an explicit sign; a fall is not an
-  error. Round the before/after values consistently so the visible change reconciles.
+  “Nivel de juego 1.658 · +14”. Vertically center the row; use an explicit sign with green
+  for increases, red for decreases and ordinary text for zero. Round the before/after
+  values consistently so the visible change reconciles.
   The first rating says “Tu primer nivel de juego …” without implying a prior earned rating.
 - Show the update for that exact finalized attempt, using the existing history projection
   and attempt identity. Retain full internal precision. No new formula, persisted rating,
