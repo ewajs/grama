@@ -367,7 +367,7 @@ no cohort quotas or recording diagnostics appear in the normal player flow.
 - [x] Reconcile current documentation; prepare release version, changelog and player news
 - [x] Tag the merged release commit `v0.22.0` and verify deployment (80cf7a9)
 
-### Home and completion polish
+### Home and completion polish · `v0.23.0`
 
 Goal: make settings, the guide and the existing rating visible in normal play, without
 adding a dashboard or changing the scoring model.
@@ -378,6 +378,7 @@ adding a dashboard or changing the scoring model.
 - [x] Show the saved attempt's updated rating and signed change in the level-complete dialog
 - [x] Add an explicit Home action alongside Next/Map, keeping daily Share/Home behavior clear
 - [x] Update player/developer docs and screenshots; focused layout, navigation and recording tests
+- [x] Prepare v0.23.0: version, changelog and player-facing news
 
 Scope and acceptance checks: [`PROGRESS-PLAN.md`](./PROGRESS-PLAN.md#home-and-completion-polish).
 
@@ -411,6 +412,14 @@ service-worker scope before deployment changes. No accounts or shared player dat
   before/after screenshots of UI changes
 
 ## Changelog
+
+- **v0.23.0** — Settings and the player guide are accessible from Home; Tu progreso
+  shows the current game rating. Rated completions show the saved rating and signed
+  change, with green increases, red decreases and neutral zero; the row is vertically
+  centered with readable colors in every theme. Numbered completions offer Home
+  alongside Next, and replays retain Map plus Home; daily challenges keep Share/Home.
+  Updated player/developer documentation and screenshots. Scoring rules and saved
+  progress are unchanged.
 
 - **v0.22.0** — Personal progress: an unbounded Glicko-2 game rating, recent trend and
   accessible chart from ordinary puzzle play; separate Contrarreloj score history.

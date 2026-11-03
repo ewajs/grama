@@ -260,6 +260,14 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.23',
+      items: [
+        'El menú y la guía están a mano desde el inicio, donde también podés ver tu nivel de juego.',
+        'Al completar una rueda que cuenta para tu nivel de juego, ves cómo quedó y cuánto cambió: verde si sube, rojo si baja y neutro si sigue igual.',
+        'Después de completar un nivel, podés volver al inicio o seguir jugando. Al repetir uno, también podés volver al mapa.',
+      ],
+    },
+    {
       version: '0.22',
       items: [
         'Tu progreso muestra tu nivel de juego, su evolución y tus resultados recientes desde la primera rueda nueva que completás.',
