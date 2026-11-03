@@ -113,3 +113,14 @@ las anteriores a partir de tus puntos o niveles guardados. Tu progreso de juego 
 
 Jugá como siempre. Si un resultado te parece raro, mandanos una captura; no necesitás
 una cuenta en GitHub ni completar un número de partidas para probarlo.
+
+### Compartir comentarios
+
+En **Compartir comentarios**, podés **Descargar historial** si te lo pedimos para revisar
+un resultado. Incluye las partidas completas y abandonadas del registro, palabras, pistas
+y tiempos, junto con la versión del cálculo. Incluye también las partidas de práctica;
+no incluye una partida en curso ni sirve para recuperar tu progreso como copia de seguridad.
+
+El archivo se descarga en tu dispositivo. No se envía solo: vos decidís si lo compartís.
+No necesitás GitHub ni jugar un número de partidas. Si falla la descarga, podés volver
+a intentar y seguir jugando.

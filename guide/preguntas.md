@@ -26,7 +26,8 @@ Tu diccionario y el [registro local de partidas](/progreso#registro-local-de-par
 
 No se envían tus partidas ni estadísticas de juego: no hay publicidad, analítica remota
 ni cuentas. El [registro de partidas](/progreso#registro-local-de-partidas) queda solo en
-tu dispositivo. Reportar un problema o compartir un resultado envía lo que vos elijas.
+tu dispositivo. Descargar el historial también crea un archivo local, sin enviarlo.
+Reportar un problema o compartir un resultado envía lo que vos elijas.
 
 ## ¿Por qué puede bajar mi nivel de juego?
 

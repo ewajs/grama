@@ -106,6 +106,15 @@ export const es = {
   progressUnrated: 'Sin puntaje',
   progressTrialBest: 'Mejor puntaje registrado',
   progressTrialNote: 'Contrarreloj tiene su propio puntaje y no cambia tu nivel de juego.',
+  progressFeedback: 'Compartir comentarios',
+  progressFeedbackPrompt:
+    'Jugá como siempre. Si el progreso no refleja cómo te fue, mandanos una captura. Si te pedimos más información, podés compartir este archivo.',
+  progressExportDescription:
+    'Incluye tus partidas completas y abandonadas, palabras, pistas y tiempos para revisar el cálculo. No incluye la partida en curso ni sirve como copia de seguridad. Se descarga en tu dispositivo; no se envía automáticamente.',
+  progressExport: 'Descargar historial',
+  progressExportPreparing: 'Preparando archivo…',
+  progressExportReady: 'Descarga iniciada. Compartí el archivo solo si querés.',
+  progressExportFailed: 'No pudimos preparar el archivo. Volvé a intentar; podés seguir jugando.',
   progressDate: (time: number) =>
     new Date(time).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }),
   statsTitle: 'Estadísticas',

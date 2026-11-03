@@ -104,6 +104,15 @@ refresh, cohort quotas, research diagnostics or GitHub feedback requirement. A c
 **Cómo se calcula** explains the factors and provisional scale. Friends play normally
 and can send a screenshot when a result feels wrong; no prescribed workload is needed.
 
+**Compartir comentarios** explains this and offers **Descargar historial**. The local
+JSON file includes all finalized completed/abandoned original records (including practice,
+unknown exposure and uncertain time), format/app/build/model versions and current model
+settings. It excludes active checkpoints and ordinary progress/settings/dictionary saves;
+it is diagnostic evidence, not a backup/restore feature. The download rereads all history
+pages behind queued writes, even when the current view is empty or calculation failed.
+Read failures produce no partial file, expose a retryable error and leave play available.
+Nothing is uploaded; sharing the file is an explicit action outside the app.
+
 ### Daily challenge (`src/core/daily.ts`)
 
 One level per date (the player's own), the same for everyone: 7 letters, up to 9 targets, and a

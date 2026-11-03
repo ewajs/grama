@@ -12,7 +12,8 @@ export type RatingResult = {
 /** Unrated prior; its scale does not yet represent calibrated Grama ability. */
 export const NEW_RATING: Readonly<Rating> = { rating: 1500, deviation: 350, volatility: 0.06 };
 const SCALE = 173.7178;
-const DEFAULT_TAU = 0.5;
+/** Shared volatility constraint, also included in diagnostic exports. */
+export const DEFAULT_TAU = 0.5;
 const MAX_DEVIATION = NEW_RATING.deviation;
 const TOLERANCE = 0.000001;
 const MAX_ITERATIONS = 100;
