@@ -57,7 +57,12 @@ nivel, pero no son en vano: te acercan a [ganar pistas](/pistas).
 Cuando llenás todo el tablero, el nivel se completa: ves tus
 [estrellas](/progreso), tus puntos y la lista de palabras del nivel. Si te faltó alguna
 estrella, te dice qué te faltó para las 3. Tocá cualquiera para ver qué
-significa en el diccionario. Después, **Siguiente nivel**.
+significa en el diccionario. Si la partida actualiza tu [nivel de juego](/tu-nivel),
+el resumen muestra su nuevo valor y el cambio.
+
+Elegí **Siguiente nivel** para seguir o **Volver al inicio** para descansar: tu próxima
+partida empieza en el siguiente nivel. En una repetición también podés volver al mapa;
+el desafío del día conserva sus opciones de compartir y volver al inicio.
 
 <img class="screen" src="/screenshots/nivel-completo.png" alt="Nivel completo: estrellas, puntos y las palabras del nivel">
 

@@ -14,11 +14,14 @@ stars land one by one, then the points count up.
 - `newWords`: how many of its words were new to Tu diccionario; none isn't mentioned.
 - `nextLabel`: the button's label (the next level, or back to the map after a replay).
 - `share()`: when given, a share button (daily challenge); it says how it went.
-- `onnext()`: the player is done here.
+- `onnext()`: continue to the next level, map or daily Home.
+- `onhome()`: optional explicit Home action for numbered levels/replays.
+- `ratingUpdate`: this saved attempt’s rating and visible delta, when it counts.
 -->
 <script lang="ts">
   import { cubicOut } from 'svelte/easing';
   import { Tween } from 'svelte/motion';
+  import type { RatingUpdate } from '../../app/assessment/performance';
   import type { Tier } from '../../core/difficulty';
   import { TIER_MULTIPLIER } from '../../core/evaluate';
   import type { MissingStars } from '../../core/history';
@@ -42,6 +45,8 @@ stars land one by one, then the points count up.
     nextLabel: string;
     share?: () => Promise<'shared' | 'copied' | 'failed'>;
     onnext: () => void;
+    onhome?: () => void;
+    ratingUpdate?: RatingUpdate | null;
   };
   let {
     detail,
@@ -56,6 +61,8 @@ stars land one by one, then the points count up.
     nextLabel,
     share,
     onnext,
+    onhome,
+    ratingUpdate,
   }: Props = $props();
 
   let copied = $state(false);
@@ -99,6 +106,21 @@ stars land one by one, then the points count up.
       <li class="new">{strings.dictionaryNew(newWords)}</li>
     {/if}
   </ul>
+  {#if ratingUpdate}
+    <div class="rating-result" role="status">
+      <span>{ratingUpdate.change === null ? strings.ratingFirst : strings.progressRating}</span>
+      <strong>{Math.round(ratingUpdate.rating).toLocaleString('es-AR')}</strong>
+      {#if ratingUpdate.change !== null}
+        <span
+          class="delta"
+          class:increase={ratingUpdate.change > 0}
+          class:decrease={ratingUpdate.change < 0}
+          aria-label={strings.ratingChange(ratingUpdate.change)}
+          >{strings.ratingDelta(ratingUpdate.change)}</span
+        >
+      {/if}
+    </div>
+  {/if}
   <section class="recap">
     <h3>{strings.recap}</h3>
     <div>
@@ -125,9 +147,37 @@ stars land one by one, then the points count up.
   {:else}
     <button class="primary" onclick={onnext}>{nextLabel}</button>
   {/if}
+  {#if onhome}<button class="secondary" onclick={onhome}>{strings.backHome}</button>{/if}
 </Dialog>
 
 <style>
+  .rating-result {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-bottom);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  .rating-result strong {
+    font-size: var(--text-lg);
+    color: var(--color-accent-strong);
+  }
+  .delta {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
+  }
+  .delta.increase {
+    color: var(--color-rating-up-strong);
+  }
+  .delta.decrease {
+    color: var(--color-rating-down-strong);
+  }
+
   p {
     margin: 0;
     color: var(--color-text-muted);

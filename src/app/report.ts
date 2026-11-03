@@ -39,3 +39,8 @@ export function reportUrl(kind: ReportKind, context: ReportContext): string {
   });
   return `${ISSUES_URL}?${params}`;
 }
+
+/** A Home report includes the app/build, without inventing a puzzle context. */
+export function appReportUrl(version: string, build: string): string {
+  return `${ISSUES_URL}?${new URLSearchParams({ title: strings.reportAppTitle, body: strings.reportAppBody(version, build) })}`;
+}

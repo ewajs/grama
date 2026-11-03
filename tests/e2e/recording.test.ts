@@ -11,9 +11,10 @@ import { saveGame } from '../../src/storage/save';
 test.use({ storageState: { cookies: [], origins: [] } });
 const records = (page: Page) => assessmentRecords<PuzzlePayload, PuzzleResult>(page);
 
-async function freshGame(page: Page) {
+async function freshGame(page: Page, frozenClock = false) {
   await openGame(page);
   await page.getByRole('button', { name: 'Saltear' }).click();
+  if (frozenClock) await page.clock.runFor(300);
   await expect(page.getByRole('dialog')).toBeHidden();
   await expect.poll(async () => (await records(page)).checkpoints[0]?.payload.presented).toBe(true);
 }
@@ -51,8 +52,12 @@ test('recording commits exposure before presentation, captures hints and finaliz
 test('recording pauses for overlays and resumes the same attempt after leaving and reload', async ({
   page,
 }) => {
-  await page.clock.install();
-  await freshGame(page);
+  // Native IndexedDB setup must finish before the controlled clock consumes its
+  // preparation budget. Keep fake time frozen during IO, then advance only the UI fades.
+  const start = new Date('2026-11-03T12:00:00Z');
+  await page.clock.install({ time: start });
+  await page.clock.pauseAt(start);
+  await freshGame(page, true);
   const original = (await records(page)).checkpoints[0]!;
   await page.clock.runFor(2000);
   await page.getByRole('button', { name: 'Abrir el menú' }).click();
@@ -61,6 +66,7 @@ test('recording pauses for overlays and resumes the same attempt after leaving a
   await page.clock.runFor(20000);
   expect((await records(page)).checkpoints[0]?.clock.activeMs).toBe(paused);
   await page.getByRole('button', { name: 'Volver al juego' }).click();
+  await page.clock.runFor(300);
   await expect(page.getByRole('dialog')).toBeHidden();
   await drawWord(page, level(1).targets[0]!);
   await expect

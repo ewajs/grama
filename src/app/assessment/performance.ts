@@ -106,3 +106,24 @@ export function performanceHistory(records: readonly unknown[]) {
     trialBest,
   };
 }
+
+/** Visible rating after a particular attempt; null change marks the first rated puzzle. */
+export type RatingUpdate = { rating: number; change: number | null };
+
+/** Finds the matching update and reconciles its delta with displayed rounded before/after ratings. */
+export function ratingUpdate(
+  history: ReturnType<typeof performanceHistory>,
+  id: string,
+): RatingUpdate | null {
+  let before: number | null = null;
+  for (const entry of history.puzzles) {
+    if (!entry.rating) continue;
+    if (entry.record.attempt.id === id)
+      return {
+        rating: entry.rating.rating,
+        change: before === null ? null : Math.round(entry.rating.rating) - Math.round(before),
+      };
+    before = entry.rating.rating;
+  }
+  return null;
+}

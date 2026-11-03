@@ -46,3 +46,6 @@ features:
     details: Todas las palabras que encontraste, en orden y con su significado.
     link: /diccionario
 ---
+
+Desde el inicio del juego, **Guía** abre estas páginas y el botón de menú te deja cambiar
+los ajustes sin entrar a una partida. La tarjeta **Tu progreso** muestra tu nivel de juego.

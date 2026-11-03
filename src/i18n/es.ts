@@ -77,6 +77,19 @@ export const es = {
     ].join('\n'),
   achievements: 'Logros',
   progressTitle: 'Tu progreso',
+  ratingDiscover: 'Descubrí tu nivel de juego',
+  ratingFirst: 'Tu primer nivel de juego',
+  ratingDelta: (change: number) =>
+    change === 0 ? '±0' : `${change > 0 ? '+' : '−'}${Math.abs(change)}`,
+  ratingChange: (change: number) =>
+    change === 0
+      ? 'Sin cambio de nivel'
+      : `${change > 0 ? 'Subiste' : 'Bajaste'} ${Math.abs(change)} puntos de nivel de juego`,
+  homeGuide: 'Guía',
+  homeGuideLabel: 'Guía del juego',
+  reportAppTitle: 'Un problema en Grama',
+  reportAppBody: (version: string, build: string) =>
+    `Desde el inicio de Grama\nVersión: ${version} · ${build}\n\n¿Qué pasó?\n`,
   progressSolving: 'Resolución de palabras',
   progressRating: 'Tu nivel de juego',
   progressRatingValue: (rating: number) =>

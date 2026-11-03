@@ -42,6 +42,8 @@ el modo silencio puesto, Grama no suena, y si estás escuchando música, la deja
 
 ## ¿Puedo cambiar los colores?
 
+Podés abrir el menú desde el inicio, con el botón de las tres líneas, o desde una partida.
+
 Sí: en el menú, **Tema** tiene cuatro: **Grama** (el de siempre), **Argento** (celeste y
 sol de mayo), **Yerba** (verde mate) y **Quebrada** (terracota, como los cerros de colores).
 Debajo elegís el modo: **Automático** sigue a tu teléfono, o lo dejás siempre **Claro** u

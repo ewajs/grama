@@ -1,6 +1,7 @@
 <!-- @component Root of the app: loads the words, then starts or resumes the game. -->
 <script lang="ts">
   import { GramaRecorder } from './app/assessment/recorder';
+  import { performanceHistory, ratingUpdate } from './app/assessment/performance';
   import { Game } from './app/game.svelte';
   import { Installer } from './app/install.svelte';
   import { Navigation } from './app/navigation.svelte';
@@ -93,6 +94,28 @@
     }
   });
 
+  let ratingSummary = $state.raw<{ value: number | null; ready: boolean }>({
+    value: null,
+    ready: false,
+  });
+  let ratingRequest = 0;
+  async function refreshRatings(id?: string) {
+    const request = ++ratingRequest;
+    try {
+      const records = await recorder?.history(id !== undefined);
+      const view = records ? performanceHistory(records) : null;
+      if (request === ratingRequest)
+        ratingSummary = { value: view?.current?.rating ?? null, ready: view !== null };
+      return view && id ? ratingUpdate(view, id) : null;
+    } catch {
+      if (request === ratingRequest) ratingSummary = { value: null, ready: false };
+      return null;
+    }
+  }
+  $effect(() => {
+    if (navigation.screen === 'home' && recorder) void refreshRatings();
+  });
+
   // Back from the background (a PWA can sleep for days), the daily may have changed.
   $effect(() => {
     const refresh = () => {
@@ -105,7 +128,15 @@
 
 {#if navigation.screen === 'game'}
   {#if game.ready}
-    <GameScreen {game} {preferences} {installer} {recorder} onback={() => navigation.back()} />
+    <GameScreen
+      {game}
+      {preferences}
+      {installer}
+      {recorder}
+      onback={() => navigation.back()}
+      onhome={() => navigation.go('home')}
+      onrated={refreshRatings}
+    />
   {:else if failed}
     <p class="status">{strings.loadError}</p>
   {:else}
@@ -150,6 +181,10 @@
 {:else}
   <Home
     {game}
+    {preferences}
+    {installer}
+    rating={ratingSummary.value}
+    ratingReady={ratingSummary.ready}
     onplay={() => {
       game.playCurrent();
       navigation.go('game');

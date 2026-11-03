@@ -46,6 +46,9 @@ const PAIRS: [text: string, background: string][] = [
   ]),
   ['accent-contrast', 'accent'],
   ['on-strong', 'accent-strong'],
+  ...['text', 'rating-up-strong', 'rating-down-strong'].map(
+    (text) => [text, 'bg-bottom'] as [string, string],
+  ),
   ...['success', 'bonus', 'danger'].flatMap((status) => [
     [`${status}-strong`, 'surface'] as [string, string],
     [`${status}-strong`, 'tile'] as [string, string],

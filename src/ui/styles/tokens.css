@@ -102,6 +102,10 @@
   /* Text on a -strong fill, in every theme. */
   --color-on-strong: light-dark(#ffffff, #12111f);
 
+  /* Rating direction stays green/red in every theme; zero uses ordinary text. */
+  --color-rating-up-strong: light-dark(#196a45, #4cc38a);
+  --color-rating-down-strong: light-dark(#b52a30, #f26c70);
+
   /* Typography */
   --font-sans: 'Outfit Variable', system-ui, sans-serif;
   --text-sm: 0.875rem;
