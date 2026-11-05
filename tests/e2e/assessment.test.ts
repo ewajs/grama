@@ -520,3 +520,43 @@ test('assessment snapshot includes finalized evidence, unfinished state and expo
   });
   expect(result.closed).toEqual({ ok: false, error: 'failed' });
 });
+
+test('assessment restore undoes the paired profile when the final transaction aborts', async ({
+  page,
+}) => {
+  const result = await page.evaluate(async () => {
+    const opened = await window.openAssessment();
+    if (!opened.ok) throw new Error(opened.error);
+    const store = opened.value;
+    await store.saveCheckpoint(window.fixture);
+    const before = await store.snapshot();
+    const original = IDBDatabase.prototype.transaction;
+    let transaction: IDBTransaction | undefined,
+      profile = 'old';
+    IDBDatabase.prototype.transaction = function (...args: Parameters<typeof original>) {
+      transaction = original.apply(this, args);
+      return transaction;
+    };
+    let outcome;
+    try {
+      outcome = await store.restore(
+        { version: 2, records: [], checkpoints: [], exposures: [], sequence: 0 },
+        () => {
+          profile = 'new';
+          transaction!.abort();
+          return () => {
+            profile = 'old';
+          };
+        },
+      );
+    } finally {
+      IDBDatabase.prototype.transaction = original;
+    }
+    const after = await store.snapshot();
+    store.close();
+    return { before, after, outcome, profile };
+  });
+  expect(result.outcome).toEqual({ ok: false, error: 'failed' });
+  expect(result.profile).toBe('old');
+  expect(result.after).toEqual(result.before);
+});

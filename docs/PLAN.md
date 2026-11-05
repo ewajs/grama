@@ -326,7 +326,8 @@ remain uncertain.
 - [x] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
 - [ ] Bounded retention and assessment deletion controls/documentation — deferred follow-up
 - [x] Full-profile export: include saved game, dictionary, settings, trial records and complete recording state
-- [ ] Import the versioned profile export with validation and explicit restore confirmation
+- [x] Import cycle 1: validate the complete file and restore recording/profile storage with rollback
+- [ ] Import cycle 2: file picker, replacement preview, reload and transfer/resume browser checks
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
 

@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { NEW_PROGRESS } from '../core/progress';
-import { readProfile } from './profile';
+import { readProfile, replaceProfile } from './profile';
 import { loadGame, saveGame } from './save';
 
 it('preserves the exact versioned save and other profile values without including unrelated storage', () => {
@@ -32,4 +32,46 @@ it('fails instead of replacing unreadable profile data with defaults', () => {
       },
     }),
   ).toThrow('Storage blocked');
+});
+
+it('replaces and undoes a profile while preserving other same-origin applications', () => {
+  const saved = new Map([
+    ['grama.save', 'old'],
+    ['other-app', 'untouched'],
+  ]);
+  const storage = {
+    getItem: (k: string) => saved.get(k) ?? null,
+    setItem: (k: string, v: string) => {
+      saved.set(k, v);
+    },
+    removeItem: (k: string) => {
+      saved.delete(k);
+    },
+  };
+  const before = readProfile(storage),
+    next = { ...before, 'grama.save': null, 'grama.words': '["SAL"]' };
+  const undo = replaceProfile(next, storage);
+  expect(readProfile(storage)).toEqual(next);
+  expect(saved.get('other-app')).toBe('untouched');
+  undo();
+  expect(readProfile(storage)).toEqual(before);
+});
+
+it('rolls back a partial profile write when a value cannot be stored', () => {
+  const saved = new Map([['grama.save', 'old']]);
+  const storage = {
+    getItem: (k: string) => saved.get(k) ?? null,
+    setItem: (k: string, v: string) => {
+      if (v === 'too-large') throw new Error('Quota');
+      saved.set(k, v);
+    },
+    removeItem: (k: string) => {
+      saved.delete(k);
+    },
+  };
+  const before = readProfile(storage);
+  expect(() =>
+    replaceProfile({ ...before, 'grama.save': 'new', 'grama.words': 'too-large' }, storage),
+  ).toThrow('Quota');
+  expect(readProfile(storage)).toEqual(before);
 });
