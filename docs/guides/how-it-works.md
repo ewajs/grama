@@ -371,8 +371,13 @@ Recorder and research eligibility rules stay independent. The optional data down
 `app/assessment/export`: copy original finalized history, unfinished checkpoints, exposure
 ownership and sequence counter in one storage transaction, then read the five known
 profile keys through `storage/profile`. The file retains model/build context and existing
-save/schema versions for future import. Failed reads never download partial data; the UI
-reports failure without changing play. Import is not available yet.
+save/schema versions for import. Failed reads never download partial data; the UI
+reports failure without changing play. `app/assessment/import` validates the selected
+file and prepares its summary. `ImportData` shows the replacement preview; confirmation
+uses the recorder's write queue and `AssessmentStore.restore`. Recording writes are
+transactional; `storage/profile.replaceProfile` restores old values on partial failures
+and supplies an undo for database aborts. A successful restore reloads the app. These
+compensating writes do not provide crash atomicity or synchronize other open tabs.
 
 ### Assessment storage (M22)
 

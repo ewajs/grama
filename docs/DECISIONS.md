@@ -8,6 +8,22 @@ delete it, the history is the point.
 
 ---
 
+## D42 · Restore a complete profile with an explicit replacement preview — 2026-11-05
+
+- **Decision:** import version-2 exports locally from Tu progreso → Traer tus datos.
+  Validate saved values and recording identities, counters and ledger ownership before
+  previewing level, points, dictionary size and match count. History-only version-1
+  files cannot restore a full profile and get an actionable compatibility message.
+- **Replacement:** confirmation replaces the five Grama keys and all recording stores;
+  it does not merge independent sequence histories or apply exported model settings.
+  Reload after success so game state, preferences and ratings all use the imported data.
+- **Failure handling:** IndexedDB changes are transactional; synchronous profile writes
+  undo partial failures, and database aborts undo the paired profile write. This is not
+  crash-atomic across both browser storage systems. Close other Grama tabs first, as
+  the preview asks; cross-tab synchronization and crash-recovery journaling are separate work.
+  A 20 MiB file limit bounds phone memory use. Restore supports current save/schema versions;
+  older level content follows the existing save loader's session-reset policy.
+
 ## D41 · Complete the export before adding import — 2026-11-05
 
 - **Decision:** upgrade the existing download to format `grama-assessment-history`,
@@ -18,8 +34,8 @@ delete it, the history is the point.
   writes, then the known localStorage keys are read synchronously. Read errors create
   no partial file; missing keys remain null. Other same-origin applications are excluded.
   This captures persisted state, not unsaved memory or a cross-tab global transaction.
-- **Delivery:** this cycle delivers complete export; import is the next cycle. The UI
-  says restore is not available yet. This begins the full-profile work previously deferred
+- **Delivery:** this cycle delivers complete export; D42 adds import in the next cycle.
+  This begins the full-profile work previously deferred
   in D34/D37; retention/deletion remain separate.
 
 ## D40 · Put settings, help and saved ratings on the main path — 2026-11-03

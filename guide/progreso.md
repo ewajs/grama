@@ -131,10 +131,22 @@ las partidas de práctica, las palabras, pistas y tiempos, la versión del cálc
 registros de partidas sin terminar. Conserva lo que está guardado; una partida de
 Contrarreloj en curso no se convierte en una partida que puedas retomar.
 
-El archivo ya incluye los datos para preparar una importación completa. **La importación
-todavía no está disponible**: por ahora, descargarlo no permite restaurar ni trasladar
-tu progreso desde la app. Los archivos anteriores (versión 1) solo incluyen el historial
-de partidas, sin niveles, puntos ni diccionario.
+Para recuperar o trasladar tus datos, abrí **Tu progreso → Traer tus datos → Elegir
+archivo** en la instalación de destino. Elegí el archivo descargado y revisá el resumen
+de nivel, puntos, palabras y partidas. **Reemplazar e importar** reemplaza todos los datos
+de esa instalación y vuelve a abrir Grama; no combina dos progresos diferentes.
+Podés cancelar y descargar tus datos actuales antes de confirmar. Cerrá otras pestañas
+de Grama antes de importar.
+
+En iPhone/iPad, instalá Grama primero y abrí la app desde su ícono para importar ahí.
+Safari y la app instalada guardan sus datos por separado. En Android, instalar desde
+el mismo perfil de Chrome normalmente conserva los datos compartidos con ese navegador.
+
+Los archivos anteriores (versión 1) solo incluyen el historial de partidas, sin niveles,
+puntos ni diccionario, y no sirven para esta importación completa: actualizá Grama y
+volvé a descargar los datos. Se admiten archivos completos de hasta 20 MB. Si no se
+puede leer o importar un archivo, aparece un error y podés volver a intentar conservando
+la copia original. Una partida de Contrarreloj en curso no se retoma al importar.
 
 El archivo se descarga en tu dispositivo. No se envía solo: vos decidís si lo compartís.
 No necesitás GitHub ni jugar un número de partidas. Si falla la descarga, podés volver

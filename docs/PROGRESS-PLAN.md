@@ -1,6 +1,6 @@
 # Personal progress: replacement plan
 
-Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycles 1–3 are implemented. D41 upgrades the export to include the full persisted profile; import and retention/deletion remain follow-ups.
+Decision: D38 (amending D37 in `docs/DECISIONS.md`). Cycles 1–3 are implemented. D41/D42 deliver full persisted-profile export and confirmed import; retention/deletion remain follow-ups.
 The player screen now uses the Glicko rating and recent history.
 
 ## Outcome
@@ -84,8 +84,9 @@ Implemented as a local JSON download in `app/assessment/export` and `ProgressScr
 
 M22 now delivers complete export before import: saved game, dictionary, trial records,
 settings and recording coverage, plus original finalized records, unfinished checkpoints,
-the exposure ledger and sequence counter. Import remains the next cycle; historical
-version-1 files contain only finalized history. Keep bounded retention and explicit
+the exposure ledger and sequence counter. Confirmed import replaces the profile after
+validation and a short preview; historical version-1 files contain only finalized history
+and cannot restore full progress. Keep bounded retention and explicit
 assessment deletion in M22/M24. Retention must define what happens to replay recognition and recalculation
 before deleting exposure evidence. Defer recommendations, formal rating research and
 platform extraction until the progress feature has proved useful in ordinary play.

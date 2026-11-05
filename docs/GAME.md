@@ -139,10 +139,23 @@ keys are null. Unfinished recording checkpoints, exposure ownership and the sequ
 counter are copied with finalized records in one read-only IndexedDB transaction after
 queued recording writes; the known localStorage keys are then read synchronously.
 Other applications' storage, word-list caches and unsaved in-memory play are excluded.
-There is no cross-tab transaction across IndexedDB and localStorage. The file prepares
-for full-profile import, which is not available yet and is explicitly labeled as such.
+There is no cross-tab transaction across IndexedDB and localStorage.
 Read failures create no partial file, expose a retryable error and leave play available.
 Nothing is uploaded; sharing the file is an explicit action outside the app.
+
+**Traer tus datos → Elegir archivo** reads a local version-2 export (up to 20 MiB),
+validates the complete saved profile and recording ledger, then previews level, points,
+dictionary size and recorded match count. No data changes until **Reemplazar e importar**.
+Confirmation replaces this installation's profile; cancellation leaves it untouched.
+History-only version-1 files and incompatible/malformed data get an error explaining
+how to download a new complete copy. Exported model settings never override the app's model.
+Recording state is replaced in one transaction. Failed profile writes undo their partial
+changes; an aborted database transaction undoes the paired profile write. These operations
+are not crash-atomic across both storage systems. The preview asks players to close other
+Grama tabs first and offers cancellation to download the current data. Success reloads
+the app into the imported profile. Saved levels/dailies resume through the normal loader;
+an in-progress Contrarreloj run is not resumed. Existing content-version mismatch handling
+still resets affected sessions while preserving totals. Nothing is uploaded or synchronized.
 
 ### Daily challenge (`src/core/daily.ts`)
 
