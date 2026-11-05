@@ -130,13 +130,18 @@ refresh, cohort quotas, research diagnostics or GitHub feedback requirement. A c
 **Cómo se calcula** explains the factors and provisional scale. Friends play normally
 and can send a screenshot when a result feels wrong; no prescribed workload is needed.
 
-**Compartir comentarios** explains this and offers **Descargar historial**. The local
-JSON file includes all finalized completed/abandoned original records (including practice,
-unknown exposure and uncertain time), format/app/build/model versions and current model
-settings. It excludes active checkpoints and ordinary progress/settings/dictionary saves;
-it is diagnostic evidence, not a backup/restore feature. The download rereads all history
-pages behind queued writes, even when the current view is empty or calculation failed.
-Read failures produce no partial file, expose a retryable error and leave play available.
+**Compartir comentarios** offers **Descargar datos**. The local JSON file (format
+`grama-assessment-history`, version 2) retains all finalized completed/abandoned original
+records, including practice, unknown exposure and uncertain time, plus model/build context.
+It also includes the exact saved game (levels, points, hints, stars, dailies and saved
+sessions), dictionary, trial records, settings and assessment-gap marker. Missing saved
+keys are null. Unfinished recording checkpoints, exposure ownership and the sequence
+counter are copied with finalized records in one read-only IndexedDB transaction after
+queued recording writes; the known localStorage keys are then read synchronously.
+Other applications' storage, word-list caches and unsaved in-memory play are excluded.
+There is no cross-tab transaction across IndexedDB and localStorage. The file prepares
+for full-profile import, which is not available yet and is explicitly labeled as such.
+Read failures create no partial file, expose a retryable error and leave play available.
 Nothing is uploaded; sharing the file is an explicit action outside the app.
 
 ### Daily challenge (`src/core/daily.ts`)

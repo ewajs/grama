@@ -123,7 +123,7 @@ test('progress storage failure keeps navigation and ordinary play available', as
   let downloads = 0;
   page.on('download', () => downloads++);
   await page.getByText('Compartir comentarios', { exact: true }).click();
-  await page.getByRole('button', { name: 'Descargar historial', exact: true }).click();
+  await page.getByRole('button', { name: 'Descargar datos', exact: true }).click();
   await expect(
     page.getByText('No pudimos preparar el archivo. Volvé a intentar; podés seguir jugando.'),
   ).toBeVisible();
@@ -161,7 +161,7 @@ test('existing game progress is preserved without manufacturing past assessment 
   await expect(page.getByRole('button', { name: /^Jugar.*Nivel 24/ })).toBeVisible();
 });
 
-test('history download rereads every page and preserves original evidence for recalculation', async ({
+test('data download preserves all saved profile values and original evidence for recalculation', async ({
   page,
 }) => {
   await page.goto('./');
@@ -176,11 +176,31 @@ test('history download rereads every page and preserves original evidence for re
   Reflect.deleteProperty(first.attempt, 'result');
   records[1]!.attempt.exposures[0]!.kind = 'unknown';
   await installHistory(page, records);
+  let saved = '';
+  saveGame(
+    { ...NEW_PROGRESS, levelNumber: 24, score: 900, hints: 7 },
+    {
+      setItem: (_key, value) => {
+        saved = value;
+      },
+    },
+  );
+  const profile = {
+    'grama.save': saved,
+    'grama.settings': '{"theme":"yerba","sound":false}',
+    'grama.words': '["ÁRBOL","TENÉS"]',
+    'grama.trials': '{"runs":3,"best":{"points":50,"cleared":0,"words":1},"mostCleared":0}',
+    'grama.assessment-gap': '1',
+  };
+  await page.evaluate((data) => {
+    for (const [key, value] of Object.entries(data)) localStorage.setItem(key, value);
+    localStorage.setItem('unrelated-data', 'excluded');
+  }, profile);
   // The screen still holds its empty snapshot; download must read the actual store again.
   await page.getByText('Compartir comentarios', { exact: true }).click();
-  const button = page.getByRole('button', { name: 'Descargar historial', exact: true });
+  const button = page.getByRole('button', { name: 'Descargar datos', exact: true });
   await expect(button).toHaveAccessibleDescription(
-    /partidas completas y abandonadas.*no se envía automáticamente/i,
+    /progreso guardado.*diccionario.*no se envía automáticamente.*importación todavía no está disponible/i,
   );
   const [download] = await Promise.all([page.waitForEvent('download'), button.click()]);
   expect(download.suggestedFilename()).toMatch(/^grama-historial-\d{4}-\d{2}-\d{2}\.json$/);
@@ -188,17 +208,45 @@ test('history download rereads every page and preserves original evidence for re
   const file = JSON.parse(await readFile((await download.path())!, 'utf8'));
   expect(file).toMatchObject({
     format: 'grama-assessment-history',
-    version: 1,
+    version: 2,
     model: { version: 2, prior: { rating: 1500 }, tau: 0.5 },
   });
   expect(file.app.version).toMatch(/^\d+\.\d+\.\d+$/);
   expect(file.app.build).toBeTruthy();
   expect(Number.isFinite(Date.parse(file.exportedAt))).toBe(true);
   expect(file.records).toEqual(records);
+  expect(file.profile).toEqual(profile);
+  expect(file.assessment).toEqual({
+    version: 2,
+    checkpoints: [],
+    exposures: expect.arrayContaining(
+      records.flatMap((record) =>
+        record.attempt.exposures.map((exposure) => ({ ...exposure, attemptId: record.attempt.id })),
+      ),
+    ),
+    sequence: Math.max(...records.map((record) => record.attempt.sequence)),
+  });
+  expect(file.assessment.exposures).toHaveLength(
+    records.flatMap((record) => record.attempt.exposures).length,
+  );
   expect(performanceHistory(file.records)).toEqual(performanceHistory(records));
   await expect(page.getByRole('status')).toHaveText(
     'Descarga iniciada. Compartí el archivo solo si querés.',
   );
+  let extraDownloads = 0;
+  page.on('download', () => extraDownloads++);
+  await page.evaluate(() =>
+    Object.defineProperty(window, 'localStorage', {
+      get() {
+        throw new DOMException('Blocked', 'SecurityError');
+      },
+    }),
+  );
+  await button.click();
+  await expect(page.getByRole('alert')).toHaveText(
+    'No pudimos preparar el archivo. Volvé a intentar; podés seguir jugando.',
+  );
+  expect(extraDownloads).toBe(0);
   await page.goBack();
   await expect(page.getByRole('button', { name: /^Jugar/ })).toBeVisible();
 });

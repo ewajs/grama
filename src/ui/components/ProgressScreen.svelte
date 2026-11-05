@@ -18,7 +18,7 @@
     const source = recorder;
     if (!source || exporting === 'preparing') return;
     exporting = 'preparing';
-    const ok = await downloadHistory(() => source.history(), {
+    const ok = await downloadHistory(() => source.snapshot(), {
       version: __VERSION__,
       build: __BUILD__,
       at: Date.now(),

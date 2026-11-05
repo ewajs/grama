@@ -124,8 +124,8 @@ export const es = {
   progressFeedbackPrompt:
     'Jugá como siempre. Si el progreso no refleja cómo te fue, mandanos una captura. Si te pedimos más información, podés compartir este archivo.',
   progressExportDescription:
-    'Incluye tus partidas completas y abandonadas, palabras, pistas y tiempos para revisar el cálculo. No incluye la partida en curso ni sirve como copia de seguridad. Se descarga en tu dispositivo; no se envía automáticamente.',
-  progressExport: 'Descargar historial',
+    'Incluye tu progreso guardado: niveles, puntos, pistas, estrellas, desafíos diarios, diccionario, récords de Contrarreloj, ajustes e historial de partidas. Se descarga en tu dispositivo; no se envía automáticamente. La importación todavía no está disponible.',
+  progressExport: 'Descargar datos',
   progressExportPreparing: 'Preparando archivo…',
   progressExportReady: 'Descarga iniciada. Compartí el archivo solo si querés.',
   progressExportFailed: 'No pudimos preparar el archivo. Volvé a intentar; podés seguir jugando.',

@@ -367,10 +367,12 @@ See the [formula and worked examples](./skill-model.md#performance-version-2).
 `ProgressScreen` loads the projection on entry and renders the rating, trend and recent
 results. `RatingChart` renders a small SVG with spoken values. Read/calculation failures
 show retry without blocking navigation. Empty modes and research diagnostics stay hidden.
-Recorder and research eligibility rules stay independent. The optional diagnostic
-history download uses `app/assessment/export`: read all finalized history again, serialize
-original evidence plus model/build context, and initiate a local Blob download. Failed
-reads never download partial history; the UI reports failure without changing play.
+Recorder and research eligibility rules stay independent. The optional data download uses
+`app/assessment/export`: copy original finalized history, unfinished checkpoints, exposure
+ownership and sequence counter in one storage transaction, then read the five known
+profile keys through `storage/profile`. The file retains model/build context and existing
+save/schema versions for future import. Failed reads never download partial data; the UI
+reports failure without changing play. Import is not available yet.
 
 ### Assessment storage (M22)
 

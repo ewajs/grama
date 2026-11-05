@@ -124,10 +124,17 @@ una cuenta en GitHub ni completar un número de partidas para probarlo.
 
 ### Compartir comentarios
 
-En **Compartir comentarios**, podés **Descargar historial** si te lo pedimos para revisar
-un resultado. Incluye las partidas completas y abandonadas del registro, palabras, pistas
-y tiempos, junto con la versión del cálculo. Incluye también las partidas de práctica;
-no incluye una partida en curso ni sirve para recuperar tu progreso como copia de seguridad.
+En **Compartir comentarios → Descargar datos**, podés guardar un archivo con tu progreso
+guardado: niveles, puntos, pistas, estrellas, desafíos del día, diccionario, récords de
+Contrarreloj y ajustes. También incluye el registro de partidas completas y abandonadas,
+las partidas de práctica, las palabras, pistas y tiempos, la versión del cálculo y los
+registros de partidas sin terminar. Conserva lo que está guardado; una partida de
+Contrarreloj en curso no se convierte en una partida que puedas retomar.
+
+El archivo ya incluye los datos para preparar una importación completa. **La importación
+todavía no está disponible**: por ahora, descargarlo no permite restaurar ni trasladar
+tu progreso desde la app. Los archivos anteriores (versión 1) solo incluyen el historial
+de partidas, sin niveles, puntos ni diccionario.
 
 El archivo se descarga en tu dispositivo. No se envía solo: vos decidís si lo compartís.
 No necesitás GitHub ni jugar un número de partidas. Si falla la descarga, podés volver

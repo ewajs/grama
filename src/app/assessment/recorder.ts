@@ -91,6 +91,15 @@ export class GramaRecorder {
     }
   }
 
+  /** Copies all persisted recording state after this visit's pending writes. */
+  snapshot() {
+    return this.#queue(async () => {
+      const store = await this.#store;
+      const result = await store?.snapshot();
+      return result?.ok ? result.value : null;
+    });
+  }
+
   /** Commits exposure before presentation; unavailable/slow storage falls back to ordinary play. */
   async prepare(snapshot: PuzzleObservation, forceNew = false): Promise<PuzzleRecording | null> {
     return this.#prepare((cancelled) =>

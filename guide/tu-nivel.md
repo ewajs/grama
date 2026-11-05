@@ -126,8 +126,8 @@ Los valores actuales son referencias del juego, no una escala universal entre pe
 ### ¿Cómo ayudo a mejorar el cálculo?
 
 Jugá como siempre. Si algo no coincide con cómo te fue, mandanos una captura. Si hace
-falta investigar, **Compartir comentarios → Descargar historial** crea un archivo local
-con tus partidas y la versión del cálculo. Vos decidís si lo compartís. No necesitás
+falta investigar, **Compartir comentarios → Descargar datos** crea un archivo local
+con tus partidas, la versión del cálculo y tu progreso guardado. Vos decidís si lo compartís. No necesitás
 GitHub ni un número fijo de partidas. Leé [qué incluye el archivo](/progreso#compartir-comentarios).
 
 **Para seguir aprendiendo:** [El cálculo, paso a paso](/calculo-del-nivel), con ecuaciones,
