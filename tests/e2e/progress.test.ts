@@ -200,7 +200,7 @@ test('data download preserves all saved profile values and original evidence for
   await page.getByText('Compartir comentarios', { exact: true }).click();
   const button = page.getByRole('button', { name: 'Descargar datos', exact: true });
   await expect(button).toHaveAccessibleDescription(
-    /progreso guardado.*diccionario.*no se envía automáticamente.*importación todavía no está disponible/i,
+    /progreso guardado.*diccionario.*no se envía automáticamente/i,
   );
   const [download] = await Promise.all([page.waitForEvent('download'), button.click()]);
   expect(download.suggestedFilename()).toMatch(/^grama-historial-\d{4}-\d{2}-\d{2}\.json$/);

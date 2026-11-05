@@ -1,7 +1,7 @@
 # Personal performance and skill model experiments
 
 Status: D38 selects the existing Glicko-2 engine with a provisional benchmark adapter.
-The progress screen uses the versioned calculation/history projection. Complete persisted-profile export is available; import, formal calibration and remaining M22 controls are deferred.
+The progress screen uses the versioned calculation/history projection. Complete persisted-profile export/import is available; formal calibration and remaining M22 controls are deferred.
 
 ## Performance version 2
 
@@ -199,7 +199,10 @@ the saved profile and creates a local JSON Blob/download link. It releases the U
 the browser starts reading it. Null or failed reads create no partial file; blocked
 localStorage never silently substitutes defaults. This exports persisted state rather
 than unsaved memory, and is not a transaction across tabs and both storage systems.
-The UI describes the contents and notes that import is not available yet. Model changes
+The UI describes the contents. Import validates the full version-2 file, including
+record/checkpoint identities and exposure ownership, before requesting replacement
+confirmation. It retains original evidence and uses the app's own model settings;
+ratings are recomputed on reload rather than importing a supplied rating value. Model changes
 can still be investigated from the original `records` with the corresponding source/build.
 
 ## Player learning guide

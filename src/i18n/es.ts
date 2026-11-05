@@ -124,7 +124,34 @@ export const es = {
   progressFeedbackPrompt:
     'Jugá como siempre. Si el progreso no refleja cómo te fue, mandanos una captura. Si te pedimos más información, podés compartir este archivo.',
   progressExportDescription:
-    'Incluye tu progreso guardado: niveles, puntos, pistas, estrellas, desafíos diarios, diccionario, récords de Contrarreloj, ajustes e historial de partidas. Se descarga en tu dispositivo; no se envía automáticamente. La importación todavía no está disponible.',
+    'Incluye tu progreso guardado: niveles, puntos, pistas, estrellas, desafíos diarios, diccionario, récords de Contrarreloj, ajustes e historial de partidas. Se descarga en tu dispositivo; no se envía automáticamente.',
+  importSection: 'Traer tus datos',
+  importDescription:
+    'Elegí el archivo de Descargar datos para traer tu progreso desde otro navegador o dispositivo. El archivo se lee acá; no se sube a ningún servidor.',
+  importChoose: 'Elegir archivo',
+  importTitle: 'Importar tus datos',
+  importSummary: ({
+    level,
+    points,
+    words,
+    matches,
+  }: {
+    level: number;
+    points: number;
+    words: number;
+    matches: number;
+  }) =>
+    `Nivel ${level} · ${points} puntos · ${words === 1 ? '1 palabra' : `${words} palabras`} en tu diccionario · ${matches === 1 ? '1 partida registrada' : `${matches} partidas registradas`}.`,
+  importReplace:
+    'Este archivo reemplazará todo el progreso guardado en esta instalación. Podés cancelar y descargar tus datos actuales antes de continuar.',
+  importCloseTabs:
+    'Cerrá otras pestañas de Grama antes de importar. Al terminar, la app se vuelve a abrir con los datos del archivo.',
+  importConfirm: 'Reemplazar e importar',
+  importWorking: 'Importando…',
+  importInvalid:
+    'El archivo no es una copia completa compatible. Actualizá Grama y volvé a descargar tus datos. Los archivos antiguos de solo historial no incluyen todo tu progreso.',
+  importTooLarge: 'El archivo supera los 20 MB. Elegí una copia más pequeña.',
+  importFailed: 'No pudimos importar los datos. Conservá el archivo y volvé a intentar.',
   progressExport: 'Descargar datos',
   progressExportPreparing: 'Preparando archivo…',
   progressExportReady: 'Descarga iniciada. Compartí el archivo solo si querés.',

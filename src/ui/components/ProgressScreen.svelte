@@ -8,6 +8,7 @@
   import { strings } from '../../i18n';
   import RatingChart from './RatingChart.svelte';
   import ScreenHeader from './ScreenHeader.svelte';
+  import ImportData from './ImportData.svelte';
 
   let { recorder, onback }: { recorder: GramaRecorder | null; onback: () => void } = $props();
   let overview = $state<ReturnType<typeof performanceHistory> | null>(null);
@@ -179,6 +180,11 @@
     </button>
     {#if exporting === 'failed'}<p role="alert">{strings.progressExportFailed}</p>
     {:else if exporting === 'ready'}<p role="status">{strings.progressExportReady}</p>{/if}
+  </details>
+  <details>
+    <summary>{strings.importSection}</summary>
+    <p class="muted">{strings.importDescription}</p>
+    <ImportData {recorder} />
   </details>
 </main>
 
