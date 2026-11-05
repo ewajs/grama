@@ -287,6 +287,14 @@ export const es = {
   whatsNew: 'Novedades',
   news: [
     {
+      version: '0.24',
+      items: [
+        'Descargar datos ahora guarda tu progreso completo: niveles, puntos, pistas, estrellas, diccionario, ajustes e historial de partidas.',
+        'Traer tus datos permite recuperar esa copia en otro navegador o dispositivo. Revisás un resumen y confirmás reemplazar los datos de esa instalación.',
+        'La guía explica cómo guardar y trasladar tu progreso, incluido el paso de Safari a la app instalada en iPhone o iPad.',
+      ],
+    },
+    {
       version: '0.23',
       items: [
         'El menú y la guía están a mano desde el inicio, donde también podés ver tu nivel de juego.',

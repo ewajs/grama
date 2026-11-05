@@ -329,6 +329,7 @@ remain uncertain.
 - [x] Import cycle 1: validate the complete file and restore recording/profile storage with rollback
 - [x] Import cycle 2: file picker, replacement preview, reload and transfer/resume browser checks
 - [x] Player manual: discoverable transfer steps, replacement behavior and browser/install FAQ
+- [x] Prepare v0.24.0: version, complete-profile export/import changelog and player news
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
 
@@ -415,6 +416,15 @@ service-worker scope before deployment changes. No accounts or shared player dat
   before/after screenshots of UI changes
 
 ## Changelog
+
+- **v0.24.0** — Complete saved-profile export and confirmed local import: levels,
+  points, hints, stars, dailies, dictionary, settings, Contrarreloj records and original
+  match history. Version-2 files also retain unfinished recordings, exposure ownership
+  and sequence counters. Import validates the file, previews its contents and replaces
+  the destination profile after confirmation, with rollback for normal write failures.
+  Clear errors for malformed/incompatible files; old history-only files cannot restore
+  full progress. Player manual adds numbered transfer steps, visible navigation and
+  Safari-to-installed-app guidance. Scoring and existing save/content versions are unchanged.
 
 - **v0.23.0** — Settings and the player guide are accessible from Home; Tu progreso
   shows the current game rating. Rated completions show the saved rating and signed
