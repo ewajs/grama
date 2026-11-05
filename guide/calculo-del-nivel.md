@@ -288,4 +288,4 @@ experiencia; se conserva el registro original para poder recalcularla.
 **Fuente:** Mark E. Glickman, [Example of the Glicko-2 system (2022)](https://www.glicko.net/glicko/glicko2.pdf).
 El motor de Grama reproduce el ejemplo de la referencia en sus pruebas. Los factores
 y los supuestos de esta página corresponden al modelo 2; la versión de la app y la del
-modelo se registran por separado en el [archivo de historial](/progreso#compartir-comentarios).
+modelo se registran por separado en el [archivo de datos](/progreso#guardar-y-trasladar-tus-datos).
