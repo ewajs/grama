@@ -44,6 +44,7 @@ export default defineConfig({
         text: 'Tu progreso',
         items: [
           { text: 'Estrellas, mapa y logros', link: '/progreso' },
+          { text: 'Guardar y trasladar datos', link: '/progreso#guardar-y-trasladar-tus-datos' },
           { text: 'Tu nivel de juego', link: '/tu-nivel' },
           { text: 'El cálculo, paso a paso', link: '/calculo-del-nivel' },
           { text: 'Desafío del día', link: '/desafio-del-dia' },

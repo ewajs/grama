@@ -328,6 +328,7 @@ remain uncertain.
 - [x] Full-profile export: include saved game, dictionary, settings, trial records and complete recording state
 - [x] Import cycle 1: validate the complete file and restore recording/profile storage with rollback
 - [x] Import cycle 2: file picker, replacement preview, reload and transfer/resume browser checks
+- [x] Player manual: discoverable transfer steps, replacement behavior and browser/install FAQ
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
 

@@ -128,7 +128,7 @@ Los valores actuales son referencias del juego, no una escala universal entre pe
 Jugá como siempre. Si algo no coincide con cómo te fue, mandanos una captura. Si hace
 falta investigar, **Compartir comentarios → Descargar datos** crea un archivo local
 con tus partidas, la versión del cálculo y tu progreso guardado. Vos decidís si lo compartís. No necesitás
-GitHub ni un número fijo de partidas. Leé [qué incluye el archivo](/progreso#compartir-comentarios).
+GitHub ni un número fijo de partidas. Leé [qué incluye el archivo](/progreso#guardar-y-trasladar-tus-datos).
 
 **Para seguir aprendiendo:** [El cálculo, paso a paso](/calculo-del-nivel), con ecuaciones,
 un ejemplo resuelto y controles para explorar los supuestos.

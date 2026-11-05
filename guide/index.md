@@ -49,3 +49,6 @@ features:
 
 Desde el inicio del juego, **Guía** abre estas páginas y el botón de menú te deja cambiar
 los ajustes sin entrar a una partida. La tarjeta **Tu progreso** muestra tu nivel de juego.
+
+Si cambiás de navegador o dispositivo, seguí los pasos para
+[guardar y trasladar tus datos](/progreso#guardar-y-trasladar-tus-datos).

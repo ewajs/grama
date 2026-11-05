@@ -17,10 +17,20 @@ diccionario**.
 
 ## ¿Dónde se guarda mi progreso?
 
-En tu teléfono o computadora, y en ningún otro lado: no hay cuentas. Si borrás los datos
-del navegador, o jugás desde otro dispositivo, empezás de cero. Desde el menú también
+En el navegador o la app donde jugás, en tu teléfono o computadora: no hay cuentas ni
+sincronización automática. Si borrás esos datos sin haber descargado una copia, no podés
+recuperarlos. Para jugar desde otro navegador o dispositivo con tu progreso, podés
+[guardar e importar tus datos](/progreso#guardar-y-trasladar-tus-datos).
+Desde el menú también
 podés **Empezar de cero** a propósito: reinicia los niveles, puntos y pistas, pero conserva
 Tu diccionario y el [registro local de partidas](/progreso#registro-local-de-partidas).
+
+## ¿Conservo mi progreso al instalar la app?
+
+En Android, si instalás Grama desde el mismo perfil de Chrome donde jugabas, normalmente
+se conserva. En iPhone/iPad, Safari y la app instalada tienen datos separados: descargá
+tus datos desde Safari, instalá Grama y abrila desde su ícono para importar la copia ahí.
+Leé [los pasos para trasladar tu progreso](/progreso#guardar-y-trasladar-tus-datos).
 
 ## ¿El juego manda mis datos a algún lado?
 

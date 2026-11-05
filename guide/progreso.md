@@ -122,7 +122,7 @@ las anteriores a partir de tus puntos o niveles guardados. Tu progreso de juego 
 Jugá como siempre. Si un resultado te parece raro, mandanos una captura; no necesitás
 una cuenta en GitHub ni completar un número de partidas para probarlo.
 
-### Compartir comentarios
+### Guardar y trasladar tus datos
 
 En **Compartir comentarios → Descargar datos**, podés guardar un archivo con tu progreso
 guardado: niveles, puntos, pistas, estrellas, desafíos del día, diccionario, récords de
@@ -131,15 +131,24 @@ las partidas de práctica, las palabras, pistas y tiempos, la versión del cálc
 registros de partidas sin terminar. Conserva lo que está guardado; una partida de
 Contrarreloj en curso no se convierte en una partida que puedas retomar.
 
-Para recuperar o trasladar tus datos, abrí **Tu progreso → Traer tus datos → Elegir
-archivo** en la instalación de destino. Elegí el archivo descargado y revisá el resumen
-de nivel, puntos, palabras y partidas. **Reemplazar e importar** reemplaza todos los datos
-de esa instalación y vuelve a abrir Grama; no combina dos progresos diferentes.
-Podés cancelar y descargar tus datos actuales antes de confirmar. Cerrá otras pestañas
-de Grama antes de importar.
+Para recuperar o trasladar tu progreso:
 
-En iPhone/iPad, instalá Grama primero y abrí la app desde su ícono para importar ahí.
-Safari y la app instalada guardan sus datos por separado. En Android, instalar desde
+1. En el navegador o la app donde venías jugando, abrí **Tu progreso → Compartir
+   comentarios → Descargar datos**. Guardá el archivo.
+2. En el navegador o la app de destino, abrí **Tu progreso → Traer tus datos → Elegir
+   archivo** y seleccioná esa copia.
+3. Revisá el resumen de nivel, puntos, palabras y partidas. Si ya tenés datos en el destino,
+   podés cancelar y descargarlos antes de continuar.
+4. Cerrá otras pestañas de Grama y confirmá **Reemplazar e importar**. Grama vuelve a abrirse
+   con los datos del archivo.
+
+**La importación reemplaza todos los datos de la instalación de destino.** No combina
+dos progresos diferentes ni mantiene los navegadores sincronizados. Conservá el archivo
+hasta comprobar que tu progreso se ve bien.
+
+Si ya jugaste en Safari en un **iPhone/iPad**, descargá primero tus datos desde Safari.
+Después instalá Grama, abrila desde su ícono en la pantalla de inicio e importá el archivo
+ahí. Safari y la app instalada guardan sus datos por separado. En Android, instalar desde
 el mismo perfil de Chrome normalmente conserva los datos compartidos con ese navegador.
 
 Los archivos anteriores (versión 1) solo incluyen el historial de partidas, sin niveles,
@@ -147,6 +156,11 @@ puntos ni diccionario, y no sirven para esta importación completa: actualizá G
 volvé a descargar los datos. Se admiten archivos completos de hasta 20 MB. Si no se
 puede leer o importar un archivo, aparece un error y podés volver a intentar conservando
 la copia original. Una partida de Contrarreloj en curso no se retoma al importar.
+
+### Compartir comentarios
+
+Si un resultado te parece raro, podés mandarnos una captura. El archivo de **Descargar datos**
+también sirve para investigar un cálculo cuando te lo pidamos.
 
 El archivo se descarga en tu dispositivo. No se envía solo: vos decidís si lo compartís.
 No necesitás GitHub ni jugar un número de partidas. Si falla la descarga, podés volver
