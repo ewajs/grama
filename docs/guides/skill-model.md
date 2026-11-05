@@ -1,7 +1,7 @@
 # Personal performance and skill model experiments
 
 Status: D38 selects the existing Glicko-2 engine with a provisional benchmark adapter.
-The progress screen uses the versioned calculation/history projection. Formal calibration, backup/restore and remaining M22 controls are deferred.
+The progress screen uses the versioned calculation/history projection. Complete persisted-profile export is available; import, formal calibration and remaining M22 controls are deferred.
 
 ## Performance version 2
 
@@ -189,16 +189,18 @@ baseline comparisons remain isolated in the offline evaluation experiment above.
 There are no cohort quotas, normal-flow refresh button or GitHub feedback form.
 Known practice remains visible without rating updates; uncertain time is omitted from
 the rows while the rest of the completion can count. Observations are never uploaded.
-`app/assessment/export.historyFile` creates format `grama-assessment-history`, version 1.
-It serializes original finalized records, export time, app version/build, `PERFORMANCE`,
-Glicko prior and tau. It does not filter evidence or require a successful rating projection.
-`downloadHistory` rereads the complete paginated recorder history, then creates a local
-JSON Blob/download link and releases its URL after the browser starts reading it. Null
-or failed reads create no partial file. The UI describes the contents before the player
-initiates download; it never uploads anything. Active checkpoints, settings, dictionary
-and ordinary game saves are outside this diagnostic format. It is not backup/restore or
-an atomic cross-tab database snapshot. Model changes can be investigated by recomputing
-from the exported original records with the corresponding source/build.
+`app/assessment/export.historyFile` creates format `grama-assessment-history`, version 2.
+It retains top-level original finalized `records`, export time, app version/build,
+`PERFORMANCE`, Glicko prior and tau. `profile` holds the exact five Grama localStorage
+values (null for absent keys), preserving the existing save/content versions. `assessment`
+contains schema version, unfinished checkpoints, exposure ownership and sequence counter.
+`downloadHistory` reads a consistent recording snapshot behind queued writes, then reads
+the saved profile and creates a local JSON Blob/download link. It releases the URL after
+the browser starts reading it. Null or failed reads create no partial file; blocked
+localStorage never silently substitutes defaults. This exports persisted state rather
+than unsaved memory, and is not a transaction across tabs and both storage systems.
+The UI describes the contents and notes that import is not available yet. Model changes
+can still be investigated from the original `records` with the corresponding source/build.
 
 ## Player learning guide
 

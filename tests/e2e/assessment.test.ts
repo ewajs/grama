@@ -486,3 +486,37 @@ test('assessment cannot reuse an encounter owned by another attempt', async ({ p
   });
   expect(result).toEqual({ ok: false, error: 'conflict' });
 });
+
+test('assessment snapshot includes finalized evidence, unfinished state and exposure ownership', async ({
+  page,
+}) => {
+  const result = await page.evaluate(async () => {
+    const opened = await window.openAssessment();
+    if (!opened.ok) throw new Error(opened.error);
+    const store = opened.value;
+    const first = await store.saveCheckpoint(window.fixture);
+    if (!first.ok) throw new Error(first.error);
+    const completed = await store.finalize(window.complete(first.value));
+    const second = structuredClone(window.fixture);
+    second.attempt.id = 'b';
+    second.attempt.exposures = [{ encounterId: 'e1', key: 'wheel', kind: 'first' }];
+    const pending = await store.saveCheckpoint(second);
+    const snapshot = await store.snapshot();
+    store.close();
+    return { completed, pending, snapshot, closed: await store.snapshot() };
+  });
+  expect(result.snapshot).toEqual({
+    ok: true,
+    value: {
+      version: 2,
+      records: [result.completed.ok && result.completed.value],
+      checkpoints: [result.pending.ok && result.pending.value],
+      exposures: [
+        { encounterId: 'e0', key: 'wheel', kind: 'first', attemptId: 'a' },
+        { encounterId: 'e1', key: 'wheel', kind: 'repeat', attemptId: 'b' },
+      ],
+      sequence: 2,
+    },
+  });
+  expect(result.closed).toEqual({ ok: false, error: 'failed' });
+});

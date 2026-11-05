@@ -8,6 +8,20 @@ delete it, the history is the point.
 
 ---
 
+## D41 · Complete the export before adding import — 2026-11-05
+
+- **Decision:** upgrade the existing download to format `grama-assessment-history`,
+  version 2. Keep original finalized records/model context and add the five Grama
+  localStorage values verbatim, plus unfinished checkpoints, the exposure ledger and
+  sequence counter. Save/content/schema versions stay in their existing envelopes.
+- **Implementation:** a single read-only IndexedDB transaction follows queued recorder
+  writes, then the known localStorage keys are read synchronously. Read errors create
+  no partial file; missing keys remain null. Other same-origin applications are excluded.
+  This captures persisted state, not unsaved memory or a cross-tab global transaction.
+- **Delivery:** this cycle delivers complete export; import is the next cycle. The UI
+  says restore is not available yet. This begins the full-profile work previously deferred
+  in D34/D37; retention/deletion remain separate.
+
 ## D40 · Put settings, help and saved ratings on the main path — 2026-11-03
 
 - **UI:** Guide/Menu share Home's logo row. Rebalance the existing progress area to show

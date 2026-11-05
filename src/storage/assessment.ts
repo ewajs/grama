@@ -7,7 +7,9 @@ import {
   isFinalized,
   type Checkpoint,
   type Finalized,
+  type StoredExposure,
 } from './assessment-record';
+import { isCount } from './guards';
 
 /** Explicit outcomes let the app continue play when assessment storage cannot be used. */
 export type AssessmentResult<Value> =
@@ -22,6 +24,15 @@ const NAME = 'grama.assessment';
 const VERSION = 2;
 const HISTORY_PAGE = 100;
 const STORES = ['checkpoints', 'attempts', 'exposures', 'meta'];
+
+/** One consistent copy of all persisted recording state, including replay recognition. */
+export type AssessmentSnapshot<Payload, Result> = {
+  version: 2;
+  records: Finalized<Payload, Result>[];
+  checkpoints: Checkpoint<Payload>[];
+  exposures: StoredExposure[];
+  sequence: number;
+};
 
 function validSchema(db: IDBDatabase): boolean {
   if (!STORES.every((name) => db.objectStoreNames.contains(name))) return false;
@@ -284,6 +295,37 @@ export class AssessmentStore<Payload, Result> {
       return isFinalized(value, this.#isPayload, this.#isResult)
         ? { ok: true, value }
         : { ok: false, error: 'invalid-data' };
+    });
+  }
+
+  /** Copies every recording store in one read-only transaction; invalid data yields no partial copy. */
+  snapshot(): Promise<AssessmentResult<AssessmentSnapshot<Payload, Result>>> {
+    return this.#transaction('readonly', async (tx) => {
+      const [records, checkpoints, exposures, sequence]: [
+        unknown[],
+        unknown[],
+        unknown[],
+        unknown,
+      ] = await Promise.all([
+        request(tx.objectStore('attempts').index('sequence').getAll()),
+        request(tx.objectStore('checkpoints').index('sequence').getAll()),
+        request(tx.objectStore('exposures').getAll()),
+        request(tx.objectStore('meta').get('sequence')),
+      ]);
+      if (
+        !records.every((record) => isFinalized(record, this.#isPayload, this.#isResult)) ||
+        !checkpoints.every(
+          (record): record is Checkpoint<Payload> =>
+            isCheckpoint(record, this.#isPayload) &&
+            record.revision > 0 &&
+            record.attempt.sequence > 0,
+        ) ||
+        !exposures.every(isStoredExposure) ||
+        !isCount(sequence) ||
+        [...records, ...checkpoints].some((record) => record.attempt.sequence > sequence)
+      )
+        return { ok: false, error: 'invalid-data' };
+      return { ok: true, value: { version: VERSION, records, checkpoints, exposures, sequence } };
     });
   }
 

@@ -325,7 +325,8 @@ remain uncertain.
 - [x] Record levels/dailies with resume, assistance, timing quality and legacy uncertainty
 - [x] Record Contrarreloj wheels, completion and abandonment; test multi-tab ownership
 - [ ] Bounded retention and assessment deletion controls/documentation — deferred follow-up
-- [ ] Full-profile backup and restore (game progress plus assessment history) — deferred by owner
+- [x] Full-profile export: include saved game, dictionary, settings, trial records and complete recording state
+- [ ] Import the versioned profile export with validation and explicit restore confirmation
 
 **Verify:** one attempt is recorded once; storage failures never interrupt play.
 
