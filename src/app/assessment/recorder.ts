@@ -20,6 +20,8 @@ import { isGramaPayload, isGramaResult, type GramaPayload, type GramaRecord } fr
 import type { GramaResult } from './grama';
 import { describeTrial, trialResult, type TrialObservation } from './trial';
 import type { Exposure } from '../../core/assessment/attempt';
+import { replaceProfile } from '../../storage/profile';
+import type { ProfileImport } from './import';
 
 export { RECORDING_INTERVAL } from './recording';
 /** Recording handle used by numbered/daily screens. */
@@ -98,6 +100,18 @@ export class GramaRecorder {
       const result = await store?.snapshot();
       return result?.ok ? result.value : null;
     });
+  }
+
+  /** Restores a confirmed profile behind recording writes; successful callers must reload the app. */
+  async restore(data: ProfileImport): Promise<boolean> {
+    const result = await this.#queue(async () => {
+      const store = await this.#store;
+      return store
+        ? (await store.restore(data.snapshot, () => replaceProfile(data.profile))).ok
+        : false;
+    });
+    if (result) this.#disabled = true;
+    return result === true;
   }
 
   /** Commits exposure before presentation; unavailable/slow storage falls back to ordinary play. */

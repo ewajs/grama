@@ -9,7 +9,7 @@ import {
   type Finalized,
   type StoredExposure,
 } from './assessment-record';
-import { isCount } from './guards';
+import { isCount, isObject } from './guards';
 
 /** Explicit outcomes let the app continue play when assessment storage cannot be used. */
 export type AssessmentResult<Value> =
@@ -33,6 +33,47 @@ export type AssessmentSnapshot<Payload, Result> = {
   exposures: StoredExposure[];
   sequence: number;
 };
+
+/** Validates records, unique identities/sequences and their exact exposure-ledger ownership. */
+export function isAssessmentSnapshot<Payload, Result>(
+  value: unknown,
+  isPayload: (value: unknown) => value is Payload,
+  isResult: (value: unknown) => value is Result,
+): value is AssessmentSnapshot<Payload, Result> {
+  if (
+    !isObject(value) ||
+    value.version !== VERSION ||
+    !isCount(value.sequence) ||
+    !Array.isArray(value.records) ||
+    !value.records.every((r) => isFinalized(r, isPayload, isResult)) ||
+    !Array.isArray(value.checkpoints) ||
+    !value.checkpoints.every(
+      (r): r is Checkpoint<Payload> =>
+        isCheckpoint(r, isPayload) && r.revision > 0 && r.attempt.sequence > 0,
+    ) ||
+    !Array.isArray(value.exposures) ||
+    !value.exposures.every(isStoredExposure)
+  )
+    return false;
+  const records = [...value.records, ...value.checkpoints],
+    sequence = value.sequence;
+  if (
+    new Set(records.map((r) => r.attempt.id)).size !== records.length ||
+    new Set(records.map((r) => r.attempt.sequence)).size !== records.length ||
+    records.some((r) => r.attempt.sequence > sequence)
+  )
+    return false;
+  const ledger = new Map(value.exposures.map((e) => [e.encounterId, e]));
+  const expected = records.flatMap((r) =>
+    r.attempt.exposures.map((e) => ({ ...e, attemptId: r.attempt.id })),
+  );
+  return (
+    ledger.size === value.exposures.length &&
+    expected.length === ledger.size &&
+    new Set(expected.map((e) => e.encounterId)).size === expected.length &&
+    expected.every((e) => evidenceJson(ledger.get(e.encounterId)) === evidenceJson(e))
+  );
+}
 
 function validSchema(db: IDBDatabase): boolean {
   if (!STORES.every((name) => db.objectStoreNames.contains(name))) return false;
@@ -312,21 +353,41 @@ export class AssessmentStore<Payload, Result> {
         request(tx.objectStore('exposures').getAll()),
         request(tx.objectStore('meta').get('sequence')),
       ]);
-      if (
-        !records.every((record) => isFinalized(record, this.#isPayload, this.#isResult)) ||
-        !checkpoints.every(
-          (record): record is Checkpoint<Payload> =>
-            isCheckpoint(record, this.#isPayload) &&
-            record.revision > 0 &&
-            record.attempt.sequence > 0,
-        ) ||
-        !exposures.every(isStoredExposure) ||
-        !isCount(sequence) ||
-        [...records, ...checkpoints].some((record) => record.attempt.sequence > sequence)
-      )
-        return { ok: false, error: 'invalid-data' };
-      return { ok: true, value: { version: VERSION, records, checkpoints, exposures, sequence } };
+      const value = { version: VERSION, records, checkpoints, exposures, sequence };
+      return isAssessmentSnapshot(value, this.#isPayload, this.#isResult)
+        ? { ok: true, value }
+        : { ok: false, error: 'invalid-data' };
     });
+  }
+
+  /** Replaces recording state atomically; undoes the paired profile write if the transaction aborts. */
+  async restore(
+    snapshot: AssessmentSnapshot<Payload, Result>,
+    apply: () => () => void,
+  ): Promise<AssessmentResult<null>> {
+    let undo: (() => void) | undefined;
+    const result = await this.#transaction<null>('readwrite', async (tx) => {
+      if (!isAssessmentSnapshot(snapshot, this.#isPayload, this.#isResult))
+        return { ok: false, error: 'invalid-data' };
+      await Promise.all(STORES.map((name) => request(tx.objectStore(name).clear())));
+      await Promise.all([
+        ...snapshot.records.map((r) => request(tx.objectStore('attempts').add(r))),
+        ...snapshot.checkpoints.map((r) => request(tx.objectStore('checkpoints').add(r))),
+        ...snapshot.exposures.map((e) => request(tx.objectStore('exposures').add(e))),
+        request(tx.objectStore('meta').put({ version: VERSION }, 'schema')),
+        request(tx.objectStore('meta').put(snapshot.sequence, 'sequence')),
+      ]);
+      undo = apply();
+      return { ok: true, value: null };
+    });
+    if (!result.ok && undo) {
+      try {
+        undo();
+      } catch {
+        return { ok: false, error: 'failed' };
+      }
+    }
+    return result;
   }
 
   /** A bounded sequence-ordered history page, after the last sequence already read. */

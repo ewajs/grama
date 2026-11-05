@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { isAssessmentSnapshot } from './assessment';
 import {
   canAdvance,
   evidenceJson,
@@ -31,6 +32,28 @@ const fixture: Checkpoint<string[]> = {
 };
 const payload = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every((word) => typeof word === 'string');
+
+it('validates snapshot identity, counters and exact ledger ownership together', () => {
+  const snapshot = {
+    version: 2,
+    records: [],
+    checkpoints: [fixture],
+    exposures: fixture.attempt.exposures.map((e) => ({ ...e, attemptId: fixture.attempt.id })),
+    sequence: 1,
+  };
+  const guard = (value: unknown) =>
+    isAssessmentSnapshot(value, payload, (v): v is number => typeof v === 'number');
+  expect(guard(snapshot)).toBe(true);
+  expect(guard({ ...snapshot, sequence: 0 })).toBe(false);
+  expect(guard({ ...snapshot, checkpoints: [fixture, fixture] })).toBe(false);
+  expect(guard({ ...snapshot, exposures: [] })).toBe(false);
+  expect(
+    guard({ ...snapshot, exposures: [{ ...snapshot.exposures[0], attemptId: 'someone-else' }] }),
+  ).toBe(false);
+  expect(guard({ ...snapshot, exposures: [...snapshot.exposures, ...snapshot.exposures] })).toBe(
+    false,
+  );
+});
 
 it('validates a complete checkpoint and preserves unknown exposure', () => {
   expect(isCheckpoint(structuredClone(fixture), payload)).toBe(true);

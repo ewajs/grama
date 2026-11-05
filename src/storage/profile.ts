@@ -16,3 +16,25 @@ export function readProfile(storage: Pick<Storage, 'getItem'> = localStorage): S
     PROFILE_KEYS.map((key) => [key, storage.getItem(key)]),
   ) as StoredProfile;
 }
+
+/** Replaces only Grama's saved keys; restores previous values on failure and returns an undo. */
+export function replaceProfile(
+  profile: StoredProfile,
+  storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> = localStorage,
+): () => void {
+  const before = readProfile(storage);
+  const write = (values: StoredProfile) => {
+    for (const key of PROFILE_KEYS) storage.removeItem(key);
+    for (const key of PROFILE_KEYS) {
+      const value = values[key];
+      if (value !== null) storage.setItem(key, value);
+    }
+  };
+  try {
+    write(profile);
+  } catch (error) {
+    write(before);
+    throw error;
+  }
+  return () => write(before);
+}
